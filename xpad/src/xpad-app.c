@@ -319,10 +319,10 @@ register_stock_icons (void)
 	g_object_unref (pixbuf);
 	
 	source = gtk_icon_source_new ();
-	gtk_icon_source_set_icon_name (source, "xpad");
+	gtk_icon_source_set_icon_name (source, PACKAGE);
 	set = gtk_icon_set_new ();
 	gtk_icon_set_add_source (set, source);
-	gtk_icon_factory_add (factory, "xpad", set);
+	gtk_icon_factory_add (factory, PACKAGE, set);
 	gtk_icon_set_unref (set);
 	gtk_icon_source_free (source);
 	
