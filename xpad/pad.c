@@ -120,9 +120,9 @@ GtkTextView *get_text (GtkWindow *window)
     param will be presented afterward */
 void pads_set_decorations (gboolean decor, GtkWidget *caller)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 
-	while (temp)
+	for (temp = first_pad; temp; temp = temp->next)
 	{
 		if (gtk_window_get_decorated (temp->window) != decor)
 		{
@@ -134,11 +134,9 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 				
 				/* we move it so wm's know where to place it */
 				gtk_window_move (temp->window, temp->x, temp->y);
-				
 				gtk_widget_show (GTK_WIDGET (temp->window));
 			}
 		}
-		temp = temp->next;
 	}
 	
 	gtk_window_present (GTK_WINDOW (caller));
@@ -196,14 +194,10 @@ static gboolean pad_is_empty (pad_node *pad)
 
 void pads_set_editable (gboolean editable)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		pad_set_editable (temp, editable);
-		
-		temp = temp->next;
-	}
 }
 
 static void pad_update_style (pad_node *pad)
@@ -281,9 +275,9 @@ void pad_toolbar_update (pad_node *pad)
 	
 	toolbar_update (pad->toolbar);
 	
-	list = tmp = toolbar_get_buttons (pad->toolbar);
+	list = toolbar_get_buttons (pad->toolbar);
 	
-	while (tmp)
+	for (tmp = list; tmp; tmp = tmp->next)
 	{
 		GCallback func;
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
@@ -303,8 +297,6 @@ void pad_toolbar_update (pad_node *pad)
 		}
 		
 		g_signal_connect_swapped (widget, "clicked", func, pad);
-		
-		tmp = tmp->next;
 	}
 	
 	g_list_free (list);
@@ -315,30 +307,25 @@ static void
 pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 {
 	GList *list, *tmp;
+	GCallback func = NULL;
 	
-	list = tmp = toolbar_get_buttons (pad->toolbar);
+	list = toolbar_get_buttons (pad->toolbar);
 	
-	while (tmp)
+	for (tmp = list; tmp && (func != target_func); tmp = tmp->next)
 	{
-		GCallback func;
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
 		
 		func = ((const toolbar_button *) g_object_get_data 
 			(G_OBJECT (widget), "tb"))->func;
-		
-		if (func == target_func)
-		{
-			g_signal_handlers_block_by_func (widget, (gpointer) func, pad);
-			
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+	}
+
+	if (tmp)
+	{
+		/* Found target_func; func points at it now. */
+		g_signal_handlers_block_by_func (widget, (gpointer) func, pad);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
 				value);
-			
-			g_signal_handlers_unblock_by_func (widget, (gpointer) func, pad);
-			
-			break;
-		}
-		
-		tmp = tmp->next;
+		g_signal_handlers_unblock_by_func (widget, (gpointer) func, pad);
 	}
 	
 	g_list_free (list);
@@ -390,18 +377,14 @@ void pad_edit_paste (pad_node *pad)
 
 static void quit_if_no_pads (void)
 {
-	gboolean alive = FALSE;
-	pad_node *p = first_pad;
+	pad_node *p;
 	
-	while (p)
+	for (p = first_pad; p && p->hidden; p = p->next)
 	{
-		if (!p->hidden)
-			alive = TRUE;
-		
-		p = p->next;
+		/* Find first non-hidden pad */
 	}
 	
-	if (!alive)
+	if (!p)
 		pad_close_all ();
 }
 
@@ -526,16 +509,12 @@ void pad_show (pad_node *pad)
 
 void pad_show_by_num (gint n)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
-	while (n > 1 && temp)
-	{
-		temp = temp->next;
-		
-		n--;
-	}
-	
-	if (n > 0 && temp)
+	for (temp = first_pad; temp && (n > 1); temp = temp->next)
+	  n--;
+
+	if (temp)
 		pad_show (temp);
 	
 	/* else, silently ignore */
@@ -543,14 +522,10 @@ void pad_show_by_num (gint n)
 
 void pads_show_all (void)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		pad_show (temp);
-		
-		temp = temp->next;
-	}
 }
 
 void pad_show_all (pad_node *pad)
@@ -561,19 +536,15 @@ void pad_show_all (pad_node *pad)
 
 void pad_close_all (void)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
-	while (temp)
+	for (temp = first_pad; temp; temp = first_pad)
 	{
 		if (temp->window)
-		{
 			fio_save_pad (temp);
-		}
 		
 		pad_remove (temp);
 		pad_free (temp);
-		
-		temp = first_pad;
 	}
 	
 	gtk_main_quit ();
@@ -871,6 +842,7 @@ static void
 menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 {
 	pad_node *pad;
+	gboolean foundfocus = FALSE;
 	
 	/**
 	 * Sigh...  If the user presses the keyboard accelerator for one of the 
@@ -878,20 +850,15 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 	 * Thus, we have no way of finding out what pad to use.  So, what we do is 
 	 * iterate over windows, finding the one with focus.
 	 */
-	pad = first_pad;
-	while (pad)
+	for (pad = first_pad; pad && !foundfocus; pad = pad->next)
 	{
 		if (!pad->hidden)
 		{
 			GtkWidget *w;
 			
 			w = gtk_window_get_focus (pad->window);
-			
-			if (GTK_WIDGET_HAS_FOCUS (w))
-				break;
+			foundfocus = GTK_WIDGET_HAS_FOCUS (w);
 		}
-		
-		pad = pad->next;
 	}
 	
 	/* if no pad has focus, it must have been through popup menu */
@@ -981,7 +948,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 
 static void pad_popup (pad_node *pad, GdkEventButton *event)
 {
-	pad_node *p = first_pad;
+	pad_node *p;
 	GtkWidget *tmp;
 	gint n = 0, i = SHOW_ACTION_OFFSET;
 	GtkItemFactoryEntry entry;
@@ -993,17 +960,14 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	 * changes don't keep unless you use itemfactory's api.  This api does not allow
 	 * iteration.  Thus, we use guessable action numbers for temporary items, like 10000+
 	 */
-	do
+	
+	tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
+	while (tmp)
 	{
-		tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
-		
-		if (tmp)
-		{
-			gtk_item_factory_delete_item (pad->menu, 
+		gtk_item_factory_delete_item (pad->menu, 
 				gtk_item_factory_path_from_widget (tmp));
-		}
+		tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
 	}
-	while (tmp);
 	
 	gtk_item_factory_delete_item (pad->menu, "/Windows/sep");
 	gtk_item_factory_delete_item (pad->menu, "/Windows/Show All");
@@ -1012,7 +976,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	/**
 	 * Populate list of windows.
 	 */
-	while (p)
+	for (p = first_pad; p; p = p->next)
 	{
 		gchar result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
 		
@@ -1043,8 +1007,6 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		entry.item_type = "<Item>";
 		
 		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
-		
-		p = p->next;
 	}
 	
 	entry.path = "/Windows/sep";
