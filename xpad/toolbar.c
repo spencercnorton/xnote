@@ -180,9 +180,6 @@ toolbar_update (pad_node *pad)
 	
 	g_slist_foreach (current_settings.toolbar, toolbar_add_item, pad);
 	
-/*	gtk_toolbar_append_widget (GTK_TOOLBAR (box), pad->grip, "", "");*/
-	
-/*	gtk_container_foreach (GTK_CONTAINER (box), toolbar_show_item, NULL);*/
 	gtk_widget_show_all (box);
 	
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (box), GTK_ICON_SIZE_SMALL_TOOLBAR);

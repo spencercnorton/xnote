@@ -343,10 +343,12 @@ static int xpad_init (gpointer data)
 	if (fio_load_default_settings ())
 	{
 		/* this happens if there isn't a default-style (i.e. first run) */
-		fio_save_default_settings ();
 		show_help ();
 	}
 	
+	/* we want to make sure we save any new format changes */
+	fio_save_default_settings ();
+
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
 	

@@ -176,12 +176,13 @@ void fio_close_pad_files (pad_node *pad)
 void fio_save_default_settings (void)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
+	GSList *tmp;
 	
 	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
 		"sync_time %i\ndecorations %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
 		current_settings.sync_time, current_settings.decorations,
 		current_settings.width, current_settings.height,
@@ -190,7 +191,20 @@ void fio_save_default_settings (void)
 		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
 		current_settings.style.border_width, current_settings.style.padding,
 		current_settings.style.fontname);
-
+	
+	tmp = current_settings.toolbar;
+	
+	while (tmp)
+	{
+		strcat (buf, tmp->data);
+		tmp = tmp->next;
+		
+		if (tmp)
+			strcat (buf, ", ");
+	}
+	
+	strcat (buf, "\n");
+	
 	fio_set_file (DEFAULTS_FILENAME, buf);
 }
 
