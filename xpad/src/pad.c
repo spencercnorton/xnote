@@ -69,8 +69,8 @@ static GtkItemFactoryEntry menu_items[] =
 const toolbar_button buttons[] =
 {
 	{"New", "gtk-new", 0, G_CALLBACK (pad_new), N_("Open New Pad")},
-	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), N_("Open Copy of File")},
-	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), N_("Save Pad As File")},
+/*	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), N_("Open Copy of File")},
+	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), N_("Save Pad As File")},*/
 	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
 	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
