@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad 2.2-b1\n"
+"Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-14 17:37-0500\n"
-"PO-Revision-Date: 2005-01-31 20:00+1\n"
+"POT-Creation-Date: 2005-03-03 20:57-0500\n"
+"PO-Revision-Date: 2005-03-12 09:17+1\n"
 "Last-Translator: Németh Csaba <csaba@sopron.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -27,117 +27,117 @@ msgstr "Az Xpad egy grafikus program. Kérem futtassa az asztalról!"
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:410
+#: src/xpad-app.c:435
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Nem tudom megnyitni a %s könyvtárat."
 
-#: src/xpad-app.c:413
+#: src/xpad-app.c:438
 msgid "This directory is needed to store preference and pad information.  Xpad will close now."
 msgstr "Ennek a könyvtárnak szüksége van arra, hogy eltárolja a tulajdonságokat és a jegyzet információit. Az Xpad most bezáródik."
 
-#: src/xpad-app.c:717
+#: src/xpad-app.c:742
 msgid "Show version number and quit"
 msgstr "Verziószám megjelenítése és kilépés"
 
-#: src/xpad-app.c:718
+#: src/xpad-app.c:743
 msgid "Hide existing pads on startup"
 msgstr "A meglévõ jegyzetek elrejtése indításkor"
 
-#: src/xpad-app.c:719
+#: src/xpad-app.c:744
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Ne hozzon létre új jegyzetet indításkor ha az elõzõbõl nem léptünk ki"
 
-#: src/xpad-app.c:725
+#: src/xpad-app.c:750
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Indításkor hozzon létre új jegyzetet, akkor is, ha már van"
 
-#: src/xpad-app.c:726
+#: src/xpad-app.c:751
 msgid "Close all pads"
 msgstr "Összes jegyzet bezárása"
 
-#: src/xpad-app.c:758
+#: src/xpad-app.c:783
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: src/xpad-pad.c:530
+#: src/xpad-pad.c:557
 msgid "Delete this pad?"
 msgstr "Töröljem ezt a jegyzetet?"
 
-#: src/xpad-pad.c:531
+#: src/xpad-pad.c:558
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Minden szöveg visszavonhatatlanul elveszik a jegyzetrõl."
 
-#: src/xpad-pad.c:562
+#: src/xpad-pad.c:589
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' Tulajdonságok"
 
-#: src/xpad-pad.c:1066
+#: src/xpad-pad.c:1109
 msgid "Sticky notes"
 msgstr "Ragadós jegyzetek"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1085
+#: src/xpad-pad.c:1128
 msgid "translator-credits"
 msgstr "Németh Csaba <csaba@sopron.hu>"
 
-#: src/xpad-pad.c:1306
+#: src/xpad-pad.c:1349
 msgid "_Pad"
 msgstr "_Jegyzet"
 
-#: src/xpad-pad.c:1315
+#: src/xpad-pad.c:1358
 msgid "Show on _All Workspaces"
 msgstr "Mutassa az _Összes munkaterületen"
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1365
 msgid "_Edit"
 msgstr "_Szerkesztés"
 
-#: src/xpad-pad.c:1335
+#: src/xpad-pad.c:1378
 msgid "_View"
 msgstr "_Nézet"
 
-#: src/xpad-pad.c:1342
+#: src/xpad-pad.c:1385
 msgid "_Toolbar"
 msgstr "_Eszköztár"
 
-#: src/xpad-pad.c:1343
+#: src/xpad-pad.c:1386
 msgid "_Autohide Toolbar"
 msgstr "El_rejtõdõ eszköztár"
 
-#: src/xpad-pad.c:1345
+#: src/xpad-pad.c:1388
 msgid "_Scrollbar"
 msgstr "_Görgetõsáv"
 
-#: src/xpad-pad.c:1346
+#: src/xpad-pad.c:1389
 msgid "_Window Decorations"
 msgstr "_Ablak dekoráció"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1392
 msgid "_Notes"
 msgstr "_Jegyzetek"
 
-#: src/xpad-pad.c:1357 src/xpad-tray.c:146
+#: src/xpad-pad.c:1400 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "_Mindet mutat"
 
-#: src/xpad-pad.c:1358 src/xpad-tray.c:153
+#: src/xpad-pad.c:1401 src/xpad-tray.c:152
 msgid "_Close All"
 msgstr "Mindet _bezár"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1362
+#: src/xpad-pad.c:1405
 msgid "_Help"
 msgstr "_Súgó"
 
-#: src/xpad-pad.c:1369
+#: src/xpad-pad.c:1412
 msgid "_Contents"
 msgstr "_Tartalom"
 
-#: src/xpad-pad.c:1370
+#: src/xpad-pad.c:1413
 msgid "_About"
 msgstr "_Névjegy"
 
@@ -194,8 +194,8 @@ msgid "_Edit lock"
 msgstr "Szerkesztés zárolás"
 
 #: src/xpad-preferences.c:180
-msgid "_Pads start sticky"
-msgstr "_Jegyzetek ragadósan indulnak"
+msgid "_Pads start on all workspaces"
+msgstr "Induljon az _Összes munkaterületen"
 
 #: src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
@@ -284,3 +284,6 @@ msgstr "Jegyzetek levitele késõbbi használatra"
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Ragadós jegyzetek"
+
+#~ msgid "_Pads start sticky"
+#~ msgstr "_Jegyzetek ragadósan indulnak"
