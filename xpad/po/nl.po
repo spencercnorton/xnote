@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11-b2\n"
-"POT-Creation-Date: 2003-09-23 21:58-0400\n"
+"POT-Creation-Date: 2003-10-01 14:51-0400\n"
 "PO-Revision-Date: 2003-08-04 22:28+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -223,43 +223,43 @@ msgstr "<b>Gebruikte knoppen:</b>"
 msgid "<b>Unused Buttons:</b>"
 msgstr "<b>Ongebruikte knoppen:</b>"
 
-#: src/pref.c:641 src/pref.c:642
+#: src/pref.c:642 src/pref.c:643
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 "Als dit aan staat, verschijnt een werkbalk onderaan elk kladblok als de muis "
 "over dat gebied gaat."
 
-#: src/pref.c:645 src/pref.c:646
+#: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 "Als dit aan staat, verdwijnt de werkbalk als u het kladblok niet gebruikt."
 
-#: src/pref.c:658
+#: src/pref.c:659
 msgid "Allow _scrollbars"
 msgstr "Schuifbalken toestaan"
 
-#: src/pref.c:659
+#: src/pref.c:660
 msgid "Pads start s_ticky"
 msgstr "Kladblokken standaard klevend"
 
-#: src/pref.c:662
+#: src/pref.c:663
 msgid "Close and save _all pads"
 msgstr "Alle kladblokken sluiten en opslaan"
 
-#: src/pref.c:664
+#: src/pref.c:665
 msgid "Close and save _pad"
 msgstr "Kladblok sluiten en opslaan"
 
-#: src/pref.c:666
+#: src/pref.c:667
 msgid "_Destroy pad (no confirmation)"
 msgstr "Kladblok vernietigen (geen bevestiging)"
 
-#: src/pref.c:671
+#: src/pref.c:672
 msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Sluit-opdracht vensterbeheerder:</b>"
 
-#: src/pref.c:716 src/pref.c:718
+#: src/pref.c:717 src/pref.c:719
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
@@ -267,17 +267,17 @@ msgstr ""
 "Als dit aan staat, zal uw vensterbeheerder aan elk kladblok zijn eigen "
 "versieringen toevoegen, bijvoorbeeld een titelbalk en een Sluiten-knop."
 
-#: src/pref.c:722 src/pref.c:723
+#: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 "Als dit aan staat, wordt er om bevestiging gevraagd als u gekozen heeft een "
 "kladblok te vernietigen."
 
-#: src/pref.c:726 src/pref.c:727
+#: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
 msgstr "Als dit aan staat, zijn nieuwe kladblokken standaard klevend."
 
-#: src/pref.c:730 src/pref.c:732
+#: src/pref.c:731 src/pref.c:733
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
@@ -286,7 +286,7 @@ msgstr ""
 "kladblok.  Als dit uit staat, wordt de grootte van het kladblok aan de tekst "
 "aangepast, zodat het past."
 
-#: src/pref.c:736 src/pref.c:739
+#: src/pref.c:737 src/pref.c:740
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
@@ -297,17 +297,17 @@ msgstr ""
 "de linker-muisknop ingedrukt.  Dubbelklik op het kladblok om het weer "
 "bewerkbaar te maken.  Als dit uit staat zijn kladblokken altijd bewerkbaar."
 
-#: src/pref.c:744 src/pref.c:745
+#: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
 msgstr "Alle kladblokken zullen sluiten nadat de inhoud is opgeslagen."
 
-#: src/pref.c:748 src/pref.c:749
+#: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
 msgstr ""
 "Het kladblok waarvan u op de sluitknop heeft gedrukt, wordt gesloten nadat "
 "de inhoud is opgeslagen."
 
-#: src/pref.c:752 src/pref.c:754
+#: src/pref.c:753 src/pref.c:755
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
-"POT-Creation-Date: 2003-09-23 21:58-0400\n"
+"POT-Creation-Date: 2003-10-01 14:51-0400\n"
 "PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -209,77 +209,77 @@ msgstr ""
 msgid "<b>Unused Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:641 src/pref.c:642
+#: src/pref.c:642 src/pref.c:643
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 
-#: src/pref.c:645 src/pref.c:646
+#: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 
-#: src/pref.c:658
+#: src/pref.c:659
 msgid "Allow _scrollbars"
 msgstr ""
 
-#: src/pref.c:659
+#: src/pref.c:660
 #, fuzzy
 msgid "Pads start s_ticky"
 msgstr "Blokoj startas gluecajn"
 
-#: src/pref.c:662
+#: src/pref.c:663
 msgid "Close and save _all pads"
 msgstr "Fermu kaj konservu cxiujn blokojn"
 
-#: src/pref.c:664
+#: src/pref.c:665
 msgid "Close and save _pad"
 msgstr "Fermu kaj konservu blokon"
 
-#: src/pref.c:666
+#: src/pref.c:667
 msgid "_Destroy pad (no confirmation)"
 msgstr "Forvisxu blokon (ne konfirmo)"
 
-#: src/pref.c:671
+#: src/pref.c:672
 msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Fenestra Direktanta Ferma Faro:</b>"
 
-#: src/pref.c:716 src/pref.c:718
+#: src/pref.c:717 src/pref.c:719
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
 msgstr ""
 
-#: src/pref.c:722 src/pref.c:723
+#: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 
-#: src/pref.c:726 src/pref.c:727
+#: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
 msgstr ""
 
-#: src/pref.c:730 src/pref.c:732
+#: src/pref.c:731 src/pref.c:733
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
 msgstr ""
 
-#: src/pref.c:736 src/pref.c:739
+#: src/pref.c:737 src/pref.c:740
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
 "pad.  If off, pads are always editable."
 msgstr ""
 
-#: src/pref.c:744 src/pref.c:745
+#: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
 msgstr ""
 
-#: src/pref.c:748 src/pref.c:749
+#: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
 msgstr ""
 "La bloko sur kiu vi klakis la ferman butonon fermos, konservas enhavon."
 
-#: src/pref.c:752 src/pref.c:754
+#: src/pref.c:753 src/pref.c:755
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."

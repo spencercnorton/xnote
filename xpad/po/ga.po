@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11-b2\n"
-"POT-Creation-Date: 2003-09-23 21:58-0400\n"
+"POT-Creation-Date: 2003-10-01 14:51-0400\n"
 "PO-Revision-Date: 2003-08-07 13:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -225,44 +225,44 @@ msgstr "<b>Cnaipí in úsáid:</b>"
 msgid "<b>Unused Buttons:</b>"
 msgstr "<b>Cnaipí nach bhfuil in úsáid:</b>"
 
-#: src/pref.c:641 src/pref.c:642
+#: src/pref.c:642 src/pref.c:643
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 "Más tofa é seo, d'fheicfeá barra uirlisí nuair atá an luchóg anuas ar an "
 "cheap."
 
-#: src/pref.c:645 src/pref.c:646
+#: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 "Más tofa é seo, imeoidh an barra uirlisí as radharc nuair atá an ceap ó "
 "úsáid."
 
-#: src/pref.c:658
+#: src/pref.c:659
 msgid "Allow _scrollbars"
 msgstr "Ceadaigh _scrollbharraí"
 
-#: src/pref.c:659
+#: src/pref.c:660
 msgid "Pads start s_ticky"
 msgstr "Tá na ceapa g_reamaitheacha ar dtús"
 
-#: src/pref.c:662
+#: src/pref.c:663
 msgid "Close and save _all pads"
 msgstr "Dún agus sábháil _gach uile cheap nótaí"
 
-#: src/pref.c:664
+#: src/pref.c:665
 msgid "Close and save _pad"
 msgstr "Dún agus sábháil an _ceap nótaí"
 
-#: src/pref.c:666
+#: src/pref.c:667
 msgid "_Destroy pad (no confirmation)"
 msgstr "_Scrios an ceap nótaí (ní bheidh aon dheimhniú)"
 
-#: src/pref.c:671
+#: src/pref.c:672
 msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Bainisteoir Fuinneoga - Gníomh Dúnta:</b>"
 
-#: src/pref.c:716 src/pref.c:718
+#: src/pref.c:717 src/pref.c:719
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
@@ -270,16 +270,16 @@ msgstr ""
 "Más tofa é seo, cuirfidh do bhainisteoir fuinneoga a maisiúcháin féin le "
 "gach ceap nótaí.  Mar shampla, barra teidil agus cnaipe dhúnta."
 
-#: src/pref.c:722 src/pref.c:723
+#: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 "Más tofa é seo, d'iarrfaí cinntiú nuair is mian leat ceap nótaí a scriosadh."
 
-#: src/pref.c:726 src/pref.c:727
+#: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
 msgstr "Más tofa é seo, beidh ceapa nua greamaitheacha trí mhainneachtain."
 
-#: src/pref.c:730 src/pref.c:732
+#: src/pref.c:731 src/pref.c:733
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
@@ -287,7 +287,7 @@ msgstr ""
 "Más tofa é seo, nochtfaí scrollbharraí nuair nach dtoilleann an téacs sa "
 "cheap nótaí.  Murab é, d'fheisteodh an ceap é féin don théacs."
 
-#: src/pref.c:736 src/pref.c:739
+#: src/pref.c:737 src/pref.c:740
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
@@ -298,15 +298,15 @@ msgstr ""
 "chun é a dhéanamh ineagraithe arís. Mura tofa, tá ceapa ineagraithe i "
 "dtólamh."
 
-#: src/pref.c:744 src/pref.c:745
+#: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
 msgstr "Dúnfaidh gach uile ceap nótaí; sábhálfar an t-ábhar i dtosach."
 
-#: src/pref.c:748 src/pref.c:749
+#: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
 msgstr "Dúnfaidh an ceap a bhí tofa leis an chnaipe dúnta, ag sábháil a ábhar."
 
-#: src/pref.c:752 src/pref.c:754
+#: src/pref.c:753 src/pref.c:755
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."
