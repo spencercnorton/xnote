@@ -1,3 +1,7 @@
+2003-11-07  Michael Terry  <mikix@users.sourceforge.net>
+	* src/main.c, src/tray.c: Use GTK+ 2.3 GtkIconTheme instead of built
+	  in pixmaps
+
 2003-10-23  Michael Terry  <mikix@users.sourceforge.net>
 	* po/es.po, po/ga.po, po/nl.po: Update translations
 

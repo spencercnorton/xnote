@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "main.h"
 #include "tray.h"
 #include "eggtrayicon.h"
-#include "../images/xpad2.xpm"
 #include "pad.h"
 #include "help.h"
 #include "pref.h"
@@ -177,17 +176,20 @@ static void docklet_clicked( GtkWidget *button, GdkEventButton *event, void *dat
 static void docklet_create( void )
 {
   GtkWidget *box;
-  GdkPixbuf *unscaled;
-  GdkPixbuf *scaled;
+  GdkPixbuf *pixbuf;
   GtkTooltips *docklet_tips;
 
-  unscaled = gdk_pixbuf_new_from_xpm_data( xpad2_xpm );
-  if( !unscaled ) return;
+  pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+                                     PACKAGE,
+                                     128,
+                                     0,
+                                     NULL);
+  if( !pixbuf ) return;
 
   docklet_remove();
 
   toggle_state = SHOWN;
-  docklet = egg_tray_icon_new ("xpad");
+  docklet = egg_tray_icon_new (PACKAGE);
   box = gtk_event_box_new();
   icon = gtk_image_new();
 
@@ -199,10 +201,8 @@ static void docklet_create( void )
 
   g_object_ref( G_OBJECT(docklet) );
 
-  scaled = gdk_pixbuf_scale_simple( unscaled, 24, 24, GDK_INTERP_BILINEAR );
-  gtk_image_set_from_pixbuf( GTK_IMAGE(icon), scaled );
-  g_object_unref( unscaled );
-  g_object_unref( scaled );
+  gtk_image_set_from_pixbuf( GTK_IMAGE(icon), pixbuf );
+  g_object_unref( pixbuf );
 
   docklet_tips = gtk_tooltips_new();
   gtk_tooltips_set_tip( GTK_TOOLTIPS(docklet_tips), box,

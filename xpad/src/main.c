@@ -59,7 +59,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
 #endif
 
-#include "../images/xpad2.xpm"
 #include "../images/sticky.xpm"
 #include "main.h"
 #include "pad.h"
@@ -889,15 +888,22 @@ static void xpad_register_icons (void)
 static void xpad_set_default_icon (void)
 {
 	GdkPixbuf *pixbuf;
-	GList *icons;
 	
-	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad2_xpm);
-	icons = g_list_append (NULL, pixbuf);
+	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+	                                   PACKAGE,
+	                                   128, /* larger is better */
+	                                   0,
+	                                   NULL);
 	
-	gtk_window_set_default_icon_list (icons);
-	
-	g_object_unref (pixbuf);
-	g_list_free (icons);
+	if (pixbuf)
+	{
+		GList *icons = g_list_append (NULL, pixbuf);
+		
+		gtk_window_set_default_icon_list (icons);
+		
+		g_object_unref (pixbuf);
+		g_list_free (icons);
+	}
 }
 
 
