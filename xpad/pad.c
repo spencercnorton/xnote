@@ -250,8 +250,17 @@ void pad_set_scrollbars (pad_node *pad, gboolean on)
 	}
 	else
 	{
+		GtkAdjustment *v, *h;
+		
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->scrollbar), 
 			GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+		
+		/* now we need to adjust view so that user can see whole pad */
+		h = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+		v = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+		
+		gtk_adjustment_set_value (h, 0);
+		gtk_adjustment_set_value (v, 0);
 	}
 }
 

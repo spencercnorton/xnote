@@ -374,6 +374,21 @@ static gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 	return FALSE;
 }
 
+static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
+{
+	pad_node *temp;
+	
+	current_settings.scrollbar = gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkbutton));
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		pad_set_scrollbars (temp, current_settings.scrollbar);
+	}
+	
+	return FALSE;
+}
+
 static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 {
 	current_settings.confirm_destroy = gtk_toggle_button_get_active (
@@ -821,6 +836,7 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *label_frame_wm = gtk_label_new (NULL);
 		GtkWidget *label_frame_wm_indent = gtk_label_new ("    ");
 		GtkWidget *label_frame_wm_hbox = gtk_hbox_new (FALSE, 0);
+		GtkWidget *checkbutton_scrollbars = gtk_check_button_new_with_label ("Allow Scrollbars");
 		
 		radio_close_all = gtk_radio_button_new_with_label (NULL,
 			"Close and save all pads");
@@ -865,9 +881,11 @@ static GtkWidget *preferences_create (void)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), current_settings.decorations);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), current_settings.confirm_destroy);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), current_settings.edit_lock);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), current_settings.scrollbar);
 		gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 9);
+		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_scrollbars, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), frame_wm_close, FALSE, FALSE, 3);
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
@@ -881,6 +899,12 @@ static GtkWidget *preferences_create (void)
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_confirm_destroy, 
 	"If on, choosing to delete a pad will prompt for conformation.",
 	"If on, choosing to delete a pad will prompt for conformation.");
+	
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_scrollbars, 
+	"If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
+	"to fit the text.",
+	"If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
+	"to fit the text.");
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_edit_lock, 
 	"If on, when a pad loses focus, it will become uneditable.  "
@@ -907,6 +931,7 @@ static GtkWidget *preferences_create (void)
 		g_signal_connect (GTK_OBJECT (checkbutton_confirm_destroy), "toggled", G_CALLBACK (change_confirm_destroy), (gpointer) window);
 		g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) frame_wm_close);
 		g_signal_connect (GTK_OBJECT (checkbutton_edit_lock), "toggled", G_CALLBACK (change_edit_lock), (gpointer) window);
+		g_signal_connect (GTK_OBJECT (checkbutton_scrollbars), "toggled", G_CALLBACK (change_scrollbars), (gpointer) window);
 		g_signal_connect (GTK_OBJECT (radio_close_all), "toggled", G_CALLBACK (change_wm_close), (gpointer) 0);
 		g_signal_connect (GTK_OBJECT (radio_close_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 1);
 		g_signal_connect (GTK_OBJECT (radio_delete_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 2);
