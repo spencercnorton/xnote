@@ -406,7 +406,6 @@ void fio_load_pads (void)
 	
 	while ((name = g_dir_read_name (dir)))
 	{
-		printf ("checking %s\n", name);
 		if (g_pattern_match_string (spec, name) &&
 			!fio_get_info_from_file (name, &info))
 		{
