@@ -739,9 +739,10 @@ process_local_args (gint *argc, gchar **argv[])
 	option_hide_old = FALSE;
 	
 	context = g_option_context_new (NULL);
-	g_option_context_set_ignore_unknown_options (context, TRUE);
-	g_option_context_set_help_enabled (context, FALSE);
 	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
+	/* We do remote here as well, because we want --help to pick them up.  It
+	   can't hurt since they only set the global values that we reset later. */
+	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
 	if (g_option_context_parse (context, argc, argv, &error))
 	{
 		if (option_version)
@@ -774,10 +775,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	
 	context = g_option_context_new (NULL);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
-	/* We do local here as well as remote because we want --help to pick up
-	   both.  It can't hurt, since the local options were removed in a
-	   prior pass. */
-	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
+	g_option_context_set_help_enabled (context, FALSE);
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
 	if (g_option_context_parse (context, argc, argv, &error))
 	{

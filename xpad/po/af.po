@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-23 21:50-0500\n"
+"POT-Creation-Date: 2005-01-13 22:46-0500\n"
 "PO-Revision-Date: 2004-03-02 15:23+0200\n"
 "Last-Translator: Petri Jooste <rkwjpj@puk.ac.za>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
@@ -76,94 +76,96 @@ msgstr "Maak alle boekies toe"
 msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-pad.c:510
+#: src/xpad-pad.c:530
 msgid "Delete this pad?"
 msgstr "Vee hierdie boekie uit?"
 
-#: src/xpad-pad.c:511
+#: src/xpad-pad.c:531
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle teks in hierdie boekie sal onherroeplik verlore wees."
 
-#: src/xpad-pad.c:542
+#: src/xpad-pad.c:562
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Boekie-eienskappe"
 
-#: src/xpad-pad.c:1046
+#: src/xpad-pad.c:1066
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Plaknotas (klewerig)"
 
 #. Translators: please translate this as your own name and optionally email
-#: src/xpad-pad.c:1064
+#. like so: "Your Name <your@email.com>"
+#: src/xpad-pad.c:1085
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1285
+#: src/xpad-pad.c:1306
 #, fuzzy
 msgid "_Pad"
 msgstr "/_Boekie"
 
-#: src/xpad-pad.c:1294
+#: src/xpad-pad.c:1315
 msgid "Show on _All Workspaces"
 msgstr ""
 
 #  {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 #  {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
-#: src/xpad-pad.c:1301
+#: src/xpad-pad.c:1322
 #, fuzzy
 msgid "_Edit"
 msgstr "/_Redigeer"
 
-#: src/xpad-pad.c:1314
+#: src/xpad-pad.c:1335
 msgid "_View"
 msgstr ""
 
-#: src/xpad-pad.c:1321
+#: src/xpad-pad.c:1342
 #, fuzzy
 msgid "_Toolbar"
 msgstr "Nutsbalk"
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1343
 #, fuzzy
 msgid "_Autohide Toolbar"
 msgstr "_Outoverberg nutsbalk"
 
-#: src/xpad-pad.c:1324
+#: src/xpad-pad.c:1345
 #, fuzzy
 msgid "_Scrollbar"
 msgstr "Laat _Rolstawe toe"
 
-#: src/xpad-pad.c:1325
+#: src/xpad-pad.c:1346
 #, fuzzy
 msgid "_Window Decorations"
 msgstr "Laat _vensterbestuurderversierings toe"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1349
 #, fuzzy
 msgid "_Notes"
 msgstr "/_Notas"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:140
+#: src/xpad-pad.c:1357 src/xpad-tray.c:146
 msgid "_Show All"
 msgstr "_Wys Alles"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:147
+#: src/xpad-pad.c:1358 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Maak alle boekies toe"
 
-#: src/xpad-pad.c:1375
+#. The rest of the notes menu will get set up in the prep function below
+#: src/xpad-pad.c:1362
 #, fuzzy
 msgid "_Help"
 msgstr "/_Hulp"
 
-#: src/xpad-pad.c:1382
+#: src/xpad-pad.c:1369
 #, fuzzy
 msgid "_Contents"
 msgstr "/Hulp/_Inhoud"
 
-#: src/xpad-pad.c:1383
+#: src/xpad-pad.c:1370
 #, fuzzy
 msgid "_About"
 msgstr "/Hulp/_Aangaande"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-19 16:45-0500\n"
+"POT-Creation-Date: 2005-01-13 22:46-0500\n"
 "PO-Revision-Date: 2004-12-21 00:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -15,157 +15,139 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/eggtrayicon.c:118
-msgid "Orientation"
-msgstr "Treoshuíomh"
-
-#: src/eggtrayicon.c:119
-msgid "The orientation of the tray."
-msgstr "Treoshuíomh an tráidire."
-
-#: src/fio.c:133
+#: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
 
-#: src/xpad-app.c:114 xpad.desktop.in.h:3
+#: src/xpad-app.c:125
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr ""
+
+#: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:479
+#: src/xpad-app.c:410
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
 
-#: src/xpad-app.c:482
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na ceapa agus do shainroghanna.  Druidfidh Xpad anois."
+#: src/xpad-app.c:413
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na "
+"ceapa agus do shainroghanna.  Druidfidh Xpad anois."
 
-#: src/xpad-app.c:882
-msgid "Prints usage information and exits"
-msgstr "Taispeáin eolas faoin úsáid agus scoir"
+#: src/xpad-app.c:717
+msgid "Show version number and quit"
+msgstr ""
 
-#: src/xpad-app.c:883
-msgid "Prints xpad version and exits"
-msgstr "Taispeáin an leagan xpad agus scoir"
+#: src/xpad-app.c:718
+msgid "Hide existing pads on startup"
+msgstr ""
 
-#: src/xpad-app.c:884
-msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+#: src/xpad-app.c:719
+#, fuzzy
+msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
 
-#: src/xpad-app.c:890
-msgid "Causes xpad to create a new pad on startup even if pads already exist"
+#: src/xpad-app.c:725
+#, fuzzy
+msgid "Create a new pad on startup even if pads already exist"
 msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 
-#: src/xpad-app.c:891
-msgid "Causes all running xpad instances to close"
-msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
+#: src/xpad-app.c:726
+#, fuzzy
+msgid "Close all pads"
+msgstr "Dún Gach Uile Ceap Nótaí"
 
-#: src/xpad-app.c:907
-#, c-format
-msgid "Xpad %s\n"
+#: src/xpad-app.c:749
+#, fuzzy, c-format
+msgid "Xpad %s"
 msgstr "Xpad %s\n"
 
-#: src/xpad-app.c:951
-#, c-format
-msgid ""
-"Usage: %s [OPTIONS]\n"
-"\n"
-msgstr ""
-"Úsáid: %s [ROGHANNA]\n"
-"\n"
-
-#: src/xpad-app.c:989
-#, c-format
-msgid "Missing companion argument to %s\n"
-msgstr "Ní foláir argóint don rogha %s\n"
-
-#: src/xpad-app.c:1033
-#, c-format
-msgid "Didn't understand argument '%s'\n"
-msgstr "Argóint anaithnid %s.\n"
-
-#: src/xpad-app.c:1082
-#, c-format
-msgid "Invalid number: '%s'\n"
-msgstr "Uimhir neamhbhailí: '%s'\n"
-
-#: src/xpad-pad.c:512
+#: src/xpad-pad.c:530
 msgid "Delete this pad?"
 msgstr "Ar mhaith leat an ceap seo a scriosadh?"
 
-#: src/xpad-pad.c:513
+#: src/xpad-pad.c:531
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Scriosfaidh an téacs uile atá sa cheap seo, gan fáil ar ais."
 
-#: src/xpad-pad.c:544
+#: src/xpad-pad.c:562
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' Airíonna"
 
-#: src/xpad-pad.c:1064
-#, c-format
-msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
+#: src/xpad-pad.c:1066
+#, fuzzy
+msgid "Sticky notes"
+msgstr "Nótaí Greamaitheacha"
 
-#: src/xpad-pad.c:1069
-msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-msgstr "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a fháil."
+#. Translators: please translate this as your own name and optionally email
+#. like so: "Your Name <your@email.com>"
+#: src/xpad-pad.c:1085
+msgid "translator-credits"
+msgstr ""
 
-#: src/xpad-pad.c:1285
+#: src/xpad-pad.c:1306
 msgid "_Pad"
 msgstr "Cea_p"
 
-#: src/xpad-pad.c:1294
-msgid "_Sticky"
-msgstr "_Greamaitheach"
+#: src/xpad-pad.c:1315
+msgid "Show on _All Workspaces"
+msgstr ""
 
-#: src/xpad-pad.c:1301
+#: src/xpad-pad.c:1322
 msgid "_Edit"
 msgstr "_Eagar"
 
-#: src/xpad-pad.c:1314
+#: src/xpad-pad.c:1335
 msgid "_View"
 msgstr "_Amharc"
 
-#: src/xpad-pad.c:1321
+#: src/xpad-pad.c:1342
 msgid "_Toolbar"
 msgstr "_Barra Uirlisí"
 
 # coinage - KPS
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1343
 msgid "_Autohide Toolbar"
 msgstr "_Uathfholaigh an barra uirlisí"
 
-#: src/xpad-pad.c:1324
+#: src/xpad-pad.c:1345
 msgid "_Scrollbar"
 msgstr "_Scrollbharra"
 
-#: src/xpad-pad.c:1325
+#: src/xpad-pad.c:1346
 msgid "_Window Decorations"
 msgstr "Maisiúcháin _Fuinneoga"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1349
 msgid "_Notes"
 msgstr "_Nótaí"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:133
+#: src/xpad-pad.c:1357 src/xpad-tray.c:146
 msgid "_Show All"
 msgstr "_Taispeáin an t-iomlán"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:140
+#: src/xpad-pad.c:1358 src/xpad-tray.c:153
 msgid "_Close All"
 msgstr "_Dún Gach Uile"
 
-#: src/xpad-pad.c:1375
+#. The rest of the notes menu will get set up in the prep function below
+#: src/xpad-pad.c:1362
 msgid "_Help"
 msgstr "_Cabhair"
 
-#: src/xpad-pad.c:1382
+#: src/xpad-pad.c:1369
 msgid "_Contents"
 msgstr "_Clár"
 
-#: src/xpad-pad.c:1383
+#: src/xpad-pad.c:1370
 msgid "_About"
 msgstr "_Faoi seo"
 
@@ -237,80 +219,71 @@ msgstr "Sainroghanna Xpad"
 msgid "Options"
 msgstr "Roghanna"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 msgid "Clear Pad Contents"
 msgstr "Glan Ábhar an Chip"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 msgid "Add C_lear to Toolbar"
 msgstr "Cuir G_lan leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 msgid "Close and Save Pad"
 msgstr "Dún agus Sábháil an Ceap"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 msgid "Add _Close to Toolbar"
 msgstr "Cuir _Dún leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Delete Pad"
 msgstr "Scrios Ceap Nótaí"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Add _Delete to Toolbar"
 msgstr "Cuir _Scrios leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Open New Pad"
 msgstr "Oscail Ceap Nótaí Nua"
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Add _New to Toolbar"
 msgstr "Cuir _Nua leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 msgid "Edit Preferences"
 msgstr "Cuir sainroghanna in eagar"
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Cuir Sain_roghanna leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Edit Pad Properties"
 msgstr "Athraigh Airíonna an Chip"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Add Proper_ties to Toolbar"
 msgstr "Cuir _Airíonna leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Close All Pads"
 msgstr "Dún Gach Uile Ceap Nótaí"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Add _Quit to Toolbar"
 msgstr "Cuir _Scoir leis an Bharra Uirlisí"
 
-# verb in OLT -KPS
-#: src/xpad-toolbar.c:91
-msgid "Toggle Stickiness"
-msgstr "Scoránaigh an Ghreamaitheacht"
-
-#: src/xpad-toolbar.c:91
-msgid "Add _Sticky to Toolbar"
-msgstr "Cuir _Greamaitheach leis an Bharra Uirlisí"
-
-#: src/xpad-toolbar.c:92
+#: src/xpad-toolbar.c:83
 msgid "Add a Se_parator to Toolbar"
 msgstr "Cuir _deighilteoir leis an Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:575
+#: src/xpad-toolbar.c:544
 msgid "_Remove From Toolbar"
 msgstr "_Bain amach ón Bharra Uirlisí"
 
-#: src/xpad-toolbar.c:585
+#: src/xpad-toolbar.c:554
 msgid "_Move"
 msgstr "_Aistrigh"
 
@@ -321,3 +294,52 @@ msgstr "Breac nótaí le léamh ar ball"
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Nótaí Greamaitheacha"
+
+#~ msgid "Orientation"
+#~ msgstr "Treoshuíomh"
+
+#~ msgid "The orientation of the tray."
+#~ msgstr "Treoshuíomh an tráidire."
+
+#~ msgid "Prints usage information and exits"
+#~ msgstr "Taispeáin eolas faoin úsáid agus scoir"
+
+#~ msgid "Prints xpad version and exits"
+#~ msgstr "Taispeáin an leagan xpad agus scoir"
+
+#~ msgid "Causes all running xpad instances to close"
+#~ msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
+
+#~ msgid ""
+#~ "Usage: %s [OPTIONS]\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Úsáid: %s [ROGHANNA]\n"
+#~ "\n"
+
+#~ msgid "Missing companion argument to %s\n"
+#~ msgstr "Ní foláir argóint don rogha %s\n"
+
+#~ msgid "Didn't understand argument '%s'\n"
+#~ msgstr "Argóint anaithnid %s.\n"
+
+#~ msgid "Invalid number: '%s'\n"
+#~ msgstr "Uimhir neamhbhailí: '%s'\n"
+
+#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
+#~ msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
+
+#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+#~ msgstr ""
+#~ "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a "
+#~ "fháil."
+
+#~ msgid "_Sticky"
+#~ msgstr "_Greamaitheach"
+
+# verb in OLT -KPS
+#~ msgid "Toggle Stickiness"
+#~ msgstr "Scoránaigh an Ghreamaitheacht"
+
+#~ msgid "Add _Sticky to Toolbar"
+#~ msgstr "Cuir _Greamaitheach leis an Bharra Uirlisí"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-23 21:50-0500\n"
+"POT-Creation-Date: 2005-01-13 22:46-0500\n"
 "PO-Revision-Date: 2004-09-30 15:16+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -72,82 +72,84 @@ msgstr "Alle kladblokken sluiten"
 msgid "Xpad %s"
 msgstr "Xpad %s\n"
 
-#: src/xpad-pad.c:510
+#: src/xpad-pad.c:530
 msgid "Delete this pad?"
 msgstr "Dit kladblok verwijderen?"
 
-#: src/xpad-pad.c:511
+#: src/xpad-pad.c:531
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle tekst van dit kladblok zal onherstelbaar verloren zijn."
 
-#: src/xpad-pad.c:542
+#: src/xpad-pad.c:562
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' eigenschappen"
 
-#: src/xpad-pad.c:1046
+#: src/xpad-pad.c:1066
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Klevende notities"
 
 #. Translators: please translate this as your own name and optionally email
-#: src/xpad-pad.c:1064
+#. like so: "Your Name <your@email.com>"
+#: src/xpad-pad.c:1085
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1285
+#: src/xpad-pad.c:1306
 msgid "_Pad"
 msgstr "_Kladblok"
 
-#: src/xpad-pad.c:1294
+#: src/xpad-pad.c:1315
 msgid "Show on _All Workspaces"
 msgstr ""
 
-#: src/xpad-pad.c:1301
+#: src/xpad-pad.c:1322
 msgid "_Edit"
 msgstr "Be_werken"
 
-#: src/xpad-pad.c:1314
+#: src/xpad-pad.c:1335
 msgid "_View"
 msgstr "Beel_d"
 
-#: src/xpad-pad.c:1321
+#: src/xpad-pad.c:1342
 msgid "_Toolbar"
 msgstr "_Werkbalk"
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1343
 msgid "_Autohide Toolbar"
 msgstr "Werkbalk _auto-verbergen"
 
-#: src/xpad-pad.c:1324
+#: src/xpad-pad.c:1345
 msgid "_Scrollbar"
 msgstr "_Schuifbalk"
 
-#: src/xpad-pad.c:1325
+#: src/xpad-pad.c:1346
 msgid "_Window Decorations"
 msgstr "_Vensterversieringen"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1349
 msgid "_Notes"
 msgstr "_Notities"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:140
+#: src/xpad-pad.c:1357 src/xpad-tray.c:146
 msgid "_Show All"
 msgstr "Alle weergeven"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:147
+#: src/xpad-pad.c:1358 src/xpad-tray.c:153
 msgid "_Close All"
 msgstr "_Alle sluiten"
 
-#: src/xpad-pad.c:1375
+#. The rest of the notes menu will get set up in the prep function below
+#: src/xpad-pad.c:1362
 msgid "_Help"
 msgstr "_Hulp"
 
-#: src/xpad-pad.c:1382
+#: src/xpad-pad.c:1369
 msgid "_Contents"
 msgstr "_Inhoud"
 
-#: src/xpad-pad.c:1383
+#: src/xpad-pad.c:1370
 msgid "_About"
 msgstr "In_fo"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-23 21:50-0500\n"
+"POT-Creation-Date: 2005-01-13 22:46-0500\n"
 "PO-Revision-Date: 2004-01-06 16:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -72,93 +72,95 @@ msgstr "Fermer tous les pads"
 msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-pad.c:510
+#: src/xpad-pad.c:530
 msgid "Delete this pad?"
 msgstr "Détruire ce pad?"
 
-#: src/xpad-pad.c:511
+#: src/xpad-pad.c:531
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Tous les texts de ce pad sont irrévocablement perdus."
 
-#: src/xpad-pad.c:542
+#: src/xpad-pad.c:562
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Propriétés du pad"
 
-#: src/xpad-pad.c:1046
+#: src/xpad-pad.c:1066
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Notes autocollantes"
 
 #. Translators: please translate this as your own name and optionally email
-#: src/xpad-pad.c:1064
+#. like so: "Your Name <your@email.com>"
+#: src/xpad-pad.c:1085
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1285
+#: src/xpad-pad.c:1306
 #, fuzzy
 msgid "_Pad"
 msgstr "/_Pad"
 
-#: src/xpad-pad.c:1294
+#: src/xpad-pad.c:1315
 msgid "Show on _All Workspaces"
 msgstr ""
 
-#: src/xpad-pad.c:1301
+#: src/xpad-pad.c:1322
 #, fuzzy
 msgid "_Edit"
 msgstr "/_Éditer"
 
-#: src/xpad-pad.c:1314
+#: src/xpad-pad.c:1335
 #, fuzzy
 msgid "_View"
 msgstr "/Pad/_Nouveau"
 
-#: src/xpad-pad.c:1321
+#: src/xpad-pad.c:1342
 #, fuzzy
 msgid "_Toolbar"
 msgstr "Barre d'outils"
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1343
 #, fuzzy
 msgid "_Autohide Toolbar"
 msgstr "_Auto-cacher la barre d'outils"
 
-#: src/xpad-pad.c:1324
+#: src/xpad-pad.c:1345
 #, fuzzy
 msgid "_Scrollbar"
 msgstr "Permettre les barres de _défilement"
 
-#: src/xpad-pad.c:1325
+#: src/xpad-pad.c:1346
 #, fuzzy
 msgid "_Window Decorations"
 msgstr "Permettre l'utilisation des décorations du gestionnaire de _fenêtres"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1349
 #, fuzzy
 msgid "_Notes"
 msgstr "/_Notes"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:140
+#: src/xpad-pad.c:1357 src/xpad-tray.c:146
 msgid "_Show All"
 msgstr "_afficher tout"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:147
+#: src/xpad-pad.c:1358 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Fermer tous les pads"
 
-#: src/xpad-pad.c:1375
+#. The rest of the notes menu will get set up in the prep function below
+#: src/xpad-pad.c:1362
 #, fuzzy
 msgid "_Help"
 msgstr "/_Aide"
 
-#: src/xpad-pad.c:1382
+#: src/xpad-pad.c:1369
 #, fuzzy
 msgid "_Contents"
 msgstr "/Aide/_Contenu"
 
-#: src/xpad-pad.c:1383
+#: src/xpad-pad.c:1370
 #, fuzzy
 msgid "_About"
 msgstr "/Aide/_A propos"

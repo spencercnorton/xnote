@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-23 21:50-0500\n"
+"POT-Creation-Date: 2005-01-13 22:46-0500\n"
 "PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -66,89 +66,91 @@ msgstr "Fermu Cxiujn Blokojn"
 msgid "Xpad %s"
 msgstr "Ekspado"
 
-#: src/xpad-pad.c:510
+#: src/xpad-pad.c:530
 msgid "Delete this pad?"
 msgstr "Cxu forvisxu tiun cxi blokon?"
 
-#: src/xpad-pad.c:511
+#: src/xpad-pad.c:531
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/xpad-pad.c:542
+#: src/xpad-pad.c:562
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Blokaj Ecoj"
 
-#: src/xpad-pad.c:1046
+#: src/xpad-pad.c:1066
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Gluecanotoj"
 
 #. Translators: please translate this as your own name and optionally email
-#: src/xpad-pad.c:1064
+#. like so: "Your Name <your@email.com>"
+#: src/xpad-pad.c:1085
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1285
+#: src/xpad-pad.c:1306
 #, fuzzy
 msgid "_Pad"
 msgstr "/Bloko"
 
-#: src/xpad-pad.c:1294
+#: src/xpad-pad.c:1315
 msgid "Show on _All Workspaces"
 msgstr ""
 
-#: src/xpad-pad.c:1301
+#: src/xpad-pad.c:1322
 #, fuzzy
 msgid "_Edit"
 msgstr "/R_edakto"
 
-#: src/xpad-pad.c:1314
+#: src/xpad-pad.c:1335
 #, fuzzy
 msgid "_View"
 msgstr "/Bloko/_Nova"
 
-#: src/xpad-pad.c:1321
+#: src/xpad-pad.c:1342
 msgid "_Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1343
 msgid "_Autohide Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1324
+#: src/xpad-pad.c:1345
 msgid "_Scrollbar"
 msgstr ""
 
-#: src/xpad-pad.c:1325
+#: src/xpad-pad.c:1346
 msgid "_Window Decorations"
 msgstr ""
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1349
 #, fuzzy
 msgid "_Notes"
 msgstr "/_Notoj"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:140
+#: src/xpad-pad.c:1357 src/xpad-tray.c:146
 msgid "_Show All"
 msgstr "Manifestu Cxion"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:147
+#: src/xpad-pad.c:1358 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Fermu Cxiujn Blokojn"
 
-#: src/xpad-pad.c:1375
+#. The rest of the notes menu will get set up in the prep function below
+#: src/xpad-pad.c:1362
 #, fuzzy
 msgid "_Help"
 msgstr "/_Helpo"
 
-#: src/xpad-pad.c:1382
+#: src/xpad-pad.c:1369
 #, fuzzy
 msgid "_Contents"
 msgstr "/Helpo/Enhavo"
 
-#: src/xpad-pad.c:1383
+#: src/xpad-pad.c:1370
 #, fuzzy
 msgid "_About"
 msgstr "/Helpo/Pri"
