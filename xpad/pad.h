@@ -41,6 +41,7 @@ struct pad_node_def
 	GtkWindow *window;
 	GtkWidget *eventbox;
 	GtkWidget *eventbox_outer;
+	GtkWidget *scrollbar;
 };
 
 /* describes the custom styles of a pad */

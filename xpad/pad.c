@@ -38,8 +38,9 @@ GtkTextView *get_text (GtkWindow *window)
 	return  GTK_TEXT_VIEW (
 		 gtk_bin_get_child (GTK_BIN (
 		  gtk_bin_get_child (GTK_BIN (
+		  gtk_bin_get_child (GTK_BIN (
 		   gtk_bin_get_child (GTK_BIN (window))
-		  )))
+		  )))))
 		));
 }
 
@@ -125,6 +126,7 @@ static void pad_set_style (pad_node *pad, pad_style *pstyle)
 {
 	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
 	GtkRcStyle *style1 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->eventbox_outer));
+//	GtkRcStyle *style2 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->scrollbar));
 
 	style->base[GTK_STATE_NORMAL] = pstyle->back;
 	style->text[GTK_STATE_NORMAL] = pstyle->text;
@@ -136,9 +138,15 @@ static void pad_set_style (pad_node *pad, pad_style *pstyle)
 	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
 	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
 	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
-
+/*
+	style2->bg[GTK_STATE_NORMAL] = pstyle->back;
+	style2->fg[GTK_STATE_NORMAL] = pstyle->back;
+	style->base[GTK_STATE_NORMAL] = pstyle->back;
+	style2->color_flags[GTK_STATE_NORMAL] = GTK_RC_FG | GTK_RC_BG | GTK_RC_BASE;
+	*/
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
 	gtk_widget_modify_style (GTK_WIDGET (pad->eventbox_outer), style1);
+	//gtk_widget_modify_style (pad->scrollbar, style2);
 
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
 }
@@ -737,6 +745,7 @@ static pad_node *start_pad (void)
 	GtkWidget *textbox = gtk_text_view_new ();
 	GtkWidget *eventbox = gtk_event_box_new ();
 	GtkWidget *eventbox1 = gtk_event_box_new ();
+	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
 	gchar title[20];
 	static gint num = 1;
@@ -745,8 +754,15 @@ static pad_node *start_pad (void)
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
 
+	/* set up scrollbar */
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), 
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
+		GTK_SHADOW_NONE);
+	
 	/* add textbox to window */
-	gtk_container_add (GTK_CONTAINER (eventbox), textbox);
+	gtk_container_add (GTK_CONTAINER (scroll), textbox);
+	gtk_container_add (GTK_CONTAINER (eventbox), scroll);
 	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
 	gtk_container_add (GTK_CONTAINER (window), eventbox1);
 
@@ -760,6 +776,7 @@ static pad_node *start_pad (void)
 	pad->window = GTK_WINDOW(window);
 	pad->eventbox = eventbox;
 	pad->eventbox_outer = eventbox1;
+	pad->scrollbar = scroll;
 
 	/* check if this is first pad made */
 	if (first_pad == NULL)
