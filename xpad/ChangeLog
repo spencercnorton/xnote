@@ -1,5 +1,6 @@
 2003-10-20  Michael Terry  <mikix@users.sourceforge.net>
-	* configure.ac: Remove unused header/function tests.
+	* configure.ac: Remove unused header/function tests
+	* src/main.c: Fix segfault if can't connect to master socket
 
 2003-10-10  Michael Terry  <mikix@users.sourceforge.net>
 	* src/main.c: Fix broken compile by adding back program_name

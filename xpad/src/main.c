@@ -718,7 +718,7 @@ xpad_pass_args (int *argc, char ***argv)
 	struct sockaddr_un master;
 	fd_set fdset;
 	gchar buf [129];
-	gchar *args;
+	gchar *args = NULL;
 	gint size;
 	gint bytesRead;
 	
