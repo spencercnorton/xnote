@@ -6,75 +6,76 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
-"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2003-08-01 20:33-0400\n"
+"POT-Creation-Date: 2003-09-23 21:58-0400\n"
 "PO-Revision-Date: 2003-07-10 11:05-0500\n"
 "Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 
-#: src/main.c:198
+#: src/main.c:205
 msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
 msgstr ""
 
-#: src/main.c:260
+#: src/main.c:267
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/main.c:261
+#: src/main.c:268
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/main.c:262
+#: src/main.c:269
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
 msgstr ""
 
-#: src/main.c:263
+#: src/main.c:270
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
-#: src/main.c:267
+#. registered here a second time because it has effects both on local instances and remote instances
+#: src/main.c:274
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/main.c:268
+#: src/main.c:275
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/main.c:269
+#: src/main.c:276
 msgid "Lists the titles of all open pads"
 msgstr ""
 
-#: src/main.c:270
+#: src/main.c:277
 msgid ""
 "Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
 "be seen by using \"--list\""
 msgstr ""
 
-#: src/main.c:271
+#: src/main.c:278
 msgid "Causes all pads to present themselves to the user"
 msgstr ""
 
-#: src/main.c:303
+#: src/main.c:310
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/main.c:339
+#: src/main.c:346
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/main.c:388
+#: src/main.c:395
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr ""
 
-#: src/main.c:444
+#: src/main.c:451
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -314,6 +315,7 @@ msgstr ""
 msgid "/Pad/_Delete"
 msgstr ""
 
+#. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 #: src/pad.c:49
 msgid "/_Edit"
 msgstr ""
@@ -419,6 +421,8 @@ msgstr ""
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
+#. we must also re-enable menu widgets for cut/copy/paste, since we want the
+#. user to be able to cut/copy/paste
 #: src/pad.c:968 src/pad.c:1146
 msgid "/Edit/Cut"
 msgstr ""
@@ -435,6 +439,7 @@ msgstr ""
 msgid "/Notes"
 msgstr ""
 
+#. set checkboxes
 #: src/pad.c:1140
 msgid "/Pad/Sticky"
 msgstr ""
@@ -509,8 +514,14 @@ msgstr ""
 msgid "Pad Properties"
 msgstr ""
 
-#~ msgid "Jot down notes for later"
-#~ msgstr "Prendi delle note per più tardi"
+#: xpad.desktop.in.h:1
+msgid "Jot down notes for later"
+msgstr "Prendi delle note per più tardi"
 
-#~ msgid "Sticky Notes"
-#~ msgstr "Note Adesive"
+#: xpad.desktop.in.h:2
+msgid "Sticky Notes"
+msgstr "Note Adesive"
+
+#: xpad.desktop.in.h:3
+msgid "xpad"
+msgstr ""
