@@ -35,11 +35,7 @@ static GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook;
 	GtkWidget *styletext, *stylelabel;
-	gchar helptextbuf[600];
-	
-	/**
-	 * NOTE:  ISO C89 compilers don't have to support strings larger than `509'.
-	 */
+	gchar helptextbuf[700];
 	
 	/* Create the widgets */
 	
@@ -56,13 +52,15 @@ static GtkWidget *create_help (gint page)
 "you can write memos.\n\n"
 
 "The contents of pads are transparently "
-"saved and reloaded when xpad is next started.\n\n"
-
-"To move a pad, left drag on the toolbar or right drag "
-"on the resizer in the bottom right.  To resize a pad, ");
+"saved and reloaded when xpad is next started.\n\n");
+	strcat (helptextbuf,
+"To move a pad, left drag on the toolbar, right drag "
+"on the resizer in the bottom right, or hold down CTRL "
+"while left dragging anywhere on the pad.\n\n");
+	strcat (helptextbuf,
+"To resize a pad, left drag on the resizer or hold down "
+"CTRL while right dragging anywhere on the pad.\n\n");
 	strcat (helptextbuf, 
-"left drag on the resizer.\n\n"
-
 "Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
 "enjoy.\n\n"
