@@ -36,15 +36,6 @@ void show_help_at_page (gint page)
 "<b>resizing</b>: To resize a pad, hold down CTRL and "
 "drag with the right mouse button.\n\n"
 
-"<b>making new pads</b>: To open a new pad, right click on "
-"an existing pad.  Select \"New Pad\" from the menu.\n\n"
-
-"<b>colors</b>: If black on yellow isn't your thing, change "
-"the default color by right clicking on a pad "
-"and selecting \"Preferences\" from the menu.  "
-"An options menu will now pop up and you can change the "
-"text color, background color, and border color.\n\n"
-
 "<b>closing pads</b>: To close a pad and <i>keep</i> its "
 "contents, choose \"Close\" from the right-click menu.  "
 "Again, \"Destroy\" is only if you are sure you don't want "
@@ -56,11 +47,11 @@ void show_help_at_page (gint page)
 "file.\n");
 
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
-	hadjust = gtk_adjustment_new (0, 0, 0, 0, 0, 0);
-	vadjust = gtk_adjustment_new (0, 10, 0, 1, 5, 5);
-	scrollwin = gtk_scrolled_window_new (GTK_ADJUSTMENT (hadjust), GTK_ADJUSTMENT (vadjust));
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrollwin), helptext);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrollwin, helplabel);
+//	hadjust = gtk_adjustment_new (0, 0, 0, 0, 0, 0);
+//	vadjust = gtk_adjustment_new (0, 10, 0, 1, 5, 5);
+//	scrollwin = gtk_scrolled_window_new (GTK_ADJUSTMENT (hadjust), GTK_ADJUSTMENT (vadjust));
+//	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrollwin), helptext);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
 	
 	
 	gtk_label_set_markup (GTK_LABEL (keytext),
@@ -94,7 +85,7 @@ void show_help_at_page (gint page)
 	
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
 	
-	gtk_window_set_title (GTK_WINDOW (dialog), "xpad help");
+	gtk_window_set_title (GTK_WINDOW (dialog), "xpad Help");
 	
 	/* Add the label, and show everything we've added to the dialog. */
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);

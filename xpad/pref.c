@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pref.h"
 #include "fio.h"
 #include "pad.h"
+#include "help.h"
 #include <string.h>
 
 
@@ -122,7 +123,7 @@ gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	strncpy (current_settings.style.fontname, 
 		gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel)),
 		MAX_FILENAME_SIZE);
-	current_settings.style.filename[MAX_FILENAME_SIZE] = '\0';
+	current_settings.style.fontname[MAX_FILENAME_SIZE] = '\0';
 	
 	while (temp)
 	{
@@ -169,7 +170,7 @@ void preferences_open (pad_node *pad)
 	GtkWidget *notebook = gtk_notebook_new ();
 	GtkWidget *buttonbox = gtk_hbutton_box_new ();
 	GtkWidget *button_close = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-//	GtkWidget *button_help = gtk_button_new_from_stock (GTK_STOCK_HELP);
+	GtkWidget *button_help = gtk_button_new_from_stock (GTK_STOCK_HELP);
 	GtkWidget *label_back = gtk_label_new ("Background Color");
 	GtkWidget *label_text = gtk_label_new ("Text Color");
 	GtkWidget *label_border = gtk_label_new ("Border");
@@ -214,13 +215,15 @@ void preferences_open (pad_node *pad)
 	// buttonbox setup
 	g_signal_connect_swapped (GTK_OBJECT (button_close), "clicked", 
 		G_CALLBACK (gtk_widget_destroy), (gpointer) window);
+	g_signal_connect_swapped (GTK_OBJECT (button_help), "clicked", 
+		G_CALLBACK (show_help), NULL);
 	g_signal_connect_swapped (GTK_OBJECT (window), "destroy", 
 		G_CALLBACK (fio_save_as_defaults), (gpointer) &current_settings);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
 	gtk_box_set_spacing (GTK_BOX(buttonbox), 10);
-//	gtk_box_pack_start_defaults (GTK_BOX(buttonbox), button_help);
+	gtk_box_pack_start_defaults (GTK_BOX(buttonbox), button_help);
 	gtk_box_pack_end_defaults (GTK_BOX(buttonbox), button_close);
-//	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonbox), button_help, TRUE);
+	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonbox), button_help, TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 10);
 
 	// vbox_global setup
