@@ -45,8 +45,6 @@ static void  docklet_clicked( GtkWidget *button, GdkEventButton *event, void *da
 static void  docklet_create( void );
 static void  docklet_remove( void );
 static void  docklet_toggle( void );
-static char *get_toggle_text( void );
-static void  docklet_toggle_window( GtkWidget* button, void *data );
 
 static EggTrayIcon    *docklet = NULL;
 static GtkWidget      *icon = NULL;
@@ -95,37 +93,46 @@ static void docklet_menu( GdkEventButton *event )
   n = 0;
   while( pad )
   {
-    gchar result[ 12 + TITLE_CHARS + 23 ];
+    gchar *result;
 
     n++;
-    sprintf( result, "%d. %s", n, pad->title );
+    result = g_strdup_printf ("_%d. %s", n, pad->title);
 
-    entry = gtk_menu_item_new_with_label( result );
-    g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(docklet_toggle_window), (void*)n );
-    gtk_menu_shell_append( GTK_MENU_SHELL(windows_menu), entry );
+    entry = gtk_menu_item_new_with_mnemonic (result);
+    g_signal_connect_swapped (G_OBJECT(entry), "activate", 
+    	G_CALLBACK (pad_show), pad);
+    gtk_menu_shell_append (GTK_MENU_SHELL(windows_menu), entry);
 
+    g_free (result);
     pad = pad->next;
   }
 
   menu = gtk_menu_new();
 
-  entry = gtk_menu_item_new_with_label( get_toggle_text() );
-  g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(docklet_toggle), NULL );
+  entry = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
+  g_signal_connect (G_OBJECT(entry), "activate", G_CALLBACK(pad_new), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), entry);
+  
+  entry = gtk_separator_menu_item_new();
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
-
-  entry = gtk_menu_item_new_with_label( _("Windows") );
+  
+  entry = gtk_menu_item_new_with_mnemonic (_("No_tes"));
   gtk_menu_item_set_submenu( GTK_MENU_ITEM(entry), windows_menu );
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
-
+  
+  entry = gtk_menu_item_new_with_mnemonic (_("_Show All"));
+  g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK (pads_show_all), NULL );
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), entry);
+  
+  entry = gtk_menu_item_new_with_mnemonic (_("_Hide All"));
+  g_signal_connect (G_OBJECT(entry), "activate", G_CALLBACK (pads_hide_all), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL(menu), entry);
+  
   entry = gtk_separator_menu_item_new();
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
 
   entry = gtk_image_menu_item_new_from_stock( GTK_STOCK_PREFERENCES, NULL );
   g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(preferences_open), NULL );
-  gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
-
-  entry = gtk_image_menu_item_new_from_stock( GTK_STOCK_HELP, NULL );
-  g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(show_help), NULL );
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
 
   entry = gtk_separator_menu_item_new();
@@ -170,7 +177,7 @@ static void docklet_create( void )
   docklet_remove();
 
   toggle_state = SHOWN;
-  docklet = egg_tray_icon_new( "XPad" );
+  docklet = egg_tray_icon_new ("xpad");
   box = gtk_event_box_new();
   icon = gtk_image_new();
 
@@ -189,7 +196,7 @@ static void docklet_create( void )
 
   docklet_tips = gtk_tooltips_new();
   gtk_tooltips_set_tip( GTK_TOOLTIPS(docklet_tips), box,
-                        _("XPad: right click for more options..."),
+                        _("xpad: right click for more options..."),
                         _("Right click this icon for a menu of options pertaining to XPad. "
                         "Left click it to toggle whether or not the pads are displayed.") );
 }
@@ -217,59 +224,4 @@ static void docklet_toggle( void )
   }
 }
 
-static char *get_toggle_text( void )
-{
-  return ( toggle_state == SHOWN ? _("Hide Pads") : _("Show Pads") );
-}
 
-static void docklet_toggle_window( GtkWidget* button, void *data )
-{
-  gint n = (gint)data;
-	pad_node *temp = first_pad;
-	
-	while (n > 1 && temp)
-	{
-		temp = temp->next;
-		
-		n--;
-	}
-	
-	if (n > 0 && temp)
-  {
-    if( temp->window )
-    {
-      pad_hide (temp);
-
-      temp = first_pad;
-      n = 0;
-
-      while( temp )
-      {
-        if( temp->window )
-        {
-          n = 1;
-          break;
-        }
-        temp = temp->next;
-      }
-
-      /* if all windows are hidden, set the toggle state accordingly */
-      if( !n )
-      {
-        toggle_state = HIDDEN;
-      }
-      else
-      {
-        toggle_state = SHOWN;
-      }
-    }
-    else
-    {
-      /* if any window is displayed, consider them all to be displayed */
-      toggle_state = SHOWN;
-      pad_show (temp);
-    }
-  }
-	
-	/* else, silently ignore */
-}
