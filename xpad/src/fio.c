@@ -62,10 +62,11 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	
 	if (error)
 	{
-		gchar usertext [524];
+		gchar *usertext;
 		
-		sprintf (usertext, _("Could not write to file %s."), temp);
+		usertext = g_strdup_printf (_("Could not write to file %s."), temp);
 		xpad_show_error (NULL, usertext, NULL);
+		g_free (usertext);
 	}
 	
 	g_free (temp);
@@ -86,10 +87,11 @@ gchar *fio_get_file (const gchar *name)
 	
 	if (!g_file_get_contents (fullname, &rv, NULL, NULL))
 	{
-		gchar usertext[524];
+		gchar *usertext;
 		
-		sprintf (usertext, _("Could not read from file %s."), fullname);
+		usertext = g_strdup_printf (_("Could not read from file %s."), fullname);
 		xpad_show_error (NULL, usertext, NULL);
+		g_free (usertext);
 		
 		rv = NULL;
 	}
@@ -115,9 +117,9 @@ gchar *fio_find_free_filename (gchar *pattern)
 	do
 	{
 		guint32 num = g_random_int ();
-		gchar *numstr = (gchar *) g_malloc (strlen (pattern) + 11); /* 10 for size of largest num, 1 for null byte */
+		gchar *numstr;
 		
-		sprintf (numstr, "%s%u", pattern, num);
+		numstr = g_strdup_printf ("%s%u", pattern, num);
 		
 		if (s)
 			g_free (s);
@@ -141,11 +143,11 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 	if (create)
 	{
 		pad->contentname = fio_find_free_filename ("content-");
-		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
+		if (verbosity >= 2) g_print ("Creating file [%s].\n", pad->contentname);
 		fio_set_file (pad->contentname, "");
 		
 		pad->infoname = fio_find_free_filename ("info-");
-		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
+		if (verbosity >= 2) g_print ("Creating file [%s].\n", pad->infoname);
 		fio_set_file (pad->infoname, "");
 	}
 }
@@ -184,8 +186,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		gchar *where;
 		gint size;
 		
-		fullitem = (gchar *) g_malloc (strlen (item) + 3);
-		sprintf (fullitem, "\n%s ", item);
+		fullitem = g_strdup_printf ("\n%s ", item);
 		value = va_arg (ap, void *);
 		where  = strstr (buf, fullitem);
 		
@@ -219,35 +220,37 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 
 void fio_save_pad_info (pad_node *pad)
 {
-	gchar info_file[MAX_FILE_SIZE + 1];
+	gchar *info_file;
 	gint height;
 	
 	if (!pad || pad->hidden || !pad->infoname)	/* don't bother saving hidden pads */
 		return;
 	
-	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
+	if (verbosity >= 2) g_print ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
 	if (toolbar_is_visible (pad->toolbar))
 		height -= pad->toolbar->height;
 	
-	sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
+	info_file = g_strdup_printf (
+		"x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n",
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
+		"border_red %d\nborder_green %d\n"
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
 		pad->contentname, pad->sticky,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
 		pad->style.use_back,
 		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
-		pad->style.use_text);
-	sprintf (info_file, "%sborder_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
-		info_file,
+		pad->style.use_text,
 		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
 		pad->style.border_width, pad->style.padding,
 		pad->style.fontname ? pad->style.fontname : "NULL");
 	
 	fio_set_file (pad->infoname, info_file);
+	
+	g_free (info_file);
 }
 
 void fio_save_pad_content (pad_node *pad)
@@ -325,7 +328,7 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 		bord_G = border.green,
 		bord_B = border.blue;
 
-	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
+	if (verbosity >= 2) g_print ("Loading [%s].\n", filename);
 	
 	info->style.fontname = NULL;
 	info->style.padding = xpad_settings_style_get_padding ();
@@ -406,12 +409,13 @@ int fio_load_pads (void)
 	
 	if (!dir)
 	{
-		gchar errtext [500];
+		gchar *errtext;
 		
-		sprintf (errtext, _("Could not open xpad directory %s."), working_dir);
+		errtext = g_strdup_printf (_("Could not open xpad directory %s."), working_dir);
 		
 		xpad_show_error (NULL, errtext,
 			_("This directory is needed to store preference and pad information.  Xpad will close now."));
+		g_free (errtext);
 		
 		gtk_main_quit ();
 		return -1;
@@ -431,7 +435,7 @@ int fio_load_pads (void)
 		}
 	}
 	
-	if (verbosity >= 2) printf ("Done loading files.\n");
+	if (verbosity >= 2) g_print ("Done loading files.\n");
 	
 	g_pattern_spec_free (spec);
 	g_dir_close (dir);

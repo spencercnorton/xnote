@@ -250,7 +250,7 @@ toolbar_update (xpad_toolbar *xt)
 	if (!xt)
 		return;
 	
-	if (verbosity >= 2) printf ("Updating toolbar.\n");
+	if (verbosity >= 2) g_print ("Updating toolbar.\n");
 	
 	box = toolbar_get_container (xt);
 	

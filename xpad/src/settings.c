@@ -466,10 +466,10 @@ static void xpad_settings_load_from_file (void)
 
 static void xpad_settings_save_to_file (void)
 {
-	gchar buf[MAX_FILE_SIZE + 1];
+	gchar *buf, *oldbuf;
 	GSList *tmp;
 	
-	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
+	buf = g_strdup_printf ("wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
 		"decorations %i\nauto_hide_toolbar %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
@@ -492,14 +492,17 @@ static void xpad_settings_save_to_file (void)
 	
 	while (tmp)
 	{
-		strcat (buf, ((const toolbar_button *) tmp->data)->name);
-		tmp = tmp->next;
+		oldbuf = buf;
 		
 		if (tmp)
-			strcat (buf, ", ");
+			buf = g_strconcat (buf, ((const toolbar_button *) tmp->data)->name, ", ", NULL);
+		else
+			buf = g_strconcat (buf, ((const toolbar_button *) tmp->data)->name, "\n", NULL);
+		
+		g_free (oldbuf);
+		tmp = tmp->next;
 	}
 	
-	strcat (buf, "\n");
-	
 	fio_set_file (DEFAULTS_FILENAME, buf);
+	g_free (buf);
 }

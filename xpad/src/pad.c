@@ -633,12 +633,12 @@ static void pad_free (pad_node *pad)
 
 void pad_destroy (pad_node *pad)
 {
-	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
+	if (verbosity >= 1) g_print ("Destroying pad [%s].\n", pad->infoname);
 
 	fio_remove_pad_files (pad);
 	pad_remove (pad);
 
-	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
+	if (verbosity >= 2) g_print ("Freeing pad's memory [%s].\n", pad->infoname);
 	pad_free (pad);
 
 	quit_if_no_pads ();
@@ -675,7 +675,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 
 void pad_hide (pad_node *pad)
 {
-	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
+	if (verbosity >= 1) g_print ("Closing pad [%s].\n", pad->infoname);
 	
 	toolbar_hide (pad);
 	
@@ -833,14 +833,15 @@ static void pad_resize (pad_node *node, GdkEventButton *event)
 static void about_dialog (pad_node *pad)
 {
 	GtkWidget *dialog;
-	GString *text = g_string_new ("");
+	gchar *text;
 	
-	g_string_printf (text, _("You are using xpad %s with GTK+ %i.%i.%i."),
+	text = g_strdup_printf (_("You are using xpad %s with GTK+ %i.%i.%i."),
 		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
 	
 	dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
-		text->str,
+		text,
 		_("Visit http://xpad.sourceforge.net for more information about xpad."));
+	g_free (text);
 	
 	if (!dialog)
 		return;
@@ -868,7 +869,7 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 		pad = pad_new();
 		if (!pad)
 		{
-			if (verbosity >= 1)	fprintf(stderr, "Could not open new pad\n");
+			if (verbosity >= 1) g_printerr ("Could not open new pad\n");
 			return;
 		}
 	}
@@ -1529,7 +1530,7 @@ pad_background_update (pad_node *pad)
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	
-	printf ("making %i, %i, from %i, %i\n", pad->width, pad->height, (int)ha->upper, (int)va->upper);
+	g_print ("making %i, %i, from %i, %i\n", pad->width, pad->height, (int)ha->upper, (int)va->upper);
 	
 	pix = gdk_pixmap_new (textwin, pad->width, pad->height, -1);
 	
@@ -1575,7 +1576,7 @@ pad_resize_background (pad_node *pad)
 	height = va->upper;
 	pix = gdk_pixmap_new (textwin, width, height, -1);
 	
-	printf ("background is %i, %i\n", width, height);
+	g_print ("background is %i, %i\n", width, height);
 	
 	if (pad->background)
 	{
@@ -1606,7 +1607,7 @@ pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 		changed -- here we are concerned about the 'upper' member */
 	
 	/* Here we find out if the upper member was the actual member changed */
-	printf ("v changed\n");
+	g_print ("v changed\n");
 	
 	if (!pad->background)
 	{
@@ -1623,7 +1624,7 @@ pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	
 	if (doit)
 	{
-		printf ("v changed for real\n");
+		g_print ("v changed for real\n");
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
@@ -1642,7 +1643,7 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	
 	/* Here we find out if the upper member was the actual member changed */
 	
-	printf ("h changed\n");
+	g_print ("h changed\n");
 	
 	if (!pad->background)
 	{
@@ -1651,7 +1652,7 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	
 	if (!doit)
 	{
-		printf ("drawable exists\n");
+		g_print ("drawable exists\n");
 		gdk_drawable_get_size (pad->background, &w, NULL);
 		
 		if (w != adjustment->upper)
@@ -1660,7 +1661,7 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	
 	if (doit)
 	{
-		printf ("v changed for real\n");
+		g_print ("v changed for real\n");
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
@@ -1729,7 +1730,7 @@ grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 void
 pad_remove_toolbar (pad_node *pad)
 {
-	if (verbosity >= 2) printf ("Removing toolbar from pad.\n");
+	if (verbosity >= 2) g_print ("Removing toolbar from pad.\n");
 
 	if (pad->toolbar)
 	{
@@ -1745,7 +1746,7 @@ pad_remove_toolbar (pad_node *pad)
 void
 pad_add_toolbar (pad_node *pad)
 {
-	if (verbosity >= 2) printf ("Adding toolbar to pad.\n");
+	if (verbosity >= 2) g_print ("Adding toolbar to pad.\n");
 	
 	if (!pad->toolbar)
 	{
@@ -1978,7 +1979,7 @@ pad_node *pad_new (void)
 {
 	pad_node *pad;
 	
-	if (verbosity >= 2) printf ("Making new pad.\n");
+	if (verbosity >= 2) g_print ("Making new pad.\n");
 	
 	pad = start_pad ();
 	
@@ -2018,7 +2019,7 @@ pad_node *pad_new_with_info (pad_info *info)
 {
 	pad_node *pad;
 	
-	if (verbosity >= 2) printf ("Making new pad with info.\n");
+	if (verbosity >= 2) g_print ("Making new pad with info.\n");
 	
 	pad = start_pad ();
 	
@@ -2061,7 +2062,7 @@ pad_node *pad_new_with_info (pad_info *info)
 static void
 pad_renew (pad_node *pad)
 {
-	if (verbosity >= 2) printf ("Refreshing pad.\n");
+	if (verbosity >= 2) g_print ("Refreshing pad.\n");
 	
 	pad_alloc_gtk (pad, pad->infoname);
 	

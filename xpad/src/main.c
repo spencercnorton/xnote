@@ -75,7 +75,7 @@ gchar *program_name;
 
 static gint at_gtk_exit (gpointer data)
 {
-	if (verbosity >= 1) printf ("xpad is shutting down.\n");
+	if (verbosity >= 1) g_print ("xpad is shutting down.\n");
 	
 	xpad_sm_shutdown ();	
 	
@@ -107,7 +107,7 @@ static gint at_gtk_exit (gpointer data)
 GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary)
 {
 	GtkWidget *dialog, *hbox, *image, *label;
-	gchar buf [1024];
+	gchar *buf;
 	
 	dialog = gtk_dialog_new_with_buttons (
 		"",
@@ -119,11 +119,13 @@ GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *p
 	image = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_DIALOG);
 	label = gtk_label_new (NULL);
 	
-	sprintf (buf, "<span weight=\"bold\" size=\"larger\">%s</span>", primary);
 	if (secondary)
-		sprintf (buf, "%s\n\n%s", buf, secondary);
+		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>\n\n%s", primary, secondary);
+	else
+		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>", primary);
 	
 	gtk_label_set_markup (GTK_LABEL (label), buf);
+	g_free (buf);
 	
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
 	gtk_container_add (GTK_CONTAINER (hbox), image);
@@ -150,7 +152,7 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 	if (!xpad_sm_start_interact (TRUE))
 		return;
 	
-	fprintf (stderr, "%s\n", primary);
+	g_printerr ("%s\n", primary);
 	
 	dialog = xpad_alert_new (parent, GTK_STOCK_DIALOG_ERROR,
 		primary,
@@ -212,7 +214,7 @@ set_verbosity (gint *v)
 {
 	if (*v < 0 || *v > 2)
 	{
-		fprintf (stderr, _("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"));
+		g_printerr (_("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"));
 		exit (1);
 	}
 	
@@ -287,7 +289,7 @@ static const argument arguments[] =
 
 static void missing_companion_arg(const char argname[])
 {
-	fprintf(stderr, _("Missing companion argument to %s\n"), argname);
+	g_printerr (_("Missing companion argument to %s\n"), argname);
 	exit(1);
 }
 
@@ -331,7 +333,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 */
 			if (local)
 			{
-				fprintf (stderr, _("Didn't understand argument %s.\n"), (*argv)[i]);
+				g_printerr (_("Didn't understand argument %s.\n"), (*argv)[i]);
 				exit (1);
 			}
 			else
@@ -388,7 +390,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 				
 				if (*endptr)
 				{
-					fprintf(stderr, _("Invalid number: '%s'\n"), companion);
+					g_printerr (_("Invalid number: '%s'\n"), companion);
 					
 					if (local)
 						exit(1);
@@ -500,7 +502,7 @@ read_from_proc_file (void)
 	socklen_t client_len;
 	size_t bytes;
 	
-	if (verbosity >= 1) printf ("Accepting client connection.\n");
+	if (verbosity >= 1) g_print ("Accepting client connection.\n");
 	
 	/* accept waiting connection */
 	client_fd = accept (master_fd, (struct sockaddr *) &client, &client_len);
@@ -513,11 +515,11 @@ read_from_proc_file (void)
 		if (verbosity >= 1)
 		{
 			if (bytes < 0) 
-				fprintf(stderr, "Error on client connection\n");
+				g_printerr ("Error on client connection\n");
 			else if (bytes == 0)
-				fprintf(stderr, "No data on client connection\n");
+				g_printerr ("No data on client connection\n");
 			else
-				fprintf(stderr, "Expected %d bytes, got %d!\n",sizeof(size),bytes);
+				g_printerr ("Expected %d bytes, got %d!\n", sizeof(size),bytes);
 		}
 		
 		goto close_client_fd;
@@ -527,7 +529,7 @@ read_from_proc_file (void)
 	args = (gchar *) g_malloc (size);
 	if (!args)
 	{
-		if (verbosity >= 2) fprintf(stderr, "Out of memory\n");
+		if (verbosity >= 2) g_printerr ("Out of memory\n");
 		goto close_client_fd;
 	}
 	
@@ -537,8 +539,8 @@ read_from_proc_file (void)
 	{
 		if (verbosity >= 1)
 		{
-			if (bytes < 0) fprintf(stderr, "Error on client connection\n");
-			else fprintf(stderr, "Broken client connection\n");
+			if (bytes < 0) g_printerr ("Error on client connection\n");
+			else g_printerr ("Broken client connection\n");
 		}
 		goto close_client_fd;
 	}
@@ -546,7 +548,7 @@ read_from_proc_file (void)
 	argc = string_to_args (args, &argv);
 	
 	if (verbosity >= 2) 
-	  fprintf (stderr, "Handling %i foreign args '%s'.\n", argc, args);
+		g_printerr ("Handling %i foreign args '%s'.\n", argc, args);
 	
 	g_free (args);
 	
@@ -590,7 +592,7 @@ open_proc_file (void)
 	GIOChannel *channel;
 	struct sockaddr_un master;
 	
-	if (verbosity >= 2) printf ("Creating master socket '%s'.\n", master_name);
+	if (verbosity >= 2) g_print ("Creating master socket '%s'.\n", master_name);
 	
 	unlink (master_name);
 	
@@ -600,7 +602,7 @@ open_proc_file (void)
 	strcpy (master.sun_path, master_name);
 	if (bind (master_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 	{
-		if (verbosity >= 2) printf ("Failed to bind master socket.\n");
+		if (verbosity >= 2) g_print ("Failed to bind master socket.\n");
 		return 1;
 	}
 	
@@ -667,12 +669,12 @@ xpad_pass_args (int *argc, char ***argv)
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, master_name);
 	
-	if (verbosity >= 2) fprintf (stderr, "Connecting and sending to master socket '%s'.\n", master_name);
+	if (verbosity >= 2) g_printerr ("Connecting and sending to master socket '%s'.\n", master_name);
 	
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 	{
-		if (verbosity >= 2) fprintf (stderr, "Error on connect.\n");
+		if (verbosity >= 2) g_printerr ("Error on connect.\n");
 		goto done;
 	}
 	
@@ -684,7 +686,7 @@ xpad_pass_args (int *argc, char ***argv)
 	/* now, write string */
 	write (client_fd, args, size);
 	
-	if (verbosity >= 2) fprintf (stderr, "Blocking on master socket.\n");
+	if (verbosity >= 2) g_print ("Blocking on master socket.\n");
 	
 	do
 	{
@@ -701,7 +703,7 @@ xpad_pass_args (int *argc, char ***argv)
 			if (bytesRead < 0)
 			{
 				if (verbosity >= 2)
-					fprintf (stderr, "Error reading from master socket.\n");
+					g_printerr ("Error reading from master socket.\n");
 			  goto done;
 			}
 
@@ -845,7 +847,7 @@ static void xpad_set_default_icon (void)
 
 static RETSIGTYPE xpad_catch_quit_signal (int signum)
 {
-	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
+	if (verbosity >= 2) g_print ("xpad caught a signal.  Shutting down.\n");
 	gtk_main_quit ();
 }
 
