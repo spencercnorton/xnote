@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pref.h"
 #include "fio.h"
 #include "pad.h"
+#include <string.h>s
 
 pad_style *backup_style;
 gint backup_width, backup_height;

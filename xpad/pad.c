@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include <sys/stat.h>
 #include <sys/file.h>
+#include <string.h>
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
