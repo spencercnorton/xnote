@@ -514,20 +514,23 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_pad_preferences;
 	GtkWidget *menu_item_global_preferences;
 	GtkWidget *separator2, *separator3, *separator4;
+	GtkWidget *tearoff;
+	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 	
+	tearoff = gtk_tearoff_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
         separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
-	menu_item_about = gtk_menu_item_new_with_mnemonic ("_About");
-	menu_item_help = gtk_image_menu_item_new_with_mnemonic ("_Help");
+	menu_item_about = gtk_image_menu_item_new_with_mnemonic ("_About...");
+	menu_item_help = gtk_image_menu_item_new_with_mnemonic ("_Help...");
 	menu_item_new_pad = gtk_image_menu_item_new_with_mnemonic ("_New Pad");
-	menu_item_save_as = gtk_image_menu_item_new_with_mnemonic ("_Save As");
-	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open");
+	menu_item_save_as = gtk_image_menu_item_new_with_mnemonic ("_Save As...");
+	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open...");
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
 	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
-	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("_Pad Preferences");
-	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("_Global Preferences");
+	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("_Pad Preferences...");
+	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("_Global Preferences...");
 	
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
@@ -538,7 +541,9 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_global_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_save_as), gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_about), gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_MENU));
 	
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), tearoff);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
@@ -564,13 +569,11 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_pad_preferences, "activate", G_CALLBACK (pad_preferences_open), pad);
 	g_signal_connect_swapped (menu_item_global_preferences, "activate", G_CALLBACK (global_preferences_open), pad);
 	
-	//gtk_menu_set_accel_path (GTK_MENU (menu), "<xpad-Pad>/");
-	//gtk_menu_item_set_accel_path (GTK_MENU_ITEM (menu_item_new_pad), "<xpad-Pad>/New Pad");
-	
 	gtk_widget_show_all (menu);
 	
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
+
 
 static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
 {

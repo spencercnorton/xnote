@@ -1,8 +1,8 @@
 1.1
 ---
 simplified popup menu (removed GTK+ default cut/copy/paste/input method/insert)
-added keyboard shortcuts (ctrl-N: new note, ctrl-D: destroy note, ctrl-c: close,
-	ctrl-a: close all)
+	If you used them, and miss them, let me know.
+added keyboard shortcuts for most menu items
 expanded help dialog to include shortcuts
 allow border left-drags, right-drags, and right clicks
 

@@ -184,7 +184,7 @@ void xpad_init ()
 	strcat (working_dir, "/.xpad/");
 	
 	default_style = DEFAULT_STYLE;
-
+	
 	fio_get_values_from_file (DEFAULTS_FILENAME, 
 						  "decorations", &decorations,
 						  "sync_time", &sync_time,
@@ -194,6 +194,7 @@ void xpad_init ()
 						  NULL);
 	if (fio_get_style_from_file (DEFAULTS_FILENAME, &default_style))
 	{
+		// this happens if there isn't a ~/.xpad directory (i.e. first run)
 		fio_save_defaults ();
 		help_dialog ();
 	}
@@ -204,10 +205,8 @@ void xpad_init ()
 	if (verbosity >= 2)
 		printf ("PID is %i.\nSync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
 			getpid (), sync_time, verbosity, decorations);
-
-	xpad_set_default_icon ();
 	
-	//gtk_accel_map_add_entry ("<xpad-Pad>/New Pad", GDK_n, GDK_CONTROL_MASK);
+	xpad_set_default_icon ();
 	
 	/* load all pads */
 	fio_load_pads();
@@ -216,15 +215,15 @@ void xpad_init ()
 int main (int argc, char *argv[])
 {
 	handle_args (&argc, &argv);
-
+	
 	gtk_set_locale ();
 	gtk_init(&argc, &argv);
-
+	
 	xpad_init ();
-
+	
 	gtk_main ();
-
+	
 	xpad_exit ();
-
+	
 	return 0;
 }
