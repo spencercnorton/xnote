@@ -229,7 +229,7 @@ void xpad_init (void)
 	
 	if (verbosity >= 2)
 		printf ("PID is %i.\nSync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
-			getpid (), current_settings.sync_time, verbosity, current_settings.decorations);
+			(int) getpid (), current_settings.sync_time, verbosity, current_settings.decorations);
 	
 	xpad_set_default_icon ();
 	

@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "help.h"
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 #include <sys/file.h>
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
