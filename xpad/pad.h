@@ -151,7 +151,7 @@ static const toolbar_button buttons[] =
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Edit Preferences"},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), "Quit"},
 	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Show Help"},
-	{"Sticky", "gtk-cdrom", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"}
+	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"}
 };
 
 

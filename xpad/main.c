@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad.xpm"
 #include "lock.xpm"
+#include "sticky.xpm"
 #include "main.h"
 #include "pad.h"
 #include "help.h"
@@ -571,15 +572,21 @@ static void xpad_register_icons (void)
 	GtkIconFactory *factory;
 	GdkPixbuf *pixbuf;
 	
+	factory = gtk_icon_factory_new ();
+	
 	pixbuf = gdk_pixbuf_new_from_xpm_data (lock_xpm);
 	set = gtk_icon_set_new_from_pixbuf (pixbuf);
-	
-	factory = gtk_icon_factory_new ();
 	gtk_icon_factory_add (GTK_ICON_FACTORY (factory),
 		"xpad-lock", set);
-	gtk_icon_factory_add_default (GTK_ICON_FACTORY (factory));
-	
 	g_object_unref (pixbuf);
+	
+	pixbuf = gdk_pixbuf_new_from_xpm_data (sticky_xpm);
+	set = gtk_icon_set_new_from_pixbuf (pixbuf);
+	gtk_icon_factory_add (GTK_ICON_FACTORY (factory),
+		"xpad-sticky", set);
+	g_object_unref (pixbuf);
+	
+	gtk_icon_factory_add_default (GTK_ICON_FACTORY (factory));
 	g_object_unref (factory);
 }
 
