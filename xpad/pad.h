@@ -52,6 +52,7 @@ struct pad_node_def
 	gchar *infoname;
 	gchar *contentname;
 	gint locked;
+	gint num;
 	
 	pad_style style;
 	
@@ -65,6 +66,7 @@ struct pad_node_def
 	
 	GdkPixmap *background;
 	GdkPixmap *visible_back;
+	gint last_draw_x, last_draw_y;
 };
 
 /* used to keep all the persistant data we need for one pad */
@@ -139,18 +141,3 @@ const toolbar_button *get_toolbar_button_by_func (GCallback func);
 const toolbar_button *get_toolbar_button_by_name (const gchar *name);
 
 #endif /* _PAD_H_ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

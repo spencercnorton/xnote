@@ -132,7 +132,7 @@ static gboolean pad_is_empty (pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	rv = !*content;
+	rv = strcmp (content, "") == 0;
 	
 	g_free (content);
 	
@@ -644,10 +644,18 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_preferences;
 	GtkWidget *menu_item_lock;
 	GtkWidget *menu_item_clear;
-	GtkWidget *separator2, *separator3, *separator4;
+	GtkWidget *menu_item_close;
+	GtkWidget *separator1, *separator2, *separator3, *separator4;
 	GtkWidget *tearoff;
+	GtkWidget *menu_file, *menu_file_sub;
+	GtkWidget *menu_pads, *menu_pads_sub;
 	
+	menu_file = gtk_menu_item_new_with_mnemonic ("_File");
+	menu_file_sub = gtk_menu_new ();
+	menu_pads = gtk_menu_item_new_with_mnemonic ("Windows");
+	menu_pads_sub = gtk_menu_new ();
 	tearoff = gtk_tearoff_menu_item_new ();
+	separator1 = gtk_separator_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
 	separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
@@ -659,10 +667,12 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Delete");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Quit");
 	menu_item_preferences = gtk_image_menu_item_new_with_mnemonic ("_Preferences...");
-	menu_item_clear = gtk_image_menu_item_new_with_mnemonic ("_Clear");
+	menu_item_clear = gtk_image_menu_item_new_with_mnemonic ("Clea_r");
 	menu_item_lock = gtk_check_menu_item_new_with_mnemonic ("_Lock Style");
+	menu_item_close = gtk_image_menu_item_new_with_mnemonic ("_Close");
 	
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_help), gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_open), gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU));
@@ -671,13 +681,21 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_about), gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_clear), gtk_image_new_from_stock (GTK_STOCK_CLEAR, GTK_ICON_SIZE_MENU));
+	
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item_lock), pad->locked);
 	
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_file), menu_file_sub);
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_pads), menu_pads_sub);
+	
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), tearoff);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_file);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_new_pad);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_open);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_save_as);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), separator1);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_close);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_pads);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_clear);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_lock);
@@ -698,7 +716,113 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_preferences, "activate", G_CALLBACK (preferences_open), pad);
 	g_signal_connect_swapped (menu_item_clear, "activate", G_CALLBACK (pad_clear), pad);
 	g_signal_connect_swapped (menu_item_lock, "toggled", G_CALLBACK (pad_toggle_lock), pad);
-
+	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
+	
+	/**
+	 * Now we iterate through pads, adding them to the list of pads.
+	 */
+	{
+		pad_node *p = first_pad;
+		GList *list;
+		gboolean f = FALSE;
+		
+		while (p)
+		{
+			GtkTextIter s, e;
+			GtkTextBuffer *buf;
+			gchar *content, *stripped;
+			char result [15];
+			
+			GtkWidget *menu_item;
+			
+			buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(p->window)));
+			gtk_text_buffer_get_start_iter (buf, &s);
+			gtk_text_buffer_get_end_iter (buf, &e);
+			content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+			stripped = g_strstrip (content);
+			
+			strcpy (result, "\"");
+			strncat (result, stripped, 12);
+			strcat (result, "\"");
+			
+			g_strdelimit (result, "\n", ' ');
+			
+			menu_item = gtk_menu_item_new_with_label (result);
+			
+			gtk_menu_shell_append (GTK_MENU_SHELL (menu_pads_sub), menu_item);
+			g_signal_connect_swapped (menu_item, "activate", G_CALLBACK (gtk_window_present), p->window);
+			
+			g_free (content);
+			
+			/* to make our life easier, we stick the number of the pad to the menu item */
+			g_object_set_data (G_OBJECT (menu_item), "num", &p->num);
+			
+			p = p->next;
+		}
+		
+		list = gtk_container_get_children (GTK_CONTAINER (menu_pads_sub));
+		
+		/**
+		 * Now, we need to run through pads again, to see which names are not unique or blank
+		 * This takes O (n^2)
+		 */
+		while (list)
+		{
+			GtkWidget *label;
+			const gchar *text;
+			gboolean unique;
+			
+			label = gtk_bin_get_child (GTK_BIN (list->data));
+			text = gtk_label_get_text (GTK_LABEL (label));
+			
+			unique = strcmp (text, "\"\""); 	/* if it is blank, we need a real name */
+			
+			/* if we earlier noted that this is non-unique */
+			if (g_object_get_data (G_OBJECT (list->data), "unique"))
+				unique = FALSE;
+			
+			if (unique)
+			{
+				/**
+				 * Now, run through rest of list
+				 */
+				GList *tmp = list->next;
+				while (tmp)
+				{
+					GtkWidget *tmp_label;
+					const gchar *tmp_text;
+					
+					tmp_label = gtk_bin_get_child (GTK_BIN (tmp->data));
+					tmp_text = gtk_label_get_text (GTK_LABEL (tmp_label));
+					
+					if (strcmp (text, tmp_text) == 0)	/* not unique, so change this one */
+					{
+						unique = FALSE;
+						
+						/* note for later that this item is non-unique */
+						g_object_set_data (G_OBJECT (tmp->data), "unique", &f);
+					}
+					
+					tmp = tmp->next;
+				}
+			}
+			
+			if (!unique)
+			{
+				gchar new_text[15];
+				gint num;
+				
+				num = *((gint *) g_object_get_data (G_OBJECT (list->data), "num"));
+				
+				sprintf (new_text, "Pad %i", num);
+				
+				gtk_label_set_text (GTK_LABEL (label), new_text);
+			}
+			
+			list = list->next;
+		}
+	}
+	
 	block_toolbar_events (pad);
 	g_signal_connect_swapped (menu, "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
@@ -730,6 +854,19 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			{
 				pad_background_draw (pad, x, y);
 				return TRUE;
+			}
+		}
+		break;
+		
+		case GDK_BUTTON_RELEASE:
+		{
+			GdkEventButton *event_button = (GdkEventButton *) event;
+			
+			switch (event_button->button)
+			{
+				case 1:
+					pad->last_draw_x = pad->last_draw_y = -1;
+					return FALSE;
 			}
 		}
 		break;
@@ -920,44 +1057,52 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 {
 	GdkRectangle brush;
 	GtkWidget *textbox;
+	GdkWindow *textwin;
 	GtkAdjustment *ha, *va;
 	
-	brush.x = x - 1;
-	brush.y = y - 1;
-	brush.width = 2;
-	brush.height = 2;
+	if (!pad->visible_back || !pad->background)
+		return;
+	
+	brush.x = x ;
+	brush.y = y ;
+	brush.width = 1;
+	brush.height = 1;
 	
 	textbox = GTK_WIDGET (get_text (pad->window));
+	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
 	
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	
-	if (pad->visible_back && pad->background)
-	{
 	/* draw brush on both current background and master background */
-	gdk_draw_rectangle (pad->visible_back,
-					textbox->style->text_gc[GTK_STATE_NORMAL],
-					TRUE,
-					brush.x, brush.y, brush.width, brush.height);
-	gdk_draw_rectangle (pad->background,
-					textbox->style->text_gc[GTK_STATE_NORMAL],
-					TRUE,
-					ha->value + brush.x, va->value + brush.y, brush.width, brush.height);
+	if (pad->last_draw_x > -1 && pad->last_draw_y > -1)
+	{
+		gdk_draw_line (pad->visible_back,
+						textbox->style->text_gc[GTK_STATE_NORMAL],
+						pad->last_draw_x, pad->last_draw_y,
+						brush.x, brush.y);
+		gdk_draw_line (pad->background,
+						textbox->style->text_gc[GTK_STATE_NORMAL],
+						ha->value + pad->last_draw_x, va->value + pad->last_draw_y,
+						ha->value + brush.x, va->value + brush.y);
 	}
 	else
 	{
-		printf ("not there\n");
+		gdk_draw_rectangle (pad->visible_back,
+						textbox->style->text_gc[GTK_STATE_NORMAL],
+						TRUE,
+						brush.x, brush.y, brush.width, brush.height);
+		gdk_draw_rectangle (pad->background,
+						textbox->style->text_gc[GTK_STATE_NORMAL],
+						TRUE,
+						ha->value + brush.x, va->value + brush.y, brush.width, brush.height);
 	}
 	
 	/* now make change visible */
-	gdk_window_invalidate_rect (GTK_WIDGET (pad->window)->window,
-			      &brush,
-			      TRUE);
-	/*
-	gdk_window_invalidate_rect (pad->visible_back,
-			      &brush,
-			      TRUE);*/
 	pad_background_refresh (pad);
+	
+	pad->last_draw_x = brush.x;
+	pad->last_draw_y = brush.y;
 }
 
 static void
@@ -973,6 +1118,8 @@ pad_background_update (pad_node *pad)
 	
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	
+	printf ("making %i, %i, from %i, %i\n", pad->width, pad->height, (int)ha->upper, (int)va->upper);
 	
 	pix = gdk_pixmap_new (textwin, pad->width, pad->height, -1);
 	
@@ -1014,6 +1161,8 @@ pad_resize_background (pad_node *pad)
 	height = va->upper;
 	pix = gdk_pixmap_new (textwin, width, height, -1);
 	
+	printf ("background is %i, %i\n", width, height);
+	
 	if (pad->background)
 	{
 		gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, width, height);
@@ -1034,20 +1183,31 @@ pad_resize_background (pad_node *pad)
 static void
 pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 {
-	gint w, h;
+	gint h;
+	gboolean doit = FALSE;
 	
 	/* This is called if an adjustment member other than it's 'value'
 		changed -- here we are concerned about the 'upper' member */
 	
 	/* Here we find out if the upper member was the actual member changed */
+	printf ("v changed\n");
 	
 	if (!pad->background)
-		return;
-	
-	gdk_drawable_get_size (pad->background, &w, &h);
-	
-	if (h != adjustment->upper)
 	{
+		doit = TRUE;
+	}
+	
+	if (!doit)
+	{
+		gdk_drawable_get_size (pad->background, NULL, &h);
+		
+		if (h != adjustment->upper)
+			doit = TRUE;
+	}
+	
+	if (doit)
+	{
+		printf ("v changed for real\n");
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
@@ -1056,20 +1216,33 @@ pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 static void
 pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 {
-	gint w, h;
+	gint w;
+	gboolean doit = FALSE;
 	
 	/* This is called if an adjustment member other than it's 'value'
 		changed -- here we are concerned about the 'upper' member */
 	
 	/* Here we find out if the upper member was the actual member changed */
 	
+	printf ("h changed\n");
+	
 	if (!pad->background)
-		return;
-	
-	gdk_drawable_get_size (pad->background, &w, &h);
-	
-	if (w != adjustment->upper)
 	{
+		doit = TRUE;
+	}
+	
+	if (!doit)
+	{
+		printf ("drawable exists\n");
+		gdk_drawable_get_size (pad->background, &w, NULL);
+		
+		if (w != adjustment->upper)
+			doit = TRUE;
+	}
+	
+	if (doit)
+	{
+		printf ("v changed for real\n");
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
@@ -1086,6 +1259,8 @@ void pad_background_clear (pad_node *pad)
 	gdk_draw_rectangle (pad->background, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, w, h);
 	
 	pad_background_update (pad);
+	
+	pad_background_refresh (pad);
 }
 
 static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
@@ -1116,16 +1291,13 @@ static gboolean
 grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 {
 	if (event->button == 1)
-		gtk_window_begin_resize_drag (pad->window,
-			GDK_WINDOW_EDGE_SOUTH_EAST,
-			event->button,
-			event->x_root, event->y_root,
-			event->time);
+	{
+		pad_resize (pad, event);
+	}
 	else
-		gtk_window_begin_move_drag (pad->window,
-			event->button,
-			event->x_root, event->y_root,
-			event->time);
+	{
+		pad_move (pad, event);
+	}
 	
 	return TRUE;
 }
@@ -1223,6 +1395,8 @@ static pad_node *start_pad (void)
 	pad->toolbar = NULL;
 	pad->background = NULL;
 	pad->visible_back = NULL;
+	pad->last_draw_x = pad->last_draw_y = -1;
+	pad->num = num++;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -1236,7 +1410,7 @@ static pad_node *start_pad (void)
 		last_pad = pad;
 	}
 	
-	sprintf (title, "Pad %i", num++);
+	sprintf (title, "Pad %i", pad->num);
 	gtk_window_set_title (GTK_WINDOW(window), title);
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);

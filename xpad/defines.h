@@ -10,7 +10,7 @@
 /* files we use are not large */
 #define MAX_FILE_SIZE		1024
 
-#define VERSION				"1.5"
+#define VERSION				"1.6"
 
 /* now define some structures here so that i don't have odd header dependencies */
 typedef struct xpad_toolbar_def xpad_toolbar;
