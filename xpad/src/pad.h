@@ -80,6 +80,9 @@ struct pad_node_def
 	/* toolbar stuff */
 	xpad_toolbar *toolbar;
 	
+	/* properties window */
+	GtkWidget *properties;
+	
 #if DRAWING_ON
 	/* background image stuff */
 	GdkPixmap *background;

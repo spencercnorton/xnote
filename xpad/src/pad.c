@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include "tray.h"
 #include "settings.h"
+#include "properties.h"
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -42,6 +43,8 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/File/sep", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},*/
 	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
+	{"/Pad/_Properties", 			NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
+	{"/Pad/sep2", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
 	{N_("/Pad/_Destroy"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
 /*	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},*/
@@ -51,7 +54,6 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
 	{N_("/Edit/Clea_r Pad"),		NULL,			menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,			0,		0,	"<Separator>"},
-	{N_("/Edit/_Lock Style"),		NULL,			menuitem_cb,	15,	"<CheckItem>"},
 	{N_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
 	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
@@ -74,7 +76,6 @@ const toolbar_button buttons[] =
 	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
 	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
-	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), N_("Lock Style")},
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Preferences")},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Close All Pads")},
 	{"Help", "gtk-help", 0, G_CALLBACK (show_help), N_("Show Help")},
@@ -593,6 +594,7 @@ pad_free_gtk (pad_node *pad)
 {
 	g_signal_handlers_destroy (pad->window);
 	pad_remove_toolbar (pad);
+	properties_close (pad);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
 	g_free (pad->menu);
 	
@@ -1141,6 +1143,10 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		pad_set_sticky (pad, gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)));
 		break;
 
+	case 17:
+		properties_open (pad);
+		break;
+
 	default:
 		break;
 	}
@@ -1201,8 +1207,6 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	block_toolbar_events (pad);
 	
 	/* set checkboxes */
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Lock Style"));
-	GTK_CHECK_MENU_ITEM (tmp)->active = pad->locked;
 	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Sticky"));
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
 	
@@ -1935,6 +1939,7 @@ static pad_node *start_pad (void)
 	pad->hidden = FALSE;
 	pad->infoname = NULL;
 	pad->contentname = NULL;
+	pad->properties = NULL;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)

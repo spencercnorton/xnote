@@ -562,7 +562,7 @@ static GtkWidget *preferences_create (void)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_width), 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_entries), 0);
 	
-	gtk_window_set_title (GTK_WINDOW(window), _("Xpad Preferences"));
+	gtk_window_set_title (GTK_WINDOW(window), _("Global Preferences"));
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
 
 	/* buttonbox setup */

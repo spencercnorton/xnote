@@ -441,11 +441,16 @@ static void xpad_settings_load_from_file (void)
 		
 		for (i = 0; button_names[i]; ++i)
 		{
+			toolbar_button *tb;
+			
 			dup = g_strstrip (button_names[i]);
 			
-			current_settings.toolbar_buttons = 
-				g_slist_append (current_settings.toolbar_buttons,
-				(toolbar_button *) get_toolbar_button_by_name (dup));
+			tb = (toolbar_button *) get_toolbar_button_by_name (dup);
+			
+			if (tb)
+				current_settings.toolbar_buttons = 
+					g_slist_append (current_settings.toolbar_buttons,
+					tb);
 		}
 		
 		g_strfreev  (button_names);

@@ -89,7 +89,7 @@ VERSION = @VERSION@
 
 bin_PROGRAMS = xpad
 
-xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h  help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c  eggtrayicon.h defines.h gettext.h settings.c settings.h
+xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h  help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c  eggtrayicon.h defines.h gettext.h settings.c settings.h  properties.c properties.h
 
 
 AM_CFLAGS = -ansi -pedantic -Wall `pkg-config --cflags gtk+-2.0`  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED  -DGDK_PIXMAP_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
@@ -110,7 +110,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 xpad_OBJECTS =  main.o fio.o pref.o pad.o help.o toolbar.o tray.o \
-eggtrayicon.o settings.o
+eggtrayicon.o settings.o properties.o
 xpad_LDADD = $(LDADD)
 xpad_DEPENDENCIES = 
 CFLAGS = @CFLAGS@
@@ -125,7 +125,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = tar
 GZIP_ENV = --best
 DEP_FILES =  .deps/eggtrayicon.P .deps/fio.P .deps/help.P .deps/main.P \
-.deps/pad.P .deps/pref.P .deps/settings.P .deps/toolbar.P .deps/tray.P
+.deps/pad.P .deps/pref.P .deps/properties.P .deps/settings.P \
+.deps/toolbar.P .deps/tray.P
 SOURCES = $(xpad_SOURCES)
 OBJECTS = $(xpad_OBJECTS)
 
