@@ -61,21 +61,10 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	
 	if (error)
 	{
-		GtkWidget *dialog;
 		gchar usertext [524];
 		
 		sprintf (usertext, _("Could not write to file %s."), temp);
-		fprintf (stderr, "%s\n", usertext);
-		
-		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
-			usertext,
-			NULL);
-		
-		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
-		
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		
-		gtk_widget_destroy (dialog);
+		xpad_show_error (NULL, usertext, NULL);
 	}
 	
 	g_free (temp);
@@ -97,7 +86,10 @@ gchar *fio_get_file (const gchar *name)
 	
 	if (!g_file_get_contents (fullname, &rv, NULL, &error))
 	{
-		xpad_show_error (NULL, error->message, NULL);
+		gchar usertext[524];
+		
+		sprintf (usertext, _("Could not read from file %s."), fullname);
+		xpad_show_error (NULL, usertext, NULL);
 		
 		g_error_free (error);
 	}
