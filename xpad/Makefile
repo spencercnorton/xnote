@@ -31,4 +31,4 @@ uninstall:
 	rm $(ICONDIR)/xpad.xpm
 
 clean:
-	-rm -rf xpad core *.o tags
+	-rm -rf xpad *.o
