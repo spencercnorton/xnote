@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
-"POT-Creation-Date: 2003-03-25 18:39-0500\n"
+"POT-Creation-Date: 2003-04-01 18:29+0400\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
@@ -25,14 +25,6 @@ msgid ""
 "                          default is 0\n"
 "  -n, --new             opens a new pad only\n"
 msgstr ""
-"Usage: xpad [OPTIONS]\n"
-"\n"
-"  -V, --version         Выводит версию xpad и завершает работу\n"
-"  -h, --help            Выводит эту справку об использовании xpad и завершает работу\n"
-"  -v N, --verbosity=N   Устанавливает уровень детализации вывода\n"
-"                          0=молча, 1=ограниченно, 2=отладка\n"
-"                          по умолчанию используется уровень 0\n"
-"  -n, --new             Открывает только новую записку\n"
 
 #: src/main.c:182
 msgid ""
@@ -42,81 +34,68 @@ msgid ""
 "  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
 "  --showall             brings all pads to the foreground\n"
 msgstr ""
-"  --nonew               Защищает от создания новых записок\n"
-"  -q, --quit            Завершает работу всех сессий/копий xpad\n"
-"  -l, --list            Выводит список заголовков всех записок\n"
-"  -s N, --show=N        Передвигает на верхний уровень записку под номером N (Начиная с 1)\n"
-"  --showall             Передвигает на верхний уровень все записки.\n"
-
-
-
 
 #: src/main.c:215
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
-msgstr "Неправильное значение уровня детализации вывода. Оно должно быть от 0 до 2 включительно.\n"
-
+msgstr ""
 
 #: src/main.c:290
 #, c-format
 msgid "Missing companion argument to %s\n"
-msgstr "Пропущен дополнительный аргумент к %s\n"
+msgstr ""
 
 #: src/main.c:334
 #, c-format
 msgid "Didn't understand argument %s.\n"
-msgstr "Непонятный аргумент %s.\n"
+msgstr ""
 
 #: src/main.c:391
 #, c-format
 msgid "Invalid number: '%s'\n"
-msgstr "Неправильный номер: '%s'\n"
+msgstr ""
 
 #: src/fio.c:67
 #, c-format
 msgid "Could not write to file %s."
-msgstr "Не могу писать в файл %s."
+msgstr ""
 
 #: src/fio.c:91
 #, c-format
 msgid "Could not read from file %s."
-msgstr "Не могу читать из файла %s."
+msgstr ""
 
 #: src/fio.c:411
 #, c-format
 msgid "Could not open xpad directory %s."
-msgstr "Не могу открыть xpad директорию %s."
+msgstr ""
 
 #: src/fio.c:414
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
-"Эта директория необходима для сохранения настроек и записок."
-"Xpad закрывается."
 
-
-
-#: src/pref.c:281
+#: src/pref.c:281 src/properties.c:228
 msgid "Background Color"
 msgstr "Цвет фона"
 
-#: src/pref.c:282
+#: src/pref.c:282 src/properties.c:229
 msgid "Text Color"
 msgstr "Цвет текста"
 
-#: src/pref.c:283
+#: src/pref.c:283 src/properties.c:230
 msgid "Border"
 msgstr "Рамка"
 
-#: src/pref.c:284
+#: src/pref.c:284 src/properties.c:231
 msgid "Border _width:"
 msgstr "Толщина рамки"
 
-#: src/pref.c:285 src/pref.c:290
+#: src/pref.c:285 src/pref.c:290 src/properties.c:232 src/properties.c:235
 msgid "pixels"
 msgstr "пикселей"
 
-#: src/pref.c:286
+#: src/pref.c:286 src/properties.c:233
 msgid "Font Face"
 msgstr "Шрифт"
 
@@ -128,7 +107,7 @@ msgstr "Настройки"
 msgid "Toolbar"
 msgstr "Панель инструментов"
 
-#: src/pref.c:289
+#: src/pref.c:289 src/properties.c:234
 msgid "_Padding:"
 msgstr "Отступ:"
 
@@ -142,52 +121,51 @@ msgstr "Подтверждение при удалении записки"
 
 #: src/pref.c:298
 msgid "_Edit lock"
-msgstr "Защищать после правки"
+msgstr "Защита от редактирования"
 
 #: src/pref.c:343
 msgid "Global Preferences"
 msgstr "Общие настройки"
 
-#: src/pref.c:362
+#: src/pref.c:362 src/properties.c:303
 msgid "_Use system text color"
 msgstr "Использовать системный цвет текста"
 
-#: src/pref.c:385
+#: src/pref.c:385 src/properties.c:324
 msgid "_Use system background color"
 msgstr "Использовать системный цвет фона"
 
-#: src/pref.c:421
+#: src/pref.c:421 src/properties.c:357
 msgid "The amount of space you want between the border and text."
 msgstr "Отступ текста от рамки."
 
-#: src/pref.c:422
+#: src/pref.c:422 src/properties.c:358
 msgid ""
 "Choose the number of pixels around the text region.  This space is colored "
 "the same and surrounds it on all sides."
 msgstr ""
-"Установите отступ в пикселях вокруг текста. Это место закрашивается "
-"одним и тем же цветом  и окружает текст со всех сторон."
+"Установите отступ в пикселях вокруг текста. Это место закрашивается одним и "
+"тем же цветом  и окружает текст со всех сторон."
 
-
-#: src/pref.c:435
+#: src/pref.c:435 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
 msgstr "Толщина рамки вокруг записки. "
 
-#: src/pref.c:436
+#: src/pref.c:436 src/properties.c:375
 msgid ""
 "Choose the number of pixels around the pad.  This space is colored "
 "independently and surrounds it on all sides."
 msgstr ""
 "Установите отступ в пикселях вокруг записки. Это место закрашивается "
-"независимо и окружает записку со всех сторон."
+"независимо от остального и окружает записку со всех сторон."
 
-#: src/pref.c:462
+#: src/pref.c:462 src/properties.c:397
 msgid "_Use system font face"
 msgstr "Использовать системный шрифт"
 
 #: src/pref.c:498
 msgid "Click and drag a button to move it."
-msgstr "Щелкните и тащите кнопку для ее перемещения."
+msgstr "Перетаскивайте кнопки по своему усмотрению."
 
 #: src/pref.c:504
 msgid "_Enable toolbar"
@@ -213,11 +191,14 @@ msgstr "<b>Неиспользуемые:</b>"
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
-"Если включено, панель инструментов будет появляться в каждой записке, когда указатель мыши окажется над ней."
+"Если включено, панель инструментов будет появляться в каждой записке, когда "
+"указатель мыши окажется над ней."
 
 #: src/pref.c:638 src/pref.c:639
 msgid "If on, the toolbar will disappear when you are not using the pad."
-msgstr "Если включено, панель инструментов будет убираться когда вы не используете записку."
+msgstr ""
+"Если включено, панель инструментов будет убираться когда вы не используете "
+"записку."
 
 #: src/pref.c:651
 msgid "Allow _scrollbars"
@@ -244,20 +225,23 @@ msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
 msgstr ""
-"Если включено, ваш оконный менеджер будет добавлять элементы декорации окна ко всем запискам. Для примера "
-"заголовок окна, и кнопку 'закрыть'"
+"Если включено, ваш оконный менеджер будет добавлять элементы декорации окна "
+"ко всем запискам. Для примера заголовок окна, и кнопку 'закрыть'"
 
 #: src/pref.c:712 src/pref.c:713
 msgid "If on, choosing to destroy a pad will prompt for conformation."
-msgstr "Если включено, при уничтожении записки будет выдан запрос на подтверждение этого действия."
+msgstr ""
+"Если включено, при уничтожении записки будет выдан запрос на подтверждение "
+"этого действия."
 
 #: src/pref.c:716 src/pref.c:718
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
 msgstr ""
-"Если включено, полосы прокрутки будут появляться, когда текст не помещается в записку целиком. Если выключено, "
-"размер записки будет изменятся для помещения в нее всего текста."
+"Если включено, полосы прокрутки будут появляться, когда текст не помещается "
+"в записку целиком. Если выключено, размер записки будет изменятся для "
+"помещения в нее всего текста."
 
 #: src/pref.c:722 src/pref.c:725
 msgid ""
@@ -265,10 +249,10 @@ msgid ""
 "to move it by left dragging.  To make it editable again, double-click the "
 "pad.  If off, pads are always editable."
 msgstr ""
-"Если включено, когда записка теряет фокус, она становится нередактируемой. Это позволяет вам "
-"перемещать ее левой кнопкой.  Чтобы снова сделать записку редактируемой, используйте на этой записке двойной щелчок."
-"Если выключено, записка всегда будет редактируемой."
-
+"Если включено, когда записка теряет фокус, она становится нередактируемой. "
+"Это позволяет вам перемещать ее левой кнопкой.  Чтобы снова сделать записку "
+"редактируемой, используйте на этой записке двойной щелчок.Если выключено, "
+"записка всегда будет редактируемой."
 
 #: src/pref.c:730 src/pref.c:731
 msgid "All pads will close, saving contents first."
@@ -276,39 +260,40 @@ msgstr "Все записки будут закрыты, сначала сохр
 
 #: src/pref.c:734 src/pref.c:735
 msgid "The pad you clicked the close button on will close, saving contents."
-msgstr "Записка при вашем щелчке по кнопке 'закрыть', сохранит свое содержимое."
+msgstr ""
+"Записка при вашем щелчке по кнопке 'закрыть', сохранит свое содержимое."
 
 #: src/pref.c:738 src/pref.c:740
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."
 msgstr ""
-"Когда вы щелкаете по кнопке 'закрыть', записка уничтожается с потерей своего содержимого."
-"Запроса на подтверждение не будет."
+"Когда вы щелкаете по кнопке 'закрыть', записка уничтожается с потерей своего "
+"содержимого.Запроса на подтверждение не будет."
 
 #: src/pad.c:40
 msgid "/_Pad"
-msgstr "/Записка"
+msgstr "/Стикер"
 
 #: src/pad.c:41
 msgid "/Pad/_New"
-msgstr "/Записка/Новая"
+msgstr "/Стикер/Новый"
 
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
-msgstr "/Записка/Приколоть"
+msgstr "/Стикер/Приколоть"
 
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
-msgstr "/Записка/Свойства"
+msgstr "/Стикер/Свойства"
 
 #: src/pad.c:46
 msgid "/Pad/_Close"
-msgstr "/Записка/Закрыть"
+msgstr "/Стикер/Закрыть"
 
 #: src/pad.c:47
 msgid "/Pad/_Delete"
-msgstr "/Записка/Удалить"
+msgstr "/Стикер/Удалить"
 
 #: src/pad.c:49
 msgid "/_Edit"
@@ -336,7 +321,7 @@ msgstr "/Заметки"
 
 #: src/pad.c:56
 msgid "/Notes/_Show All"
-msgstr "/Заметки/Показать все/"
+msgstr "/Заметки/Показать Все"
 
 #: src/pad.c:57
 msgid "/Notes/_Close All"
@@ -405,7 +390,7 @@ msgstr "Вы используете xpad %s c GTK+ %i.%i.%i."
 
 #: src/pad.c:843
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
-msgstr "Приходите на http://xpad.sourceforge.net чтобы узнать побольше про xpad."
+msgstr "Посетите http://xpad.sourceforge.net чтобы узнать побольше про xpad."
 
 #: src/pad.c:884
 msgid "Open which file?"
@@ -415,25 +400,25 @@ msgstr "Открыть which файл?"
 msgid "Save as which file?"
 msgstr "Сохранить как which файл?"
 
-#: src/pad.c:1072 src/pad.c:1258
+#: src/pad.c:1072 src/pad.c:1269
 msgid "/Edit/Cut"
 msgstr "/Правка/Вырезать"
 
-#: src/pad.c:1074 src/pad.c:1260
+#: src/pad.c:1074 src/pad.c:1271
 msgid "/Edit/Copy"
 msgstr "/Правка/Копировать"
 
-#: src/pad.c:1076 src/pad.c:1264
+#: src/pad.c:1076 src/pad.c:1275
 msgid "/Edit/Paste"
 msgstr "/Правка/Вставить"
 
-#: src/pad.c:1206
+#: src/pad.c:1215
 msgid "/Notes"
 msgstr "/Заметки"
 
-#: src/pad.c:1252
+#: src/pad.c:1263
 msgid "/Pad/Sticky"
-msgstr "/Записка/Прикрепить"
+msgstr "/Стикер/Приколоть"
 
 #: src/help.c:46
 msgid ""
@@ -441,10 +426,10 @@ msgid ""
 "basically sticky notes on your desktop in which you can write memos.\n"
 "\n"
 msgstr ""
-"Каждая xpad сессия содержит одну или несколько открытых записок. Записки изначально "
-"предназначены для прикрепления замечаний на ваш десктоп в которых вы можете вести свои записи \n"
+"Каждая xpad сессия содержит одну или несколько открытых записок. Записки "
+"изначально предназначены для прикрепления замечаний на ваш десктоп в которых "
+"вы можете вести свои записи \n"
 "\n"
-
 
 #: src/help.c:50
 msgid ""
@@ -453,10 +438,21 @@ msgid ""
 "pad.\n"
 "\n"
 msgstr ""
-"<b>Для перемешения записки</b>, тащите ее левой кнопкой за панель инструментов, правой кнопкой за "
-" значок изменения размеров в правом нижнем углу, или удерживая CTRL перетаскивайте левой кнопкой за любое место "
+"<b>Для перемешения записки</b>, тащите ее левой кнопкой за панель "
+"инструментов, правой кнопкой за  значок изменения размеров в правом нижнем "
+"углу, или удерживая CTRL перетаскивайте левой кнопкой за любое место "
 "записки.\n"
 
+#: src/help.c:54
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+"<b>Для изменения размеров</b>, тащите левой кнопкой за значок ресайзинга "
+"(правый нижний угол) на панели инструментов, или удерживая клавишу CTRL "
+"перетаскивайте правой кнопкой мыши за любое место записки.\n"
+"\n"
 
 #: src/help.c:57
 msgid ""
@@ -464,8 +460,8 @@ msgid ""
 ">Preferences.\n"
 "\n"
 msgstr ""
-"<b>Для изменения цвета</b>, щелчок правой кнопкой на записке и выбрать Правка-"
-">Свойства.\n"
+"<b>Для изменения цвета</b>, щелчок правой кнопкой на записке и выбрать "
+"Правка->Свойства.\n"
 "\n"
 
 #: src/help.c:60
@@ -474,13 +470,14 @@ msgid ""
 "right click on a pad.  Try it out and enjoy.\n"
 "\n"
 msgstr ""
-"Многие действия доступны через всплывающие меню, которые появляются, когда вы "
-"щелкаете правой кнопкой на записке.  Попробуйте эту возможность.\n"
+"Многие действия доступны через всплывающие меню, которые появляются, когда "
+"вы щелкаете правой кнопкой на записке.  Попробуйте эту возможность.\n"
 "\n"
 
 #: src/help.c:64
 msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr "Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge.net"
+msgstr ""
+"Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge.net"
 
 #: src/help.c:73
 msgid "Help"
@@ -500,13 +497,16 @@ msgstr "Скрыть все"
 
 #: src/tray.c:203
 msgid "xpad: right click for more options..."
-msgstr "xpad: щелчок правой кнопкой для дополнительных опций..."
+msgstr "xpad: щелкните правой кнопкой для дополнительных опций..."
 
 #: src/tray.c:204
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
 msgstr ""
-"Щелчок правой кнопкой на этом значке откроет меню опций XPad. Щелчок левой кнопкой"
-"показывает или скрывает на экране все записки."
+"Щелчок правой кнопкой на этом значке откроет меню опций XPad. Щелчок левой "
+"кнопкойпоказывает или скрывает на экране все записки."
 
+#: src/properties.c:276
+msgid "Pad Properties"
+msgstr "Свойства записки"
