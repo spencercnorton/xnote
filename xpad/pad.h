@@ -54,6 +54,7 @@ struct pad_node_def
 	gint locked;
 	gint num;
 	gboolean hidden;
+	gboolean sticky;
 	
 	pad_style style;
 	
@@ -65,9 +66,11 @@ struct pad_node_def
 	
 	xpad_toolbar *toolbar;
 	
+#if DRAWING_ON
 	GdkPixmap *background;
 	GdkPixmap *visible_back;
 	gint last_draw_x, last_draw_y;
+#endif
 };
 
 /* used to keep all the persistant data we need for one pad */
@@ -107,6 +110,7 @@ void pad_toggle_lock (pad_node *pad);
 void pad_style_copy (pad_style *dest, pad_style *source);
 void pad_style_free (pad_style *dest);
 void pad_background_clear (pad_node *pad);
+void pad_toggle_sticky (pad_node *pad);
 
 void pad_remove_toolbar (pad_node *pad);
 void pad_add_toolbar (pad_node *pad);
@@ -132,7 +136,8 @@ static const toolbar_button buttons[] =
 	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), "Lock Style"},
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Edit Preferences"},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), "Quit"},
-	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Show Help"}
+	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Show Help"},
+	{"Sticky", "gtk-cdrom", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"}
 };
 
 

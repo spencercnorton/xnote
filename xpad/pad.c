@@ -201,6 +201,20 @@ void pad_style_free (pad_style *style)
 	g_free (style->fontname);
 }
 
+void pad_toggle_sticky (pad_node *pad)
+{
+	if (pad->sticky)
+	{
+		gtk_window_unstick (pad->window);
+		pad->sticky = 0;
+	}
+	else
+	{
+		gtk_window_stick (pad->window);
+		pad->sticky = 1;
+	}
+}
+
 void pad_toolbar_update (pad_node *pad)
 {
 	GList *list, *tmp;
@@ -724,13 +738,13 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), separator1);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_close);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu_file_sub), menu_item_close_all);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_pads);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_clear);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_lock);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator3);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_help);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_about);
@@ -927,6 +941,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		}
 		break;
 		
+#if DRAWING_ON
 		case GDK_BUTTON_RELEASE:
 		{
 			GdkEventButton *event_button = (GdkEventButton *) event;
@@ -939,6 +954,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			}
 		}
 		break;
+#endif
 		
 		case GDK_BUTTON_PRESS: 
 		{
@@ -1424,6 +1440,11 @@ pad_add_toolbar (pad_node *pad)
 	}
 }
 
+gboolean state_handler (GtkWidget *window, GdkEvent *event, pad_node *pad)
+{
+	return TRUE;
+}
+
 /*
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
@@ -1463,11 +1484,12 @@ static pad_node *start_pad (void)
 	g_signal_connect (window, "button-press-event", G_CALLBACK (window_button_handler), pad);
 	
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
-	/*//g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
+	/*g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
+/*	g_signal_connect (window, "window-state-event", G_CALLBACK (state_handler), pad);*/
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
@@ -1478,11 +1500,14 @@ static pad_node *start_pad (void)
 	pad->scrollbar = scroll;
 	pad->box = box;
 	pad->toolbar = NULL;
+#if DRAWING_ON
 	pad->background = NULL;
 	pad->visible_back = NULL;
 	pad->last_draw_x = pad->last_draw_y = -1;
+#endif
 	pad->num = num++;
 	pad->hidden = FALSE;
+	pad->sticky = FALSE;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
