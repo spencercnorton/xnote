@@ -3,7 +3,8 @@ OBJECTS=main.o \
 	fio.o \
 	pref.o \
 	pad.o \
-	help.o
+	help.o \
+	toolbar.o
 CFLAGS=-ansi -pedantic -Wall -O3 `pkg-config --cflags gtk+-2.0` -fexpensive-optimizations
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 

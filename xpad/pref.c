@@ -164,7 +164,7 @@ static void pref_close (void)
 	fio_save_default_settings ();
 }
 
-static GtkWidget *preferences_create (pad_node *pad)
+static GtkWidget *preferences_create (void)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *notebook = gtk_notebook_new ();
@@ -414,10 +414,10 @@ static GtkWidget *preferences_create (pad_node *pad)
 	return window;
 }
 
-void preferences_open (pad_node *pad)
+void preferences_open (void)
 {
 	if (pref_window == NULL)
-		pref_window = preferences_create (pad);
+		pref_window = preferences_create ();
 	else
 		gtk_window_present (GTK_WINDOW (pref_window));
 }

@@ -27,14 +27,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 
 struct settings {
-	int width;
-	int height;
-	int sync_time;
-	int decorations;
-	int confirm_destroy;
-	int edit_lock;
-	int wm_close;
+	gint width;
+	gint height;
+	gint sync_time;
+	gint decorations;
+	gint confirm_destroy;
+	gint edit_lock;
+	gint wm_close;
 	pad_style style;
+	GSList *toolbar;
 };
 
 void xpad_display_dialog_with_text (GtkMessageType type, const gchar *text);
