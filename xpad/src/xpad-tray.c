@@ -127,7 +127,6 @@ static void
 xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 {
 	GtkWidget *menu, *item, *imgwidget;
-	gint i = 0;
 	GSList *pads, *l;
 	gint n;
 	
@@ -136,16 +135,16 @@ xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 	
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), xpad_app_get_pad_group ());
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
 	item = gtk_separator_menu_item_new ();
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_Show All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_show_all), xpad_app_get_pad_group ());
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	if (!pads)
 		gtk_widget_set_sensitive (item, FALSE);
@@ -154,11 +153,11 @@ xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 	imgwidget = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), imgwidget);
 	g_signal_connect (item, "activate", G_CALLBACK (gtk_main_quit), NULL);
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
 	item = gtk_separator_menu_item_new ();
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
 	/**
@@ -184,7 +183,7 @@ xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 		
 		item = gtk_menu_item_new_with_mnemonic (title);
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (gtk_window_present), l->data);
-		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+		gtk_container_add (GTK_CONTAINER (menu), item);
 		gtk_widget_show (item);
 		
 		g_free (title);
@@ -194,13 +193,13 @@ xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 	if (pads)
 	{
 		item = gtk_separator_menu_item_new ();
-		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+		gtk_container_add (GTK_CONTAINER (menu), item);
 		gtk_widget_show (item);
 	}
 	
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
 	g_signal_connect (item, "activate", G_CALLBACK (xpad_preferences_open), NULL);
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, button, time);
