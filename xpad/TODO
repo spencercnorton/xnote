@@ -1,5 +1,2 @@
-make less posix-oriented (i.e. be ready for GTK+ 2 on win32)
-	-- we're pretty close now
-
 native titlebar/resizer
 toolbar for delete/new etc actions

@@ -372,7 +372,6 @@ void fio_load_pads (void)
 
 	/* set up some sort of defaults for these.  if xpad works
 	   right, these won't be used. */
-	info.style = current_settings.style;
 	info.x = 0;
 	info.y = 0;
 	info.width = 260;

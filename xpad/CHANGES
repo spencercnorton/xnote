@@ -1,12 +1,16 @@
 1.4
 ---
 code cleanup
+we now compile clean with -ansi and -pedantic!  ;)
 should take up a little less memory
 fixed several memory leaks
+should be able to compile on windows and beos.
+	-- PLEASE let me know how this works for you.
 added scrollbars if window isn't big enough to handle text
 	-- this fixes two known bugs
-new xpad processes now handled gracefully.
-added further optimizations to compilation.  let me know if this causes you problems
+new xpad processes now handled gracefully
+added further optimizations to compilation
+	-- let me know if this causes you problems
 fixed some possible buffer overflows
 fixed some warnings/errors on gcc3 compilation
 cursor icon changes when edit lock is on

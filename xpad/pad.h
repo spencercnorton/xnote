@@ -61,7 +61,6 @@ struct pad_info_def
 	gint y;
 	gint width;
 	gint height;
-	pad_style style;
 	gchar *infoname;
 	gchar *contentname;
 };
