@@ -833,13 +833,13 @@ static void pad_resize (pad_node *node, GdkEventButton *event)
 static void about_dialog (pad_node *pad)
 {
 	GtkWidget *dialog;
-	gchar text [524];
+	GString *text = g_string_new ("");
 	
-	sprintf (text, _("You are using xpad %s with GTK+ %i.%i.%i."),
+	g_string_printf (text, _("You are using xpad %s with GTK+ %i.%i.%i."),
 		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
 	
 	dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
-		text,
+		text->str,
 		_("Visit http://xpad.sourceforge.net for more information about xpad."));
 	
 	if (!dialog)
