@@ -113,7 +113,7 @@ static void docklet_menu( GdkEventButton *event )
   g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(docklet_toggle), NULL );
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
 
-  entry = gtk_menu_item_new_with_label( "Windows" );
+  entry = gtk_menu_item_new_with_label( _("Windows") );
   gtk_menu_item_set_submenu( GTK_MENU_ITEM(entry), windows_menu );
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
 
@@ -188,9 +188,9 @@ static void docklet_create( void )
 
   docklet_tips = gtk_tooltips_new();
   gtk_tooltips_set_tip( GTK_TOOLTIPS(docklet_tips), box,
-                        "XPad: right click for more options...",
-                        "Right click this icon for a menu of options pertaining to XPad. "
-                        "Left click it to toggle whether or not the pads are displayed." );
+                        _("XPad: right click for more options..."),
+                        _("Right click this icon for a menu of options pertaining to XPad. "
+                        "Left click it to toggle whether or not the pads are displayed.") );
 }
 
 static void docklet_remove( void )
@@ -218,7 +218,7 @@ static void docklet_toggle( void )
 
 static char *get_toggle_text( void )
 {
-  return ( toggle_state == SHOWN ? "Hide Pads" : "Show Pads" );
+  return ( toggle_state == SHOWN ? _("Hide Pads") : _("Show Pads") );
 }
 
 static void docklet_toggle_window( GtkWidget* button, void *data )

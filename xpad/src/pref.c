@@ -48,12 +48,12 @@ help_window_new (GtkWidget *parent, gint page)
 	GtkWidget *notebook = gtk_notebook_new ();
 	GtkWidget *buttonbox = gtk_hbutton_box_new ();
 	GtkWidget *button_close = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-	GtkWidget *label_back = gtk_label_new ("Background Color");
-	GtkWidget *label_text = gtk_label_new ("Text Color");
-	GtkWidget *label_border = gtk_label_new ("Border");
-	GtkWidget *label_font = gtk_label_new ("Font Face");
-	GtkWidget *label_misc = gtk_label_new ("Options");
-	GtkWidget *label_toolbar = gtk_label_new ("Toolbar");
+	GtkWidget *label_back = gtk_label_new (_("Background Color"));
+	GtkWidget *label_text = gtk_label_new (_("Text Color"));
+	GtkWidget *label_border = gtk_label_new (_("Border"));
+	GtkWidget *label_font = gtk_label_new (_("Font Face"));
+	GtkWidget *label_misc = gtk_label_new (_("Options"));
+	GtkWidget *label_toolbar = gtk_label_new (_("Toolbar"));
 	GtkWidget *label_back_help = gtk_label_new ("");
 	GtkWidget *label_text_help = gtk_label_new ("");
 	GtkWidget *label_border_help = gtk_label_new ("");
@@ -87,7 +87,7 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_misc), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_misc), 6);
 	
-	gtk_window_set_title (GTK_WINDOW(window), "xpad Preferences Help");
+	gtk_window_set_title (GTK_WINDOW(window), _("Xpad Preferences Help"));
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
 	
 	/* buttonbox setup */
@@ -109,12 +109,12 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_text), label_text_help, FALSE, FALSE, 0);
 	gtk_label_set_markup (GTK_LABEL (label_text_help),
-"Select the <b>color</b> you would like the text of pads to be.  Either click on the "
+_("Select the <b>color</b> you would like the text of pads to be.  Either click on the "
 "color wheel or enter values in the Red, Green, Blue text boxes to change the "
 "color.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
 "there is text visible to be changed and that the pad does not have its style "
-"locked (right click on pad, make sure that \"Lock Style\" is disabled).");
+"locked (right click on pad, make sure that \"Lock Style\" is disabled)."));
 	gtk_label_set_line_wrap (GTK_LABEL (label_text_help), TRUE);
 
 	/* background setup */
@@ -122,11 +122,11 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_background), label_back_help, FALSE, FALSE, 0);
 	gtk_label_set_markup (GTK_LABEL (label_back_help),
-"Select the <b>color</b> you would like the background of pads to be.  Either click on the "
+_("Select the <b>color</b> you would like the background of pads to be.  Either click on the "
 "color wheel or enter values in the Red, Green, Blue text boxes to change the "
 "color.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
-"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled).");
+"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled)."));
 	gtk_label_set_line_wrap (GTK_LABEL (label_back_help), TRUE);
 
 	/* border setup */
@@ -134,15 +134,15 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_border), label_border_help, FALSE, FALSE, 0);
 	strcpy (bordertext,
-"Select the <b>color</b> you would like the border of pads to be.  Either click on the "
+_("Select the <b>color</b> you would like the border of pads to be.  Either click on the "
 "color wheel or enter values in the Red, Green, Blue text boxes to change the "
 "color.  You cannot change the border color if the border width is zero.\n\n"
-"You can also change the <b>size of the border</b> and the <b>amount of padding</b>.  The border ");
+"You can also change the size of the border and the amount of padding.\n\n"));
 	strcat (bordertext,
-"width controls how many pixels are drawn in an outline around the pad.  The padding "
+_("The <b>border width</b> controls how many pixels are drawn in an outline around the pad.  The <b>padding</b> "
 "controls how many pixels are drawn between the border and the text of the pad.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
-"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled).");
+"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled)."));
 
 	gtk_label_set_markup (GTK_LABEL (label_border_help), bordertext);
 	gtk_label_set_line_wrap (GTK_LABEL (label_border_help), TRUE);
@@ -152,16 +152,16 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_font), label_font_help, FALSE, FALSE, 0);
 	strcpy (fonttext,
-"Select the <b>font face</b> you would like the text of pads to use.\n\n"
+_("Select the <b>font face</b> you would like the text of pads to use.\n\n"
 "The font <b>family</b> determines the general look and feel of text.  When some of the "
 "available families are chosen, text will not be visible or will be garbled.  This means "
-"the font family is not installed correctly.  Please choose another family.\n\n");
+"the font family is not installed correctly.  Please choose another family.\n\n"));
 	strcat (fonttext,
-"The font <b>style</b> controls whether the text is bold or italicized.\n\n"
+_("The font <b>style</b> controls whether the text is bold or italicized.\n\n"
 "The font <b>size</b> controls how large the text is.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
 "there is text visible to be changed and that the pad does not have its style locked "
-"(right click on pad, make sure that \"Lock Style\" is disabled).");
+"(right click on pad, make sure that \"Lock Style\" is disabled)."));
 	gtk_label_set_markup (GTK_LABEL (label_font_help), fonttext);
 	gtk_label_set_line_wrap (GTK_LABEL (label_font_help), TRUE);
 
@@ -178,20 +178,20 @@ help_window_new (GtkWidget *parent, gint page)
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), label_toolbar_help, FALSE, FALSE, 0);
 		strcpy (toolbartext,
-"You can control whether pads have a <b>toolbar</b> or not by clicking on the "
-"\"Enable toolbars\" option.  This affects all pads immediately.\n\n");
+-("You can control whether pads have a <b>toolbar</b> or not by clicking on the "
+"\"Enable toolbars\" option.  This affects all pads immediately.\n\n"));
 		strcat (toolbartext,
-"If <b>auto-hide</b> is enabled, a pad's toolbar will disappear (after a small delay) when "
-"your mouse pointer leaves the pad.  It will return when your mouse does.\n\n");
+_("If <b>auto-hide</b> is enabled, a pad's toolbar will disappear (after a small delay) when "
+"your mouse pointer leaves the pad.  It will return when your mouse does.\n\n"));
 		strcat (toolbartext,
-"If the toolbar is enabled, you can customize which <b>buttons</b> appear by dragging "
+_("If the toolbar is enabled, you can customize which <b>buttons</b> appear by dragging "
 "the button you want from one box to another.  The upper box looks like a toolbar and "
-"contains the buttons that are currently enabled.  The lower box holds unused buttons.  ");
+"contains the buttons that are currently enabled.  The lower box holds unused buttons.  "));
 		strcat (toolbartext,
-"Dropping a button moves it to the end of the box you dropped it in.\n\n"
+_("Dropping a button moves it to the end of the box you dropped it in.\n\n"
 "If you don't know "
 "what a button does, try hovering your mouse over it for a bit until a box appears, "
-"describing the button.");
+"describing the button."));
 		gtk_label_set_markup (GTK_LABEL (label_toolbar_help), toolbartext);
 		gtk_label_set_line_wrap (GTK_LABEL (label_toolbar_help), TRUE);
 	}
@@ -202,27 +202,27 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 	gtk_label_set_line_wrap (GTK_LABEL (label_misc_help), TRUE);
 	strcpy (misctext,
-"If <b>edit lock</b> is enabled, pads that are not in focus lose the ability to "
+_("If <b>edit lock</b> is enabled, pads that are not in focus lose the ability to "
 "be edited.  Rather, clicking and dragging on the surface of the pad will move it.  "
 "To edit a pad that is locked, double click on its surface.  This will allow you to "
 "change its text until the pad loses focus again.  If edit lock is not enabled, every "
 "pad is always editable -- to move it, either drag on the border or hold down CTRL and "
-"left click.  Edit lock is disabled by default.\n\n");
+"left click.  Edit lock is disabled by default.\n\n"));
 	strcat (misctext,
-"If <b>confirm pad deletion</b> is enabled, a confirmation dialog will appear whenever "
+_("If <b>confirm pad deletion</b> is enabled, a confirmation dialog will appear whenever "
 "you delete a non-empty pad.  Deleting a pad loses the pad contents irrevocably.  Delete "
-"confirmation is enabled by default.\n\n");
+"confirmation is enabled by default.\n\n"));
 	strcat (misctext,
-"If <b>allow scrollbars</b> is enabled, when a pad is smaller than the text area it "
+_("If <b>allow scrollbars</b> is enabled, when a pad is smaller than the text area it "
 "contains, scrollbars appear so you can view all the text.  If they are disabled, the "
-"pad resizes to fit the text.\n\n");
+"pad resizes to fit the text.\n\n"));
 	strcat (misctext,
-"If <b>window decorations</b> are enabled, your window manager will draw a border and title "
+_("If <b>window decorations</b> are enabled, your window manager will draw a border and title "
 "bar for each pad.  Window decorations are disabled by default.\n\n"
 "If window decorations are enabled, you can choose what happens when you click on your <b>window "
 "manager's close button</b>.  You can close and save all pads (quitting xpad), close and save "
 "the one pad you clicked on, or delete the pad (no confirmation is offered).  By default, "
-"only the one pad you clicked on is closed and saved.");
+"only the one pad you clicked on is closed and saved."));
 
 	gtk_label_set_markup (GTK_LABEL (label_misc_help), misctext);
 	
@@ -592,24 +592,24 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *buttonbox = gtk_hbutton_box_new ();
 	GtkWidget *button_close = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 	GtkWidget *button_help = gtk_button_new_from_stock (GTK_STOCK_HELP);
-	GtkWidget *label_back = gtk_label_new ("Background Color");
-	GtkWidget *label_text = gtk_label_new ("Text Color");
-	GtkWidget *label_border = gtk_label_new ("Border");
-	GtkWidget *label_border_width = gtk_label_new ("Border width:");
-	GtkWidget *label_border_width_unit = gtk_label_new ("pixels");
-	GtkWidget *label_font = gtk_label_new ("Font Face");
-	GtkWidget *label_misc = gtk_label_new ("Options");
-	GtkWidget *label_toolbar = gtk_label_new ("Toolbar");
-	GtkWidget *label_padding = gtk_label_new ("Padding:");
-	GtkWidget *label_padding_unit = gtk_label_new ("pixels");
+	GtkWidget *label_back = gtk_label_new (_("Background Color"));
+	GtkWidget *label_text = gtk_label_new (_("Text Color"));
+	GtkWidget *label_border = gtk_label_new (_("Border"));
+	GtkWidget *label_border_width = gtk_label_new (_("Border width:"));
+	GtkWidget *label_border_width_unit = gtk_label_new (_("pixels"));
+	GtkWidget *label_font = gtk_label_new (_("Font Face"));
+	GtkWidget *label_misc = gtk_label_new (_("Options"));
+	GtkWidget *label_toolbar = gtk_label_new (_("Toolbar"));
+	GtkWidget *label_padding = gtk_label_new (_("Padding:"));
+	GtkWidget *label_padding_unit = gtk_label_new (_("pixels"));
 	GtkWidget *vbox_global = gtk_vbox_new (FALSE, 0);
 	GtkWidget *color_back = gtk_color_selection_new ();
 	GtkWidget *color_text = gtk_color_selection_new ();
 	GtkWidget *color_border = gtk_color_selection_new ();
 	GtkWidget *font_selection = gtk_font_selection_new ();
-	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_label ("Allow window manager decorations");
-	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label ("Confirm pad deletion");
-	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_label ("Edit lock");
+	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_label (_("Allow window manager decorations"));
+	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label (_("Confirm pad deletion"));
+	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_label (_("Edit lock"));
 	GtkWidget *separator_border = gtk_hseparator_new ();
 	GtkObject *adjust_padding;
 	GtkWidget *spinner_padding;
@@ -651,7 +651,7 @@ static GtkWidget *preferences_create (void)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_width), 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_entries), 0);
 	
-	gtk_window_set_title (GTK_WINDOW(window), "xpad Preferences");
+	gtk_window_set_title (GTK_WINDOW(window), _("Xpad Preferences"));
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
 
 	/* buttonbox setup */
@@ -675,7 +675,7 @@ static GtkWidget *preferences_create (void)
 	/* text setup */
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
-		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system text color");
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label (_("Use system text color"));
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 		gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
@@ -697,7 +697,7 @@ static GtkWidget *preferences_create (void)
 	/* background setup */
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
-		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system background color");
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label (_("Use system background color"));
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 		gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
@@ -730,9 +730,9 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
 		g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) color_border);
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
-	"The amount of space you want between the border and text.",
+	_("The amount of space you want between the border and text.",
 	"Choose the number of pixels around the text region.  This space is colored "
-	"the same and surrounds it on all sides.");
+	"the same and surrounds it on all sides."));
 		
 		adjust_border_width = gtk_adjustment_new (current_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
 		spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
@@ -744,9 +744,9 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
 		g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
-	"The amount of space you want surrounding the pad.", 
+	_("The amount of space you want surrounding the pad.", 
 	"Choose the number of pixels around the pad.  This space is colored "
-	"independently and surrounds it on all sides.");
+	"independently and surrounds it on all sides."));
 		
 		gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
 		gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
@@ -768,7 +768,7 @@ static GtkWidget *preferences_create (void)
 	/* font setup */
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
-		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system font face");
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label (_("Use system font face"));
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
 		gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
@@ -804,14 +804,14 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *buttonbox = gtk_hbox_new (FALSE, 3);
 		GtkTooltips *tt = gtk_tooltips_new ();
 		GtkTargetEntry entry;
-		GtkWidget *label_buttons_desc = gtk_label_new ("Click and drag a button to move it.");
+		GtkWidget *label_buttons_desc = gtk_label_new (_("Click and drag a button to move it."));
 		GtkWidget *unused_frame = gtk_frame_new (NULL);
 		GtkWidget *toolbar_frame = gtk_frame_new (NULL);
 		GtkWidget *vbox_frame = gtk_vbox_new (FALSE, 0);
 		GtkWidget *vbox_unused_frame = gtk_vbox_new (FALSE, 0);
 		GtkWidget *vbox_toolbar_frame = gtk_vbox_new (FALSE, 0);
-		GtkWidget *toolbar_on = gtk_check_button_new_with_label ("Enable toolbar");
-		GtkWidget *toolbar_auto_hide = gtk_check_button_new_with_label ("Auto-hide toolbar");
+		GtkWidget *toolbar_on = gtk_check_button_new_with_label (_("Enable toolbar"));
+		GtkWidget *toolbar_auto_hide = gtk_check_button_new_with_label (_("Auto-hide toolbar"));
 		GtkWidget *align = gtk_alignment_new (0, 0, 0, 0);
 		GtkWidget *hbox_buttons = gtk_hbox_new (FALSE, 0);
 		GtkWidget *label_indent = gtk_label_new ("    ");
@@ -821,9 +821,9 @@ static GtkWidget *preferences_create (void)
 			GtkWidget *label_unused = gtk_label_new (NULL);
 			GtkWidget *label_used = gtk_label_new (NULL);
 			
-			gtk_label_set_markup (GTK_LABEL (label_frame), "<b>Toolbar Buttons:</b>");
-			gtk_label_set_markup (GTK_LABEL (label_used), "<b>Used Buttons:</b>");
-			gtk_label_set_markup (GTK_LABEL (label_unused), "<b>Unused Buttons:</b>");
+			gtk_label_set_markup (GTK_LABEL (label_frame), _("<b>Toolbar Buttons:</b>"));
+			gtk_label_set_markup (GTK_LABEL (label_used), _("<b>Used Buttons:</b>"));
+			gtk_label_set_markup (GTK_LABEL (label_unused), _("<b>Unused Buttons:</b>"));
 			gtk_frame_set_label_widget (GTK_FRAME (frame), label_frame);
 			gtk_frame_set_label_widget (GTK_FRAME (toolbar_frame), label_used);
 			gtk_frame_set_label_widget (GTK_FRAME (unused_frame), label_unused);
@@ -937,12 +937,12 @@ static GtkWidget *preferences_create (void)
 		}
 		
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tt), toolbar_on, 
-"If on, a toolbar will appear below each pad when the mouse hovers over it.",
-"If on, a toolbar will appear below each pad when the mouse hovers over it.");
+_("If on, a toolbar will appear below each pad when the mouse hovers over it."),
+_("If on, a toolbar will appear below each pad when the mouse hovers over it."));
 		
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tt), toolbar_auto_hide, 
-"If on, the toolbar will disappear when you are not using the pad.",
-"If on, the toolbar will disappear when you are not using the pad.");
+_("If on, the toolbar will disappear when you are not using the pad."),
+_("If on, the toolbar will disappear when you are not using the pad."));
 		
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_frame), 6);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_unused_frame), 6);
@@ -954,19 +954,19 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *label_frame_wm = gtk_label_new (NULL);
 		GtkWidget *label_frame_wm_indent = gtk_label_new ("    ");
 		GtkWidget *label_frame_wm_hbox = gtk_hbox_new (FALSE, 0);
-		GtkWidget *checkbutton_scrollbars = gtk_check_button_new_with_label ("Allow Scrollbars");
+		GtkWidget *checkbutton_scrollbars = gtk_check_button_new_with_label (_("Allow Scrollbars"));
 		
 		radio_close_all = gtk_radio_button_new_with_label (NULL,
-			"Close and save all pads");
+			_("Close and save all pads"));
 		radio_close_this = gtk_radio_button_new_with_label_from_widget (
-			GTK_RADIO_BUTTON (radio_close_all), "Close and save pad");
+			GTK_RADIO_BUTTON (radio_close_all), _("Close and save pad"));
 		radio_delete_this = gtk_radio_button_new_with_label_from_widget (
-			GTK_RADIO_BUTTON (radio_close_all), "Delete pad (no confirmation)");
+			GTK_RADIO_BUTTON (radio_close_all), _("Delete pad (no confirmation)"));
 		frame_wm_close = gtk_frame_new (NULL);
 		
 		vbox_wm_close = gtk_vbox_new (FALSE, 3);
 		
-		gtk_label_set_markup (GTK_LABEL (label_frame_wm), "<b>Window Manager Close Action:</b>");
+		gtk_label_set_markup (GTK_LABEL (label_frame_wm), _("<b>Window Manager Close Action:</b>"));
 		gtk_frame_set_shadow_type (GTK_FRAME (frame_wm_close), GTK_SHADOW_NONE);
 		gtk_frame_set_label_widget (GTK_FRAME (frame_wm_close), label_frame_wm);
 		
@@ -1009,42 +1009,42 @@ static GtkWidget *preferences_create (void)
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_decorations, 
-	"If on, your window manager will add its own decorations to each pad.  For example, "
-	"a titlebar and close button.",
-	"If on, your window manager will add its own decorations to each pad.  For example, "
-	"a titlebar and close button.");
+	_("If on, your window manager will add its own decorations to each pad.  For example, "
+	"a titlebar and close button."),
+	_("If on, your window manager will add its own decorations to each pad.  For example, "
+	"a titlebar and close button."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_confirm_destroy, 
-	"If on, choosing to delete a pad will prompt for conformation.",
-	"If on, choosing to delete a pad will prompt for conformation.");
+	_("If on, choosing to delete a pad will prompt for conformation."),
+	_("If on, choosing to delete a pad will prompt for conformation."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_scrollbars, 
-	"If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
-	"to fit the text.",
-	"If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
-	"to fit the text.");
+	_("If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
+	"to fit the text."),
+	_("If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
+	"to fit the text."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_edit_lock, 
-	"If on, when a pad loses focus, it will become uneditable.  "
+	_("If on, when a pad loses focus, it will become uneditable.  "
 	"This allows you to move it by left dragging.  To make it editable again, "
-	"double-click the pad.  If off, pads are always editable.",
-	"If on, when a pad loses focus, it will become uneditable.  "
+	"double-click the pad.  If off, pads are always editable."),
+	_("If on, when a pad loses focus, it will become uneditable.  "
 	"This allows you to move it by left dragging.  To make it editable again, "
-	"double-click the pad.  If off, pads are always editable.");
+	"double-click the pad.  If off, pads are always editable."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_close_all, 
-	"All pads will close, saving contents first.",
-	"All pads will close, saving contents first.");
+	_("All pads will close, saving contents first."),
+	_("All pads will close, saving contents first."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_close_this, 
-	"The pad you clicked the close button on will close, saving contents.",
-	"The pad you clicked the close button on will close, saving contents.");
+	_("The pad you clicked the close button on will close, saving contents."),
+	_("The pad you clicked the close button on will close, saving contents."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_delete_this, 
-	"The pad you clicked the close button on will be deleted, losing contents.  There "
-	"will be no confirmation.",
-	"The pad you clicked the close button on will be deleted, losing contents.  There "
-	"will be no confirmation.");
+	_("The pad you clicked the close button on will be deleted, losing contents.  There "
+	"will be no confirmation."),
+	_("The pad you clicked the close button on will be deleted, losing contents.  There "
+	"will be no confirmation."));
 	
 		g_signal_connect (GTK_OBJECT (checkbutton_confirm_destroy), "toggled", G_CALLBACK (change_confirm_destroy), (gpointer) window);
 		g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) frame_wm_close);

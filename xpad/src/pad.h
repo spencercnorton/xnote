@@ -147,7 +147,7 @@ struct toolbar_button_def
 	const gchar *stock;
 	guint type;
 	GCallback func;
-	const gchar *desc;
+	gchar *desc;
 };
 
 extern toolbar_button buttons[];
