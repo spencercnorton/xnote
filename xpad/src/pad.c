@@ -43,7 +43,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Pad/_Properties", 			NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
 	{"/Pad/sep2", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{N_("/Pad/_Destroy"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
+	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
 /*	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},*/
 	{N_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
@@ -68,7 +68,7 @@ const toolbar_button buttons[] =
 {
 	{"New", "gtk-new", 0, G_CALLBACK (pad_new), N_("Open New Pad")},
 	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Destroy Pad")},
+	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Global Preferences")},
 	{"Properties", "gtk-properties", 0, G_CALLBACK (properties_open), N_("Edit Pad Properties")},
