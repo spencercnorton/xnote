@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <gdk/gdkkeysyms.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
@@ -201,6 +202,9 @@ void xpad_init (void)
 	strcpy (working_dir, getenv("HOME"));
 	strcat (working_dir, "/.xpad/");
 	
+	/* make sure directory exists */
+	mkdir (working_dir, 00777);
+
 	fio_get_values_from_file (DEFAULTS_FILENAME, 
 						  "decorations", &current_settings.decorations,
 						  "sync_time", &current_settings.sync_time,

@@ -25,10 +25,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <glob.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <ctype.h>
-#include <sys/stat.h>
 
 
 /* sets filename to full path of filename (prepends working_dir to it) 
@@ -52,22 +51,22 @@ gint fio_fill_filename (gchar *filename)
 
 gint fio_set_file (const gchar *name, const gchar *value)
 {
-        FILE *file;
-        gchar temp[MAX_FILENAME_SIZE + 1];
-
+    FILE *file;
+    gchar temp[MAX_FILENAME_SIZE + 1];
+	
 	strcpy (temp, name);
 	fio_fill_filename (temp);
-        
-        if ( (file = fopen (temp, "w")) == NULL)
-        {
-                if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", temp);
-                return 1;
-        }
-
-        fputs (value, file);
-
-        fclose (file);
-
+	
+    if ( (file = fopen (temp, "w+")) == NULL)
+    {
+        if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", temp);
+			return 1;
+    }
+	
+    fputs (value, file);
+	
+	fclose (file);
+	
 	return 0;
 }
 
@@ -89,6 +88,7 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 			printf("Could not open file [%s] "
 				"for reading.\n",
 				temp);
+		return 1;
 	}
 
 	if (size <= 0)
@@ -181,7 +181,10 @@ void fio_save_as_defaults (struct settings *set)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 
-	sprintf (buf, "edit_lock %i\nconfirm_destroy %i\nsync_time %i\ndecorations %i\nwidth %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+	sprintf (buf, "edit_lock %i\nconfirm_destroy %i\nsync_time %i\ndecorations %i\n"
+		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
+		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
+		"border_blue %d\nborder_width %d\nfontname %s\n",
 		set->edit_lock, set->confirm_destroy,
 		set->sync_time, set->decorations,
 		set->width, set->height,
@@ -263,18 +266,20 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 								"border_width", &starter->border_width,
 								"fontname", starter->fontname,
 								NULL );
-
-	starter->back.red = back_R;
-	starter->back.green = back_G;
-	starter->back.blue = back_B;
-
-	starter->text.red = text_R;
-	starter->text.green = text_G;
-	starter->text.blue = text_B;
-
-	starter->border.red = bord_R;
-	starter->border.green = bord_G;
-	starter->border.blue = bord_B;
+	if (Result == 0)
+	{
+		starter->back.red = back_R;
+		starter->back.green = back_G;
+		starter->back.blue = back_B;
+	
+		starter->text.red = text_R;
+		starter->text.green = text_G;
+		starter->text.blue = text_B;
+	
+		starter->border.red = bord_R;
+		starter->border.green = bord_G;
+		starter->border.blue = bord_B;
+	}
 
 	return Result;
 }
@@ -282,9 +287,9 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 
 void fio_save_info_file (pad_node *pad)
 {
-        gchar info_file[MAX_FILE_SIZE + 1];
-        gint x, y, height, width;
-        gchar *content;
+	gchar info_file[MAX_FILE_SIZE + 1];
+	gint x, y, height, width;
+	gchar *content;
 	gchar temp[MAX_FILENAME_SIZE + 1];
 	pad_style *pstyle;
 	GtkTextIter s, e;
@@ -294,16 +299,16 @@ void fio_save_info_file (pad_node *pad)
 
 	pstyle = pad_get_style (pad);
 
-        gtk_window_get_position (pad->window, &x, &y);
-        gtk_window_get_size (pad->window, &width, &height);
-        sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
-            	x, y, width, height, 
+    gtk_window_get_position (pad->window, &x, &y);
+    gtk_window_get_size (pad->window, &width, &height);
+    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+          	x, y, width, height, 
 		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
 		pstyle->text.red, pstyle->text.green, pstyle->text.blue,
 		pstyle->border.red, pstyle->border.green, pstyle->border.blue,
 		pstyle->border_width,
 		pstyle->fontname);
-
+	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
@@ -312,8 +317,8 @@ void fio_save_info_file (pad_node *pad)
 	sprintf (temp, "content %s\n", pad->contentname);
 	strcat (info_file, temp);
 
-        fio_set_file (pad->contentname, content);
-        g_free (content);
+	fio_set_file (pad->contentname, content);
+    g_free (content);
 
 	rewind (pad->file);
 	x = fputs (info_file, pad->file);
@@ -404,9 +409,6 @@ void fio_load_pads (void)
 	gchar pattern[MAX_FILENAME_SIZE + 1];
 	pad_node *pad;
 	pad_info info;
-
-	/* make sure directory exists */
-	mkdir (working_dir, 00777);
 
 	strcpy (pattern, working_dir);
 	strcat (pattern, "info-*");
