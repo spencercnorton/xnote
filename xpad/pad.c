@@ -69,7 +69,7 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 	gtk_window_present (GTK_WINDOW (caller));
 }
 
-void pad_set_editable (pad_node *pad, gboolean editable)
+static void pad_set_editable (pad_node *pad, gboolean editable)
 {
 	GdkCursor *cursor;
 	
@@ -87,12 +87,12 @@ void pad_set_editable (pad_node *pad, gboolean editable)
 	gdk_cursor_unref (cursor);
 }
 
-gboolean pad_get_editable (pad_node *pad)
+static gboolean pad_get_editable (pad_node *pad)
 {
 	return gtk_text_view_get_editable (get_text (pad->window));
 }
 
-gboolean pad_is_empty (pad_node *pad)
+static gboolean pad_is_empty (pad_node *pad)
 {
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
@@ -123,7 +123,7 @@ void pads_set_editable (gboolean editable)
 	}
 }
 
-void pad_set_style (pad_node *pad, pad_style *pstyle)
+static void pad_set_style (pad_node *pad, pad_style *pstyle)
 {
 	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
 	GtkRcStyle *style1 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->eventbox_outer));
@@ -145,7 +145,7 @@ void pad_set_style (pad_node *pad, pad_style *pstyle)
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
 }
 
-void pads_update_style ()
+static void pads_update_style ()
 {
 	pad_node *temp = first_pad;
 
@@ -174,7 +174,7 @@ pad_style *pad_get_style (pad_node *pad)
 	return pstyle;
 }
 
-pad_node *get_pad (GtkWindow *window)
+static pad_node *get_pad (GtkWindow *window)
 {
 	pad_node *current = first_pad;
 
@@ -189,14 +189,14 @@ pad_node *get_pad (GtkWindow *window)
 	return NULL;
 }
 
-void quit_if_no_pads (void)
+static void quit_if_no_pads (void)
 {
 	if (!first_pad)
 		xpad_exit();
 }
 
 // unlinks pad from linked list of all pads
-void pad_remove (pad_node *pad)
+static void pad_remove (pad_node *pad)
 {
 	if (!pad || !pad->window)
 		return;
@@ -222,9 +222,9 @@ void pad_remove (pad_node *pad)
 	}
 }
 
-gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
+static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
 
-void pad_destroy (pad_node *pad)
+static void pad_destroy (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
 
@@ -242,7 +242,7 @@ void pad_destroy (pad_node *pad)
 }
 
 // returns true if pad destroyed
-gboolean pad_confirm_destroy (pad_node *pad)
+static gboolean pad_confirm_destroy (pad_node *pad)
 {
 	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
 	{
@@ -286,7 +286,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 	}
 }
 
-void pad_close (pad_node *pad)
+static void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
 
@@ -304,7 +304,7 @@ void pad_close (pad_node *pad)
 }
 
 
-void pad_close_all (void)
+static void pad_close_all (void)
 {
 	pad_node *temp = first_pad;
 
@@ -315,7 +315,7 @@ void pad_close_all (void)
 	}
 }
 
-gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
+static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 {
 	switch (current_settings.wm_close)
 	{
@@ -341,7 +341,7 @@ void cleanup (void)
 }
 
 /* must be full filename */
-void pad_fill_with_file (pad_node *pad, const gchar *filename)
+static void pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
 	struct stat statbuf;
@@ -356,21 +356,21 @@ void pad_fill_with_file (pad_node *pad, const gchar *filename)
 	g_free (contentbuf);
 }
 
-void pad_move (pad_node *node, GdkEvent *event)
+static void pad_move (pad_node *node, GdkEvent *event)
 {
 	GdkEventButton *eb = (GdkEventButton *) event;
 
 	gtk_window_begin_move_drag (node->window, eb->button, eb->x_root, eb->y_root, eb->time);
 }
 
-void pad_resize (pad_node *node, GdkEvent *event)
+static void pad_resize (pad_node *node, GdkEvent *event)
 {
 	GdkEventButton *eb = (GdkEventButton *) event;
 
 	gtk_window_begin_resize_drag (node->window, GDK_WINDOW_EDGE_SOUTH_EAST, eb->button, eb->x_root, eb->y_root, eb->time);
 }
 
-void display_dialog_with_text (pad_node *pad, const gchar *text)
+static void display_dialog_with_text (pad_node *pad, const gchar *text)
 {
 	GtkWidget *dialog;
 
@@ -387,7 +387,7 @@ void display_dialog_with_text (pad_node *pad, const gchar *text)
 	gtk_widget_destroy (dialog);
 }
 
-void about_dialog (pad_node *pad)
+static void about_dialog (pad_node *pad)
 {
 	gchar text[100];
 
@@ -398,7 +398,7 @@ void about_dialog (pad_node *pad)
 	display_dialog_with_text (pad, text);
 }
 
-void open_file_callback (GtkWidget *button, pad_node *pad)
+static void open_file_callback (GtkWidget *button, pad_node *pad)
 {
 	const gchar *filename;
 	GtkFileSelection *selector;
@@ -427,7 +427,7 @@ void open_file_callback (GtkWidget *button, pad_node *pad)
 	}
 }
 
-void open_file (pad_node *pad)
+static void open_file (pad_node *pad)
 {
 	GtkWidget *filedialog;
 
@@ -456,7 +456,7 @@ void open_file (pad_node *pad)
 	gtk_widget_show (filedialog);
 }
 
-void save_as_file_callback (GtkWidget *button, pad_node *pad)
+static void save_as_file_callback (GtkWidget *button, pad_node *pad)
 {
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
@@ -489,7 +489,7 @@ void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	g_free (content);
 }
 
-void save_as_file (pad_node *pad)
+static void save_as_file (pad_node *pad)
 {
 	GtkWidget *filedialog;
 
@@ -518,7 +518,7 @@ void save_as_file (pad_node *pad)
 	gtk_widget_show (filedialog);
 }
 
-void pad_popup (pad_node *pad, GdkEventButton *event)
+static void pad_popup (pad_node *pad, GdkEventButton *event)
 {
 	GtkWidget *menu = gtk_menu_new ();
 	
@@ -755,7 +755,7 @@ static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
 */
-pad_node *start_pad (void)
+static pad_node *start_pad (void)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();

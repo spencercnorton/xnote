@@ -69,7 +69,7 @@ void xpad_exit (void)
 	gtk_exit (0);
 }
 
-void sigcatch (int signum)
+static void sigcatch (int signum)
 {
 	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
 	cleanup ();
@@ -81,7 +81,7 @@ void sigcatch (int signum)
    TODO: make args more OO, with registering of each possible param
          and systematic treatment of short/long names and callbacks
 */
-void handle_args (int *argc, char ***argv)
+static void handle_args (int *argc, char ***argv)
 {
 	gint i;
 
@@ -139,7 +139,7 @@ void handle_args (int *argc, char ***argv)
 }
 
 /* an occasional checkup to sync contents. */
-int sync_pads (gpointer data)
+static int sync_pads (gpointer data)
 {
 	if (verbosity >= 1) printf ("Auto-saving pads.\n");
 
@@ -149,7 +149,7 @@ int sync_pads (gpointer data)
 }
 
 
-void reset_sync (void)
+static void reset_sync (void)
 {
 	if (autosave_timeout_id > 0)
 		gtk_timeout_remove (autosave_timeout_id);
@@ -162,7 +162,7 @@ void reset_sync (void)
 }
 
 
-void xpad_set_default_icon (void)
+static void xpad_set_default_icon (void)
 {
 	GdkPixmap *pixmap;
 	GdkPixbuf *pixbuf;
@@ -186,7 +186,7 @@ void xpad_set_default_icon (void)
 }
 
 
-void xpad_init (void)
+static void xpad_init (void)
 {
 	struct sigaction sa;
 

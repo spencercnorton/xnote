@@ -2,12 +2,15 @@
 
 GtkWidget *help_window = NULL;
 
-void help_close (void)
+static void help_close (void)
 {
 	help_window = NULL;
 }
 
-GtkWidget *create_help (gint page)
+
+static void show_help_at_page (gint page);
+
+static GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
 	GtkWidget *edittext, *editlabel;
@@ -108,7 +111,7 @@ void show_help (void)
 	show_help_at_page (0);
 }
 
-void show_help_at_page (gint page)
+static void show_help_at_page (gint page)
 {
 	if (help_window == NULL)
 		help_window = create_help (page);

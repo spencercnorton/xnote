@@ -32,8 +32,6 @@ void fio_load_pads (void);
 gint fio_get_file (const gchar *name, gchar *value, const gint size);
 gint fio_set_file (const gchar *name, const gchar *value);
 
-gint fio_fill_filename (gchar *filename);
-
 gint fio_get_values_from_file (const gchar *filename, ...);
 gint fio_get_style_from_file (const gchar *filename, pad_style *starter);
 void fio_save_as_defaults (struct settings *);
@@ -41,7 +39,6 @@ void fio_save_as_defaults (struct settings *);
 void fio_open_pad_files (pad_node *pad, gboolean create);
 void fio_close_pad_files (pad_node *pad);
 void fio_remove_pad_files (pad_node *pad);
-void fio_remove_file (gchar *filename);
 
 #endif /* _FIO_H_ */
 

@@ -74,9 +74,7 @@ pad_node *pad_new_with_info (pad_info *info);
 pad_node *pad_new (void);
 GtkTextView *get_text (GtkWindow *window);
 void cleanup (void);
-void pad_set_style (pad_node *pad, pad_style *pstyle);
 pad_style *pad_get_style (pad_node *pad);
-void pads_update_style ();
 void pads_set_decorations (gboolean decor, GtkWidget *caller);
 void pads_set_editable (gboolean editable);
 

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* sets filename to full path of filename (prepends working_dir to it) 
    returns 0 if filename was full path, 1 if we added to it.
 */
-gint fio_fill_filename (gchar *filename)
+static gint fio_fill_filename (gchar *filename)
 {
 	size_t filename_len;
 
@@ -298,7 +298,7 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 }
 
 
-void fio_save_info_file (pad_node *pad)
+static void fio_save_info_file (pad_node *pad)
 {
 	gchar info_file[MAX_FILE_SIZE + 1];
 	gchar *content;
@@ -357,7 +357,7 @@ void fio_save_pads (void)
 	}
 }
 
-void fio_remove_file (gchar *filename)
+static void fio_remove_file (gchar *filename)
 {
 	gchar long_filename[MAX_FILENAME_SIZE + 1];
 
@@ -376,7 +376,7 @@ void fio_remove_pad_files (pad_node *pad)
 }
 
 /* filename must be absolute */
-gint fio_get_info_from_file (const gchar *filename, pad_info *info)
+static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
 	gint fd;
 

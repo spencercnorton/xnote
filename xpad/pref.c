@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // we keep a pointer around so that only one window will be open at a time
 GtkWidget *pref_window = NULL;
 
-gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
+static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 {
 	pad_node *temp = first_pad;
 	
@@ -48,7 +48,7 @@ gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
+static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
 {
 	pad_node *temp = first_pad;
 	
@@ -66,7 +66,7 @@ gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
+static gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
 {
 	pad_node *temp = first_pad;
 	
@@ -84,7 +84,7 @@ gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
+static gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 {
 	pad_node *temp = first_pad;
 	
@@ -101,7 +101,7 @@ gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
+static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 {
 	pad_node *temp = first_pad;
 	
@@ -123,7 +123,7 @@ gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 	return FALSE;
 }
 
-gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
+static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 {
 	pad_node *temp = first_pad;
 	
@@ -143,7 +143,7 @@ gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
+static gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 {
 	current_settings.decorations = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
@@ -155,7 +155,7 @@ gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 	return FALSE;
 }
 
-gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
+static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 {
 	current_settings.confirm_destroy = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
@@ -163,7 +163,7 @@ gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
+static gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 {
 	current_settings.edit_lock = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
@@ -173,20 +173,20 @@ gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_wm_close (GtkWidget *radiobutton, gint num)
+static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 {
 	current_settings.wm_close = num;
 	
 	return FALSE;
 }
 
-void pref_close (void)
+static void pref_close (void)
 {
 	pref_window = NULL;
 	fio_save_as_defaults (&current_settings);
 }
 
-GtkWidget *preferences_create (pad_node *pad)
+static GtkWidget *preferences_create (pad_node *pad)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *notebook = gtk_notebook_new ();
