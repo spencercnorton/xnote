@@ -35,11 +35,13 @@ void remove_pad_files (pad_node *pad);
 
 pad_style *get_default_style ();
 void set_default_style (pad_style *style);
+void set_default_style_from_pad (pad_node *pad);
 
 void open_pad_files (pad_node *pad, gboolean create);
 void close_pad_files (pad_node *pad);
 
 #endif /* _FIO_H_ */
+
 
 
 

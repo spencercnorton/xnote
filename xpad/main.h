@@ -24,12 +24,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <gtk/gtk.h>
 
-enum {MAX_FILE_SIZE=2048};
+enum {
+	MAX_FILENAME_SIZE=1024,
+	MAX_FILE_SIZE=2048
+};
 
-extern gchar working_dir[1024];
+extern gchar working_dir[MAX_FILENAME_SIZE];
 extern const gchar *VERSION;
 
 #endif /* _MAIN_H_ */
+
 
 
 

@@ -1,3 +1,11 @@
+0.2.3
+-----
+perfected (?) syncing.  Now will recover cleanly from anything -- including 
+ power shut off or random interrupts.  This fixes the "pad contents 
+ disappearing on X-shutdown" bug
+moved menu items around a bit
+remembers preferred size (only if you change fonts/colors. on TODO)
+
 0.2.2
 -----
 debian-friendly Makefile fixes

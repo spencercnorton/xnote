@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 
 /* static data */
-gchar working_dir[1024];
+gchar working_dir[MAX_FILENAME_SIZE];
 const gchar *VERSION = "xpad v0.2.3";
 gint update_time = 60; /* sync time in seconds */
 
@@ -68,8 +68,6 @@ void handle_args (int *argc, char ***argv)
 /* an occasional checkup to sync contents. */
 int checkup (gpointer data)
 {
-	printf ("hello\n");
-
 	save_pads ();
 
 	return 1;
@@ -123,6 +121,8 @@ int main (int argc, char *argv[])
 
 	return 0;
 }
+
+
 
 
 

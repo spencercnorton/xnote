@@ -38,22 +38,16 @@ void font_diag_ok (GtkWidget *button, pad_node *node)
 {
 	GtkTextView *textbox = get_text (node->window);
 	GtkStyle *style = gtk_style_copy (gtk_widget_get_style (GTK_WIDGET(textbox)));
-	pad_style pstyle;	
 
 	strcpy(node->fontname, gtk_font_selection_dialog_get_font_name(GTK_FONT_SELECTION_DIALOG (gtk_widget_get_toplevel (button))));
-	
+
 	style->font_desc = pango_font_description_from_string (node->fontname);
 
 	gtk_widget_set_style (GTK_WIDGET(textbox), style);
 
 	gdk_window_destroy (gtk_widget_get_parent_window (button));
 
-	/* set this as new default style */
-	pstyle.text = style->text[GTK_STATE_NORMAL];
-	pstyle.back = style->base[GTK_STATE_NORMAL];
-	strcpy (pstyle.fontname, node->fontname);
-
-	set_default_style (&pstyle);
+	set_default_style_from_pad (node);
 }
 
 
@@ -73,6 +67,7 @@ void font_select (pad_node *node)
 
 	gtk_widget_show (GTK_WIDGET (font_diag));
 }
+
 
 
 

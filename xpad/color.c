@@ -74,7 +74,6 @@ void color_diag_ok (GtkWidget *button, coupling *c)
 {	
 	GtkStyle *style = gtk_style_copy (gtk_widget_get_style (c->widget));
 	GdkColor color;
-	pad_style pstyle;
 
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION 
 		(GTK_COLOR_SELECTION_DIALOG(gtk_widget_get_toplevel(button))->colorsel), &color);
@@ -86,14 +85,10 @@ void color_diag_ok (GtkWidget *button, coupling *c)
 	
 	gtk_widget_set_style (c->widget, style);
 	gdk_window_destroy (gtk_widget_get_parent_window (button));
+
+	set_default_style_from_pad (get_pad (GTK_WINDOW(gtk_widget_get_toplevel(c->widget))));
+
 	g_free (c);
-
-	/* set this as new default style */
-	pstyle.text = style->text[GTK_STATE_NORMAL];
-	pstyle.back = style->base[GTK_STATE_NORMAL];
-	strcpy (pstyle.fontname, pango_font_description_to_string (style->font_desc));
-
-	set_default_style (&pstyle);
 }
 
 void color_changed (GtkColorSelection *colorsel, coupling *c)
@@ -158,6 +153,8 @@ void text_color_select (GtkWidget *widget)
 {
 	color_select (widget, FALSE);
 }
+
+
 
 
 

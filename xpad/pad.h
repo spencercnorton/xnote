@@ -32,30 +32,30 @@ typedef struct pad_style_def pad_style;
 struct pad_node_def
 {
         pad_node *next;
-	gchar fontname[1024];
+	gchar fontname[MAX_FILENAME_SIZE];
 	gboolean hidden;
 	FILE *file;
-	gchar infoname[1024];
-	gchar contentname[1024];
+	gchar infoname[MAX_FILENAME_SIZE];
+	gchar contentname[MAX_FILENAME_SIZE];
         GtkWindow *window;
 };
 
 struct pad_style_def
 {
+	gint width;
+	gint height;
 	GdkColor back;
 	GdkColor text;
-	gchar fontname[1024];
+	gchar fontname[MAX_FILENAME_SIZE];
 };
 
 struct pad_info_def
 {
         gint x;
         gint y;
-        gint width;
-        gint height;
 	pad_style style;
-	gchar infoname[1024];
-	gchar contentname[1024];
+	gchar infoname[MAX_FILENAME_SIZE];
+	gchar contentname[MAX_FILENAME_SIZE];
         gchar content[MAX_FILE_SIZE];
 };
 
@@ -66,9 +66,13 @@ extern pad_info current_info;
 
 pad_node *create_pad_with_info (pad_info *info);
 pad_node *create_pad ();
+pad_node *get_pad (GtkWindow *window);
 void cleanup ();
 
 #endif /* _PAD_H_ */
+
+
+
 
 
 

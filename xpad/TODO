@@ -1,6 +1,3 @@
 no entry in panel
-make more fault-tolerant
-	i.e. check for lost files on startup
-add arbitrary file loading ?
-
-
+fix fonts (GTK problem?)
+fix preferred size only updating on font/color change

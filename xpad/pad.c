@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include <stdio.h>
 
-pad_info DEFAULT_INFO = {0, 0, 260, 260, { {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "annstone 12"}, ""};
+pad_info DEFAULT_INFO = {0, 0, {260, 260, {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "annstone 12"}, ""};
 pad_info current_info;
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -338,8 +338,7 @@ pad_node *create_pad ()
 	GtkStyle *style = gtk_style_new ();
 	pad_style *pstyle = get_default_style ();
 
-	gtk_window_set_default_size (pad->window, DEFAULT_INFO.width, DEFAULT_INFO.height);
-	gtk_window_set_position (pad->window, GTK_WIN_POS_NONE);
+	gtk_window_set_default_size (pad->window, pstyle->width, pstyle->height);
 
 	style->base[GTK_STATE_NORMAL] = pstyle->back;
 	style->text[GTK_STATE_NORMAL] = pstyle->text;
@@ -364,7 +363,7 @@ pad_node *create_pad_with_info (pad_info *info)
 	GtkTextBuffer *buffer;
 	GtkTextView *textbox = get_text (pad->window);	
 
-	gtk_window_set_default_size (pad->window, info->width, info->height);
+	gtk_window_set_default_size (pad->window, info->style.width, info->style.height);
 	gtk_widget_set_uposition (GTK_WIDGET(pad->window), info->x, info->y);
 
 	/* set content of textbox */
@@ -387,6 +386,10 @@ pad_node *create_pad_with_info (pad_info *info)
 
 	return pad;
 }
+
+
+
+
 
 
 

@@ -29,11 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/file.h>
 #include <sys/stat.h>
 
-const gchar *TEMP_PAD_INFO_PREFIX = "temp-info";
-const gchar *TEMP_PAD_CONTENT_PREFIX = "content";
-const gchar *PAD_INFO_PREFIX = "info";
-const gchar *PAD_CONTENT_PREFIX = "content";
-
 /* helper func to get textbox from window */
 GtkTextView *get_text (GtkWindow *window)
 {
@@ -53,7 +48,7 @@ GtkTextView *get_text (GtkWindow *window)
 int set_file (const char *name, const char *value)
 {
         FILE *file;
-        gchar temp[1024];
+        gchar temp[MAX_FILENAME_SIZE];
 
 	if (name[0] == '/')
 		strcpy (temp, name);
@@ -79,7 +74,7 @@ int set_file (const char *name, const char *value)
 
 int get_file (const char *name, char *value)
 {
-	gchar temp[1024];
+	gchar temp[MAX_FILENAME_SIZE];
         gchar c[2];
 	FILE *file;
         
@@ -143,11 +138,27 @@ void close_pad_files (pad_node *pad)
 }
 
 
+void set_default_style_from_pad (pad_node *pad)
+{
+	GtkStyle *style;
+	pad_style pstyle;
+
+	style = gtk_widget_get_style (GTK_WIDGET(get_text(pad->window)));
+
+	gdk_window_get_size (GTK_WIDGET(pad->window)->window, &pstyle.width, &pstyle.height);
+	pstyle.text = style->text[GTK_STATE_NORMAL];
+	pstyle.back = style->base[GTK_STATE_NORMAL];
+	strcpy (pstyle.fontname, pango_font_description_to_string (style->font_desc));
+
+	set_default_style (&pstyle);
+}
+
 void set_default_style (pad_style *style)
 {
 	gchar buf[MAX_FILE_SIZE];
 
-	sprintf (buf, "back_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nfontname %s\n",
+	sprintf (buf, "width %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nfontname %s\n",
+		style->width, style->height,
             	style->back.red, style->back.green, style->back.blue,
 		style->text.red, style->text.green, style->text.blue,
 		style->fontname);
@@ -171,7 +182,11 @@ pad_style *get_default_style ()
 
 	while (item != NULL)
         {
-		if (strcmp (item, "back_red") == 0)
+		if (strcmp (item, "width") == 0)
+			style->width = atoi (value);
+		else if (strcmp (item, "height") == 0)
+			style->height = atoi (value);
+		else if (strcmp (item, "back_red") == 0)
 			style->back.red = atoi (value);
 		else if (strcmp (item, "back_green") == 0)
 			style->back.green = atoi (value);
@@ -198,7 +213,7 @@ void save_info_file (pad_node *pad)
         gchar info_file[MAX_FILE_SIZE] = "";
         gint x, y, height, width;
         gchar *content;
-	gchar temp[1024] = "";
+	gchar temp[MAX_FILENAME_SIZE] = "";
 	GdkColor back, text;
 	GtkTextIter s, e;	
 	GtkTextBuffer *buf;
@@ -251,7 +266,7 @@ void save_pads ()
 /* removes a file, within working_dir */
 void remove_file (gchar *filename)
 {
-	gchar long_filename[1024];
+	gchar long_filename[MAX_FILENAME_SIZE];
 
 	if (filename[0] == '/')
 		strcpy (long_filename, filename);
@@ -302,9 +317,9 @@ pad_node *load_info_file (gchar *filename)
                 else if (strcmp (item, "y") == 0)
                         info.y = atoi (value);
                 else if (strcmp (item, "width") == 0)
-                        info.width = atoi (value);
+                        info.style.width = atoi (value);
                 else if (strcmp (item, "height") == 0)
-                        info.height = atoi (value);
+                        info.style.height = atoi (value);
 		else if (strcmp (item, "back_red") == 0)
 			info.style.back.red = atoi (value);
 		else if (strcmp (item, "back_green") == 0)
@@ -341,7 +356,7 @@ void load_pads ()
 {
 	gint counter = 0, opened = 0;
 	glob_t globbuf;
-	gchar pattern[1024];
+	gchar pattern[MAX_FILENAME_SIZE];
 	pad_node *pad;
 
 	/* make all directory exists */
@@ -368,6 +383,7 @@ void load_pads ()
 
 	globfree (&globbuf);
 }
+
 
 
 
