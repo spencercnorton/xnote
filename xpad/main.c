@@ -55,7 +55,12 @@ void handle_args (int *argc, char ***argv)
 			char *value = (char *) strchr ((*argv)[i], '=');
 			value++;
 			update_time = atoi (value);
-			printf ("update time = %d\n", update_time);
+
+			if (update_time < 0)
+			{
+				printf ("sync-time cannot be less than 0.\n");
+				gtk_exit (0);
+			}
 		}
 	}
 }
@@ -73,7 +78,8 @@ void xpad_init (int *argc, char ***argv)
 	handle_args (argc, argv);
 
 	/* save contents every "update_time" seconds */
-	gtk_timeout_add (update_time * 1000, checkup, NULL);
+	if (update_time > 0)
+		gtk_timeout_add (update_time * 1000, checkup, NULL);
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
