@@ -294,7 +294,7 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *color_border = gtk_color_selection_new ();
 	GtkWidget *font_selection = gtk_font_selection_new ();
 	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_mnemonic (_("Allow _window manager decorations"));
-	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_mnemonic (_("_Confirm pad destruction"));
+	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_mnemonic (_("Con_firm pad destruction"));
 	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_mnemonic (_("_Edit lock"));
 	GtkWidget *separator_border = gtk_hseparator_new ();
 	GtkObject *adjust_padding;
