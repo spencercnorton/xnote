@@ -5,6 +5,7 @@ perfected (?) syncing.  Now will recover cleanly from anything -- including
  disappearing on X-shutdown" bug
 moved menu items around a bit
 remembers preferred size (only if you change fonts/colors. on TODO)
+not always centered now
 
 0.2.2
 -----
