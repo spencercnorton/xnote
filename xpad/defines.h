@@ -10,7 +10,7 @@
 /* files we use are not large */
 #define MAX_FILE_SIZE		1024
 
-#define VERSION				"1.6"
+#define VERSION				"1.6.1"
 
 #define TITLE_CHARS			10
 
