@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 
 enum {
-	MAX_FILENAME_SIZE=1024
+	MAX_FILENAME_SIZE=1024,
+	MAX_FILE_SIZE = 1024
 };
 
 void xpad_exit ();

@@ -1,5 +1,5 @@
 /* XPM */
-static char * xpad_icon_xpm[] = {
+static char * xpad_xpm[] = {
 "48 48 670 2",
 "  	c None",
 ". 	c #2F333A",

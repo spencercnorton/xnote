@@ -31,8 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/stat.h>
 
 
-
-const gint MAX_FILE_SIZE = 1024;
 const gchar *DEFAULTS_FILENAME = "default-style";
 
 
@@ -117,15 +115,17 @@ gint fio_get_file (const gchar *name, gchar *value, const gint size)
 
 void fio_open_pad_files (pad_node *pad, gboolean create)
 {
-	struct flock fl = {F_WRLCK, SEEK_SET, 0, 0, getpid()};
-
+	struct flock fl = {F_WRLCK, SEEK_SET, 0, 0, 0};
+	
+	fl.l_pid = getpid ();
+	
 	if (create == TRUE)
 	{
 		strcpy (pad->infoname, working_dir);
 		strcat (pad->infoname, "info-XXXXXX");
 		mkstemp (pad->infoname);
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
-
+		
 		strcpy (pad->contentname, working_dir);
 		strcat (pad->contentname, "content-XXXXXX");
 		mkstemp (pad->contentname);
@@ -146,7 +146,8 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 
 void fio_close_pad_files (pad_node *pad)
 {
-	struct flock fl = {F_UNLCK, SEEK_SET, 0, 0, getpid()};
+	struct flock fl = {F_UNLCK, SEEK_SET, 0, 0, 0};
+	fl.l_pid = getpid ();
 	fcntl (fileno(pad->file), F_SETLK, &fl);
 	fclose (pad->file);
 }
