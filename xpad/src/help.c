@@ -34,15 +34,13 @@ static void show_help_at_page (gint page);
 
 static GtkWidget *create_help (gint page)
 {
-	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook;
+	GtkWidget *dialog, *helptext, *button;
 	gchar helptextbuf[700];
 	
 	/* Create the widgets */
 	
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
-	helplabel = gtk_label_new (_("Introduction"));
-	notebook = gtk_notebook_new ();
 	
 	strcpy (helptextbuf, 
 _("Each xpad session consists of one or more open pads.  "
@@ -71,14 +69,11 @@ _("Please send comments or bug reports to "
 	gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
 	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
-	
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
 	
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Help"));
 	
 	/* Add the label, and show everything we've added to the dialog. */
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), helptext);
 	button = gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
 	
 	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);

@@ -3,11 +3,15 @@
 *features*
 now use automake/autoconf, which allows for more complete build control
 now use gettext, allowing easy translation of xpad
+now auto-apply any pad changes to hard drive, making xpad a tad more reliable
+now can easily change settings for only one pad
 
 *fixes*
-File menu is now called Pad, per HIG
+popup menu is decluttered and altered, with the HIG in mind
 fixed crash on exit if we didn't init docklet
 fixed new pads randomly starting up as white background
+cut/copy/paste are now unsensitive if no content to copy or paste
+pads now play nice with the X clipboard (middle mouse button)
 
 
 1.8
