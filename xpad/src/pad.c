@@ -1926,12 +1926,12 @@ pad_node *pad_new (void)
 		xpad_settings_get_default_height ();
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);
 	
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
-	
 	pad->locked = 0;
 	pad->closed = FALSE;
 	pad->sticky = 0;
+	
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
 	
 	pad->style = xpad_settings_get_style ();
 	pad_update_style (pad);
