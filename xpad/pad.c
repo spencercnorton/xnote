@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 
 pad_node *first_pad = NULL;
+pad_node *last_pad = NULL;
 
 static void
 menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget);
@@ -413,6 +414,9 @@ static void pad_remove (pad_node *pad)
 		if (temp->next)
 		{
 			temp->next = pad->next;
+			
+			if (pad == last_pad)
+				last_pad = temp;
 		}
 	}
 }
@@ -1700,8 +1704,14 @@ static pad_node *start_pad (void)
 	if (first_pad == NULL)
 	{
 		first_pad = pad;
+		last_pad = pad;
 		
 		accel_group = gtk_accel_group_new ();
+	}
+	else
+	{
+		last_pad->next = pad;
+		last_pad = pad;
 	}
 	
 	pad_alloc_gtk (pad);
