@@ -149,7 +149,8 @@ static void set_values (GObject *window)
 	else
 	{
 		p = g_object_get_data (window, "pad");
-		pad_style_copy (&style, &((pad_node *) p)->style);	}
+		pad_style_copy (&style, &((pad_node *) p)->style);
+	}
 	
 	p = g_object_get_data (window, "use_text");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p),  !style.use_text);
