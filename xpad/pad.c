@@ -39,7 +39,7 @@ GtkTextView *get_text (GtkWindow *window)
 		);
 }
 
-void pad_set_decorations (gboolean decor)
+void pads_set_decorations (gboolean decor)
 {
 	pad_node *temp = first_pad;
 
@@ -48,12 +48,24 @@ void pad_set_decorations (gboolean decor)
 		if (gtk_window_get_decorated (temp->window) != decor)
 		{
 			gint x, y;
-
-        		gtk_window_get_position (temp->window, &x, &y);
+			
+        	gtk_window_get_position (temp->window, &x, &y);
 			gtk_window_set_decorated (temp->window, decor);
 			gtk_window_reshow_with_initial_size (temp->window);
 			gtk_window_move (temp->window, x, y);
 		}
+		temp = temp->next;
+	}
+}
+
+void pads_set_editable (gboolean editable)
+{
+	pad_node *temp = first_pad;
+
+	while (temp)
+	{
+		gtk_text_view_set_editable (get_text (temp->window), editable);
+		
 		temp = temp->next;
 	}
 }
@@ -777,7 +789,6 @@ static gboolean focus_out_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 	return TRUE;
 }
 
-
 /*
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
@@ -819,6 +830,9 @@ pad_node *start_pad (void)
 	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
+	
+	/* set editable */
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), current_settings.edit_lock == 0 ? TRUE : FALSE);
 	
 	/* make sure that we only save after pad is realized */
 	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);

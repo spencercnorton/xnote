@@ -32,7 +32,7 @@ void global_preferences_cancel (GtkWidget *button)
 	current_settings = backup_settings;
 	fio_save_as_defaults (&current_settings);
 
-	pad_set_decorations (current_settings.decorations);
+	pads_set_decorations (current_settings.decorations);
 
 	gtk_widget_destroy (gtk_widget_get_toplevel(button));
 }
@@ -155,7 +155,8 @@ void global_preferences_apply (GtkWidget *button)
 	
 	reset_sync ();
 	
-	pad_set_decorations (current_settings.decorations);
+	pads_set_decorations (current_settings.decorations);
+	pads_set_editable (current_settings.edit_lock == 0 ? TRUE : FALSE);
 	
 	fio_save_as_defaults (&current_settings);
 	
