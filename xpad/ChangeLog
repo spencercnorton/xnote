@@ -1,4 +1,4 @@
-2004-02-23  Michael Terry  <mikix@users.sourceforge.net>
+2004-02-23  Michael Terry  <mike@mterry.name>
 
 	* src/main.c: Use a list of pixbufs instead of just a 48 pixel
 	one for the default window icon.
