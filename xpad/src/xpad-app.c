@@ -89,6 +89,7 @@ static gboolean  xpad_app_open_proc_file    (void);
 static void
 xpad_app_init (int argc, char **argv)
 {
+	gboolean first_time;
 	gboolean have_gtk;
 /*	GdkVisual *visual;*/
 	
@@ -106,10 +107,7 @@ xpad_app_init (int argc, char **argv)
 	output = stdout;
 	
 	/* Set up config directory. */
-	if (!config_dir_exists ())
-	{
-		show_help ();
-	}
+	first_time = !config_dir_exists ();
 	config_dir = make_config_dir ();
 	
 	/* create master socket name */
@@ -174,6 +172,9 @@ xpad_app_init (int argc, char **argv)
 	}
 	
 	xpad_app_quit_if_no_pads (pad_group);
+	
+	if (first_time)
+		show_help ();
 	
 	g_free (server_filename);
 	server_filename = NULL;
