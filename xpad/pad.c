@@ -559,17 +559,49 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 }
 
 static void
-disable_toolbar_events (pad_node *pad)
+block_toolbar_events (pad_node *pad)
 {
-	g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
-	g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
+	if (pad->toolbar)
+	{
+		if (pad->toolbar->timeout)
+			toolbar_end_timeout (pad);
+		
+		g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
+		g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
+	}
 }
 
 static void
-reenable_toolbar_events (pad_node *pad)
+unblock_toolbar_events (pad_node *pad)
 {
-	g_signal_handlers_unblock_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
-	g_signal_handlers_unblock_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
+	if (pad->toolbar)
+	{
+		g_signal_handlers_unblock_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
+		g_signal_handlers_unblock_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
+	}
+}
+
+static void
+connect_toolbar_events (pad_node *pad)
+{
+	if (pad->toolbar)
+	{
+		g_signal_connect (pad->window, "leave-notify-event", G_CALLBACK (leave_handler), pad);
+		g_signal_connect (pad->window, "enter-notify-event", G_CALLBACK (enter_handler), pad);
+	}
+}
+
+static void
+disconnect_toolbar_events (pad_node *pad)
+{
+	if (pad->toolbar)
+	{
+		if (pad->toolbar->timeout)
+			toolbar_end_timeout (pad);
+		
+		g_signal_handlers_disconnect_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
+		g_signal_handlers_disconnect_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
+	}
 }
 
 static void
@@ -579,7 +611,7 @@ disable_popup_handler (pad_node *pad)
 	
 	if (pad->toolbar)
 	{
-		reenable_toolbar_events (pad);
+		unblock_toolbar_events (pad);
 		
 		/**
 		 * We must check if we disabled off of pad and start the timeout if so.
@@ -665,7 +697,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_clear, "activate", G_CALLBACK (pad_clear), pad);
 	g_signal_connect_swapped (menu_item_lock, "toggled", G_CALLBACK (pad_toggle_lock), pad);
 
-	disable_toolbar_events (pad);
+	block_toolbar_events (pad);
 	g_signal_connect_swapped (menu, "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
 	gtk_widget_show_all (menu);
@@ -890,9 +922,11 @@ pad_remove_toolbar (pad_node *pad)
 
 	if (pad->toolbar)
 	{
-		gtk_widget_ref (pad->toolbar->bar);
+		disconnect_toolbar_events (pad);
+		
+		toolbar_hide (pad);
 		gtk_container_remove (GTK_CONTAINER (pad->box), pad->toolbar->bar);
-		g_free (pad->toolbar->bar);
+		/*g_free (pad->toolbar->bar);*/
 		g_free (pad->toolbar);
 		pad->toolbar = NULL;
 	}
@@ -913,6 +947,8 @@ pad_add_toolbar (pad_node *pad)
 			G_CALLBACK (grip_press_handler), pad);
 		
 		pad_toolbar_update (pad);
+		
+		connect_toolbar_events (pad);
 	}
 }
 
@@ -960,8 +996,6 @@ static pad_node *start_pad (void)
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
- 	g_signal_connect_after (window, "leave-notify-event", G_CALLBACK (leave_handler), pad);
-	g_signal_connect_after (window, "enter-notify-event", G_CALLBACK (enter_handler), pad);	
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	

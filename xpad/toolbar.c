@@ -37,8 +37,18 @@ toolbar_show (pad_node *pad)
 	}
 }
 
-int
-toolbar_hide (gpointer data)
+void
+toolbar_hide (pad_node *pad)
+{
+	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	{
+		gtk_widget_hide (pad->toolbar->bar);
+		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
+	}
+}
+
+static int
+toolbar_hide_timeout (gpointer data)
 {
 	pad_node *pad = (pad_node *) data;
 	
@@ -46,8 +56,7 @@ toolbar_hide (gpointer data)
 	{
 		pad->toolbar->timeout = 0;
 		
-		gtk_widget_hide (pad->toolbar->bar);
-		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
+		toolbar_hide (pad);
 	}
 	
 	return 0;
@@ -56,7 +65,7 @@ toolbar_hide (gpointer data)
 void
 toolbar_start_timeout (pad_node *pad)
 {
-	pad->toolbar->timeout = gtk_timeout_add (1000, toolbar_hide, pad);
+	pad->toolbar->timeout = gtk_timeout_add (1000, toolbar_hide_timeout, pad);
 }
 
 void
