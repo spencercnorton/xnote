@@ -114,7 +114,7 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 	 */
 	bytesread = fread(value, 1, size + 1, file);
 
-	if (bytesread == size + 1)
+	if (bytesread >= size + 1)
 	{
 		bytesread = size;
 		
