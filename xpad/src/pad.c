@@ -714,7 +714,9 @@ void pads_unhide_all (void)
 	while (temp)
 	{
 		if (!temp->closed)
+		{
 			pad_show (temp);
+		}
 		
 		temp = temp->next;
 	}
@@ -1985,6 +1987,7 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->height = info->height;
 	pad->x = info->x;
 	pad->y = info->y;
+	pad->closed = FALSE;
 	
 	pad_set_sticky (pad, info->sticky);
 	
