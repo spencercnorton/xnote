@@ -47,7 +47,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Edit/C_ut",				"<control>X",			menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
 	{"/Edit/_Copy",				"<control>C",			menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
 	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
-	{"/Edit/Clear Pad",			NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
+	{"/Edit/Clea_r Pad",			NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Lock Style",		NULL,					menuitem_cb,	15,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,					0,				0,	"<Separator>"},
