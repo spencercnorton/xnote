@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
-"POT-Creation-Date: 2003-04-01 18:29+0400\n"
+"POT-Creation-Date: 2003-04-01 22:44-0500\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
@@ -279,6 +279,10 @@ msgstr "/Стикер"
 msgid "/Pad/_New"
 msgstr "/Стикер/Новый"
 
+#: src/pad.c:42
+msgid "/Pad/sep1"
+msgstr "/Стикер/Закрыть"
+
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
 msgstr "/Стикер/Приколоть"
@@ -286,6 +290,10 @@ msgstr "/Стикер/Приколоть"
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
 msgstr "/Стикер/Свойства"
+
+#: src/pad.c:45
+msgid "/Pad/sep2"
+msgstr "/Стикер/Закрыть"
 
 #: src/pad.c:46
 msgid "/Pad/_Close"
@@ -311,6 +319,10 @@ msgstr "/Правка/Копировать"
 msgid "/Edit/_Paste"
 msgstr "/Правка/Вставить"
 
+#: src/pad.c:53
+msgid "/Edit/sep"
+msgstr "/Правка/Вставить"
+
 #: src/pad.c:54
 msgid "/Edit/Prefere_nces"
 msgstr "/Правка/Свойства"
@@ -326,6 +338,10 @@ msgstr "/Заметки/Показать Все"
 #: src/pad.c:57
 msgid "/Notes/_Close All"
 msgstr "/Заметки/Закрыть все"
+
+#: src/pad.c:58
+msgid "/Notes/sep"
+msgstr "/Заметки/Вставить"
 
 #: src/pad.c:59
 msgid "/_Help"
@@ -400,23 +416,23 @@ msgstr "Открыть which файл?"
 msgid "Save as which file?"
 msgstr "Сохранить как which файл?"
 
-#: src/pad.c:1072 src/pad.c:1269
+#: src/pad.c:1072 src/pad.c:1258
 msgid "/Edit/Cut"
 msgstr "/Правка/Вырезать"
 
-#: src/pad.c:1074 src/pad.c:1271
+#: src/pad.c:1074 src/pad.c:1260
 msgid "/Edit/Copy"
 msgstr "/Правка/Копировать"
 
-#: src/pad.c:1076 src/pad.c:1275
+#: src/pad.c:1076 src/pad.c:1264
 msgid "/Edit/Paste"
 msgstr "/Правка/Вставить"
 
-#: src/pad.c:1215
+#: src/pad.c:1206
 msgid "/Notes"
 msgstr "/Заметки"
 
-#: src/pad.c:1263
+#: src/pad.c:1252
 msgid "/Pad/Sticky"
 msgstr "/Стикер/Приколоть"
 

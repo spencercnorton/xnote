@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-01 22:18-0500\n"
+"POT-Creation-Date: 2003-04-01 22:44-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -395,15 +395,15 @@ msgstr ""
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1072 src/pad.c:1259
+#: src/pad.c:1072 src/pad.c:1258
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1074 src/pad.c:1261
+#: src/pad.c:1074 src/pad.c:1260
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1076 src/pad.c:1265
+#: src/pad.c:1076 src/pad.c:1264
 msgid "/Edit/Paste"
 msgstr ""
 
@@ -411,7 +411,7 @@ msgstr ""
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1253
+#: src/pad.c:1252
 msgid "/Pad/Sticky"
 msgstr ""
 
