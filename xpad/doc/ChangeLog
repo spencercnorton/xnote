@@ -1,3 +1,15 @@
+1.9
+---
+*features*
+now use automake/autoconf, which allows for more complete build control
+now use gettext, allowing easy translation of xpad
+
+*fixes*
+File menu is now called Pad, per HIG
+fixed crash on exit if we didn't init docklet
+fixed new pads randomly starting up as white background
+
+
 1.8
 ---
 *features*
