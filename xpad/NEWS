@@ -1,3 +1,8 @@
+Version 2.0-b3
+* Fixed a double-free bug that caused some problems with new pads
+* Updated Irish translation (Kevin Patrick Scannell)
+* Updated Spanish translation (Ramon Rey Vicente)
+
 Version 2.0-b2
 * Redesigned preferences and pad properties dialogs
 * If the tray disappears (e.g. killall gnome-panel), xpad's icon reappears

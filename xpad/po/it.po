@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 21:42-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: 2003-07-10 11:05-0500\n"
 "Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -150,11 +150,11 @@ msgstr ""
 msgid "_Notes"
 msgstr ""
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr ""
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 msgid "_Close All"
 msgstr ""
 

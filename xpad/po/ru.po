@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 21:42-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
@@ -161,11 +161,11 @@ msgstr "Разрешить атрибуты окна оконного менед
 msgid "_Notes"
 msgstr "/Заметки"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr "Показать все"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Закрыть все стикеры"

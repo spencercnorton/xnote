@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 21:42-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,11 +150,11 @@ msgstr ""
 msgid "_Notes"
 msgstr ""
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr ""
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 msgid "_Close All"
 msgstr ""
 

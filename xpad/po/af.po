@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 21:42-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: 2004-03-02 15:23+0200\n"
 "Last-Translator: Petri Jooste <rkwjpj@puk.ac.za>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
@@ -170,11 +170,11 @@ msgstr "Laat _vensterbestuurderversierings toe"
 msgid "_Notes"
 msgstr "/_Notas"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr "_Wys Alles"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Maak alle boekies toe"

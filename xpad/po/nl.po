@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 21:42-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: 2003-10-21 22:44+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -166,11 +166,11 @@ msgstr "Vensterbeheerder versieringen toestaan"
 msgid "_Notes"
 msgstr "/Notities"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr "Alle weergeven"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 #, fuzzy
 msgid "_Close All"
 msgstr "Alle kladblokken sluiten"
