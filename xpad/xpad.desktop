@@ -5,7 +5,7 @@ Version=1.0
 Name=xpad
 
 GenericName=Sticky Notes
-GenericName[de]=Selvklæbende Noter
+GenericName[dk]=Selvklæbende Noter
 GenericName[eo]=Gluecnotoj
 GenericName[es]=Nota Pegajosa
 GenericName[fr]=Mémos Autocollants
@@ -13,7 +13,7 @@ GenericName[it]=Note Adesive
 GenericName[ru]=Cтикеры
 
 Comment=Jot down notes for later
-Comment[de]=Tag hurtige noter til brug senere
+Comment[dk]=Tag hurtige noter til brug senere
 Comment[es]=Anotar más tarde
 Comment[fr]=Prenez des notes pour plus tard
 Comment[it]=Prendi delle note per più tardi
