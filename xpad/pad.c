@@ -606,7 +606,8 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				gtk_window_present (pad->window);
 				
 				if ((event_button->state & GDK_CONTROL_MASK) ||
-						current_settings.edit_lock) {
+						(current_settings.edit_lock && 
+						gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)) == FALSE)) {
 					pad_move (pad, event);
 					return TRUE;
 				}
@@ -622,6 +623,25 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		}
 		break;
 
+		// if they double click...
+		case GDK_2BUTTON_PRESS:
+		{
+			GdkEventButton *event_button = (GdkEventButton *) event;
+			
+			switch (event_button->button)
+			{
+				case 1:
+				// raise window if clicked on
+		///		gtk_window_present (pad->window);
+				
+				if (current_settings.edit_lock) {
+					gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), TRUE);
+					return TRUE;
+				}
+			}
+		}
+		break;
+		
 		case GDK_KEY_PRESS:
 		{
 			GdkEventKey *event_key = (GdkEventKey *) event;
@@ -694,29 +714,45 @@ static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_
 	if (event == NULL)
 		return FALSE;
 
-	if (event->type == GDK_BUTTON_PRESS)
+	switch (event->type)
 	{
-		event_button = (GdkEventButton *) event;
-		
-		switch (event_button->button)
-		{
-			case 1:
-			// raise window if clicked on
-			gtk_window_present (pad->window);
+		case GDK_BUTTON_PRESS:
+			event_button = (GdkEventButton *) event;
 			
-			pad_move (pad, event);
-			return TRUE;
-
-		  	case 3:
-			if (event_button->state & GDK_CONTROL_MASK)
-				pad_resize (pad, event);
-			else
-				pad_popup (pad, event_button);
-			return TRUE;
-		}
+			switch (event_button->button)
+			{
+				case 1:
+				// raise window if clicked on
+				gtk_window_present (pad->window);
+				
+				pad_move (pad, event);
+				return TRUE;
+	
+				case 3:
+				if (event_button->state & GDK_CONTROL_MASK)
+					pad_resize (pad, event);
+				else
+					pad_popup (pad, event_button);
+				return TRUE;
+			}
+			break;
+		
+		default:
+			break;
 	}
 
 	return FALSE;
+}
+
+static gboolean focus_out_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
+{
+	if (event == NULL)
+		return FALSE;
+	
+	if (current_settings.edit_lock)
+		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
+	
+	return TRUE;
 }
 
 
@@ -742,6 +778,7 @@ pad_node *start_pad (void)
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
 	g_signal_connect (eventbox, "event", G_CALLBACK (eventbox_event_handler), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
+	g_signal_connect_after (textbox, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 
 	pad->next = NULL;
 	pad->window = GTK_WINDOW(window);
