@@ -18,8 +18,14 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GLIB_2_0
-AM_PATH_GTK_2_0(2.4.0)
+AM_PATH_GLIB_2_0(2.6.0,,AC_MSG_ERROR([
+  *** GLib 2.6 is required to build Xpad; please make sure you have the GLib
+  *** development headers installed. The latest version of GLib is
+  *** always available at http://gtk.org/.]))
+AM_PATH_GTK_2_0(2.6.0,,AC_MSG_ERROR([
+  *** GTK+ 2.6 is required to build Xpad; please make sure you have the GTK+
+  *** development headers installed. The latest version of GTK+ is
+  *** always available at http://gtk.org/.]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
