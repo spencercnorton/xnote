@@ -1,0 +1,519 @@
+# Irish translations for xpad
+# Copyright (C) 2003 Free Software Foundation, Inc. 
+# This file is distributed under the same license as the xpad package.
+# Kevin Patrick Scannell <scannell@SLU.EDU>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xpad 1.11-b2\n"
+"POT-Creation-Date: 2003-07-11 19:48-0400\n"
+"PO-Revision-Date: 2003-08-07 13:45-0600\n"
+"Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
+"Language-Team: Irish <ga@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:198
+msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
+msgstr "Modh \"--verbosity\" neamhcheadaithe.  Ní foláir dó a bheith 0, 1, nó 2.\n"
+
+#: src/main.c:260
+msgid "Prints usage information and exits"
+msgstr "Taispeáin eolas faoin úsáid agus éirigh as"
+
+#: src/main.c:261
+msgid "Prints xpad version and exits"
+msgstr "Taispeáin an leagan xpad agus éirigh as"
+
+#: src/main.c:262
+msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
+msgstr "Socraigh an leibhéal d'aschur dífhabhtaithe (0, 1, nó 2; luach loicthe 0)"
+
+#: src/main.c:263
+msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
+
+#. registered here a second time because it has effects both on local instances and remote instances
+#: src/main.c:267
+msgid "Causes xpad to create a new pad on startup even if pads already exist"
+msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
+
+#: src/main.c:268
+msgid "Causes all running xpad instances to close"
+msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
+
+#: src/main.c:269
+msgid "Lists the titles of all open pads"
+msgstr "Taispeáin na teidil de na ceapa oscailte"
+
+#: src/main.c:270
+msgid "Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\""
+msgstr "Taispeáin an ceap Nú (bunaithe ag 1) chuig an úsáideoir; féach ar uimhreacha le \"--list\""
+
+#: src/main.c:271
+msgid "Causes all pads to present themselves to the user"
+msgstr "Taispeáin gach ceap chuig an úsáideoir"
+
+#: src/main.c:303
+msgid ""
+"Usage: xpad [OPTIONS]\n"
+"\n"
+msgstr ""
+"Úsáid: xpad [ROGHANNA]\n"
+"\n"
+
+#: src/main.c:339
+#, c-format
+msgid "Missing companion argument to %s\n"
+msgstr "Ní foláir argóint don rogha %s\n"
+
+#: src/main.c:388
+#, c-format
+msgid "Didn't understand argument '%s'\n"
+msgstr "Argóint anaithnid %s.\n"
+
+#: src/main.c:444
+#, c-format
+msgid "Invalid number: '%s'\n"
+msgstr "Uimhir neamhbhailí: '%s'\n"
+
+#: src/fio.c:84
+#, c-format
+msgid "Could not write to file %s."
+msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
+
+#: src/fio.c:110
+#, c-format
+msgid "Could not read from file %s."
+msgstr "Níorbh fhéidir aon rud a léamh as an gcomhad %s."
+
+#: src/fio.c:438
+#, c-format
+msgid "Could not open directory %s."
+msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
+
+#: src/fio.c:441
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgstr "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na ceapa agus na hairíonna.  Druidfidh Xpad anois."
+
+#: src/pref.c:289 src/properties.c:228
+msgid "Background Color"
+msgstr "Dath an Chúlra"
+
+#: src/pref.c:290 src/properties.c:229
+msgid "Text Color"
+msgstr "Dath an Théacs"
+
+#: src/pref.c:291 src/properties.c:230
+msgid "Border"
+msgstr "Ciumhais"
+
+#: src/pref.c:292 src/properties.c:231
+msgid "Border _width:"
+msgstr "_Leithead na ciumhaise:"
+
+#: src/pref.c:293 src/pref.c:298 src/properties.c:232 src/properties.c:235
+msgid "pixels"
+msgstr "picsil"
+
+#: src/pref.c:294 src/properties.c:233
+msgid "Font Face"
+msgstr "Cló-aghaidh"
+
+#: src/pref.c:295
+msgid "Options"
+msgstr "Roghanna"
+
+#: src/pref.c:296
+msgid "Toolbar"
+msgstr "Barra Uirlisí"
+
+#: src/pref.c:297 src/properties.c:234
+msgid "_Padding:"
+msgstr "_Stuáil:"
+
+#: src/pref.c:304
+msgid "Allow _window manager decorations"
+msgstr "Ceadaigh maisiúcháin ón bhainisteoir _fuinneoga"
+
+#: src/pref.c:305
+msgid "Con_firm pad destruction"
+msgstr "_Dearbhaigh scrios an cheap nótaí"
+
+#: src/pref.c:306
+msgid "_Edit lock"
+msgstr "Cosc ar _Eagar"
+
+# Domhanda in FARF but that seems like bald Béarlachas - KPS
+#: src/pref.c:351
+msgid "Global Preferences"
+msgstr "Airíonna Cuimsitheacha"
+
+#: src/pref.c:370 src/properties.c:303
+msgid "_Use system text color"
+msgstr "Bain _úsáid as dath an théacs ón chóras"
+
+#: src/pref.c:393 src/properties.c:324
+msgid "_Use system background color"
+msgstr "Bain _úsáid as dath an chúlra ón chóras"
+
+#: src/pref.c:429 src/properties.c:357
+msgid "The amount of space you want between the border and text."
+msgstr "An méid spáis atá tú ag iarraidh idir an chiumhais agus an théacs."
+
+#: src/pref.c:430 src/properties.c:358
+msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
+msgstr "Roghnaigh líon na bpicsil timpeall an achair théacs.  Tá an dath céanna ar an achar seo agus tá sé ar gach dtaobh."
+
+#: src/pref.c:443 src/properties.c:374
+msgid "The amount of space you want surrounding the pad."
+msgstr "An méid spáis atá tú ag iarraidh timpeall an chip nótaí."
+
+#: src/pref.c:444 src/properties.c:375
+msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
+msgstr "Roghnaigh líon na bpicsil timpeall an chip nótaí.  Tá a dhath féin ag an achar seo agus tá sé ar gach dtaobh."
+
+#: src/pref.c:470 src/properties.c:397
+msgid "_Use system font face"
+msgstr "Bain _úsáid as an chló-aghaidh ón chóras"
+
+# in FARF - KPS
+#: src/pref.c:506
+msgid "Click and drag a button to move it."
+msgstr "Cliceáil agus tarraing cnaipe á haistriú."
+
+#: src/pref.c:512
+msgid "_Enable toolbar"
+msgstr "_Cuir an barra uirlisí ar fáil"
+
+# coinage - KPS
+#: src/pref.c:513
+msgid "_Auto-hide toolbar"
+msgstr "_Uathfholaigh an barra uirlisí"
+
+#: src/pref.c:523
+msgid "<b>Toolbar Buttons:</b>"
+msgstr "<b>Cnaipí ar an Bharra Uirlisí:</b>"
+
+# guessing the present tense is really the intent -KPS
+#: src/pref.c:524
+msgid "<b>Used Buttons:</b>"
+msgstr "<b>Cnaipí in úsáid:</b>"
+
+# guessing the present tense is really the intent -KPS
+#: src/pref.c:525
+msgid "<b>Unused Buttons:</b>"
+msgstr "<b>Cnaipí nach bhfuil in úsáid:</b>"
+
+#: src/pref.c:642 src/pref.c:643
+msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr "Más tofa é seo, d'fheicfeá barra uirlisí nuair atá an luchóg anuas ar an cheap."
+
+#: src/pref.c:646 src/pref.c:647
+msgid "If on, the toolbar will disappear when you are not using the pad."
+msgstr "Más tofa é seo, imeoidh an barra uirlisí as radharc nuair atá an ceap ó úsáid."
+
+#: src/pref.c:659
+msgid "Allow _scrollbars"
+msgstr "Ceadaigh _scrollbharraí"
+
+#: src/pref.c:660
+msgid "Pads start s_ticky"
+msgstr "Tá na ceapa g_reamaitheacha ar dtús"
+
+#: src/pref.c:663
+msgid "Close and save _all pads"
+msgstr "Dún agus sábháil _gach uile cheap nótaí"
+
+#: src/pref.c:665
+msgid "Close and save _pad"
+msgstr "Dún agus sábháil an _ceap nótaí"
+
+#: src/pref.c:667
+msgid "_Destroy pad (no confirmation)"
+msgstr "_Scrios an ceap nótaí (ní bheidh aon dheimhniú)"
+
+#: src/pref.c:672
+msgid "<b>Window Manager Close Action:</b>"
+msgstr "<b>Bainisteoir Fuinneoga - Gníomh Dúnta:</b>"
+
+#: src/pref.c:717 src/pref.c:719
+msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
+msgstr "Más tofa é seo, cuirfidh do bhainisteoir fuinneoga a maisiúcháin féin le gach ceap nótaí.  Mar shampla, barra teidil agus cnaipe dhúnta."
+
+#: src/pref.c:723 src/pref.c:724
+msgid "If on, choosing to destroy a pad will prompt for conformation."
+msgstr "Más tofa é seo, d'iarrfaí cinntiú nuair is mian leat ceap nótaí a scriosadh."
+
+#: src/pref.c:727 src/pref.c:728
+msgid "If on, new pads are sticky by default."
+msgstr "Más tofa é seo, beidh ceapa nua greamaitheacha trí mhainneachtain."
+
+#: src/pref.c:731 src/pref.c:733
+msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
+msgstr "Más tofa é seo, nochtfaí scrollbharraí nuair nach dtoilleann an téacs sa cheap nótaí.  Murab é, d'fheisteodh an ceap é féin don théacs."
+
+#: src/pref.c:737 src/pref.c:740
+msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
+msgstr "Más tofa é seo, nuair atá ceap as fócas, tá sé do-eagraithe.   Dá bhrí seo, is féidir leat é a bhogadh trí tharraingt ar clé.  Cliceáil an ceap faoi dhó chun é a dhéanamh ineagraithe arís. Mura tofa, tá ceapa ineagraithe i dtólamh."
+
+#: src/pref.c:745 src/pref.c:746
+msgid "All pads will close, saving contents first."
+msgstr "Dúnfaidh gach uile ceap nótaí; sábhálfar an t-ábhar i dtosach."
+
+#: src/pref.c:749 src/pref.c:750
+msgid "The pad you clicked the close button on will close, saving contents."
+msgstr "Dúnfaidh an ceap a bhí tofa leis an chnaipe dúnta, ag sábháil a ábhar."
+
+#: src/pref.c:753 src/pref.c:755
+msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
+msgstr "Scriosfar an ceap a bhí tofa leis an chnaipe dúnta, ag cailleadh a ábhar.  Ní bheidh aon dheimhniú."
+
+#: src/pad.c:40
+msgid "/_Pad"
+msgstr "/_Ceap"
+
+#: src/pad.c:41
+msgid "/Pad/_New"
+msgstr "/Ceap/_Nua"
+
+#: src/pad.c:42
+msgid "/Pad/sep1"
+msgstr "/Ceap/sep1"
+
+#: src/pad.c:43
+msgid "/Pad/_Sticky"
+msgstr "/Ceap/_Greamaitheach"
+
+#: src/pad.c:44
+msgid "/Pad/Proper_ties"
+msgstr "/Ceap/_Airíonna"
+
+#: src/pad.c:45
+msgid "/Pad/sep2"
+msgstr "/Ceap/sep2"
+
+#: src/pad.c:46
+msgid "/Pad/_Close"
+msgstr "/Ceap/_Dún"
+
+#: src/pad.c:47
+msgid "/Pad/_Delete"
+msgstr "/Ceap/_Scrios"
+
+#. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+#: src/pad.c:49
+msgid "/_Edit"
+msgstr "/_Eagar"
+
+#: src/pad.c:50
+msgid "/Edit/C_ut"
+msgstr "/Eagar/_Gearr"
+
+#: src/pad.c:51
+msgid "/Edit/_Copy"
+msgstr "/Eagar/_Cóipeáil"
+
+#: src/pad.c:52
+msgid "/Edit/_Paste"
+msgstr "/Eagar/G_reamaigh"
+
+#: src/pad.c:53
+msgid "/Edit/sep"
+msgstr "/Eagar/sep"
+
+#: src/pad.c:54
+msgid "/Edit/Prefere_nces"
+msgstr "/Eagar/_Airíonna"
+
+#: src/pad.c:55
+msgid "/_Notes"
+msgstr "/_Nótaí"
+
+# too long? - KPS
+#: src/pad.c:56
+msgid "/Notes/_Show All"
+msgstr "/Nótaí/_Taispeáin an t-iomlán"
+
+# too long? - KPS
+#: src/pad.c:57
+msgid "/Notes/_Close All"
+msgstr "/Nótaí/_Dún an t-iomlán"
+
+#: src/pad.c:58
+msgid "/Notes/sep"
+msgstr "/Nótaí/sep"
+
+#: src/pad.c:59
+msgid "/_Help"
+msgstr "/_Cabhair"
+
+#: src/pad.c:60
+msgid "/Help/_Contents"
+msgstr "/Cabhair/_Clár"
+
+#: src/pad.c:61
+msgid "/Help/_About"
+msgstr "/Cabhair/_Faoi seo"
+
+#: src/pad.c:68
+msgid "Open New Pad"
+msgstr "Oscail Ceap Nótaí Nua"
+
+#: src/pad.c:69
+msgid "Close and Save Pad"
+msgstr "Dún agus Sábháil an Ceap"
+
+#: src/pad.c:70
+msgid "Delete Pad"
+msgstr "Scrios Ceap Nótaí"
+
+#: src/pad.c:71
+msgid "Clear Pad Contents"
+msgstr "Glan Ábhar an Chip"
+
+#: src/pad.c:72
+msgid "Edit Global Preferences"
+msgstr "Athraigh Airíonna Cuimsitheacha"
+
+#: src/pad.c:73
+msgid "Edit Pad Properties"
+msgstr "Athraigh Airíonna an Chip"
+
+#: src/pad.c:74
+msgid "Close All Pads"
+msgstr "Dún Gach Uile Ceap Nótaí"
+
+# verb in OLT -KPS
+#: src/pad.c:75
+msgid "Toggle Stickiness"
+msgstr "Scoránaigh an Ghreamaitheacht"
+
+#: src/pad.c:76
+msgid "Minimize Pads to System Tray"
+msgstr "Íoslaghdaigh ceapa chuig an dtrae córais"
+
+#: src/pad.c:657
+msgid "Delete this pad?"
+msgstr "Ar mhaith leat an ceap seo a scriosadh?"
+
+#: src/pad.c:658
+msgid "All text of this pad will be irrevocably lost."
+msgstr "Scriosfaidh an téacs uile atá sa cheap seo, gan fáil ar ais."
+
+#: src/pad.c:838
+#, c-format
+msgid "You are using xpad %s with GTK+ %i.%i.%i."
+msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
+
+#: src/pad.c:843
+msgid "Visit http://xpad.sourceforge.net for more information about xpad."
+msgstr "Féach ar http://xpad.sourceforge.net chun tuilleadh eolais faoi xpad a fháil."
+
+#. we must also re-enable menu widgets for cut/copy/paste, since we want the
+#. user to be able to cut/copy/paste
+#: src/pad.c:968 src/pad.c:1146
+msgid "/Edit/Cut"
+msgstr "/Eagar/Gearr"
+
+#: src/pad.c:970 src/pad.c:1148
+msgid "/Edit/Copy"
+msgstr "/Eagar/Cóipeáil"
+
+#: src/pad.c:972 src/pad.c:1152
+msgid "/Edit/Paste"
+msgstr "/Eagar/Greamaigh"
+
+#: src/pad.c:1094
+msgid "/Notes"
+msgstr "/Nótaí"
+
+#. set checkboxes
+#: src/pad.c:1140
+msgid "/Pad/Sticky"
+msgstr "/Ceap/Greamaitheach"
+
+#: src/help.c:46
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
+"\n"
+msgstr ""
+"Tá seisiún xpad comhdhéanta de ceap amháin oscailte ar a laghad.  Tá siad mar nótaí greamaitheacha ar do dheasc inar féidir leat meamraim a scríobh.\n"
+"\n"
+
+#: src/help.c:50
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+"<b>Chun ceap a bhogadh</b>, tarraing ar clé ar an mbarra uirlisí, tarraing ar dheis ar an bhunathraitheoir méide (íochtar ar dheis),nó coinnigh CTRL síos agus ag tarraingt ar clé in áit ar bith ar an gceap.\n"
+"\n"
+
+#: src/help.c:54
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+"<b>Chun an mhéid a athrú</b>, tarraing ar clé ar an bhunathraitheoir méide, nó coinnigh CTRL síos agus ag tarraingt ar dheis in áit ar bith ar an gceap.\n"
+"\n"
+
+#: src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
+"\n"
+msgstr ""
+"<b>Chun na hairíonna dathúcháin a athrú</b>, cliceáil ar dheis ar ceap agus roghnaigh Eagar+Airíonna.\n"
+"\n"
+
+#: src/help.c:60
+msgid ""
+"Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
+"\n"
+msgstr ""
+"Tá an chuid is mó de na gníomhartha ar fáil tríd an roghchlár aníos a fheiceann tú nuair a chliceáil ar dheis ar ceap.  Bain triail as agus bain sult as.\n"
+"\n"
+
+#: src/help.c:64
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr "Seol tuairiscí fabhtanna nó léirmheasanna chuig xpad-devel@lists.sourceforge.net"
+
+#: src/help.c:73
+msgid "Help"
+msgstr "Cabhair"
+
+#: src/tray.c:123
+msgid "No_tes"
+msgstr "Nó_taí"
+
+#: src/tray.c:127
+msgid "_Show All"
+msgstr "_Taispeáin an t-iomlán"
+
+#: src/tray.c:131
+msgid "_Hide All"
+msgstr "_Folaigh an t-iomlán"
+
+#: src/tray.c:203
+msgid "xpad: right click for more options..."
+msgstr "xpad: cliceáil ar dheis chun roghanna breise a fheiceáil..."
+
+#: src/tray.c:204
+msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
+msgstr "Cliceáil ar dheis ar an dheilbhín seo le haghaidh roghchlár XPad.  Cliceáil ar clé chun scoránú an dtaispeánfar nó nach dtaispeánfar na ceapa."
+
+#: src/properties.c:276
+msgid "Pad Properties"
+msgstr "Airíonna an Chip"
+
+#: xpad.desktop.in.h:1
+msgid "Jot down notes for later"
+msgstr "Breac nótaí le léamh ar ball"
+
+#: xpad.desktop.in.h:2
+msgid "Sticky Notes"
+msgstr "Nótaí Greamaitheacha"
+
+#: xpad.desktop.in.h:3
+msgid "xpad"
+msgstr "xpad"
