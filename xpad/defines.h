@@ -1,6 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#include "config.h"
+
 /**
  * This file is just used to hold all the common hard defines we need.
  */
