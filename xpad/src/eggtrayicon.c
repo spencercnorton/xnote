@@ -81,7 +81,8 @@ egg_tray_icon_get_type (void)
 	NULL, /* class_data */
 	sizeof (EggTrayIcon),
 	0,    /* n_preallocs */
-	(GInstanceInitFunc) egg_tray_icon_init
+	(GInstanceInitFunc) egg_tray_icon_init,
+	NULL
       };
 
       our_type = g_type_register_static (GTK_TYPE_PLUG, "EggTrayIcon", &our_info, 0);
@@ -133,7 +134,7 @@ egg_tray_icon_get_property (GObject    *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-      g_value_set_enum (value, icon->orientation);
+      g_value_set_enum (value, (gint)icon->orientation);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -147,7 +148,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
   Display *xdisplay;
   Atom type;
   int format;
-  gulong *prop = NULL;
+  guchar *prop = NULL;
   gulong nitems;
   gulong bytes_after;
   int error, result;
@@ -164,7 +165,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
 			       0, G_MAXLONG, FALSE,
 			       XA_CARDINAL,
 			       &type, &format, &nitems,
-			       &bytes_after, (guchar **)&prop);
+			       &bytes_after, &prop);
   error = gdk_error_trap_pop ();
 
   if (error || result != Success)
@@ -174,7 +175,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
     {
       GtkOrientation orientation;
 
-      orientation = (prop[0] == SYSTEM_TRAY_ORIENTATION_HORZ) ?
+      orientation = (*(gulong *)prop == SYSTEM_TRAY_ORIENTATION_HORZ) ?
 					GTK_ORIENTATION_HORIZONTAL :
 					GTK_ORIENTATION_VERTICAL;
 
@@ -186,8 +187,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
 	}
     }
 
-  if (prop)
-    XFree (prop);
+  if (prop) XFree (prop);
 }
 
 static GdkFilterReturn
@@ -196,24 +196,23 @@ egg_tray_icon_manager_filter (GdkXEvent *xevent, GdkEvent *event, gpointer user_
   EggTrayIcon *icon = user_data;
   XEvent *xev = (XEvent *)xevent;
 
-  if (xev->xany.type == ClientMessage &&
-      xev->xclient.message_type == icon->manager_atom &&
-      xev->xclient.data.l[1] == icon->selection_atom)
-    {
+  switch (xev->xany.type)
+  {
+  case ClientMessage:
+    if (xev->xclient.message_type == icon->manager_atom &&
+	(Atom)xev->xclient.data.l[1] == icon->selection_atom)
       egg_tray_icon_update_manager_window (icon);
-    }
-  else if (xev->xany.window == icon->manager_window)
-    {
-      if (xev->xany.type == PropertyNotify &&
-	  xev->xproperty.atom == icon->orientation_atom)
-	{
-	  egg_tray_icon_get_orientation_property (icon);
-	}
-      if (xev->xany.type == DestroyNotify)
-	{
-	  egg_tray_icon_update_manager_window (icon);
-	}
-    }
+    break;
+  case PropertyNotify:
+    if (xev->xany.window == icon->manager_window &&
+	xev->xproperty.atom == icon->orientation_atom)
+      egg_tray_icon_get_orientation_property (icon);
+    break;
+  case DestroyNotify:
+    if (xev->xany.window == icon->manager_window)
+      egg_tray_icon_update_manager_window (icon);
+    break;
+  }
   
   return GDK_FILTER_CONTINUE;
 }
@@ -278,7 +277,7 @@ egg_tray_icon_send_dock_request (EggTrayIcon *icon)
   egg_tray_icon_send_manager_message (icon,
 				      SYSTEM_TRAY_REQUEST_DOCK,
 				      icon->manager_window,
-				      gtk_plug_get_id (GTK_PLUG (icon)),
+				      (long)gtk_plug_get_id (GTK_PLUG (icon)),
 				      0, 0);
 }
 
@@ -419,7 +418,7 @@ egg_tray_icon_send_message (EggTrayIcon *icon,
   /* Get ready to send the message */
   egg_tray_icon_send_manager_message (icon, SYSTEM_TRAY_BEGIN_MESSAGE,
 				      (Window)gtk_plug_get_id (GTK_PLUG (icon)),
-				      timeout, len, stamp);
+				      timeout, len, (long)stamp);
 
   /* Now to send the actual message */
   gdk_error_trap_push ();
@@ -427,6 +426,7 @@ egg_tray_icon_send_message (EggTrayIcon *icon,
     {
       XClientMessageEvent ev;
       Display *xdisplay;
+      const size_t chunklen = ((len > 20) ? 20 : len);
 
       xdisplay = GDK_DISPLAY_XDISPLAY (gtk_widget_get_display (GTK_WIDGET (icon)));
       
@@ -435,17 +435,9 @@ egg_tray_icon_send_message (EggTrayIcon *icon,
       ev.format = 8;
       ev.message_type = XInternAtom (xdisplay,
 				     "_NET_SYSTEM_TRAY_MESSAGE_DATA", False);
-      if (len > 20)
-	{
-	  memcpy (&ev.data, message, 20);
-	  len -= 20;
-	  message += 20;
-	}
-      else
-	{
-	  memcpy (&ev.data, message, len);
-	  len = 0;
-	}
+      memcpy (&ev.data, message, chunklen);
+      len -= chunklen;
+      message += chunklen;
 
       XSendEvent (xdisplay,
 		  icon->manager_window, False, StructureNotifyMask, (XEvent *)&ev);
@@ -465,7 +457,7 @@ egg_tray_icon_cancel_message (EggTrayIcon *icon,
   
   egg_tray_icon_send_manager_message (icon, SYSTEM_TRAY_CANCEL_MESSAGE,
 				      (Window)gtk_plug_get_id (GTK_PLUG (icon)),
-				      id, 0, 0);
+				      (long)id, 0, 0);
 }
 
 GtkOrientation
