@@ -1,6 +1,16 @@
+2004-01-30  Michael Terry  <mikix@users.sourceforge.net>
+
+	* src/dashboard-frontend.c, dashboard-frontend.h: New files used 
+	to connect to dashboard.
+	* src/xpad-dashboard-frontend.c, src/xpad-dashboard-frontend.h: 
+	New files used to send dashboard relevant information.
+	* src/pad.c: Register with dashboard when creating pads.
+	* po/POTFILES.in: Add new files.
+	* src/Makefile.am: Add new files.
+
 2004-01-26  Michael Terry  <mikix@users.sourceforge.net>
 
-	* pad.c: Remove old ui for popup when popping
+	* pad.c: Remove old ui for popup when popping 
 
 2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
 

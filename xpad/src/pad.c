@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "tray.h"
 #include "settings.h"
 #include "properties.h"
+#include "xpad-dashboard-frontend.h"
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -103,21 +104,6 @@ const toolbar_button *get_toolbar_button_by_name (const gchar *name)
 	
 	return NULL;
 }
-
-/* helper func to get textbox from window */
-GtkTextView *get_text (GtkWindow *window)
-{
-	return  GTK_TEXT_VIEW (
-		 gtk_bin_get_child (GTK_BIN (
-		  gtk_bin_get_child (GTK_BIN (
-		   gtk_bin_get_child (GTK_BIN (
-			gtk_container_get_children (
-		     GTK_CONTAINER (gtk_bin_get_child (GTK_BIN (window)))
-		   )->data
-		 )))))
-		));
-}
-
 
 /* This function returns 'string' with all instances
    of 'obj' replaced with instances of 'replacement'
@@ -204,13 +190,12 @@ void pad_set_editable (pad_node *pad, gboolean editable)
 {
 	GdkCursor *cursor;
 	
-	gtk_text_view_set_editable (get_text (pad->window), editable);
-	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (pad->textview), editable);
+	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (pad->textview), editable);
 	
 	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
 	
-	gdk_window_set_cursor (gtk_text_view_get_window (get_text (
-		pad->window), GTK_TEXT_WINDOW_TEXT), cursor);
+	gdk_window_set_cursor (gtk_text_view_get_window (GTK_TEXT_VIEW (pad->textview), GTK_TEXT_WINDOW_TEXT), cursor);
 	
 	if (cursor) gdk_cursor_unref (cursor);
 }
@@ -219,7 +204,7 @@ void pad_clear (pad_node *pad)
 {
 	GtkTextBuffer *buf;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	
 	gtk_text_buffer_set_text (buf, "", 0);
 	
@@ -228,7 +213,7 @@ void pad_clear (pad_node *pad)
 
 static gboolean pad_get_editable (pad_node *pad)
 {
-	return gtk_text_view_get_editable (get_text (pad->window));
+	return gtk_text_view_get_editable (GTK_TEXT_VIEW (pad->textview));
 }
 
 static gboolean pad_is_empty (pad_node *pad)
@@ -238,7 +223,7 @@ static gboolean pad_is_empty (pad_node *pad)
 	gchar *content;
 	gboolean rv;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
@@ -260,10 +245,12 @@ void pads_set_editable (gboolean editable)
 
 void pad_set_back_color (pad_node *pad, GdkColor *c)
 {
-	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
+	gtk_widget_modify_base (pad->textview, GTK_STATE_NORMAL, c);
 	
-	gtk_widget_modify_base (text, GTK_STATE_NORMAL, c);
-	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, c);
+	if (c)
+		gtk_widget_modify_bg (pad->textview, GTK_STATE_NORMAL, c);
+	else
+		gtk_widget_modify_bg (pad->textview, GTK_STATE_NORMAL, &gtk_widget_get_default_style ()->base[GTK_STATE_NORMAL]);
 	
 	if (pad->locked)
 	{
@@ -281,9 +268,7 @@ void pad_set_back_color (pad_node *pad, GdkColor *c)
 
 void pad_set_text_color (pad_node *pad, GdkColor *c)
 {
-	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
-	
-	gtk_widget_modify_text (text, GTK_STATE_NORMAL, c);
+	gtk_widget_modify_text (pad->textview, GTK_STATE_NORMAL, c);
 	
 	if (pad->locked)
 	{
@@ -299,51 +284,13 @@ void pad_set_text_color (pad_node *pad, GdkColor *c)
 	}
 }
 
-void pad_set_border_color (pad_node *pad, GdkColor *c)
-{
-	gtk_widget_modify_bg (pad->eventbox_outer, GTK_STATE_NORMAL, c);
-	
-	if (pad->locked)
-	{
-		if (c)
-			pad->style.border = *c;
-		
-		fio_save_pad_info (pad);
-	}
-}
-
-void pad_set_padding (pad_node *pad, gint p)
-{
-	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
-	
-	gtk_container_set_border_width (GTK_CONTAINER (text), p);
-	
-	if (pad->locked)
-	{
-		pad->style.padding = p;
-		fio_save_pad_info (pad);
-	}
-}
-
-void pad_set_border_width (pad_node *pad, gint w)
-{
-	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), w);
-	
-	if (pad->locked)
-	{
-		pad->style.border_width = w;
-		fio_save_pad_info (pad);
-	}
-}
-
 void pad_set_fontname (pad_node *pad, const gchar *fontname)
 {
-	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = fontname ? pango_font_description_from_string (fontname) : NULL;
 	
-	gtk_widget_modify_font (text, fontdesc);
+	gtk_widget_modify_font (pad->textview, fontdesc);
 	
 	if (pad->locked)
 	{
@@ -357,7 +304,6 @@ void pad_set_fontname (pad_node *pad, const gchar *fontname)
 static void pad_update_style (pad_node *pad)
 {
 	pad_style pstyle;
-	GtkWidget *text, *outline;
 	
 	if (pad->hidden)
 		return;
@@ -367,18 +313,10 @@ static void pad_update_style (pad_node *pad)
 	else
 		pstyle = xpad_settings_get_style ();
 	
-	text = GTK_WIDGET (get_text (pad->window));
-	outline = pad->eventbox_outer;
-	
-	gtk_widget_modify_base (text, GTK_STATE_NORMAL, pstyle.use_back ? &pstyle.back : NULL);
-	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, pstyle.use_back ? &text->style->base[GTK_STATE_NORMAL] : &gtk_widget_get_default_style ()->base[GTK_STATE_NORMAL]);
-	gtk_widget_modify_text (text, GTK_STATE_NORMAL,	pstyle.use_text ? &pstyle.text : NULL);
-	gtk_widget_modify_font (text, pstyle.fontname ? pango_font_description_from_string (pstyle.fontname) : NULL);
-	
-	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &text->style->base[GTK_STATE_NORMAL]);
-	
-	gtk_container_set_border_width (GTK_CONTAINER (text), pstyle.padding);
-	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle.border_width);
+	gtk_widget_modify_base (pad->textview, GTK_STATE_NORMAL, pstyle.use_back ? &pstyle.back : NULL);
+	gtk_widget_modify_bg (pad->textview, GTK_STATE_NORMAL, pstyle.use_back ? &pad->textview->style->base[GTK_STATE_NORMAL] : &gtk_widget_get_default_style ()->base[GTK_STATE_NORMAL]);
+	gtk_widget_modify_text (pad->textview, GTK_STATE_NORMAL, pstyle.use_text ? &pstyle.text : NULL);
+	gtk_widget_modify_font (pad->textview, pstyle.fontname ? pango_font_description_from_string (pstyle.fontname) : NULL);
 	
 	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
 	
@@ -392,11 +330,8 @@ void pad_style_copy (pad_style *dest, pad_style *source)
 {
 	dest->back = source->back;
 	dest->text = source->text;
-	dest->border = source->border;
 	dest->use_back = source->use_back;
 	dest->use_text = source->use_text;
-	dest->border_width = source->border_width;
-	dest->padding = source->padding;
 	dest->fontname = g_strdup (source->fontname);
 }
 
@@ -515,7 +450,7 @@ void pad_edit_cut_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
 {
 	GtkTextBuffer *buf;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	
 	gtk_text_buffer_cut_clipboard (buf, clipboard, TRUE);
 }
@@ -529,7 +464,7 @@ void pad_edit_copy_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
 {
 	GtkTextBuffer *buf;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	
 	gtk_text_buffer_copy_clipboard (buf, clipboard);
 }
@@ -543,7 +478,7 @@ void pad_edit_paste_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
 {
 	GtkTextBuffer *buf;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	
 	gtk_text_buffer_paste_clipboard (buf, clipboard, NULL, TRUE);
 }
@@ -790,13 +725,12 @@ static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 	gchar *contentbuf;
 	GtkTextBuffer *buffer;
 	GtkTextIter iter;
-	GtkTextView *textbox = get_text (pad->window);
 	
 	contentbuf = fio_get_file (filename);
 	if (!contentbuf)
 		return FALSE;
 	
-	buffer = gtk_text_view_get_buffer (textbox);
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	gtk_text_buffer_set_text (buffer, contentbuf, -1);
 	g_free (contentbuf);
 	
@@ -1122,7 +1056,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
 	
 	/* setup copy/cut/paste sensitivity */
-	buf = gtk_text_view_get_buffer (get_text (GTK_WINDOW (pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	is_selection = gtk_text_buffer_get_selection_bounds (buf, NULL, NULL);
 	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/CutItem");
 	gtk_widget_set_sensitive (tmp, is_selection);
@@ -1317,7 +1251,7 @@ pad_background_refresh (pad_node *pad)
 	rect.width = pad->width;
 	rect.height = pad->height;
 	
-	win = gtk_text_view_get_window (get_text (pad->window), GTK_TEXT_WINDOW_TEXT);
+	win = gtk_text_view_get_window (GTK_TEXT_VIEW (pad->textview), GTK_TEXT_WINDOW_TEXT);
 	
 	gdk_window_invalidate_rect (win, &rect, FALSE);
 }
@@ -1340,7 +1274,7 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 	brush.width = 1;
 	brush.height = 1;
 	
-	textbox = GTK_WIDGET (get_text (pad->window));
+	textbox = pad->textview;
 	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
 	
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
@@ -1387,7 +1321,7 @@ pad_background_update (pad_node *pad)
 	GdkWindow *textwin;
 	GdkPixmap *pix;
 	
-	textbox = GTK_WIDGET (get_text (pad->window));
+	textbox = pad->textview;
 	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
 	
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
@@ -1429,7 +1363,7 @@ pad_resize_background (pad_node *pad)
 	GdkPixmap *pix;
 	gint height, width;
 	
-	textbox = GTK_WIDGET (get_text (pad->window));
+	textbox = pad->textview;
 	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
 	
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
@@ -1488,7 +1422,7 @@ pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	if (doit)
 	{
 		g_print ("v changed for real\n");
-		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
+		if (GTK_WIDGET_REALIZED (pad->textview))
 			pad_resize_background (pad);
 	}
 #endif
@@ -1525,7 +1459,7 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 	if (doit)
 	{
 		g_print ("v changed for real\n");
-		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
+		if (GTK_WIDGET_REALIZED (pad->textview))
 			pad_resize_background (pad);
 	}
 #endif
@@ -1534,13 +1468,10 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 void pad_background_clear (pad_node *pad)
 {
 #if DRAWING_ON
-	GtkWidget *textbox;
 	gint w, h;
 	
-	textbox = GTK_WIDGET (get_text (pad->window));
-	
 	gdk_drawable_get_size (pad->background, &w, &h);
-	gdk_draw_rectangle (pad->background, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, w, h);
+	gdk_draw_rectangle (pad->background, pad->textview->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, w, h);
 	
 	pad_background_update (pad);
 	
@@ -1638,7 +1569,7 @@ void pad_set_title (pad_node *pad)
 	GtkTextIter s, e;
 	gchar *content, *end;
 	
-	buf = gtk_text_view_get_buffer (get_text (pad->window));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
@@ -1703,8 +1634,6 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();
-	GtkWidget *eventbox = gtk_event_box_new ();
-	GtkWidget *eventbox1 = gtk_event_box_new ();
 	GtkWidget *box = gtk_vbox_new (FALSE, 0);
 	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkTextBuffer *textbuf;
@@ -1714,6 +1643,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
+	gtk_container_set_border_width (GTK_CONTAINER (textbox), 5);
 	
 	/* set up scrollbar */
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
@@ -1721,9 +1651,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	
 	/* add textbox to window */
 	gtk_container_add (GTK_CONTAINER (scroll), textbox);
-	gtk_container_add (GTK_CONTAINER (eventbox), scroll);
-	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
-	gtk_box_pack_start (GTK_BOX (box), eventbox1, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (box), scroll, TRUE, TRUE, 0);
 	gtk_container_add (GTK_CONTAINER (window), box);
 	
 	textbuf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textbox));
@@ -1731,27 +1659,24 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 	g_signal_connect (window, "button-press-event", G_CALLBACK (window_button_handler), pad);
-	
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
-	/*g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
 	g_signal_connect (window, "delete-event", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
-/*	g_signal_connect (window, "window-state-event", G_CALLBACK (state_handler), pad);*/
 	g_signal_connect (textbuf, "end-user-action", G_CALLBACK (text_changed), pad);
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
+	g_object_set_data (G_OBJECT (window), "textbox", textbox);
 	
 	gtk_window_set_role (GTK_WINDOW (window), role);
 	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
 	
 	pad->window = GTK_WINDOW (window);
-	pad->eventbox = eventbox;
-	pad->eventbox_outer = eventbox1;
 	pad->box = box;
 	pad->toolbar = NULL;
 	pad->scrollbar = scroll;
+	pad->textview = textbox;
 	pad->title = NULL;
 	pad->popup_notes_actions = NULL;
 	pad->popup_notes_merge_id = 0;
@@ -1843,12 +1768,8 @@ pad_node *pad_new (void)
 	
 	pad_alloc_gtk (pad, pad->infoname);
 	
-	pad->width = xpad_settings_style_get_padding () + 
-		xpad_settings_style_get_border_width () +
-		xpad_settings_get_default_width ();
-	pad->height = xpad_settings_style_get_padding () + 
-		xpad_settings_style_get_border_width () +
-		xpad_settings_get_default_height ();
+	pad->width = xpad_settings_get_default_width ();
+	pad->height = xpad_settings_get_default_height ();
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);
 	
 	pad->locked = 0;
@@ -1862,9 +1783,9 @@ pad_node *pad_new (void)
 	
 	pad_set_title (pad);
 	
-	gtk_widget_show_all (pad->eventbox_outer);
-	gtk_widget_show (pad->box);
-	gtk_widget_show (GTK_WIDGET(pad->window));
+	xpad_dashboard_frontend_init_for_pad (pad);
+	
+	gtk_widget_show_all (GTK_WIDGET (pad->window));
 	
 	return pad;
 }
@@ -1903,9 +1824,9 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->style = info->style;
 	pad_update_style (pad);
 	
-	gtk_widget_show_all (pad->eventbox_outer);
-	gtk_widget_show (pad->box);
-	gtk_widget_show (GTK_WIDGET(pad->window));
+	xpad_dashboard_frontend_init_for_pad (pad);
+	
+	gtk_widget_show_all (GTK_WIDGET (pad->window));
 	
 	return pad;
 }
@@ -1928,7 +1849,5 @@ pad_renew (pad_node *pad)
 	
 	pad_update_style (pad);
 	
-	gtk_widget_show_all (pad->eventbox_outer);
-	gtk_widget_show (pad->box);
-	gtk_widget_show (GTK_WIDGET(pad->window));
+	gtk_widget_show_all (GTK_WIDGET (pad->window));
 }

@@ -80,15 +80,6 @@ GdkColor xpad_settings_style_get_text_color (void);
 gboolean xpad_settings_style_get_system_back (void);
 gboolean xpad_settings_style_get_system_text (void);
 
-void xpad_settings_style_set_border_color (GdkColor *border);
-GdkColor xpad_settings_style_get_border_color (void);
-
-void xpad_settings_style_set_border_width (gint width);
-gint xpad_settings_style_get_border_width (void);
-
-void xpad_settings_style_set_padding (gint padding);
-gint xpad_settings_style_get_padding (void);
-
 void xpad_settings_style_set_fontname (const gchar *fontname);
 const gchar *xpad_settings_style_get_fontname (void);
 

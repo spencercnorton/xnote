@@ -37,11 +37,8 @@ struct pad_style_def
 {
 	GdkColor back;
 	GdkColor text;
-	GdkColor border;
 	gint use_back;
 	gint use_text;
-	gint border_width;
-	gint padding;
 	gchar *fontname;
 };
 
@@ -73,8 +70,7 @@ struct pad_node_def
 	
 	/* main textbox stuff */
 	GtkWindow *window;
-	GtkWidget *eventbox;
-	GtkWidget *eventbox_outer;
+	GtkWidget *textview;
 	GtkWidget *scrollbar;
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
 	
@@ -123,7 +119,6 @@ extern pad_node *first_pad;
 
 pad_node *pad_new_with_info (pad_info *info);
 pad_node *pad_new (void);
-GtkTextView *get_text (GtkWindow *window);
 void cleanup (void);
 
 void pads_set_editable (gboolean editable);

@@ -253,17 +253,13 @@ void fio_save_pad_info (pad_node *pad)
 	info_file = g_strdup_printf (
 		"x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
-		"border_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
 		pad->contentname, pad->sticky,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
 		pad->style.use_back,
 		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
 		pad->style.use_text,
-		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
-		pad->style.border_width, pad->style.padding,
 		pad->style.fontname ? pad->style.fontname : "NULL");
 	
 	fio_set_file (pad->infoname, info_file);
@@ -280,7 +276,7 @@ void fio_save_pad_content (pad_node *pad)
 	if (!pad || !pad->contentname)
 		return;
 	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
@@ -341,25 +337,18 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 	 * These will be assigned back to the appropriate values after load.
 	 */
 	GdkColor back = xpad_settings_style_get_back_color (),
-		text = xpad_settings_style_get_text_color (),
-		border = xpad_settings_style_get_border_color ();
+		text = xpad_settings_style_get_text_color ();
 	gint 	back_R = back.red,
 		back_G = back.green,
 		back_B = back.blue,
 		
 		text_R = text.red,
 		text_G = text.green,
-		text_B = text.blue,
-		
-		bord_R = border.red,
-		bord_G = border.green,
-		bord_B = border.blue;
+		text_B = text.blue;
 
 	if (verbosity >= 2) g_print ("Loading [%s].\n", filename);
 	
 	info->style.fontname = NULL;
-	info->style.padding = xpad_settings_style_get_padding ();
-	info->style.border_width = xpad_settings_style_get_border_width ();
 	
 	fio_get_values_from_file (  filename,
 		"x", &info->x,
@@ -377,11 +366,6 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 		"text_green", &text_G,
 		"text_blue", &text_B,
 		"use_text", &info->style.use_text,
-		"border_red", &bord_R,
-		"border_green", &bord_G,
-		"border_blue", &bord_B,
-		"border_width", &info->style.border_width,
-		"padding", &info->style.padding,
 		"fontname", &info->style.fontname,
 		NULL);
 	info->infoname = g_strdup (filename);
@@ -403,10 +387,6 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 	info->style.text.red = text_R;
 	info->style.text.green = text_G;
 	info->style.text.blue = text_B;
-	
-	info->style.border.red = bord_R;
-	info->style.border.green = bord_G;
-	info->style.border.blue = bord_B;
 	
 	return 0;
 }

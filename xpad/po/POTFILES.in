@@ -2,6 +2,7 @@
 # Copyright (C) 2003 Michael Terry
 
 # Package source files
+src/dashboard-frontend.c
 src/main.c
 src/fio.c
 src/pref.c
@@ -13,4 +14,5 @@ src/eggtrayicon.c
 src/properties.c
 src/settings.c
 src/sm.c
+src/xpad-dashboard-frontend.c
 xpad.desktop.in

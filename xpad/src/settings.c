@@ -280,22 +280,6 @@ GdkColor xpad_settings_style_get_text_color (void)
 	return current_settings.style.text;
 }
 
-void xpad_settings_style_set_border_color (GdkColor *border)
-{
-	current_settings.style.border = *border;
-	
-	PAD_ITERATE_START
-	if (!PAD->locked && !PAD->hidden) pad_set_border_color (PAD, border);
-	PAD_ITERATE_END
-	
-	xpad_settings_save_to_file ();
-}
-
-GdkColor xpad_settings_style_get_border_color (void)
-{
-	return current_settings.style.border;
-}
-
 gboolean xpad_settings_style_get_system_back (void)
 {
 	return current_settings.style.use_back ? FALSE : TRUE;
@@ -304,39 +288,6 @@ gboolean xpad_settings_style_get_system_back (void)
 gboolean xpad_settings_style_get_system_text (void)
 {
 	return current_settings.style.use_text ? FALSE : TRUE;
-}
-
-
-void xpad_settings_style_set_border_width (gint width)
-{
-	current_settings.style.border_width = width;
-	
-	PAD_ITERATE_START
-	if (!PAD->locked && !PAD->hidden) pad_set_border_width (PAD, width);
-	PAD_ITERATE_END
-	
-	xpad_settings_save_to_file ();
-}
-
-gint xpad_settings_style_get_border_width (void)
-{
-	return current_settings.style.border_width;
-}
-
-void xpad_settings_style_set_padding (gint padding)
-{
-	current_settings.style.padding = padding;
-	
-	PAD_ITERATE_START
-	if (!PAD->locked && !PAD->hidden) pad_set_padding (PAD, padding);
-	PAD_ITERATE_END
-	
-	xpad_settings_save_to_file ();
-}
-
-gint xpad_settings_style_get_padding (void)
-{
-	return current_settings.style.padding;
 }
 
 void xpad_settings_style_set_fontname (const gchar *fontname)
@@ -373,18 +324,12 @@ static void xpad_settings_load_defaults (void)
 	current_settings.style.text.red = 0;
 	current_settings.style.text.green = 0;
 	current_settings.style.text.blue = 0;
-	current_settings.style.border.pixel = 0;
-	current_settings.style.border.red = 0;
-	current_settings.style.border.green = 0;
-	current_settings.style.border.blue = 0;
 	current_settings.style.use_back = 1;
 	current_settings.style.use_text = 1;
-	current_settings.style.border_width = 0;
-	current_settings.style.padding = 5;
 	current_settings.style.fontname = NULL;
 	current_settings.toolbar = 1;
 	current_settings.auto_hide_toolbar = 1;
-	current_settings.scrollbar = 1;
+	current_settings.scrollbar = 0;
 	
 	current_settings.toolbar_buttons = NULL;
 	current_settings.toolbar_buttons = 
@@ -410,13 +355,8 @@ static void xpad_settings_load_from_file (void)
 		
 		text_R = current_settings.style.text.red,
 		text_G = current_settings.style.text.green,
-		text_B = current_settings.style.text.blue,
-		
-		bord_R = current_settings.style.border.red,
-		bord_G = current_settings.style.border.green,
-		bord_B = current_settings.style.border.blue;
-		
-		gchar *buttons = NULL;
+		text_B = current_settings.style.text.blue;
+	gchar *buttons = NULL;
 	
 	if (fio_get_values_from_file (DEFAULTS_FILENAME, 
 		"decorations", &current_settings.decorations,
@@ -434,11 +374,6 @@ static void xpad_settings_load_from_file (void)
 		"text_green", &text_G,
 		"text_blue", &text_B,
 		"use_text", &current_settings.style.use_text,
-		"border_red", &bord_R,
-		"border_green", &bord_G,
-		"border_blue", &bord_B,
-		"border_width", &current_settings.style.border_width,
-		"padding", &current_settings.style.padding,
 		"fontname", &current_settings.style.fontname,
 		"toolbar", &current_settings.toolbar,
 		"auto_hide_toolbar", &current_settings.auto_hide_toolbar,
@@ -461,10 +396,6 @@ static void xpad_settings_load_from_file (void)
 	current_settings.style.text.red = text_R;
 	current_settings.style.text.green = text_G;
 	current_settings.style.text.blue = text_B;
-	
-	current_settings.style.border.red = bord_R;
-	current_settings.style.border.green = bord_G;
-	current_settings.style.border.blue = bord_B;
 	
 	if (buttons) /* get rid of defaults, use our own */
 	{
@@ -510,9 +441,7 @@ static void xpad_settings_save_to_file (void)
 		"decorations %i\nsticky_on_start %i\nauto_hide_toolbar %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
-		"border_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\n"
-		"scrollbar %d\nbuttons ",
+		"fontname %s\ntoolbar %d\nscrollbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
 		current_settings.decorations, current_settings.sticky_on_start,
 		current_settings.auto_hide_toolbar, current_settings.width, current_settings.height,
@@ -520,8 +449,6 @@ static void xpad_settings_save_to_file (void)
 		current_settings.style.use_back,
 		current_settings.style.text.red, current_settings.style.text.green, current_settings.style.text.blue,
 		current_settings.style.use_text,
-		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
-		current_settings.style.border_width, current_settings.style.padding,
 		current_settings.style.fontname ? current_settings.style.fontname : "NULL", 
 		current_settings.toolbar, current_settings.scrollbar);
 	
