@@ -76,12 +76,29 @@ struct settings current_settings =
 	}
 };
 
-gint at_gtk_exit (gpointer data)
+static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	cleanup ();
 	g_free (working_dir);
 	return 0;
+}
+
+void xpad_display_dialog_with_text (GtkMessageType type, const gchar *text)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new (NULL,
+        		GTK_DIALOG_MODAL,
+        		type,
+        		GTK_BUTTONS_CLOSE,
+        		text);
+
+	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+
+	gtk_widget_destroy (dialog);
 }
 
 static void xpad_catch_quit_signal (int signum)

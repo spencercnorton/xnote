@@ -37,7 +37,7 @@ struct settings {
 	pad_style style;
 };
 
-void xpad_exit (void);
+void xpad_display_dialog_with_text (GtkMessageType type, const gchar *text);
 
 extern gchar *working_dir;
 extern gint verbosity;

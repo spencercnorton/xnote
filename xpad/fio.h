@@ -29,8 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 void fio_save_pad (pad_node *pad);
 void fio_save_pads (void);
 void fio_load_pads (void);
-gchar *fio_get_file (const gchar *name, const char **errortext);
-gint fio_set_file (const gchar *name, const gchar *value, const char **errtext);
+gchar *fio_get_file (const gchar *name);
+gboolean fio_set_file (const gchar *name, const gchar *value);
 
 gint fio_load_default_settings (void);
 void fio_save_default_settings (void);

@@ -299,23 +299,16 @@ void cleanup (void)
 }
 
 
-static void display_dialog_with_text (pad_node *pad, const gchar *text);
-
-
 static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
 	GtkTextBuffer *buffer;
-	const char *errortext;
 	GtkTextView *textbox = get_text (pad->window);
 	
-	contentbuf = fio_get_file (filename, &errortext);
+	contentbuf = fio_get_file (filename);
 	if (!contentbuf)
-	{
-		display_dialog_with_text(pad, errortext);
 		return FALSE;
-	}
-
+	
 	buffer = gtk_text_view_get_buffer (textbox);
 	gtk_text_buffer_set_text (buffer, contentbuf, -1);
 	g_free (contentbuf);
@@ -336,23 +329,6 @@ static void pad_resize (pad_node *node, GdkEvent *event)
 	gtk_window_begin_resize_drag (node->window, GDK_WINDOW_EDGE_SOUTH_EAST, eb->button, eb->x_root, eb->y_root, eb->time);
 }
 
-static void display_dialog_with_text (pad_node *pad, const gchar *text)
-{
-	GtkWidget *dialog;
-
-	dialog = gtk_message_dialog_new (pad->window,
-        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
-        		GTK_MESSAGE_INFO,
-        		GTK_BUTTONS_CLOSE,
-        		text);
-
-	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-
-	gtk_dialog_run (GTK_DIALOG (dialog));
-
-	gtk_widget_destroy (dialog);
-}
-
 static void about_dialog (pad_node *pad)
 {
 	gchar text[100];
@@ -361,21 +337,21 @@ static void about_dialog (pad_node *pad)
 		VERSION, "http://xpad.sourceforge.net", 
 		gtk_major_version, gtk_minor_version, gtk_micro_version);
 
-	display_dialog_with_text (pad, text);
+	xpad_display_dialog_with_text (GTK_MESSAGE_INFO, text);
 }
 
 static void open_file_callback (GtkWidget *button, pad_node *pad)
 {
 	const gchar *filename;
 	GtkFileSelection *selector;
-	gboolean NewPad;
+	gboolean newPad;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
-	NewPad = pad_is_empty(pad);
-	if (NewPad)
+	newPad = !pad_is_empty(pad);
+	if (newPad)
 	{
 		pad = pad_new();
 		if (!pad)
@@ -384,12 +360,12 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 			return;
 		}
 	}
-
+	
 	if (!pad_fill_with_file(pad, filename))
 	{
-	  	if (NewPad)
+	  	if (newPad)
 		{
-			/* TODO: Close pad to avoid overwriting original file */
+			pad_destroy (pad);	/* no need to open a new pad, if no content */
 		}
 	}
 }
@@ -430,7 +406,6 @@ static void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	gchar *content;
 	const gchar *filename;
 	GtkFileSelection *selector;
-	const char *errtext;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
@@ -441,8 +416,7 @@ static void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
         content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	if (!fio_set_file (filename, content, &errtext))
-		display_dialog_with_text(pad, errtext);
+	fio_set_file (filename, content);
 
 	g_free (content);
 }
