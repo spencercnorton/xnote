@@ -1,12 +1,26 @@
 1.6
 ---
+*features*
 rearrange popup menu
-add popup menu submenu that allows you to choose windows to focus on
+more meaningful window titles
+add popup menu submenu that allows you to choose window to show
 allow reopening of closed pads
+the return of cut/copy/paste
+native sticky support
+add a show all command -- via command line or menu
+allow turning off of scrollbars
+allow reshowing of closed pads (without restarting xpad)
+
+*fixes*
+stopped style lock from turning on accidentally
+properly handle WM closures
+better HIG-style support of keyboard accelerators
+
 
 1.5.1
 -----
 fix a possible segfault on startup
+
 
 1.5
 ---
