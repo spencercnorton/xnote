@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad 2.1\n"
+"Project-Id-Version: xpad 2.2-b1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-13 22:58-0500\n"
-"PO-Revision-Date: 2004-12-21 00:45-0600\n"
+"POT-Creation-Date: 2005-01-14 17:37-0500\n"
+"PO-Revision-Date: 2005-01-19 00:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
 
 #: src/xpad-app.c:125
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr ""
+msgstr "Is clár grafach é Xpad. Rith ó do dheasc, le do thoil."
 
 #: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
@@ -34,40 +34,33 @@ msgid "Could not open directory %s."
 msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
 
 #: src/xpad-app.c:413
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
-msgstr ""
-"Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na "
-"ceapa agus do shainroghanna.  Druidfidh Xpad anois."
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgstr "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na ceapa agus do shainroghanna.  Druidfidh Xpad anois."
 
 #: src/xpad-app.c:717
 msgid "Show version number and quit"
-msgstr ""
+msgstr "Taispeáin an uimhir leagain agus scoir"
 
 #: src/xpad-app.c:718
 msgid "Hide existing pads on startup"
-msgstr ""
+msgstr "Folaigh ceapa atá ann i dtosach"
 
 #: src/xpad-app.c:719
-#, fuzzy
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
+msgstr "Ná cruthaigh ceap nua i dtosach mura bhfuil ceap ann cheana féin"
 
 #: src/xpad-app.c:725
-#, fuzzy
 msgid "Create a new pad on startup even if pads already exist"
-msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
+msgstr "Cruthaigh ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 
 #: src/xpad-app.c:726
-#, fuzzy
 msgid "Close all pads"
-msgstr "Dún Gach Uile Ceap Nótaí"
+msgstr "Dún gach ceap nótaí"
 
-#: src/xpad-app.c:750
-#, fuzzy, c-format
+#: src/xpad-app.c:758
+#, c-format
 msgid "Xpad %s"
-msgstr "Xpad %s\n"
+msgstr "Xpad %s"
 
 #: src/xpad-pad.c:530
 msgid "Delete this pad?"
@@ -83,15 +76,14 @@ msgid "'%s' Properties"
 msgstr "'%s' Airíonna"
 
 #: src/xpad-pad.c:1066
-#, fuzzy
 msgid "Sticky notes"
-msgstr "Nótaí Greamaitheacha"
+msgstr "Nótaí greamaitheacha"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
 #: src/xpad-pad.c:1085
 msgid "translator-credits"
-msgstr ""
+msgstr "Kevin Scannell <scannell@slu.edu>"
 
 #: src/xpad-pad.c:1306
 msgid "_Pad"
@@ -99,7 +91,7 @@ msgstr "Cea_p"
 
 #: src/xpad-pad.c:1315
 msgid "Show on _All Workspaces"
-msgstr ""
+msgstr "Taispeáin i n_Gach Spás Oibre"
 
 #: src/xpad-pad.c:1322
 msgid "_Edit"
@@ -330,9 +322,7 @@ msgstr "Nótaí Greamaitheacha"
 #~ msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
 
 #~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-#~ msgstr ""
-#~ "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a "
-#~ "fháil."
+#~ msgstr "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a fháil."
 
 #~ msgid "_Sticky"
 #~ msgstr "_Greamaitheach"
