@@ -503,32 +503,48 @@ void pad_toggle_sticky (pad_node *pad)
 	pad_set_sticky (pad, pad->sticky ? 0 : 1);
 }
 
-void pad_edit_cut (pad_node *pad)
+void pad_edit_cut_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
 {
 	GtkTextBuffer *buf;
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	
-	gtk_text_buffer_cut_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), TRUE);
+	gtk_text_buffer_cut_clipboard (buf, clipboard, TRUE);
+}
+
+void pad_edit_cut (pad_node *pad)
+{
+	pad_edit_cut_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
+}
+
+void pad_edit_copy_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
+{
+	GtkTextBuffer *buf;
+	
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	
+	gtk_text_buffer_copy_clipboard (buf, clipboard);
 }
 
 void pad_edit_copy (pad_node *pad)
 {
-	GtkTextBuffer *buf;
-	
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
-	
-	gtk_text_buffer_copy_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
+	pad_edit_copy_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
 }
 
-void pad_edit_paste (pad_node *pad)
+void pad_edit_paste_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
 {
 	GtkTextBuffer *buf;
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
-
-	gtk_text_buffer_paste_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), NULL, TRUE);
+	
+	gtk_text_buffer_paste_clipboard (buf, clipboard, NULL, TRUE);
 }
+
+void pad_edit_paste (pad_node *pad)
+{
+	pad_edit_paste_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
+}
+
 
 static void quit_if_no_pads (void)
 {
@@ -1253,7 +1269,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		
 			switch (event_button->button)
 			{
-				case 1:
+			case 1:
 				/* raise window if clicked on */
 				gtk_window_present (pad->window);
 				
@@ -1271,8 +1287,35 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 					return TRUE;
 				}
 				break;
-
-		  		case 3:
+				
+#if 0
+			case 2:
+				if ((event_button->state & GDK_CONTROL_MASK) &&
+				    (event_button->state & GDK_SHIFT_MASK))
+				{
+					/* HIG says "Create link, shortcut or alias to selection"
+					  We can't do that, so ignore. */
+				}
+				else if (event_button->state & GDK_CONTROL_MASK)
+				{
+					/* HIG says copy */
+					pad_edit_paste_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
+				}
+				else if (event_button->state & GDK_SHIFT_MASK)
+				{
+					/* HIG says move */
+				/*	pad_edit_copy_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
+					*/
+				}
+				else if (event_button->state == 0)
+				{
+					/* HIG says copy */
+					pad_edit_paste_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
+				}
+				
+				return TRUE;
+#endif
+			case 3:
 				if (event_button->state & GDK_CONTROL_MASK)
 					pad_resize (pad, event_button);
 				else
@@ -1817,6 +1860,7 @@ pad_alloc_gtk (pad_node *pad)
 	gtk_container_add (GTK_CONTAINER (window), box);
 	
 	textbuf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textbox));
+	gtk_text_buffer_add_selection_clipboard (textbuf, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
 	
 	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
