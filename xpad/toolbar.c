@@ -36,7 +36,7 @@ toolbar_set_visible (xpad_toolbar *xt, gboolean v)
 gboolean
 toolbar_is_visible (xpad_toolbar *xt)
 {
-	return xt->visible;
+	return xt && xt->visible;
 }
 
 void
