@@ -328,7 +328,6 @@ void pad_set_fontname (pad_node *pad, const gchar *fontname)
 
 static void pad_update_style (pad_node *pad)
 {
-	GtkStyle *style;
 	pad_style pstyle;
 	GtkWidget *text, *outline;
 	
@@ -343,8 +342,7 @@ static void pad_update_style (pad_node *pad)
 	gtk_widget_modify_base (text, GTK_STATE_NORMAL, 
 		pstyle.use_back ? &pstyle.back : NULL);
 	
-	style = gtk_widget_get_style (text);
-	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
+	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, &text->style->base[GTK_STATE_NORMAL]);
 	
 	gtk_widget_modify_text (text, GTK_STATE_NORMAL,
 		pstyle.use_text ? &pstyle.text : NULL);
