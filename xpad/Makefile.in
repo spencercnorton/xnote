@@ -70,10 +70,10 @@ xpad: $(OBJS)
 	$(CC) $(LDFLAGS) -o xpad $(OBJS) $(LIBS)
 
 clean:
-	/bin/rm -f core *.o *~ .\#* $(OBJS)
+	/bin/rm -f core *.o $(OBJS)
 
 distclean: clean
-	/bin/rm -f Makefile config.h config.status config.cache config.log stamp-h
+	/bin/rm -f *~ .\#* Makefile config.h config.status config.cache config.log stamp-h
 
 mostlyclean: clean
 
@@ -81,31 +81,30 @@ maintainer-clean: clean
 
 
 # the next several rules are inspired by the aterm project's Makefile.in
+prepdistdir:
+	(cd ..; cp -r main $(VERNAME); cd $(VERNAME); make distclean;)
+
 tar.gz: ../$(VERNAME).tar.gz
-../$(VERNAME).tar.gz: distclean
+../$(VERNAME).tar.gz: prepdistdir
 	(cd ..;\
-	cp -r main $(VERNAME);\
 	tar cf - $(VERNAME) | gzip --best > $(VERNAME).tar.gz;\
 	rm -r $(VERNAME))
 
 tar.Z: ../$(VERNAME).tar.Z
-../$(VERNAME).tar.Z: distclean
+../$(VERNAME).tar.Z: prepdistdir
 	(cd ..;\
-	cp -r main $(VERNAME);\
 	tar cf - $(VERNAME) | compress > $(VERNAME).tar.Z;\
 	rm -r $(VERNAME))
 
 tar.bz2: ../$(VERNAME).tar.bz2
-../$(VERNAME).tar.bz2: distclean
+../$(VERNAME).tar.bz2: prepdistdir
 	(cd ..;\
-	cp -r main $(VERNAME);\
 	tar cf - $(VERNAME) | bzip2 -f --best > $(VERNAME).tar.bz2;\
 	rm -r $(VERNAME))
 
 zip: ../$(VERNAME).zip
-../$(VERNAME).zip: distclean
+../$(VERNAME).zip: prepdistdir
 	(cd ..;\
-	cp -r main $(VERNAME);\
 	zip -9 -qr - $(VERNAME) > $(VERNAME).zip;\
 	rm -r $(VERNAME))
 

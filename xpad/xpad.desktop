@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=xpad
+Comment=Sticky notes for your desktop
+FilePattern=xpad
+TryExec=xpad
+Exec=xpad
+Terminal=false
+Icon=xpad/xpad.xpm
+Type=Application
+Categories=Application;TODO;
