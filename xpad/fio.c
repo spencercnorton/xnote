@@ -397,6 +397,7 @@ gint fio_load_default_settings (void)
 		}
 		
 		g_strfreev  (button_names);
+		g_free (buttons);
 	}
 	
 	return 0;
