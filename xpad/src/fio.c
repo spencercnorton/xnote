@@ -259,7 +259,7 @@ void fio_save_pad_info (pad_node *pad)
 	gchar info_file[MAX_FILE_SIZE + 1];
 	gint height;
 	
-	if (!pad || pad->hidden)	/* don't bother saving hidden pads */
+	if (!pad || pad->hidden || !pad->infoname)	/* don't bother saving hidden pads */
 		return;
 	
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
@@ -291,6 +291,9 @@ void fio_save_pad_content (pad_node *pad)
 	gchar *content;
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
+	
+	if (!pad || !pad->contentname)
+		return;
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);

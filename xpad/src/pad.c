@@ -370,7 +370,7 @@ pad_set_sticky (pad_node *pad, gboolean on)
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), on);
 	
-	fio_pad_save_info (pad);
+/*	fio_save_pad_info (pad);*/
 }
 
 void pad_toggle_sticky (pad_node *pad)
@@ -1517,7 +1517,7 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	pad->width = event->width;
 	pad->height = event->height;
 	
-	fio_pad_save_info (pad);
+/*	fio_save_pad_info (pad);*/
 	
 	return FALSE;
 }
@@ -1775,7 +1775,9 @@ static pad_node *start_pad (void)
 #endif
 	pad->num = num++;
 	pad->hidden = FALSE;
-	
+	pad->infoname = NULL;
+	pad->contentname = NULL;
+
 	/* check if this is first pad made */
 	if (first_pad == NULL)
 	{
