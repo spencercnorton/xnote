@@ -187,6 +187,20 @@ static void pref_close (void)
 	fio_save_default_settings ();
 }
 
+static void
+data_get (GtkWidget *widget, GdkDragContext *drag_context, 
+	GtkSelectionData *data, guint info, guint time, gpointer user_data)
+{
+	printf ("sent data\n");
+}
+	
+static void
+data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
+	gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data)
+{
+	printf ("got data\n");
+}
+
 static GtkWidget *preferences_create (void)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -360,6 +374,14 @@ static GtkWidget *preferences_create (void)
 		gint i;
 		GList *inxt, *tmp, *inxt_funcs = NULL;
 		GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+		GtkWidget *buttonbox = gtk_hbox_new (TRUE, 2);
+		GtkTooltips *tt = gtk_tooltips_new ();
+		GtkTargetEntry entry;
+		GtkWidget *eventbox = gtk_event_box_new ();
+		
+		entry.target = "tbbutton";
+		entry.flags = GTK_TARGET_SAME_APP;
+		entry.info = 2;
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
 		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, FALSE, FALSE, 0);
@@ -370,12 +392,24 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (vbox), xt->bar, FALSE, FALSE, 3);
 		toolbar_update (xt);
 		
-		inxt = tmp = toolbar_get_buttons (xt);
+		gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new (), FALSE, FALSE, 3);
+		gtk_box_pack_start (GTK_BOX (vbox), eventbox, FALSE, FALSE, 3);
+		gtk_container_add (GTK_CONTAINER (eventbox), buttonbox);
+		
+		inxt = tmp = toolbar_get_children (xt);
 		
 		while (tmp)
 		{
-			inxt_funcs = g_list_append (inxt_funcs,
-				g_object_get_data (G_OBJECT (tmp->data), "func"));
+			if (toolbar_is_button (GTK_WIDGET (tmp->data)))
+				inxt_funcs = g_list_append (inxt_funcs,
+					g_object_get_data (G_OBJECT (tmp->data), "func"));
+			
+			gtk_drag_source_set (GTK_WIDGET (tmp->data),
+				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
+			
+			g_signal_connect (GTK_WIDGET (tmp->data), "drag-data-get", 
+				G_CALLBACK (data_get), NULL);
+			
 			tmp = tmp->next;
 		}
 		
@@ -386,13 +420,26 @@ static GtkWidget *preferences_create (void)
 		{
 			if (!g_list_find (inxt_funcs, (void *) buttons[i].func))
 			{
-				gtk_box_pack_start (GTK_BOX (vbox), 
-					toolbar_button_new (&buttons[i]), FALSE, FALSE, 3);
+				GtkWidget *b = toolbar_button_new (&buttons[i]);
+				
+				gtk_box_pack_start_defaults (GTK_BOX (buttonbox), b);
+				
+				gtk_tooltips_set_tip (tt, b, buttons[i].desc, buttons[i].desc);
 			}
 		}
 		
+		g_list_free (inxt_funcs);
 		
-		
+		/* now set up drag and dropping */
+		{
+			
+			
+			gtk_drag_dest_set (eventbox, GTK_DEST_DEFAULT_HIGHLIGHT | 
+				GTK_DEST_DEFAULT_DROP, &entry, 1, GDK_ACTION_MOVE);
+			
+			g_signal_connect (eventbox, "drag-data-received",
+				G_CALLBACK (data_receive), NULL);
+		}
 	}
 	
 	/* misc. setup */

@@ -17,6 +17,9 @@ void toolbar_end_timeout (pad_node *pad);
 xpad_toolbar *toolbar_new (void);
 
 GList *toolbar_get_buttons (xpad_toolbar *xt);
+GList *toolbar_get_children (xpad_toolbar *xt);
+
+gboolean toolbar_is_button (GtkWidget *widget);
 
 void toolbar_update (xpad_toolbar *xt);
 

@@ -141,19 +141,30 @@ toolbar_add_item (gpointer gname, gpointer gxt)
 	}
 }
 
+GList *toolbar_get_children (xpad_toolbar *xt)
+{
+	return gtk_container_get_children (GTK_CONTAINER (
+		toolbar_get_box (xt->bar)));
+}
+
+gboolean toolbar_is_button (GtkWidget *widget)
+{
+	const gchar *type;
+	
+	type = GTK_OBJECT_TYPE_NAME (GTK_OBJECT (widget));
+	
+	return !strcmp (type, "GtkButton") || !strcmp (type, "GtkToggleButton");
+}
+
 GList *toolbar_get_buttons (xpad_toolbar *xt)
 {
-	GList *list = gtk_container_get_children (GTK_CONTAINER (
-		toolbar_get_box (xt->bar))), *tmp = list;
+	GList *list = toolbar_get_children (xt), *tmp = list;
 	
 	while (tmp)
 	{
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
-		const gchar *type;
 		
-		type = GTK_OBJECT_TYPE_NAME (GTK_OBJECT (widget));
-		
-		if (strcmp (type, "GtkButton") && strcmp (type, "GtkToggleButton"))
+		if (!toolbar_is_button (widget))
 		{
 			GList *backup = tmp->next;
 			
