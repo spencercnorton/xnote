@@ -60,10 +60,7 @@ gboolean
 xpad_tray_is_open (void)
 {
 	if (docklet)
-	{
-		printf ("egg status icon is %i\n", egg_status_icon_is_visible (docklet));
 		return egg_status_icon_is_visible (docklet);
-	}
 	else
 		return FALSE;
 }

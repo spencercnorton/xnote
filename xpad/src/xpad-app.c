@@ -430,6 +430,30 @@ set_default_icon (void)
 }
 
 
+static void
+xpad_app_pad_hidden (XpadPadGroup *group, XpadPad *pad)
+{
+	if (!xpad_tray_is_open ())
+	{
+		GSList *list, *i;
+		list = xpad_pad_group_get_pads (group);
+		for (i = list; i; i = i->next)
+		{
+			if (GTK_WIDGET_VISIBLE(GTK_WIDGET(i->data)))
+				break;
+		}
+		if (!i)
+			gtk_main_quit ();
+		g_slist_free (list);
+	}
+}
+
+static void
+xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)
+{
+	g_signal_connect_swapped (pad, "hide", G_CALLBACK (xpad_app_pad_hidden), group);
+}
+
 
 /* Scans config directory for pad files and loads them. */
 static gint
@@ -443,6 +467,8 @@ xpad_app_load_pads (void)
 	if (pad_group)
 		g_object_unref (pad_group);
 	pad_group = xpad_pad_group_new ();
+	
+	g_signal_connect (pad_group, "pad-added", G_CALLBACK (xpad_app_pad_added), NULL);
 	
 	dir = g_dir_open (xpad_app_get_config_dir (), 0, NULL);
 	

@@ -244,7 +244,7 @@ egg_status_icon_class_init (EggStatusIconClass *klass)
 gboolean
 egg_status_icon_is_visible (EggStatusIcon *icon)
 {
-	return(icon->priv->tray_icon && GTK_WIDGET_VISIBLE (icon->priv->tray_icon));
+	return(icon->priv->tray_icon && EGG_TRAY_ICON (icon->priv->tray_icon)->manager_window != None);
 }
 
 static void egg_status_icon_destroyed (EggStatusIcon *icon);
