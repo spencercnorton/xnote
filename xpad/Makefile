@@ -4,7 +4,7 @@ OBJECTS=main.o \
 	color.o \
 	font.o \
 	pad.o 
-CFLAGS=`pkg-config --cflags gtk+-2.0`
+CFLAGS=-O3 -Wall `pkg-config --cflags gtk+-2.0`
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 
 xpad: $(OBJECTS)
