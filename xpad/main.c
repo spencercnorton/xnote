@@ -411,7 +411,14 @@ clipboard_clear (GtkClipboard *clipboard, gpointer data)
 		if (!handle_args (&argc, &argv, FALSE))
 		{
 			/* if there were no non-local arguments, insert --new as argument */
-/*			handle_args (&1, &(&"new"), FALSE);*/
+			gint c = 2;
+			gchar **v = g_malloc (sizeof (gchar *) * 2);
+			v[0] = "xpad";
+			v[1] = "--new";
+			
+			handle_args (&c, &v, FALSE);
+			
+			g_free (v);
 		}
 		
 		for (i = 0; i < argc; i++)
