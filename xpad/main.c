@@ -247,8 +247,9 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 						
 						if (i == (*argc))
 						{
-							printf ("Missing companion argument to %s\n",
-								arguments[j].name);
+							fprintf (stderr,
+							         "Missing companion argument to %s\n",
+								 arguments[j].name);
 							exit (1);
 						}
 						
@@ -272,7 +273,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 		
 		if (j == NUM_ARGUMENTS && local) /* only check on a local pass */
 		{
-			printf ("Didn't understand argument %s.\n", (*argv)[i]);
+			fprintf (stderr, "Didn't understand argument %s.\n", (*argv)[i]);
 			exit (1);
 		}
 	}
@@ -560,6 +561,38 @@ static void xpad_set_default_icon (void)
 	g_object_unref (pixbuf);
 }
 
+
+#ifdef G_OS_UNIX
+
+/* Try to intercept a signal, but don't do so if it was previously set to be ignored -- we
+ * should respect non-job-control shells and such. 
+ */
+static void SetSignal(int signum)
+{
+	if (signal(signum, xpad_catch_quit_signal) == SIG_IGN)
+		signal(signum, SIG_IGN);
+}
+
+
+/* try to intercept various quit-style signals. */
+static void SetQuitSignals(void)
+{
+	SetSignal(SIGHUP);
+	SetSignal(SIGINT);
+	SetSignal(SIGQUIT);
+	SetSignal(SIGABRT);
+	SetSignal(SIGTERM);
+}
+
+#else
+
+static void SetQuitSignals(void)
+{
+}
+
+#endif
+
+
 /* data is an array of void pointers, indicating the argc and argv */
 static int xpad_init (gpointer data)
 {
@@ -572,22 +605,7 @@ static int xpad_init (gpointer data)
 	if (xpad_check_if_others (data))
 		return 0;
 	
-#ifdef G_OS_UNIX
-	
-	/* try to intercept various quit-style signals.  don't do so if they were previously
-	    ignored, however -- we should respect non-job-control shells and such */
-	if (signal (SIGHUP, xpad_catch_quit_signal) == SIG_IGN)
-		signal (SIGHUP, SIG_IGN);
-	if (signal (SIGINT, xpad_catch_quit_signal) == SIG_IGN)
-		signal (SIGINT, SIG_IGN);
-	if (signal (SIGQUIT, xpad_catch_quit_signal) == SIG_IGN)
-		signal (SIGQUIT, SIG_IGN);
-	if (signal (SIGABRT, xpad_catch_quit_signal) == SIG_IGN)
-		signal (SIGABRT, SIG_IGN);
-	if (signal (SIGTERM, xpad_catch_quit_signal) == SIG_IGN)
-		signal (SIGTERM, SIG_IGN);
-	
-#endif
+	SetQuitSignals();
 	
 	xpad_make_working_dir ();
 	
