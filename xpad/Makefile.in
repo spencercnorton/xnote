@@ -24,16 +24,8 @@ top_srcdir = @top_srcdir@
 srcdir = @srcdir@
 VPATH = @srcdir@
 
-.SUFFIXES:
-.SUFFIXES: .c .o
+subdirs = src images doc
 
-CFLAGS = -I. @CFLAGS@ -ansi -pedantic -Wall\
- `pkg-config --cflags gtk+-2.0`\
- -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED\
- -DGDK_PIXMAP_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
-
-LDFLAGS = @LDFLAGS@
-LIBS = @LIBS@ `pkg-config --libs gtk+-2.0`
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = $(INSTALL) -m 644
@@ -44,40 +36,42 @@ bindir = @bindir@
 libdir = @libdir@
 infodir = @infodir@
 mandir = @mandir@
-man1dir = $(mandir)/man1
-icondir = $(datadir)/pixmaps/xpad
 desktopdir = $(shell $(top_srcdir)/scripts/finddesktopdir $(datadir)/applications)
 
-SOURCES=main.c fio.c pref.c pad.c help.c toolbar.c tray.c eggtrayicon.c
-DOCS=xpad.1
-OBJS=main.o fio.o pref.o pad.o help.o toolbar.o tray.o eggtrayicon.o
 
-all: xpad
+all:
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) all) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
 
 install: all
-	$(top_srcdir)/mkinstalldirs $(bindir)
-	$(top_srcdir)/mkinstalldirs $(man1dir)
-	$(top_srcdir)/mkinstalldirs $(icondir)
-	$(top_srcdir)/mkinstalldirs $(desktopdir)
-	$(INSTALL_PROGRAM) xpad $(bindir)
-	$(INSTALL_DATA) xpad.1 $(man1dir)
-	$(INSTALL_DATA) xpad.xpm $(icondir)
+	$(top_srcdir)/autoconf/mkinstalldirs $(desktopdir)
 	$(INSTALL_DATA) xpad.desktop $(desktopdir)
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) install) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
 
 uninstall:
-	/bin/rm -f $(bindir)/xpad
-	/bin/rm -f $(man1dir)/xpad.1*
-	/bin/rm -f $(icondir)/xpad.xpm
 	/bin/rm -f $(desktopdir)/xpad.desktop
-
-xpad: $(OBJS)
-	$(CC) $(LDFLAGS) -o xpad $(OBJS) $(LIBS)
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) uninstall) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
 
 clean:
-	/bin/rm -f core *.o $(OBJS)
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) clean) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
 
 distclean: clean
-	/bin/rm -f *~ .\#* Makefile config.h config.status config.cache config.log stamp-h
+	/bin/rm -f *~ .\#* Makefile config.status config.cache config.log autoconf/stamp-h
+	@for dir in ${subdirs}; do \
+	  (cd $$dir && $(MAKE) distclean) \
+	  || case "$(MFLAGS)" in *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
 
 mostlyclean: clean
 
@@ -112,26 +106,25 @@ zip: ../$(VERNAME).zip
 	zip -9 -qr - $(VERNAME) > $(VERNAME).zip;\
 	rm -r $(VERNAME))
 
-uuencode: tar.gz
+uuencode: ../$(VERNAME).tar.gz
 	uuencode ../$(VERNAME).tar.gz $(VERNAME).tar.gz > ../$(VERNAME).tgz.uu
 
 
 
-
 # automatic re-running of configure if the configure.in file has changed
-${srcdir}/configure: configure.in #aclocal.m4
-	cd ${srcdir} && autoconf
+${srcdir}/configure: autoconf/configure.in
+	cd ${srcdir} && autoconf autoconf/configure.in > configure
 
 # autoheader might not change config.h.in, so touch a stamp file
-${srcdir}/config.h.in: stamp-h.in
-${srcdir}/stamp-h.in: configure.in #aclocal.m4
-		cd ${srcdir} && autoheader
-		echo timestamp > ${srcdir}/stamp-h.in
+${srcdir}/autoconf/config.h.in: autoconf/stamp-h.in
+${srcdir}/autoconf/stamp-h.in: autoconf/configure.in
+	cd ${srcdir} && autoheader autoconf/configure.in > autoconf/config.h.in
+	echo timestamp > ${srcdir}/autoconf/stamp-h.in
 
-config.h: stamp-h
-stamp-h: config.h.in config.status
+src/config.h: autoconf/stamp-h
+autoconf/stamp-h: autoconf/config.h.in config.status
 	./config.status
-Makefile: Makefile.in config.status
+Makefile: Makefile.in src/Makefile.in images/Makefile.in doc/Makefile.in config.status
 	./config.status
 config.status: configure
 	./config.status --recheck
