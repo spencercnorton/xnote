@@ -15,7 +15,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/main.c:178
-#, fuzzy
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
