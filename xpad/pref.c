@@ -107,10 +107,7 @@ static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 	
 	current_settings.style.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	
-	if (current_settings.style.border_width == 0)
-		gtk_widget_set_sensitive (colorsel, FALSE);
-	else
-		gtk_widget_set_sensitive (colorsel, TRUE);
+	gtk_widget_set_sensitive(colorsel, (current_settings.style.border_width != 0));
 	
 	while (temp)
 	{
