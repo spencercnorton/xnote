@@ -42,14 +42,10 @@ toolbar_is_visible (xpad_toolbar *xt)
 void
 toolbar_show (pad_node *pad)
 {
-	printf ("considering whether to show\n");
 	if (!toolbar_is_visible (pad->toolbar))
 	{
-		gint oldh = pad->height;
-		
 		gtk_window_resize (pad->window, pad->width, pad->height + pad->toolbar->height);
 		gtk_widget_show_all (pad->toolbar->bar);
-		printf ("going ahead with show - height: %i -> %i\n", oldh, pad->height);
 		
 		toolbar_set_visible (pad->toolbar, TRUE);
 	}
@@ -58,14 +54,10 @@ toolbar_show (pad_node *pad)
 void
 toolbar_hide (pad_node *pad)
 {
-	printf ("considering whether to hide\n");
 	if (toolbar_is_visible (pad->toolbar))
 	{
-		gint oldh = pad->height;
-		
 		gtk_widget_hide (pad->toolbar->bar);
 		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
-		printf ("going ahead with hide - height: %i -> %i\n", oldh, pad->height);
 		
 		toolbar_set_visible (pad->toolbar, FALSE);
 	}

@@ -291,7 +291,7 @@ static void quit_if_no_pads (void)
 /* unlinks pad from linked list of all pads */
 static void pad_remove (pad_node *pad)
 {
-	if (!pad || !pad->window)
+	if (!pad)
 		return;
 	
 	/*  first, find pad in linked list, and remove it  */
@@ -1575,7 +1575,6 @@ pad_node *pad_new (void)
 	if (verbosity >= 2) printf ("Making new pad.\n");
 	
 	pad = start_pad ();
-	
 	gtk_window_set_default_size (pad->window, 
 		current_settings.style.padding + current_settings.style.border_width
 			+ current_settings.width,
