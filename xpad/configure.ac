@@ -30,6 +30,18 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.12.1)
 
+# Determine if we're debugging
+AC_ARG_ENABLE(debug,
+  AC_HELP_STRING([--enable-debug=[no/yes]],[turn on debugging [default=no]]),
+  enable_debug="$enableval",
+  enable_debug=no)
+if test "$enable_debug" = "yes"; then
+  DEBUG_CFLAGS="-ansi -pedantic -Wall -Werror -g -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+else
+  DEBUG_CFLAGS=""
+fi
+AC_SUBST(DEBUG_CFLAGS)
+
 # Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/Makefile autopackage/default.apspec])
 AC_OUTPUT
