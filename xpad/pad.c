@@ -34,29 +34,29 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget);
 
 static GtkItemFactoryEntry menu_items[] = 
 {
-	{"/_File", 					NULL,					0,				0, 	"<Branch>"},
-	{"/File/_New",				"<control>N",			menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-	{"/File/_Open...",			"<control>O",			menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
-	{"/File/sep", 				NULL,					0,				0,	"<Separator>"},
-	{"/File/Save _As...",		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
-	{"/File/sep2", 				NULL,					0,				0,	"<Separator>"},
-	{"/File/_Close",			"<control>W",			menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{"/File/_Delete",			NULL,					menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
-	{"/File/_Quit",				"<control>Q",			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
-	{"/_Edit",					NULL,					0,				0,	"<Branch>"},
-	{"/Edit/C_ut",				"<control>X",			menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
-	{"/Edit/_Copy",				"<control>C",			menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
-	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
-	{"/Edit/Clea_r Pad",		NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
-	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
-	{"/Edit/_Lock Style",		NULL,					menuitem_cb,	15,	"<CheckItem>"},
-	{"/Edit/_Sticky",			NULL,					menuitem_cb,	16,	"<CheckItem>"},
-	{"/Edit/sep2",				NULL,					0,				0,	"<Separator>"},
-	{"/Edit/_Preferences...",	NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
-	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
-	{"/_Help",					NULL,					0,				0,	"<Branch>"},
-	{"/Help/_Contents",			"F1",					menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
-	{"/Help/_About",			NULL,					menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
+	{"/_File", 				NULL,			0,		0, 	"<Branch>"},
+	{"/File/_New",				"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
+	{"/File/_Open...",			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
+	{"/File/sep", 				NULL,			0,		0,	"<Separator>"},
+	{"/File/Save _As...",			"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
+	{"/File/sep2", 				NULL,			0,		0,	"<Separator>"},
+	{"/File/_Close",			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
+	{"/File/_Delete",			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
+	{"/File/_Quit",				"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{"/_Edit",				NULL,			0,		0,	"<Branch>"},
+	{"/Edit/C_ut",				"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
+	{"/Edit/_Copy",				"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
+	{"/Edit/_Paste",			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
+	{"/Edit/Clea_r Pad",			NULL,			menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
+	{"/Edit/sep",				NULL,			0,		0,	"<Separator>"},
+	{"/Edit/_Lock Style",			NULL,			menuitem_cb,	15,	"<CheckItem>"},
+	{"/Edit/_Sticky",			NULL,			menuitem_cb,	16,	"<CheckItem>"},
+	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
+	{"/Edit/_Preferences...",		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
+	{"/_Windows",				NULL,			0,		0,	"<Branch>"},
+	{"/_Help",				NULL,			0,		0,	"<Branch>"},
+	{"/Help/_Contents",			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
+	{"/Help/_About",			NULL,			menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
 };
 
 #define SHOW_ACTION_OFFSET		10000
@@ -1033,9 +1033,9 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	
 	/* set checkboxes */
 	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Lock Style");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->locked);
+	GTK_CHECK_MENU_ITEM (tmp)->active = pad->locked;
 	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Sticky");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->sticky);
+	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
 	
 	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
 }
@@ -1800,7 +1800,6 @@ static void
 pad_renew (pad_node *pad)
 {
 	if (verbosity >= 2) printf ("Refreshing pad.\n");
-	printf ("lock is %i\n", pad->locked);
 	
 	pad_alloc_gtk (pad);
 	
@@ -1810,8 +1809,7 @@ pad_renew (pad_node *pad)
 	pad_fill_with_file (pad, pad->contentname);
 	
 	pad_set_sticky (pad, pad->sticky);
-	printf ("lock is %i\n", pad->locked);
-
+	
 	pad_update_style (pad);
 	
 	pad_set_title (pad);

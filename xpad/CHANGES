@@ -3,6 +3,7 @@
 xpad won't take 100% cpu sometimes when idle
 fixed bug that screwed up last toolbar button's toggle setting
 fixed toolbar hiding when you right click on another pad
+fixed style locking and sticky status changing on menu popup
 
 
 1.7
