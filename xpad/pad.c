@@ -1493,10 +1493,6 @@ pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	/* set editable */
 	pad_set_editable (pad, current_settings.edit_lock == 0);
 	
-	/* we want to start off with valid values for position/size */
-	gtk_window_get_size (pad->window, &pad->width, &pad->height);
-	gtk_window_get_position (pad->window, &pad->x, &pad->y);
-	
 	pad_resize_background (pad);
 	
 	/* show the toolbar now that we are realized */
@@ -1784,6 +1780,8 @@ pad_node *pad_new (void)
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	pad->locked = 0;
 	pad->sticky = 0;
+	pad->width = current_settings.style.padding + current_settings.style.border_width + current_settings.width;
+	pad->height = current_settings.style.padding + current_settings.style.border_width + current_settings.height;
 	
 	pad_set_title (pad);
 	
@@ -1811,6 +1809,10 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->locked = info->locked;
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
+	pad->width = info->width;
+	pad->height = info->height;
+	pad->x = info->x;
+	pad->y = info->y;
 	
 	pad_set_sticky (pad, info->sticky);
 	
