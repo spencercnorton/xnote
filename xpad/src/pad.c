@@ -1920,9 +1920,8 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
 	
-	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
-	
 #if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
+	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
 #endif
 	
