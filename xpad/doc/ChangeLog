@@ -1,3 +1,8 @@
+1.9.1
+-----
+fix a segfault when show all is selected after a new pad is made
+
+
 1.9
 ---
 *features*
