@@ -179,7 +179,11 @@ help_window_new (GtkWidget *parent, gint page)
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), label_toolbar_help, FALSE, FALSE, 0);
 		strcpy (toolbartext,
 "You can control whether pads have a <b>toolbar</b> or not by clicking on the "
-"\"Enable toolbars\" option.  This affects all pads immediately.\n\n"
+"\"Enable toolbars\" option.  This affects all pads immediately.\n\n");
+		strcat (toolbartext,
+"If <b>auto-hide</b> is enabled, a pad's toolbar will disappear (after a small delay) when "
+"your mouse pointer leaves the pad.  It will return when your mouse does.\n\n");
+		strcat (toolbartext,
 "If the toolbar is enabled, you can customize which <b>buttons</b> appear by dragging "
 "the button you want from one box to another.  The upper box looks like a toolbar and "
 "contains the buttons that are currently enabled.  The lower box holds unused buttons.  ");
@@ -865,6 +869,10 @@ static GtkWidget *preferences_create (void)
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tt), toolbar_on, 
 "If on, a toolbar will appear below each pad when the mouse hovers over it.",
 "If on, a toolbar will appear below each pad when the mouse hovers over it.");
+		
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tt), toolbar_auto_hide, 
+"If on, the toolbar will disappear when you are not using the pad.",
+"If on, the toolbar will disappear when you are not using the pad.");
 		
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_frame), 6);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_unused_frame), 6);
