@@ -323,8 +323,8 @@ const gchar *xpad_settings_style_get_fontname (void)
 
 static void xpad_settings_load_defaults (void)
 {
-	current_settings.width = 260;
-	current_settings.height = 260;
+	current_settings.width = 200;
+	current_settings.height = 200;
 	current_settings.decorations = 0;
 	current_settings.confirm_destroy = 1;
 	current_settings.edit_lock = 0;
