@@ -207,6 +207,7 @@ void fio_save_default_settings (void)
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
 	gchar *buf;
+	const gchar *item;
 	va_list ap;
 	
 	buf = fio_get_file (filename);
@@ -223,37 +224,36 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	
 	va_start (ap, filename);
 
-	while (1)
+	while ((item = va_arg (ap, gchar *)))
 	{
-		gchar *item;
 		gchar *fullitem;
 		gint *value;
 		gchar *where;
-		gchar *temp;
 		gint size;
 		
-		item = va_arg (ap, gchar *);
-		if (!item)
-			break;
 		fullitem = (gchar *) g_malloc (strlen (item) + 3);
 		sprintf (fullitem, "\n%s ", item);
 		value = va_arg (ap, void *);
 		where  = strstr (buf, fullitem);
 		
-		if (!where) continue;
+		if (where)
+		{
+			gchar *temp;
+
+			where = strstr (where, " ") + 1;
+			size = strcspn (where, "\n");
 		
-		where = strstr (where, " ") + 1;
+			temp = g_malloc (size + 1);
+			strncpy (temp, where, size);
+			temp[size] = '\0';
 		
-		temp = (gchar *) g_malloc ((size = strcspn (where, "\n")) + 1);
-		strncpy (temp, where, size);
-		temp[size] = '\0';
+			if (g_ascii_isdigit (temp[0]))
+				*((gint *) value) = atoi (temp);
+			else
+				*((gchar **) value) = g_strdup (temp);
 		
-		if (g_ascii_isdigit (temp[0]))
-			*((gint *) value) = atoi (temp);
-		else
-			*((gchar **) value) = g_strdup (temp);
-		
-		g_free (temp);
+			g_free (temp);
+		}
 		g_free (fullitem);
 	}
 
