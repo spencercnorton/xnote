@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "tray.h"
 #include "settings.h"
+#include "defines.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>

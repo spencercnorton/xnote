@@ -1183,20 +1183,21 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	 */
 	for (p = first_pad; p; p = p->next)
 	{
-		gchar result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
+		gchar *title;
 		
 		n++;
 		
-		sprintf (result, "%s/%i. ", submenu, n);
-		strcat (result, p->title);
+		title = g_strdup_printf ("%s/%i. %s", submenu, n, p->title);
 		
-		entry.path = result;
+		entry.path = title;
 		entry.accelerator = NULL;
 		entry.callback = menuitem_cb;
 		entry.callback_action = SHOW_ACTION_OFFSET + n - 1;
 		entry.item_type = "<Item>";
 		
 		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
+		
+		g_free (title);
 	}
 	
 	block_toolbar_events (pad);
@@ -1287,33 +1288,6 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				}
 				break;
 				
-#if 0
-			case 2:
-				if ((event_button->state & GDK_CONTROL_MASK) &&
-				    (event_button->state & GDK_SHIFT_MASK))
-				{
-					/* HIG says "Create link, shortcut or alias to selection"
-					  We can't do that, so ignore. */
-				}
-				else if (event_button->state & GDK_CONTROL_MASK)
-				{
-					/* HIG says copy */
-					pad_edit_paste_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
-				}
-				else if (event_button->state & GDK_SHIFT_MASK)
-				{
-					/* HIG says move */
-				/*	pad_edit_copy_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
-					*/
-				}
-				else if (event_button->state == 0)
-				{
-					/* HIG says copy */
-					pad_edit_paste_for_clipboard (pad, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
-				}
-				
-				return TRUE;
-#endif
 			case 3:
 				if (event_button->state & GDK_CONTROL_MASK)
 					pad_resize (pad, event_button);
@@ -1752,9 +1726,8 @@ void pad_set_title (pad_node *pad)
 {
 	GtkTextBuffer *buf;
 	GtkTextIter s, e;
-	gchar *content, *tmp;
+	gchar *content, *end;
 	gint n;
-	gchar result [TITLE_CHARS + 1];	/* 1 null and TITLE_CHARS characters */
 	const char *more = "";
 	gunichar u;
 	
@@ -1763,48 +1736,19 @@ void pad_set_title (pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 	
-	tmp = content;
+	end = g_utf8_strchr (content, -1, '\n');
 	
-	/**
-	 * Unfortunately, I had some real problems taking the UTF-8 encoded text from
-	 * the text buffer to play nice with input to gtk_window_set_title.  Thus, this quick
-	 * little utf8->ascii conversion must take place.
-	 */
-	
-	n = 0;
-	u = g_utf8_get_char (tmp);
-	while (u && (n < TITLE_CHARS))
+	if (end)
 	{
-		if (u <= 0x7F)	/* is ASCII */
-		{
-			char c = 0;
-
-			if (g_unichar_isgraph (u)) 	c = (char)u;
-			else if (g_unichar_isspace (u))	c = ' ';
-			
-			if (c) result[n++] = c;
-		}
-
-		tmp = g_utf8_next_char (tmp);
-		u = g_utf8_get_char (tmp);
+		end[0] = '\0';
 	}
-
-	result[n] = '\0';
 	
-	/* There may be more text than we want to fit into our title.  If 
-	 * there's anything in that tail other than whitespace, we'll want
-	 * to append an ellipsis ("...") to signify this.
-	 */
-  	while (u && ((u > 0x7f) || !g_unichar_isgraph(u)))
-	{
-	  tmp = g_utf8_next_char (tmp);
-	  u = g_utf8_get_char (tmp);
-	}
-	if (u) more = "...";
-	
-	sprintf (pad->title, "%s%s", result, more);
+	g_free (pad->title);
+	pad->title = g_strdup (content);
 	
 	gtk_window_set_title (pad->window, pad->title);
+	
+	g_free (content);
 }
 
 
@@ -1882,6 +1826,7 @@ pad_alloc_gtk (pad_node *pad)
 	pad->box = box;
 	pad->toolbar = NULL;
 	pad->scrollbar = scroll;
+	pad->title = NULL;
 	
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);

@@ -62,7 +62,7 @@ struct pad_node_def
 	/* generated values */
 	gint num;
 	gboolean hidden;
-	gchar title [TITLE_CHARS + 4];	/* make room for ellipses */
+	gchar *title;
 	
 	/* this was added to differentiate between a pad that has been explicitly closed,
 	 * and a pad that has been merely hidden to the system tray */
