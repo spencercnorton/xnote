@@ -31,5 +31,5 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.12.1)
 
 # Sets up output files.
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/default.apspec])
+AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/Makefile autopackage/default.apspec])
 AC_OUTPUT
