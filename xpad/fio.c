@@ -189,14 +189,14 @@ void fio_save_default_settings (void)
 	GSList *tmp;
 	
 	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
-		"sync_time %i\ndecorations %i\n"
+		"sync_time %i\ndecorations %i\nauto_hide_toolbar %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\n"
 		"scrollbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
 		current_settings.sync_time, current_settings.decorations,
-		current_settings.width, current_settings.height,
+		current_settings.auto_hide_toolbar, current_settings.width, current_settings.height,
 		current_settings.style.back.red, current_settings.style.back.green, current_settings.style.back.blue,
 		current_settings.style.text.red, current_settings.style.text.green, current_settings.style.text.blue,
 		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
@@ -390,6 +390,7 @@ gint fio_load_default_settings (void)
 						"padding", &current_settings.style.padding,
 						"fontname", &current_settings.style.fontname,
 						"toolbar", &current_settings.toolbar,
+						"auto_hide_toolbar", &current_settings.auto_hide_toolbar,
 						"scrollbar", &current_settings.scrollbar,
 						"buttons", &buttons,
 						NULL ))
@@ -539,8 +540,21 @@ int fio_load_pads (void)
 	
 	if (!dir)
 	{
-		fprintf (stderr, "Can't open working directory [%s].\n", working_dir);
+		gchar errtext [500];
+		GtkWidget *dialog;
+		
+		sprintf (errtext, "Could not open xpad directory '%s'.\n", working_dir);
+		
+		fprintf (stderr, errtext);
+		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR, errtext, 
+			"This directory is needed to store preference and pad information.  Xpad will close now.");
+		
+		gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_OK, 1);
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		gtk_widget_destroy (dialog);
+		
 		gtk_main_quit ();
+		return -1;
 	}
 	
 	while ((name = g_dir_read_name (dir)))
