@@ -8,6 +8,7 @@ Version 2.2
 * Renamed command-line option --nonew to --no-new and added -N shortcut
 * Allow running from console if we don't need to do anything graphical
 * Readded keyboard shortcuts
+* Updated Irish translation (Kevin Patrick Scannell)
 
 
 Version 2.1
