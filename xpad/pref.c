@@ -178,6 +178,7 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *label_border_width_unit = gtk_label_new ("pixels");
 	GtkWidget *label_font = gtk_label_new ("Font Face");
 	GtkWidget *label_misc = gtk_label_new ("Options");
+	GtkWidget *label_toolbar = gtk_label_new ("Toolbar");
 	GtkWidget *label_padding = gtk_label_new ("Padding:");
 	GtkWidget *label_padding_unit = gtk_label_new ("pixels");
 	GtkWidget *vbox_global = gtk_vbox_new (FALSE, 0);
@@ -200,6 +201,8 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *frame_wm_close;
 	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_toolbar = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_toolbar = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 3);
@@ -219,6 +222,8 @@ static GtkWidget *preferences_create (void)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_background), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_text), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_text), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_toolbar), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_border), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_font), 6);
@@ -306,7 +311,7 @@ static GtkWidget *preferences_create (void)
 	g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
 "The amount of space you want surrounding the pad.", 
-"Choose the number of pixels around the pad.  This space is colored"
+"Choose the number of pixels around the pad.  This space is colored "
 "independently and surrounds it on all sides.");
 
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
@@ -324,6 +329,18 @@ static GtkWidget *preferences_create (void)
 	/* key release event does not seem to be sent when I think it should */
 	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
 
+
+	/* toolbar  setup */
+	{
+		GtkWidget *frame = gtk_frame_new ("Buttons");
+		
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
+		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 0);
+		
+		
+	}
+	
 	/* misc. setup */
 	
 	radio_close_all = gtk_radio_button_new_with_label (NULL,
@@ -406,6 +423,8 @@ static GtkWidget *preferences_create (void)
 	g_signal_connect (GTK_OBJECT (radio_close_all), "toggled", G_CALLBACK (change_wm_close), (gpointer) 0);
 	g_signal_connect (GTK_OBJECT (radio_close_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 1);
 	g_signal_connect (GTK_OBJECT (radio_delete_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 2);
+
+
 
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 	gtk_window_set_position (GTK_WINDOW(window), GTK_WIN_POS_CENTER);

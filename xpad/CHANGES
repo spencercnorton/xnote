@@ -1,5 +1,6 @@
 1.5
 ---
+fixed a bug that stopped saving of defaults on shutdown
 better error reporting
 toolbar
 

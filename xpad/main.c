@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "xpad.xpm"
+#include "lock.xpm"
 #include "main.h"
 #include "pad.h"
 #include "help.h"
@@ -201,30 +202,6 @@ static void reset_sync (void)
 
 }
 
-
-static void xpad_set_default_icon (void)
-{
-	GdkPixmap *pixmap;
-	GdkPixbuf *pixbuf;
-	GdkPixbuf *pixbuf_full;
-
-	pixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, gdk_colormap_get_system (), NULL, NULL, xpad_xpm);
-	
-	pixbuf = gdk_pixbuf_get_from_drawable (NULL, pixmap, NULL, 0, 0, 0, 0, 48, 48);
-	
-	if (pixbuf)
-	{
-		pixbuf_full = gdk_pixbuf_add_alpha (pixbuf, TRUE, 0, 0, 0);
-		
-		gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf_full));
-		
-		g_object_unref (pixbuf);
-		g_object_unref (pixbuf_full);
-	}
-	
-	g_object_unref (pixmap);
-}
-
 static void clipboard_clear (GtkClipboard *clipboard, gpointer data)
 {
 	/* no data needs to be freed */
@@ -309,6 +286,35 @@ static void xpad_make_working_dir (void)
 #endif
 }
 
+static void xpad_register_icons (void)
+{
+	GtkIconSet *set;
+	GtkIconFactory *factory;
+	GdkPixbuf *pixbuf;
+	
+	pixbuf = gdk_pixbuf_new_from_xpm_data (lock_xpm);
+	
+	set = gtk_icon_set_new_from_pixbuf (pixbuf);
+	
+	factory = gtk_icon_factory_new ();
+	gtk_icon_factory_add (GTK_ICON_FACTORY (factory),
+		"xpad-lock", set);
+	gtk_icon_factory_add_default (GTK_ICON_FACTORY (factory));
+	
+	g_object_unref (pixbuf);
+}
+
+static void xpad_set_default_icon (void)
+{
+	GdkPixbuf *pixbuf;
+
+	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad_xpm);
+	
+	gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf));
+	
+	g_object_unref (pixbuf);
+}
+
 /* data is an array of void pointers, indicating the argc and argv */
 static int xpad_init (gpointer data)
 {
@@ -357,6 +363,7 @@ static int xpad_init (gpointer data)
 			current_settings.sync_time, verbosity, current_settings.decorations);
 	
 	xpad_set_default_icon ();
+	xpad_register_icons ();
 	
 	/* load all pads */
 	fio_load_pads();

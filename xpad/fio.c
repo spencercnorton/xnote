@@ -274,8 +274,8 @@ static void fio_save_info_file (pad_node *pad)
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
-	if (GTK_WIDGET_VISIBLE (pad->toolbar))
-		height -= pad->toolbar_height;
+	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+		height -= pad->toolbar->height;
 	
 	/* we don't really need to save the style, since we don't use it, but it makes
 	   later running an older version of xpad nice.  At some point this will be removed. */

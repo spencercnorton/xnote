@@ -4,47 +4,7 @@
 #include <string.h>
 
 static gboolean
-grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
-{
-	if (event->button == 1)
-		gtk_window_begin_resize_drag (pad->window,
-			GDK_WINDOW_EDGE_SOUTH_EAST,
-			event->button,
-			event->x_root, event->y_root,
-			event->time);
-	else
-		gtk_window_begin_move_drag (pad->window,
-			event->button,
-			event->x_root, event->y_root,
-			event->time);
-	
-	return TRUE;
-}
-
-static void
-get_grip_rect (GtkWidget *widget,
-               GdkRectangle *rect)
-{
-  gint w, h;
-  
-  /* These are in effect the max/default size of the grip. */
-  w = 18;
-  h = 18;
-
-  if (w > (widget->allocation.width))
-    w = widget->allocation.width;
-
-  if (h > (widget->allocation.height - widget->style->ythickness))
-    h = widget->allocation.height - widget->style->ythickness;
-  
-  rect->x = widget->allocation.x + widget->allocation.width - w;
-  rect->y = widget->allocation.y + widget->allocation.height - h;
-  rect->width = w;
-  rect->height = h;
-}
-
-static gboolean
-grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, pad_node *pad)
+grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, xpad_toolbar *xt)
 {
 	gtk_paint_resize_grip (
 		widget->style,
@@ -55,8 +15,8 @@ grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, pad_node *pad)
 		"xpad-grip",
 		GDK_WINDOW_EDGE_SOUTH_EAST,
 		0, 0,
-		pad->toolbar_height - pad->toolbar->style->xthickness,
-		pad->toolbar_height - pad->toolbar->style->ythickness);
+		xt->height - xt->bar->style->xthickness,
+		xt->height - xt->bar->style->ythickness);
 	
 	return TRUE;
 }
@@ -70,10 +30,10 @@ toolbar_get_box (GtkWidget *toolbar)
 void
 toolbar_show (pad_node *pad)
 {
-	if (!GTK_WIDGET_VISIBLE (pad->toolbar))
+	if (!GTK_WIDGET_VISIBLE (pad->toolbar->bar))
 	{
-		gtk_window_resize (pad->window, pad->width, pad->height + pad->toolbar_height);
-		gtk_widget_show_all (pad->toolbar);
+		gtk_window_resize (pad->window, pad->width, pad->height + pad->toolbar->height);
+		gtk_widget_show_all (pad->toolbar->bar);
 	}
 }
 
@@ -82,12 +42,12 @@ toolbar_hide (gpointer data)
 {
 	pad_node *pad = (pad_node *) data;
 	
-	if (GTK_WIDGET_VISIBLE (pad->toolbar))
+	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
 	{
-		pad->toolbar_timeout = 0;
+		pad->toolbar->timeout = 0;
 		
-		gtk_widget_hide (pad->toolbar);
-		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar_height);
+		gtk_widget_hide (pad->toolbar->bar);
+		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
 	}
 	
 	return 0;
@@ -96,59 +56,75 @@ toolbar_hide (gpointer data)
 void
 toolbar_start_timeout (pad_node *pad)
 {
-	pad->toolbar_timeout = gtk_timeout_add (1000, toolbar_hide, pad);
+	pad->toolbar->timeout = gtk_timeout_add (1000, toolbar_hide, pad);
 }
 
 void
 toolbar_end_timeout (pad_node *pad)
 {
-	gtk_timeout_remove (pad->toolbar_timeout);
-	pad->toolbar_timeout = 0;
+	gtk_timeout_remove (pad->toolbar->timeout);
+	pad->toolbar->timeout = 0;
 }
 
-
-static void
-toolbar_add_button (const gchar *name, pad_node *pad)
+GtkWidget *
+toolbar_button_new (const toolbar_button *tb)
 {
-	const toolbar_button *tb = NULL;
-	gint i;
-	GtkWidget *box = toolbar_get_box (pad->toolbar);
+	GtkWidget *rv = gtk_button_new ();
+	GtkWidget *image = gtk_image_new_from_stock (tb->stock, 
+		GTK_ICON_SIZE_SMALL_TOOLBAR);
 	
-	for (i = 0; i < NUM_BUTTONS; i++)
-	{
-		if (!g_ascii_strcasecmp (buttons[i].name, name))
-		{
-			tb = &buttons[i];
-			break;
-		}
-	}
+	gtk_container_add (GTK_CONTAINER (rv), image);
 	
-	if (i == NUM_BUTTONS)
-		return;
-	
-	gtk_toolbar_insert_stock (GTK_TOOLBAR (box),
-		tb->stock, tb->desc, tb->desc, tb->func, pad, -1);
+	return rv;
 }
 
 static void
-toolbar_add_separator (pad_node *pad)
+toolbar_add_separator (xpad_toolbar *xt)
 {
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_get_box (pad->toolbar)));
+/*	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_get_box (xt->bar)));*/
+	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
+		gtk_vseparator_new (), NULL, NULL);
 }
 
 static void
-toolbar_add_item (gpointer p1, gpointer p2)
+toolbar_add_button (xpad_toolbar *xt, const toolbar_button *tb)
 {
-	const gchar *name = (const gchar *) p1;
-	pad_node *pad = (pad_node *) p2;
+	GtkWidget *button = toolbar_button_new (tb);
+	
+	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
+		button, tb->desc, tb->desc);
+	
+	g_object_set_data (G_OBJECT (button), "func", (void *) tb->func);
+}
+
+void
+toolbar_add_item (gpointer gname, gpointer gxt)
+{
+	const gchar *name = (const gchar *) gname;
+	xpad_toolbar *xt = (xpad_toolbar *) gxt;
 	
 	if (!g_ascii_strcasecmp (name, "sep"))
 	{
-		toolbar_add_separator (pad);
+		toolbar_add_separator (xt);
 	}
 	else
 	{
-		toolbar_add_button (name, pad);
+		gint i;
+		const toolbar_button *tb = NULL;
+		
+		for (i = 0; i < NUM_BUTTONS; i++)
+		{
+			if (!g_ascii_strcasecmp (buttons[i].name, name))
+			{
+				tb = &buttons[i];
+				break;
+			}
+		}
+		
+		if (!tb)
+			return;
+		
+		toolbar_add_button (xt, tb);
 	}
 }
 
@@ -158,12 +134,37 @@ toolbar_show_item (GtkWidget *widget, gpointer p2)
 	gtk_widget_show_all (widget);
 }
 
+GList *toolbar_get_buttons (xpad_toolbar *xt)
+{
+	GList *list = gtk_container_get_children (GTK_CONTAINER (
+		toolbar_get_box (xt->bar))), *tmp = list;
+	
+	while (tmp)
+	{
+		GtkWidget *widget = GTK_WIDGET (tmp->data);
+		
+		if (strcmp (GTK_OBJECT_TYPE_NAME
+			(GTK_OBJECT (widget)), "GtkButton"))
+		{
+			GList *backup = tmp->next;
+			
+			g_list_remove (list, tmp->data);
+			
+			tmp = backup;
+		}
+		else
+			tmp = tmp->next;
+	}
+	
+	return list;
+}
+
 void
-toolbar_update (pad_node *pad)
+toolbar_update (xpad_toolbar *xt)
 {
 	GtkRequisition req;
 	GList *list, *temp;
-	GtkWidget *box = toolbar_get_box (pad->toolbar);
+	GtkWidget *box = toolbar_get_box (xt->bar);
 	
 	if (verbosity >= 2) printf ("Updating toolbar.\n");
 	
@@ -178,47 +179,48 @@ toolbar_update (pad_node *pad)
 	
 	g_list_free (list);
 	
-	g_slist_foreach (current_settings.toolbar, toolbar_add_item, pad);
+	g_slist_foreach (current_settings.toolbar, toolbar_add_item, xt);
 	
 	gtk_widget_show_all (box);
 	
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (box), GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_toolbar_set_style (GTK_TOOLBAR (box), GTK_TOOLBAR_ICONS);
 	
-	gtk_widget_realize (pad->toolbar);
+	gtk_widget_realize (xt->bar);
 	
-	gtk_widget_size_request (pad->toolbar, &req);
+	gtk_widget_size_request (xt->bar, &req);
 	
 	req.height = MAX (req.height, 18);	/* must make grip at least 18 pixels */
 	
-	gtk_widget_set_size_request (gtk_bin_get_child (GTK_BIN (pad->grip)), req.height, req.height);
+	gtk_widget_set_size_request (gtk_bin_get_child (GTK_BIN (xt->grip)), req.height, req.height);
 	
-	pad->toolbar_height = req.height;
-	pad->toolbar_timeout = 0;
+	xt->height = req.height;
+	xt->timeout = 0;
 }
 
-void toolbar_add_to_pad (pad_node *pad)
+
+xpad_toolbar *toolbar_new (void)
 {
 	GtkWidget *toolbar = gtk_toolbar_new ();
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 	GtkWidget *grip = gtk_drawing_area_new ();
 	GtkWidget *align = gtk_alignment_new (1, 1, 1, 1);
+	xpad_toolbar *xt = (xpad_toolbar *) g_malloc (sizeof (xpad_toolbar));
 	
 	if (verbosity >= 2) printf ("Adding toolbar to pad.\n");
 	
-	gtk_box_pack_end (GTK_BOX (pad->box), hbox, FALSE, FALSE, 0);
-	
-	gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), toolbar, TRUE, TRUE, 0);
 	gtk_box_pack_end (GTK_BOX (hbox), align, FALSE, FALSE, 0);
 	
 	gtk_widget_add_events (grip, GDK_BUTTON_PRESS_MASK);
 	g_signal_connect (G_OBJECT (grip), "expose-event", 
-		G_CALLBACK (grip_expose_handler), pad);
-	g_signal_connect (G_OBJECT (grip), "button-press-event", 
-		G_CALLBACK (grip_press_handler), pad);
-	
+		G_CALLBACK (grip_expose_handler), xt);
+
 	gtk_container_add (GTK_CONTAINER (align), grip);
 	
-	pad->toolbar = hbox;
-	pad->grip = align;
+	xt->bar = hbox;
+	xt->grip = align;
+	xt->timeout = 0;
+	
+	return xt;
 }

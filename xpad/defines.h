@@ -12,5 +12,16 @@
 
 #define VERSION				"1.4"
 
+/* now define some structures here so that i don't have odd header dependencies */
+typedef struct xpad_toolbar_def xpad_toolbar;
+struct xpad_toolbar_def
+{
+	GtkWidget *bar;
+	GtkWidget *grip;
+	guint timeout;
+	gint height;
+};
+
+
 #endif
 

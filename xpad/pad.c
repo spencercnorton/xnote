@@ -18,13 +18,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include <string.h>
+#include <gdk/gdkkeysyms.h>
+#include "toolbar.h"
 #include "pad.h"
 #include "pref.h"
 #include "fio.h"
 #include "help.h"
-#include "toolbar.h"
-#include <string.h>
-#include <gdk/gdkkeysyms.h>
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -151,7 +151,27 @@ static void pad_update_style (pad_node *pad)
 	
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); /* this is necessary to show the changed border color */
 	
-	toolbar_update (pad);
+	{
+		GList *list, *tmp;
+		
+		toolbar_update (pad->toolbar);
+		
+		list = tmp = toolbar_get_buttons (pad->toolbar);
+		
+		while (tmp)
+		{
+			GCallback func;
+			GtkWidget *widget = GTK_WIDGET (tmp->data);
+			
+			func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
+			
+			g_signal_connect (widget, "clicked", func, pad);
+			
+			tmp = tmp->next;
+		}
+		
+		g_list_free (list);
+	}
 }
 
 static void quit_if_no_pads (void)
@@ -195,6 +215,7 @@ static void pad_free (pad_node *pad)
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
 	g_free (pad->contentname);
 	g_free (pad->infoname);
+	g_free (pad->toolbar);
 	g_free (pad);
 }
 
@@ -329,18 +350,17 @@ static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 	return TRUE;
 }
 
-static void pad_move (pad_node *node, GdkEvent *event)
+static void pad_move (pad_node *node, GdkEventButton *event)
 {
-	GdkEventButton *eb = (GdkEventButton *) event;
-
-	gtk_window_begin_move_drag (node->window, eb->button, eb->x_root, eb->y_root, eb->time);
+	gtk_window_begin_move_drag (node->window, event->button,
+		event->x_root, event->y_root, event->time);
 }
 
-static void pad_resize (pad_node *node, GdkEvent *event)
+static void pad_resize (pad_node *node, GdkEventButton *event)
 {
-	GdkEventButton *eb = (GdkEventButton *) event;
-
-	gtk_window_begin_resize_drag (node->window, GDK_WINDOW_EDGE_SOUTH_EAST, eb->button, eb->x_root, eb->y_root, eb->time);
+	gtk_window_begin_resize_drag (node->window, 
+		GDK_WINDOW_EDGE_SOUTH_EAST, event->button, event->x_root,
+		event->y_root, event->time);
 }
 
 static void about_dialog (pad_node *pad)
@@ -472,7 +492,7 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	 */
 	if (event->detail != GDK_NOTIFY_INFERIOR)
 	{
-		if (pad->toolbar_timeout)
+		if (pad->toolbar->timeout)
 			toolbar_end_timeout (pad);
 		
 		toolbar_show (pad);
@@ -489,7 +509,7 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	 */
 	if (event->detail != GDK_NOTIFY_INFERIOR)
 	{
-		if (!pad->toolbar_timeout)
+		if (!pad->toolbar->timeout)
 			toolbar_start_timeout (pad);
 	}
 	
@@ -528,7 +548,7 @@ disable_popup_handler (pad_node *pad)
 	
 	if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
 	{
-		if (!pad->toolbar_timeout)
+		if (!pad->toolbar->timeout)
 			toolbar_start_timeout (pad);
 	}
 }
@@ -620,14 +640,14 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				if ((event_button->state & GDK_CONTROL_MASK) ||
 						(current_settings.edit_lock && 
 						gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)) == FALSE)) {
-					pad_move (pad, event);
+					pad_move (pad, event_button);
 					return TRUE;
 				}
 				break;
 
 		  		case 3:
 				if (event_button->state & GDK_CONTROL_MASK)
-					pad_resize (pad, event);
+					pad_resize (pad, event_button);
 				else
 					pad_popup (pad, event_button);
 				return TRUE;
@@ -703,41 +723,42 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 }
 
 
-static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
+static gboolean window_button_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 {
-	GdkEventButton *event_button;
-
-	if (event == NULL)
+	if (event->type != GDK_BUTTON_PRESS)
 		return FALSE;
-
-	switch (event->type)
-	{
-		case GDK_BUTTON_PRESS:
-			event_button = (GdkEventButton *) event;
-			
-			switch (event_button->button)
-			{
-				case 1:
-				/* raise window if clicked on */
-				gtk_window_present (pad->window);
-				
-				pad_move (pad, event);
-				return TRUE;
 	
-				case 3:
-				if (event_button->state & GDK_CONTROL_MASK)
-					pad_resize (pad, event);
-				else
-					pad_popup (pad, event_button);
-				return TRUE;
-			}
-			break;
+	switch (event->button)
+	{
+	case 1:
+		/* raise window if clicked on */
+		gtk_window_present (pad->window);
 		
-		default:
-			break;
+		pad_move (pad, event);
+		return TRUE;
+	
+	case 3:
+		if (event->state & GDK_CONTROL_MASK)
+			pad_resize (pad, event);
+		else
+			pad_popup (pad, event);
+		return TRUE;
 	}
-
+	
 	return FALSE;
+}
+
+void
+pad_lock_style (pad_node *pad)
+{
+	pad->locked = TRUE;
+}
+
+void
+pad_unlock_style (pad_node *pad)
+{
+	pad->locked = FALSE;
+	pad_update_style (pad);
 }
 
 static gboolean
@@ -780,6 +801,25 @@ static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	fio_save_pad (pad);
 }
 
+static gboolean
+grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
+{
+	if (event->button == 1)
+		gtk_window_begin_resize_drag (pad->window,
+			GDK_WINDOW_EDGE_SOUTH_EAST,
+			event->button,
+			event->x_root, event->y_root,
+			event->time);
+	else
+		gtk_window_begin_move_drag (pad->window,
+			event->button,
+			event->x_root, event->y_root,
+			event->time);
+	
+	return TRUE;
+}
+
+
 /*
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
@@ -813,9 +853,13 @@ static pad_node *start_pad (void)
 	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
 	gtk_box_pack_start (GTK_BOX (box), eventbox1, TRUE, TRUE, 0);
 	gtk_container_add (GTK_CONTAINER (window), box);
+	
+	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
+	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
+	g_signal_connect (window, "button-press-event", G_CALLBACK (window_button_handler), pad);
 
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
-	g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);
+	/*//g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
@@ -823,7 +867,6 @@ static pad_node *start_pad (void)
  	g_signal_connect_after (window, "leave-notify-event", G_CALLBACK (leave_handler), pad);
 	g_signal_connect_after (window, "enter-notify-event", G_CALLBACK (enter_handler), pad);	
 	
-
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
 	pad->next = NULL;
@@ -853,7 +896,11 @@ static pad_node *start_pad (void)
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
-	toolbar_add_to_pad (pad);
+	pad->toolbar = toolbar_new ();
+	g_signal_connect (G_OBJECT (pad->toolbar->grip), "button-press-event", 
+		G_CALLBACK (grip_press_handler), pad);
+	
+	gtk_box_pack_end (GTK_BOX (pad->box), pad->toolbar->bar, FALSE, FALSE, 0);
 	
 	pad_update_style (pad);
 	

@@ -40,6 +40,7 @@ struct pad_node_def
 	gint x, y, width, height;
 	gchar *infoname;
 	gchar *contentname;
+	gboolean locked;
 	
 	GtkWindow *window;
 	GtkWidget *eventbox;
@@ -47,11 +48,7 @@ struct pad_node_def
 	GtkWidget *scrollbar;
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
 	
-	/* toolbar related variables */
-	GtkWidget *toolbar;
-	GtkWidget *grip;
-	guint toolbar_timeout;
-	gint toolbar_height;
+	xpad_toolbar *toolbar;
 };
 
 /* describes the custom styles of a pad */
@@ -94,6 +91,7 @@ void pad_save_as_file (pad_node *pad);
 void pad_close_all (void);
 gboolean pad_confirm_destroy (pad_node *pad);
 void pad_clear (pad_node *pad);
+void pad_lock_style (pad_node *pad);
 
 struct toolbar_button_def
 {
@@ -113,6 +111,7 @@ static const toolbar_button buttons[] =
 	{"Open", "gtk-open", G_CALLBACK (pad_open_file), "Open File"},
 	{"Save As", "gtk-save-as", G_CALLBACK (pad_save_as_file), "Save Pad As File"},
 	{"Quit", "gtk-quit", G_CALLBACK (pad_close_all), "Close and Save All Pads"},
+	{"Lock", "xpad-lock", G_CALLBACK (pad_lock_style), "Lock Style"},
 	{"Clear", "gtk-clear", G_CALLBACK (pad_clear), "Clear Pad Contents"}
 };
 
