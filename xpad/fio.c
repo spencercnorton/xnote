@@ -275,11 +275,11 @@ static void fio_save_info_file (pad_node *pad)
 		height -= pad->toolbar->height;
 	
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
-		"back_red %d\nback_green %d\nback_blue %d\n"
+		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
-		pad->contentname,
+		pad->contentname, pad->sticky,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
 		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
 		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
@@ -463,6 +463,7 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 							"height", &info->height,
 							"content", &info->contentname,
 							"locked", &info->locked,
+							"sticky", &info->sticky,
 							"back_red", &back_R,
 							"back_green", &back_G,
 							"back_blue", &back_B,

@@ -227,20 +227,6 @@ void pad_style_free (pad_style *style)
 	g_free (style->fontname);
 }
 
-void pad_toggle_sticky (pad_node *pad)
-{
-	if (pad->sticky)
-	{
-		gtk_window_unstick (pad->window);
-		pad->sticky = 0;
-	}
-	else
-	{
-		gtk_window_stick (pad->window);
-		pad->sticky = 1;
-	}
-}
-
 void pad_set_scrollbars (pad_node *pad, gboolean on)
 {
 	if (on)
@@ -285,6 +271,11 @@ void pad_toolbar_update (pad_node *pad)
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
 				pad->locked);
 		}
+		else if (func == G_CALLBACK (pad_toggle_sticky))
+		{
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+				pad->sticky);
+		}
 		
 		g_signal_connect_swapped (widget, "clicked", func, pad);
 		
@@ -326,6 +317,33 @@ pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 	}
 	
 	g_list_free (list);
+}
+
+static void
+pad_set_sticky (pad_node *pad, gboolean on)
+{
+	if (on)
+	{
+		gtk_window_stick (pad->window);
+		pad->sticky = 1;
+		
+		/* make sure the toolbar widget is up to date */
+		pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), TRUE);
+	}
+	else
+	{
+		gtk_window_unstick (pad->window);
+		pad->sticky = 0;
+		
+		/* make sure the toolbar widget is up to date */
+		pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), FALSE);
+	}
+
+}
+
+void pad_toggle_sticky (pad_node *pad)
+{
+	pad_set_sticky (pad, !pad->sticky);
 }
 
 static void quit_if_no_pads (void)
@@ -1614,7 +1632,6 @@ static pad_node *start_pad (void)
 #endif
 	pad->num = num++;
 	pad->hidden = FALSE;
-	pad->sticky = FALSE;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -1652,12 +1669,14 @@ pad_node *pad_new (void)
 	
 	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
 	
 	pad_style_copy (&pad->style, &current_settings.style);
 	pad_update_style (pad);
 	
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	pad->locked = 0;
+	pad->sticky = 0;
 	
 	pad_set_title (pad);
 	
@@ -1685,6 +1704,8 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->locked = info->locked;
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
+	
+	pad_set_sticky (pad, info->sticky);
 	
 	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
@@ -1715,6 +1736,8 @@ pad_renew (pad_node *pad)
 	gtk_window_move (pad->window, pad->x, pad->y);
 	
 	pad_fill_with_file (pad, pad->contentname);
+	
+	pad_set_sticky (pad, pad->sticky);
 	
 	pad_update_style (pad);
 	

@@ -54,12 +54,12 @@ struct pad_node_def
 	gchar *infoname;
 	gchar *contentname;
 	gint locked;
+	gint sticky;
 	pad_style style;
 	
 	/* generated values */
 	gint num;
 	gboolean hidden;
-	gboolean sticky;
 	gchar title [TITLE_CHARS + 1];
 	GtkItemFactory *menu;
 	
@@ -89,6 +89,7 @@ struct pad_info_def
 	gint width;
 	gint height;
 	gint locked;
+	gint sticky;
 	
 	pad_style style;
 	
