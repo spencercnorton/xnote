@@ -1778,7 +1778,7 @@ pad_add_menu_items (pad_node *pad)
 }
 
 static void
-pad_alloc_gtk (pad_node *pad)
+pad_alloc_gtk (pad_node *pad, const gchar *role)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();
@@ -1820,6 +1820,8 @@ pad_alloc_gtk (pad_node *pad)
 	g_signal_connect (textbuf, "changed", G_CALLBACK (text_changed), pad);
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
+	
+	gtk_window_set_role (GTK_WINDOW (window), role);
 	
 	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
@@ -1901,8 +1903,6 @@ static pad_node *start_pad (void)
 		last_pad = pad;
 	}
 	
-	pad_alloc_gtk (pad);
-	
 	return pad;
 }
 
@@ -1912,9 +1912,12 @@ pad_node *pad_new (void)
 	
 	if (verbosity >= 2) printf ("Making new pad.\n");
 	
+	pad = start_pad ();
+	
 	fio_open_pad_files (pad, TRUE);
 	
-	pad = start_pad ();
+	pad_alloc_gtk (pad, pad->infoname);
+	
 	pad->width = xpad_settings_style_get_padding () + 
 		xpad_settings_style_get_border_width () +
 		xpad_settings_get_default_width ();
@@ -1936,7 +1939,6 @@ pad_node *pad_new (void)
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	
 	pad_set_title (pad);
-	gtk_window_set_role (pad->window, pad->infoname);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
@@ -1951,17 +1953,17 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	if (verbosity >= 2) printf ("Making new pad with info.\n");
 	
+	pad = start_pad ();
+	
+	pad_alloc_gtk (pad, info->infoname);
+	
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
 	
-	pad = start_pad ();
+	fio_open_pad_files (pad, FALSE);
 	
 	gtk_window_set_default_size (pad->window, info->width, info->height);
 	gtk_window_move (pad->window, info->x, info->y);
-	
-	fio_open_pad_files (pad, FALSE);
-	
-	gtk_window_set_role (pad->window, pad->infoname);
 	
 	pad_fill_with_file (pad, info->contentname);
 	
@@ -1993,7 +1995,7 @@ pad_renew (pad_node *pad)
 {
 	if (verbosity >= 2) printf ("Refreshing pad.\n");
 	
-	pad_alloc_gtk (pad);
+	pad_alloc_gtk (pad, pad->infoname);
 	
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);
 	gtk_window_move (pad->window, pad->x, pad->y);
@@ -2001,7 +2003,6 @@ pad_renew (pad_node *pad)
 	pad_fill_with_file (pad, pad->contentname);
 	
 	pad_set_title (pad);
-	gtk_window_set_role (pad->window, pad->infoname);
 	
 	pad_set_sticky (pad, pad->sticky);
 	
