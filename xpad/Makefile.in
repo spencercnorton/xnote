@@ -80,18 +80,27 @@ mostlyclean: clean
 maintainer-clean: clean
 
 
-# the next several rules are taken from the aterm project's Makefile.in
+# the next several rules are inspired by the aterm project's Makefile.in
 tar.gz: ../$(VERNAME).tar.gz
 ../$(VERNAME).tar.gz: distclean
-	(cd ..; tar cf - main | gzip --best > $(VERNAME).tar.gz)
+	(cd ..;\
+	cp -r main $(VERNAME);\
+	tar cf - $(VERNAME) | gzip --best > $(VERNAME).tar.gz;\
+	rm -r $(VERNAME))
 
 tar.Z: ../$(VERNAME).tar.Z
 ../$(VERNAME).tar.Z: distclean
-	(cd ..; tar cf - main | compress > $(VERNAME).tar.Z)
+	(cd ..;\
+	cp -r main $(VERNAME);\
+	tar cf - $(VERNAME) | compress > $(VERNAME).tar.Z;\
+	rm -r $(VERNAME))
 
 tar.bz2: ../$(VERNAME).tar.bz2
 ../$(VERNAME).tar.bz2: distclean
-	(cd ..; tar cf - main | bzip2 -f --best > $(VERNAME).tar.bz2)
+	(cd ..;\
+	cp -r main $(VERNAME);\
+	tar cf - $(VERNAME) | bzip2 -f --best > $(VERNAME).tar.bz2;\
+	rm -r $(VERNAME))
 
 uuencode: tar.gz
 	uuencode ../$(VERNAME).tar.gz $(VERNAME).tar.gz > ../$(VERNAME).tgz.uu
