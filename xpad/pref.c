@@ -138,12 +138,14 @@ gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *window)
+gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 {
 	current_settings.decorations = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
 	
-	pads_set_decorations (current_settings.decorations, window);
+	pads_set_decorations (current_settings.decorations, gtk_widget_get_toplevel (frame));
+	
+	gtk_widget_set_sensitive (frame, current_settings.decorations);
 	
 	return FALSE;
 }
@@ -162,6 +164,13 @@ gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 		GTK_TOGGLE_BUTTON (checkbutton));
 	
 	pads_set_editable (!current_settings.edit_lock);
+	
+	return FALSE;
+}
+
+gboolean change_wm_close (GtkWidget *radiobutton, gint num)
+{
+	current_settings.wm_close = num;
 	
 	return FALSE;
 }
@@ -201,6 +210,11 @@ GtkWidget *preferences_create (pad_node *pad)
 	GtkWidget *spinner_padding;
 	GtkObject *adjust_border_width;
 	GtkWidget *spinner_border_width;
+	GtkWidget *radio_close_all;
+	GtkWidget *radio_close_this;
+	GtkWidget *radio_delete_this;
+	GtkWidget *vbox_wm_close;
+	GtkWidget *frame_wm_close;
 	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 3);
@@ -325,12 +339,45 @@ GtkWidget *preferences_create (pad_node *pad)
 	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
 
 	// misc. setup
+	
+	radio_close_all = gtk_radio_button_new_with_label (NULL,
+		"Close and save all pads");
+	radio_close_this = gtk_radio_button_new_with_label_from_widget (
+		GTK_RADIO_BUTTON (radio_close_all), "Close and save pad");
+	radio_delete_this = gtk_radio_button_new_with_label_from_widget (
+		GTK_RADIO_BUTTON (radio_close_all), "Delete pad (no confirmation)");
+	frame_wm_close = gtk_frame_new ("Window Manager Close Action");
+	vbox_wm_close = gtk_vbox_new (FALSE, 3);
+	
+	switch (current_settings.wm_close)
+	{
+	case 0: // close all
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_all), TRUE);
+		break;
+	default:
+	case 1: // close pad
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_this), TRUE);
+		break;
+	case 2: // delete pad
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_delete_this), TRUE);
+		break;
+	}
+	
+	gtk_widget_set_sensitive (frame_wm_close, current_settings.decorations);
+	
+	gtk_box_pack_start (GTK_BOX (vbox_wm_close), radio_close_all, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_wm_close), radio_close_this, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_wm_close), radio_delete_this, FALSE, FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_wm_close), 6);
+	gtk_container_add (GTK_CONTAINER (frame_wm_close), vbox_wm_close);
+
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), current_settings.decorations);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), current_settings.confirm_destroy);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), current_settings.edit_lock);
 	gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 3);
+	gtk_box_pack_start (GTK_BOX (vbox_misc), frame_wm_close, FALSE, FALSE, 3);
 	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 3);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 
@@ -352,9 +399,26 @@ GtkWidget *preferences_create (pad_node *pad)
 "This allows you to move it by left dragging.  To make it editable again, "
 "double-click the pad.  If off, pads are always editable.");
 
+	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_close_all, 
+"All pads will close, saving contents first.",
+"All pads will close, saving contents first.");
+
+	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_close_this, 
+"The pad you clicked the close button on will close, saving contents.",
+"The pad you clicked the close button on will close, saving contents.");
+
+	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), radio_delete_this, 
+"The pad you clicked the close button on will be deleted, losing contents.  There "
+"will be no confirmation.",
+"The pad you clicked the close button on will be deleted, losing contents.  There "
+"will be no confirmation.");
+
 	g_signal_connect (GTK_OBJECT (checkbutton_confirm_destroy), "toggled", G_CALLBACK (change_confirm_destroy), (gpointer) window);
-	g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) window);
+	g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) frame_wm_close);
 	g_signal_connect (GTK_OBJECT (checkbutton_edit_lock), "toggled", G_CALLBACK (change_edit_lock), (gpointer) window);
+	g_signal_connect (GTK_OBJECT (radio_close_all), "toggled", G_CALLBACK (change_wm_close), (gpointer) 0);
+	g_signal_connect (GTK_OBJECT (radio_close_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 1);
+	g_signal_connect (GTK_OBJECT (radio_delete_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 2);
 
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 	gtk_window_set_position (GTK_WINDOW(window), GTK_WIN_POS_CENTER);

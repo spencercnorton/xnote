@@ -40,15 +40,6 @@ GtkTextView *get_text (GtkWindow *window)
 		   gtk_bin_get_child (GTK_BIN (window))
 		  )))
 		));
-
-	/*return  GTK_TEXT_VIEW (
-		 gtk_bin_get_child (GTK_BIN (
-		  gtk_bin_get_child (GTK_BIN (
-	      
-		  gtk_container_get_children (GTK_CONTAINER (
-		   gtk_bin_get_child (GTK_BIN (window))
-		  ))->data)
-		))));*/
 }
 
 // since reshowing all pads presents them, caller
@@ -216,26 +207,13 @@ void pad_remove (pad_node *pad)
 	}
 }
 
-void pad_window_destroyed (GtkWidget *window, pad_node *pad)
-{	
-	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
-
-	// widget is gone, but we can clean up pad memory
-	fio_save_pad (pad);
-	fio_close_pad_files (pad);
-	pad_remove (pad);
-	
-	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
-	g_free (pad);
-
-	quit_if_no_pads ();
-}
+gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
 
 void pad_destroy (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
 
-	g_signal_handlers_block_by_func (pad->window, G_CALLBACK (pad_window_destroyed), pad);
+	g_signal_handlers_block_by_func (pad->window, pad_window_destroyed, pad);
 
 	fio_close_pad_files (pad);
 	fio_remove_pad_files (pad);
@@ -248,12 +226,56 @@ void pad_destroy (pad_node *pad)
 	quit_if_no_pads ();
 }
 
+// returns true if pad destroyed
+gboolean pad_confirm_destroy (pad_node *pad)
+{
+	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
+	{
+		GtkWidget *dialog, *checkbox, *align;
+		gboolean said_yes;
+
+		/* Create the widgets */
+		dialog = gtk_message_dialog_new (pad->window,
+        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+        		GTK_MESSAGE_WARNING,
+        		GTK_BUTTONS_OK_CANCEL,
+        		"All contents are lost\nupon deletion.");
+
+		align = gtk_alignment_new (1, 0.5, 0, 0);
+		checkbox = gtk_check_button_new_with_label ("Don't show this warning again");
+		gtk_container_add (GTK_CONTAINER (align), checkbox);
+		gtk_container_set_border_width (GTK_CONTAINER (align), 6);
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), align, FALSE, FALSE, 3);
+		gtk_widget_show_all (align);
+
+		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
+
+		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
+		fio_save_as_defaults (&current_settings);
+
+		gtk_widget_destroy (dialog);
+
+		if (said_yes)
+		{
+			pad_destroy (pad);
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
+	else
+	{
+		pad_destroy (pad);
+		return TRUE;
+	}
+}
 
 void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
 
-	g_signal_handlers_block_by_func (pad->window, G_CALLBACK (pad_window_destroyed), pad);
+	g_signal_handlers_block_by_func (pad->window, pad_window_destroyed, pad);
 
 	fio_save_pad (pad);
 	fio_close_pad_files (pad);
@@ -276,6 +298,26 @@ void pad_close_all (void)
 		pad_close (temp);
 		temp = first_pad;
 	}
+}
+
+gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
+{
+	switch (current_settings.wm_close)
+	{
+	case 0: // close all
+		pad_close_all ();
+		return TRUE;
+		break;
+	case 1: // close this pad
+		pad_close (pad);
+		return TRUE;
+		break;
+	case 2: // delete this pad
+		pad_destroy (pad);
+		return TRUE;
+		break;
+	}
+	return FALSE;
 }
 
 void cleanup (void)
@@ -340,43 +382,6 @@ void about_dialog (pad_node *pad)
 
 	display_dialog_with_text (pad, text);
 }
-
-void pad_confirm_destroy (pad_node *pad)
-{
-	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
-	{
-		GtkWidget *dialog, *checkbox, *align;
-		gboolean said_yes;
-
-		/* Create the widgets */
-		dialog = gtk_message_dialog_new (pad->window,
-        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
-        		GTK_MESSAGE_WARNING,
-        		GTK_BUTTONS_OK_CANCEL,
-        		"All contents are lost\nupon deletion.");
-
-		align = gtk_alignment_new (1, 0.5, 0, 0);
-		checkbox = gtk_check_button_new_with_label ("Don't show this warning again");
-		gtk_container_add (GTK_CONTAINER (align), checkbox);
-		gtk_container_set_border_width (GTK_CONTAINER (align), 6);
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), align, FALSE, FALSE, 3);
-		gtk_widget_show_all (align);
-
-		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
-
-		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
-		fio_save_as_defaults (&current_settings);
-
-		gtk_widget_destroy (dialog);
-
-		if (said_yes)
-			pad_destroy (pad);
-	}
-	else
-		pad_destroy (pad);
-}
-
 
 void open_file_callback (GtkWidget *button, pad_node *pad)
 {
@@ -699,10 +704,8 @@ static gboolean focus_out_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 	if (event == NULL)
 		return FALSE;
 	
-	if (current_settings.edit_lock)
-	{
+	if (current_settings.edit_lock && pad_get_editable (pad))
 		pad_set_editable (pad, FALSE);
-	}
 	
 	return TRUE;
 }
@@ -774,7 +777,7 @@ pad_node *start_pad (void)
 	/* set editable */
 	pad_set_editable (pad, current_settings.edit_lock == 0 ? TRUE : FALSE);
 
-	/* make sure that we only save after pad is realized */
+	/* make sure that we save after pad is realized */
 	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);
 
 	return pad;

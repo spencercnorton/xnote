@@ -1,10 +1,12 @@
 1.3
 ---
 added a padding option
-redesigned preferences window with auto-apply
-redesigned menu
+redesigned dialogs
+preferences now auto-apply
 closing a pad with window decorations on will now save position correctly
-misc. small bugs
+cursor no longer blinks if you can't edit pad
+fixed double-clicking-doesn't-select-text-when-edit-lock-is-on bug
+you can now choose what the wm close button does
 
 1.2.1
 -----

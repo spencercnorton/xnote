@@ -33,6 +33,7 @@ struct settings {
 	int decorations;
 	int confirm_destroy;
 	int edit_lock;
+	int wm_close;
 	pad_style style;
 };
 
