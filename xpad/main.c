@@ -122,15 +122,15 @@ static void xpad_catch_quit_signal (int signum)
 static void
 print_help (void)
 {
-	printf ("Usage: xpad [OPTIONS]\n");
-	printf ("\n");
-	printf ("  -V, --version         prints xpad version; exits\n");
-	printf ("  -h, --help            prints this usage information; exits\n");
-	printf ("  -v N, --verbosity=N   sets level of output\n");
-	printf ("                          0=none, 1=moderate, 2=debug\n");
-	printf ("                          default is 0\n");
-	printf ("  -n, --new             opens a new pad\n");
-	printf ("  -q, --quit            quits all open xpad sessions\n");
+	printf ("Usage: xpad [OPTIONS]\n"
+	        "\n"
+	        "  -V, --version         prints xpad version; exits\n"
+	        "  -h, --help            prints this usage information; exits\n"
+	        "  -v N, --verbosity=N   sets level of output\n"
+	        "                          0=none, 1=moderate, 2=debug\n"
+	        "                          default is 0\n"
+	        "  -n, --new             opens a new pad\n"
+	        "  -q, --quit            quits all open xpad sessions\n");
 	exit (0);
 }
 
