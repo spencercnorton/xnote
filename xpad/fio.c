@@ -48,11 +48,10 @@ static gint fio_fill_filename (gchar *filename)
 		return 0;
 	}
 
-	filename_len = strlen(filename);
-	memmove(filename + working_dir_len, filename, filename_len);
+	memmove(filename + working_dir_len, filename, filename_len + 1);
 	memcpy(filename, working_dir, working_dir_len);
-        	
-       	return 1;
+	
+	return 1;
 }
 
 gint fio_set_file (const gchar *name, const gchar *value)
@@ -311,8 +310,8 @@ static void fio_save_info_file (pad_node *pad)
 
 	pstyle = pad_get_style (pad);
 
-	// we don't really need to save the style, since we don't use it, but it makes
-	// later running an older version of xpad nice.  At some point this will be removed.
+	/* we don't really need to save the style, since we don't use it, but it makes
+	   later running an older version of xpad nice.  At some point this will be removed. */
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, pad->height, 
 		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
@@ -400,9 +399,9 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 
 	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
 
-	// grab from standard defaults, not from pad's memory of what they were,
-	// because a pad might be closed, default changed, and when we load it up again,
-	// we want all pads to be uniform
+	/* grab from standard defaults, not from pad's memory of what they were,
+	    because a pad might be closed, default changed, and when we load it up again,
+	    we want all pads to be uniform */
 	fio_get_style_from_file (DEFAULTS_FILENAME, &info->style);
 	fio_get_values_from_file (  filename,
 							"x", &info->x,
