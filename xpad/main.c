@@ -572,7 +572,6 @@ static void xpad_register_icons (void)
 	GdkPixbuf *pixbuf;
 	
 	pixbuf = gdk_pixbuf_new_from_xpm_data (lock_xpm);
-	
 	set = gtk_icon_set_new_from_pixbuf (pixbuf);
 	
 	factory = gtk_icon_factory_new ();
@@ -581,17 +580,21 @@ static void xpad_register_icons (void)
 	gtk_icon_factory_add_default (GTK_ICON_FACTORY (factory));
 	
 	g_object_unref (pixbuf);
+	g_object_unref (factory);
 }
 
 static void xpad_set_default_icon (void)
 {
 	GdkPixbuf *pixbuf;
-
-	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad_xpm);
+	GList *icons;
 	
-	gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf));
+	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad_xpm);
+	icons = g_list_append (NULL, pixbuf);
+	
+	gtk_window_set_default_icon_list (icons);
 	
 	g_object_unref (pixbuf);
+	g_list_free (icons);
 }
 
 
