@@ -142,11 +142,11 @@ xpad_app_init (int argc, char **argv)
 	if (xpad_app_check_if_others ())
 		exit (0);
 	
-	xpad_tray_open ();
-	xpad_session_manager_init ();
-	
 	register_stock_icons ();
 	set_default_icon ();
+	
+	xpad_tray_open ();
+	xpad_session_manager_init ();
 	
 	/* load all pads */
 	pad_group = NULL;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 22:05-0400\n"
+"POT-Creation-Date: 2004-09-13 21:24-0400\n"
 "PO-Revision-Date: 2004-09-13 00:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -23,50 +23,55 @@ msgstr "Treoshuíomh"
 msgid "The orientation of the tray."
 msgstr "Treoshuíomh an thráidire."
 
-#: src/fio.c:134
+#: src/fio.c:133
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
 
-#: src/xpad-app.c:110 xpad.desktop.in.h:3
+#: src/xpad-app.c:113 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:427
+#: src/xpad-app.c:445
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
 
-#: src/xpad-app.c:430
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na ceapa agus do shainroghanna.  Druidfidh Xpad anois."
+#: src/xpad-app.c:448
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na "
+"ceapa agus do shainroghanna.  Druidfidh Xpad anois."
 
-#: src/xpad-app.c:830
+#: src/xpad-app.c:848
 msgid "Prints usage information and exits"
 msgstr "Taispeáin eolas faoin úsáid agus éirigh as"
 
-#: src/xpad-app.c:831
+#: src/xpad-app.c:849
 msgid "Prints xpad version and exits"
 msgstr "Taispeáin an leagan xpad agus éirigh as"
 
-#: src/xpad-app.c:832
-msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+#: src/xpad-app.c:850
+msgid ""
+"Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
 
-#: src/xpad-app.c:838
+#: src/xpad-app.c:856
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 
-#: src/xpad-app.c:839
+#: src/xpad-app.c:857
 msgid "Causes all running xpad instances to close"
 msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
 
-#: src/xpad-app.c:855
+#: src/xpad-app.c:873
 #, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad %s\n"
 
-#: src/xpad-app.c:899
+#: src/xpad-app.c:917
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -75,17 +80,17 @@ msgstr ""
 "Úsáid: %s [ROGHANNA]\n"
 "\n"
 
-#: src/xpad-app.c:937
+#: src/xpad-app.c:955
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Ní foláir argóint don rogha %s\n"
 
-#: src/xpad-app.c:981
+#: src/xpad-app.c:999
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Argóint anaithnid %s.\n"
 
-#: src/xpad-app.c:1030
+#: src/xpad-app.c:1048
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Uimhir neamhbhailí: '%s'\n"
@@ -110,7 +115,9 @@ msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
 
 #: src/xpad-pad.c:1075
 msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-msgstr "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a fháil."
+msgstr ""
+"Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a "
+"fháil."
 
 #: src/xpad-pad.c:1291
 msgid "_Pad"
@@ -169,7 +176,7 @@ msgstr "_Clár"
 msgid "_About"
 msgstr "_Faoi seo"
 
-#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:121
+#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:122
 msgid "Appearance"
 msgstr "Cuma"
 
@@ -177,7 +184,7 @@ msgstr "Cuma"
 msgid "Use font from xpad preferences"
 msgstr "Bain úsáid as cló fhoireann as na sainroghanna xpad"
 
-#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:149
+#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:150
 msgid "Use this font:"
 msgstr "Bain úsáid as an cló fhoireann seo:"
 
@@ -185,55 +192,55 @@ msgstr "Bain úsáid as an cló fhoireann seo:"
 msgid "Use colors from xpad preferences"
 msgstr "Bain úsáid as dathanna as na sainroghanna xpad"
 
-#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:151
+#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:152
 msgid "Use these colors:"
 msgstr "Bain úsáid as na dathanna seo:"
 
-#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:159
+#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:160
 msgid "Background:"
 msgstr "Cúlra:"
 
-#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:167
+#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:168
 msgid "Foreground:"
 msgstr "Tulra:"
 
-#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:191
+#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:192
 msgid "Set Foreground Color"
 msgstr "Socraigh Dath an Thulra"
 
-#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:192
+#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:193
 msgid "Set Background Color"
 msgstr "Socraigh Dath an Chúlra"
 
-#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:193
+#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:194
 msgid "Set Font"
 msgstr "Socraigh Clófhoireann"
 
-#: src/xpad-preferences.c:148
+#: src/xpad-preferences.c:149
 msgid "Use font from theme"
 msgstr "Bain úsáid as clófhoireann ó théama"
 
-#: src/xpad-preferences.c:150
+#: src/xpad-preferences.c:151
 msgid "Use colors from theme"
 msgstr "Bain úsáid as dathanna ó théama"
 
-#: src/xpad-preferences.c:178
+#: src/xpad-preferences.c:179
 msgid "_Edit lock"
 msgstr "Cosc ar _Eagar"
 
-#: src/xpad-preferences.c:179
+#: src/xpad-preferences.c:180
 msgid "_Pads start sticky"
 msgstr "Tá na ceapa g_reamaitheacha ar dtús"
 
-#: src/xpad-preferences.c:180
+#: src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
 msgstr "_Dearbhaigh scrios an cheap nótaí"
 
-#: src/xpad-preferences.c:186
+#: src/xpad-preferences.c:187
 msgid "Xpad Preferences"
 msgstr "Sainroghanna Xpad"
 
-#: src/xpad-preferences.c:251
+#: src/xpad-preferences.c:252
 msgid "Options"
 msgstr "Roghanna"
 

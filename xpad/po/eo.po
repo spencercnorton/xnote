@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 22:05-0400\n"
+"POT-Creation-Date: 2004-09-13 21:24-0400\n"
 "PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -23,71 +23,71 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: src/fio.c:134
+#: src/fio.c:133
 #, c-format
 msgid "Could not write to file %s."
 msgstr ""
 
-#: src/xpad-app.c:110 xpad.desktop.in.h:3
+#: src/xpad-app.c:113 xpad.desktop.in.h:3
 #, fuzzy
 msgid "Xpad"
 msgstr "Ekspado"
 
-#: src/xpad-app.c:427
+#: src/xpad-app.c:445
 #, c-format
 msgid "Could not open directory %s."
 msgstr ""
 
-#: src/xpad-app.c:430
+#: src/xpad-app.c:448
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
 
-#: src/xpad-app.c:830
+#: src/xpad-app.c:848
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/xpad-app.c:831
+#: src/xpad-app.c:849
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/xpad-app.c:832
+#: src/xpad-app.c:850
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
-#: src/xpad-app.c:838
+#: src/xpad-app.c:856
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/xpad-app.c:839
+#: src/xpad-app.c:857
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/xpad-app.c:855
+#: src/xpad-app.c:873
 #, fuzzy, c-format
 msgid "Xpad %s\n"
 msgstr "Ekspado"
 
-#: src/xpad-app.c:899
+#: src/xpad-app.c:917
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/xpad-app.c:937
+#: src/xpad-app.c:955
 #, fuzzy, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Forestas kuna ARGUMENT al %s\n"
 
-#: src/xpad-app.c:981
+#: src/xpad-app.c:999
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr ""
 
-#: src/xpad-app.c:1030
+#: src/xpad-app.c:1048
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Malvalida numero: '%s'\n"
@@ -180,7 +180,7 @@ msgstr "/Helpo/Enhavo"
 msgid "_About"
 msgstr "/Helpo/Pri"
 
-#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:121
+#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:122
 msgid "Appearance"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "Use font from xpad preferences"
 msgstr "Redaktu Terglobajn Preferojn"
 
-#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:149
+#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:150
 msgid "Use this font:"
 msgstr ""
 
@@ -198,59 +198,59 @@ msgstr ""
 msgid "Use colors from xpad preferences"
 msgstr "Redaktu Terglobajn Preferojn"
 
-#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:151
+#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:152
 msgid "Use these colors:"
 msgstr ""
 
-#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:159
+#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:160
 msgid "Background:"
 msgstr ""
 
-#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:167
+#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:168
 msgid "Foreground:"
 msgstr ""
 
-#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:191
+#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:192
 #, fuzzy
 msgid "Set Foreground Color"
 msgstr "Fona Koloro"
 
-#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:192
+#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:193
 #, fuzzy
 msgid "Set Background Color"
 msgstr "Fona Koloro"
 
-#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:193
+#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:194
 msgid "Set Font"
 msgstr ""
 
-#: src/xpad-preferences.c:148
+#: src/xpad-preferences.c:149
 msgid "Use font from theme"
 msgstr ""
 
-#: src/xpad-preferences.c:150
+#: src/xpad-preferences.c:151
 msgid "Use colors from theme"
 msgstr ""
 
-#: src/xpad-preferences.c:178
+#: src/xpad-preferences.c:179
 msgid "_Edit lock"
 msgstr ""
 
-#: src/xpad-preferences.c:179
+#: src/xpad-preferences.c:180
 #, fuzzy
 msgid "_Pads start sticky"
 msgstr "Blokoj startas gluecajn"
 
-#: src/xpad-preferences.c:180
+#: src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
 msgstr ""
 
-#: src/xpad-preferences.c:186
+#: src/xpad-preferences.c:187
 #, fuzzy
 msgid "Xpad Preferences"
 msgstr "/Redakto/Preferoj_n"
 
-#: src/xpad-preferences.c:251
+#: src/xpad-preferences.c:252
 msgid "Options"
 msgstr ""
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-11 22:05-0400\n"
+"POT-Creation-Date: 2004-09-13 21:24-0400\n"
 "PO-Revision-Date: 2004-01-06 16:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -23,21 +23,21 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: src/fio.c:134
+#: src/fio.c:133
 #, c-format
 msgid "Could not write to file %s."
 msgstr "N'a pu écrire dans le fichier %s."
 
-#: src/xpad-app.c:110 xpad.desktop.in.h:3
+#: src/xpad-app.c:113 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:427
+#: src/xpad-app.c:445
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Ne peut ouvrir le répertoire %s."
 
-#: src/xpad-app.c:430
+#: src/xpad-app.c:448
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,35 +45,35 @@ msgstr ""
 "Ce répertoire est nécessaire pour stocker les préférences et les information "
 "du pad. Xpad va maintenant fermer."
 
-#: src/xpad-app.c:830
+#: src/xpad-app.c:848
 msgid "Prints usage information and exits"
 msgstr "Afficher l'aide-mémoire et quitter"
 
-#: src/xpad-app.c:831
+#: src/xpad-app.c:849
 msgid "Prints xpad version and exits"
 msgstr "Afficher la version de xpad et quitter"
 
-#: src/xpad-app.c:832
+#: src/xpad-app.c:850
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 "Bloquer la création d'un nouveau pad lors du démarrage si aucun pad n'existe"
 
-#: src/xpad-app.c:838
+#: src/xpad-app.c:856
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 "Provoque la craétion d'un nouveau pad lors du démarrage si un pad existe déjà"
 
-#: src/xpad-app.c:839
+#: src/xpad-app.c:857
 msgid "Causes all running xpad instances to close"
 msgstr "Provoque la fermeture de toutes les instances xpad"
 
-#: src/xpad-app.c:855
+#: src/xpad-app.c:873
 #, fuzzy, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad"
 
-#: src/xpad-app.c:899
+#: src/xpad-app.c:917
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -82,17 +82,17 @@ msgstr ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
 
-#: src/xpad-app.c:937
+#: src/xpad-app.c:955
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Argument compagnon manquant à %s\n"
 
-#: src/xpad-app.c:981
+#: src/xpad-app.c:999
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Argument mal compris '%s'.\n"
 
-#: src/xpad-app.c:1030
+#: src/xpad-app.c:1048
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Nombre invalide: « %s »\n"
@@ -191,7 +191,7 @@ msgstr "/Aide/_Contenu"
 msgid "_About"
 msgstr "/Aide/_A propos"
 
-#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:121
+#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:122
 msgid "Appearance"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Use font from xpad preferences"
 msgstr "Éditer les préférences globales"
 
-#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:149
+#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:150
 #, fuzzy
 msgid "Use this font:"
 msgstr "_Utiliser l'apparence de la fonte système"
@@ -210,61 +210,61 @@ msgstr "_Utiliser l'apparence de la fonte système"
 msgid "Use colors from xpad preferences"
 msgstr "Éditer les préférences globales"
 
-#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:151
+#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:152
 #, fuzzy
 msgid "Use these colors:"
 msgstr "_Utiliser les couleurs système pour le texte"
 
-#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:159
+#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:160
 msgid "Background:"
 msgstr ""
 
-#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:167
+#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:168
 msgid "Foreground:"
 msgstr ""
 
-#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:191
+#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:192
 #, fuzzy
 msgid "Set Foreground Color"
 msgstr "Couleur d'arrière plan"
 
-#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:192
+#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:193
 #, fuzzy
 msgid "Set Background Color"
 msgstr "Couleur d'arrière plan"
 
-#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:193
+#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:194
 msgid "Set Font"
 msgstr ""
 
-#: src/xpad-preferences.c:148
+#: src/xpad-preferences.c:149
 msgid "Use font from theme"
 msgstr ""
 
-#: src/xpad-preferences.c:150
+#: src/xpad-preferences.c:151
 msgid "Use colors from theme"
 msgstr ""
 
-#: src/xpad-preferences.c:178
+#: src/xpad-preferences.c:179
 msgid "_Edit lock"
 msgstr "_Éditer le verrou"
 
-#: src/xpad-preferences.c:179
+#: src/xpad-preferences.c:180
 #, fuzzy
 msgid "_Pads start sticky"
 msgstr "Pads démarre en mode _collant"
 
-#: src/xpad-preferences.c:180
+#: src/xpad-preferences.c:181
 #, fuzzy
 msgid "_Confirm pad deletion"
 msgstr "Con_firmer la destruction du pad"
 
-#: src/xpad-preferences.c:186
+#: src/xpad-preferences.c:187
 #, fuzzy
 msgid "Xpad Preferences"
 msgstr "Préférences globales"
 
-#: src/xpad-preferences.c:251
+#: src/xpad-preferences.c:252
 msgid "Options"
 msgstr "Options"
 
