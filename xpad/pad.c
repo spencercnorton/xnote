@@ -125,8 +125,7 @@ void pads_set_editable (gboolean editable)
 static void pad_set_style (pad_node *pad, pad_style *pstyle)
 {
 	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
-	GtkRcStyle *style1 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->eventbox_outer));
-//	GtkRcStyle *style2 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->scrollbar));
+	GtkRcStyle *style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
 
 	style->base[GTK_STATE_NORMAL] = pstyle->back;
 	style->text[GTK_STATE_NORMAL] = pstyle->text;
@@ -138,15 +137,9 @@ static void pad_set_style (pad_node *pad, pad_style *pstyle)
 	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
 	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
 	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
-/*
-	style2->bg[GTK_STATE_NORMAL] = pstyle->back;
-	style2->fg[GTK_STATE_NORMAL] = pstyle->back;
-	style->base[GTK_STATE_NORMAL] = pstyle->back;
-	style2->color_flags[GTK_STATE_NORMAL] = GTK_RC_FG | GTK_RC_BG | GTK_RC_BASE;
-	*/
+	
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
-	gtk_widget_modify_style (GTK_WIDGET (pad->eventbox_outer), style1);
-	//gtk_widget_modify_style (pad->scrollbar, style2);
+	gtk_widget_modify_style (pad->eventbox_outer, style1);
 
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
 }
