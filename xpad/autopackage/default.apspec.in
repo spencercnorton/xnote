@@ -1,0 +1,42 @@
+# -*-shell-script-*-
+
+[Meta]
+RootName: @xpad.sourceforge.net/xpad:$SOFTWAREVERSION
+DisplayName: Xpad Sticky Notes
+ShortName: xpad
+URL: http://xpad.sourceforge.net/
+Maintainer: Michael Terry <mike@mterry.name>
+Packager: Michael Terry <mike@mterry.name>
+Summary: Xpad is a sticky notes program.
+License: GPL
+SoftwareVersion: @VERSION@
+PackageVersion: 1
+
+[Description]
+Xpad is a sticky notes program.
+
+[BuildPrepare]
+prepareBuild
+
+[BuildUnprepare]
+unprepareBuild
+
+[Imports]
+echo '*' | import
+
+[Prepare]
+require @gtk.org/gtk 2.4
+
+[Install]
+installExe bin/*
+copyFiles share/locale "$prefix/share"
+installMan 1 man/man1/*
+# The below line is correct, once 0.7 comes out.  For now, just copy to share
+#installIconTheme share/icons/*
+copyFiles share/icons "$prefix/share"
+# Doesn't seem to work yet and won't have an icon because of the above line...
+# But if they are root, it will work
+installDesktop "Utility" share/applications/*
+
+[Uninstall]
+uninstallFromLog

@@ -1,4 +1,4 @@
-SUBDIRS = doc src images po
+SUBDIRS = autopackage doc src images po
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications

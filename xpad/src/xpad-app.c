@@ -358,7 +358,7 @@ register_stock_icons (void)
 	
 	theme = gtk_icon_theme_get_default ();
 	icon_dir = g_build_filename (DATADIR, "icons", NULL);
-	gtk_icon_theme_append_search_path (theme, icon_dir);
+	gtk_icon_theme_prepend_search_path (theme, icon_dir);
 	g_free (icon_dir);
 	
 	factory = gtk_icon_factory_new ();
