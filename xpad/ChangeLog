@@ -1,3 +1,6 @@
+2003-10-04  Michael Terry  <mikix@users.sourceforge.net>
+	* xpad.desktop.in: Change 'xpad' to 'Xpad'
+
 2003-10-03  Michael Terry  <mikix@users.sourceforge.net>
 
 	* configure.ac, src/main.c: More correct check for locale.h and make
