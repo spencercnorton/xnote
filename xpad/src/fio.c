@@ -42,7 +42,7 @@ static gchar *fio_fill_filename (const gchar *filename)
 	return g_build_filename (working_dir, filename, NULL);
 }
 
-/* This calously overwrites name.bak -- but this is fine since this function is for
+/* This callously overwrites name.bak -- but this is fine since this function is for
    our private .xpad directory anyway */
 gboolean fio_set_file (const gchar *name, const gchar *value)
 {
@@ -51,11 +51,12 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	gboolean error = FALSE, moved = TRUE;
 	
 	fullpath = fio_fill_filename (name);
-	backup = g_build_filename (fullpath, ".bak", NULL);
+	backup = g_strconcat (fullpath, "~", NULL);
 	
 	/* we first move the file away so that if the write doesn't succeed, we don't lose data */
 	if (rename (fullpath, backup))
 	{
+		printf ("errno is %i - from %s to %s\n", errno, fullpath, backup);
 		error = TRUE;
 		moved = FALSE;
 	}
@@ -80,7 +81,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 			rename (backup, fullpath);
 		}
 		
-		usertext = g_strdup_printf (_("Could not write to file %s."), temp);
+		usertext = g_strdup_printf (_("Could not write to file %s."), fullpath);
 		xpad_show_error (NULL, usertext, NULL);
 		g_free (usertext);
 	}
@@ -409,9 +410,6 @@ int fio_load_pads (void)
 	pad_info info;
 	GDir *dir;
 	G_CONST_RETURN gchar *name;
-	GPatternSpec *spec;
-	
-	spec = g_pattern_spec_new ("info-*");
 	
 	/* set up some sort of defaults for these.  if xpad works
 	   right, these won't be used. */
@@ -440,7 +438,9 @@ int fio_load_pads (void)
 	
 	while ((name = g_dir_read_name (dir)))
 	{
-		if (g_pattern_match_string (spec, name) &&
+		/* if it's an info file, but not a backup info file... */
+		if (!strncmp (name, "info-", 5) &&
+			name[strlen (name) - 1] != '~' &&
 			!fio_get_info_from_file (name, &info))
 		{
 			/**
@@ -454,7 +454,6 @@ int fio_load_pads (void)
 	
 	if (verbosity >= 2) g_print ("Done loading files.\n");
 	
-	g_pattern_spec_free (spec);
 	g_dir_close (dir);
 	
 	return opened;

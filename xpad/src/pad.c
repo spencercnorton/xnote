@@ -1011,14 +1011,6 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		pad_new ();
 		break;
 	
-	case 2:
-		pad_open_file (pad);
-		break;
-	
-	case 3:
-		pad_save_as_file (pad);
-		break;
-	
 	case 4:
 		pad_close (pad);
 		break;
@@ -1787,8 +1779,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	gtk_window_set_role (GTK_WINDOW (window), role);
 	
 #if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
-	/*gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);*/
-	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
+	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
 #endif
 	
 	pad->window = GTK_WINDOW (window);
