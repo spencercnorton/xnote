@@ -1727,9 +1727,6 @@ void pad_set_title (pad_node *pad)
 	GtkTextBuffer *buf;
 	GtkTextIter s, e;
 	gchar *content, *end;
-	gint n;
-	const char *more = "";
-	gunichar u;
 	
 	buf = gtk_text_view_get_buffer (get_text (pad->window));
 	gtk_text_buffer_get_start_iter (buf, &s);
