@@ -866,11 +866,12 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 	{
 		GtkWidget *w;
 		
-		w = gtk_window_get_focus (pad->window);
-		
-		if (GTK_WIDGET_HAS_FOCUS (w))
+		if (pad->hidden)
 		{
-			break;
+			w = gtk_window_get_focus (pad->window);
+			
+			if (GTK_WIDGET_HAS_FOCUS (w))
+				break;
 		}
 		
 		pad = pad->next;
@@ -1774,6 +1775,7 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	pad_set_sticky (pad, info->sticky);
 	
+	printf ("setting lock as %i, sticky as %i\n", pad->locked, pad->sticky);
 	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
 	
