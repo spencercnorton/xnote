@@ -2,7 +2,7 @@
 #define DEFINES_H
 
 #include "config.h"
-#include <libintl.h>
+#include "gettext.h"
 
 /**
  * This file is just used to hold all the common hard defines we need.

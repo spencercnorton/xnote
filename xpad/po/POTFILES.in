@@ -1,0 +1,12 @@
+# List of source files containing translatable strings.
+# Copyright (C) 2003 Michael Terry
+
+# Package source files
+src/main.c
+src/fio.c
+src/pref.c
+src/pad.c
+src/help.c
+src/toolbar.c
+src/tray.c
+src/eggtrayicon.c
