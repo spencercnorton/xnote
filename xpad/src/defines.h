@@ -8,10 +8,8 @@
  * This file is just used to hold all the common hard defines we need.
  */
  
-#define _(String) (String)
-#define N_(String) String
-#define textdomain(Domain)
-#define bindtextdomain(Package, Directory)
+#define _(String) gettext (String)
+#define N_(String) gettext_noop (String)
 
 
 #define DEFAULTS_FILENAME	"default-style"

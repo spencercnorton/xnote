@@ -150,7 +150,7 @@ struct toolbar_button_def
 	const gchar *desc;
 };
 
-extern const toolbar_button buttons[];
+extern toolbar_button buttons[];
 extern const char num_buttons;
 
 const toolbar_button *get_toolbar_button_by_func (GCallback func);
