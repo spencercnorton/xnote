@@ -169,6 +169,7 @@ static void docklet_create( void )
 
   docklet_remove();
 
+  toggle_state = SHOWN;
   docklet = egg_tray_icon_new( "XPad" );
   box = gtk_event_box_new();
   icon = gtk_image_new();
