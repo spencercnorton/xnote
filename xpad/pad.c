@@ -260,7 +260,7 @@ void cleanup (void)
 }
 
 /* must be full filename */
-void pad_fill_with_file (pad_node *pad, gchar *filename)
+void pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
 	struct stat statbuf;
@@ -355,12 +355,12 @@ void open_file_callback (GtkWidget *button, pad_node *pad)
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
 	gchar *content;
-	gchar *filename;
+	const gchar *filename;
 	GtkFileSelection *selector;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
-	filename = (gchar *) gtk_file_selection_get_filename (selector);
+	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can read it. */
 	if (open (filename, O_RDONLY) == -1)
@@ -419,12 +419,12 @@ void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
 	gchar *content;
-	gchar *filename;
+	const gchar *filename;
 	GtkFileSelection *selector;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
-	filename = (gchar *) gtk_file_selection_get_filename (selector);
+	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can write to it. */
 	if (open (filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR) == -1)
