@@ -177,7 +177,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_container_add (GTK_CONTAINER (alignment), pref->priv->colorbox);
 	
 	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Edit lock"));
-	pref->priv->stickycheck = gtk_check_button_new_with_mnemonic (_("_Pads start sticky"));
+	pref->priv->stickycheck = gtk_check_button_new_with_mnemonic (_("_Pads start on all workspaces"));
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
 	
 	gtk_dialog_add_button (GTK_DIALOG (pref), "gtk-close", GTK_RESPONSE_CLOSE);
