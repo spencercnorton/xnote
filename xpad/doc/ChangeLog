@@ -14,6 +14,8 @@ fixed crash on exit if we didn't init docklet
 fixed new pads randomly starting up as white background
 cut/copy/paste are now unsensitive if no content to copy or paste
 pads now play nice with the X clipboard (middle mouse button)
+fixed a bug with the notification area applet
+fixed misc. small bugs
 
 
 1.8

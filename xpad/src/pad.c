@@ -54,7 +54,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{N_("/_Notes"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Notes/_Show All"),		NULL,			menuitem_cb,	10,	"<Item>"},
-	{N_("/Notes/_Close All"),		"<control>Q",			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{N_("/Notes/_Close All"),		"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 	{"/Notes/sep",				NULL,			0,		0,	"<Separator>"},
 	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
@@ -709,25 +709,19 @@ void pads_hide_all (void)
 
 void pads_unhide_all (void)
 {
-	pad_node *temp = first_pad;
-	
-	while (temp)
+	PAD_ITERATE_START
+	if (!PAD->closed)
 	{
-		if (!temp->closed)
-		{
-			pad_show (temp);
-		}
-		
-		temp = temp->next;
+		pad_show (PAD);
 	}
+	PAD_ITERATE_END
 }
 
 void pads_show_all (void)
 {
-	pad_node *temp;
-	
-	for (temp = first_pad; temp; temp = temp->next)
-		pad_show (temp);
+	PAD_ITERATE_START
+	pad_show (PAD);
+	PAD_ITERATE_END
 }
 
 void pad_show_all (pad_node *pad)
@@ -1073,6 +1067,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 			GtkWidget *w;
 			
 			w = gtk_window_get_focus (pad->window);
+			if (!w) continue;
 			foundfocus = GTK_WIDGET_HAS_FOCUS (w);
 			
 			if (foundfocus)
@@ -1897,10 +1892,11 @@ static pad_node *start_pad (void)
 	pad->last_draw_x = pad->last_draw_y = -1;
 #endif
 	pad->num = num++;
-	pad->hidden = FALSE;
 	pad->infoname = NULL;
 	pad->contentname = NULL;
 	pad->properties = NULL;
+	pad->closed = FALSE;
+	pad->hidden = FALSE;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -1940,7 +1936,6 @@ pad_node *pad_new (void)
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);
 	
 	pad->locked = 0;
-	pad->closed = FALSE;
 	pad->sticky = 0;
 	
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
@@ -1987,7 +1982,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->height = info->height;
 	pad->x = info->x;
 	pad->y = info->y;
-	pad->closed = FALSE;
 	
 	pad_set_sticky (pad, info->sticky);
 	

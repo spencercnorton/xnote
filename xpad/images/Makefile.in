@@ -143,7 +143,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-pixmapdir = $(datadir)/pixmaps/
+pixmapdir = $(datadir)/pixmaps
 
 pixmap_DATA = xpad.xpm
 

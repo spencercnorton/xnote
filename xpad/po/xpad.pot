@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-06 01:07-0500\n"
+"POT-Creation-Date: 2003-02-08 14:08-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:174
+#: src/main.c:173
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
@@ -27,7 +27,7 @@ msgid ""
 "  -n, --new             opens a new pad only\n"
 msgstr ""
 
-#: src/main.c:183
+#: src/main.c:182
 msgid ""
 "  --nonew               prevents xpad from making a new pad\n"
 "  -q, --quit            quits all open xpad sessions\n"
@@ -36,21 +36,21 @@ msgid ""
 "  --showall             brings all pads to the foreground\n"
 msgstr ""
 
-#: src/main.c:216
+#: src/main.c:215
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
 msgstr ""
 
-#: src/main.c:291
+#: src/main.c:290
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/main.c:335
+#: src/main.c:334
 #, c-format
 msgid "Didn't understand argument %s.\n"
 msgstr ""
 
-#: src/main.c:392
+#: src/main.c:391
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -362,41 +362,41 @@ msgstr ""
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:812
+#: src/pad.c:814
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:817
+#: src/pad.c:819
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:858
+#: src/pad.c:860
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:909
+#: src/pad.c:911
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1168
-msgid "/Notes"
-msgstr ""
-
-#: src/pad.c:1210
-msgid "/Pad/Sticky"
-msgstr ""
-
-#: src/pad.c:1216
+#: src/pad.c:1048 src/pad.c:1229
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1218
+#: src/pad.c:1050 src/pad.c:1231
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1222
+#: src/pad.c:1052 src/pad.c:1235
 msgid "/Edit/Paste"
+msgstr ""
+
+#: src/pad.c:1181
+msgid "/Notes"
+msgstr ""
+
+#: src/pad.c:1223
+msgid "/Pad/Sticky"
 msgstr ""
 
 #: src/help.c:46
@@ -447,20 +447,20 @@ msgstr ""
 msgid "Windows"
 msgstr ""
 
-#: src/tray.c:191
+#: src/tray.c:192
 msgid "XPad: right click for more options..."
 msgstr ""
 
-#: src/tray.c:192
+#: src/tray.c:193
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
 msgstr ""
 
-#: src/tray.c:221
+#: src/tray.c:222
 msgid "Hide Pads"
 msgstr ""
 
-#: src/tray.c:221
+#: src/tray.c:222
 msgid "Show Pads"
 msgstr ""
