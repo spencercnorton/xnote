@@ -1564,6 +1564,7 @@ void pad_set_title (pad_node *pad)
 	gchar *content, *tmp;
 	gint n;
 	gchar result [TITLE_CHARS + 1];	/* 1 null and TITLE_CHARS characters */
+	gboolean more;
 	
 	buf = gtk_text_view_get_buffer (get_text (pad->window));
 	gtk_text_buffer_get_start_iter (buf, &s);
@@ -1579,7 +1580,8 @@ void pad_set_title (pad_node *pad)
 	 * little utf8->ascii conversion must take place.
 	 */
 	
-	while (n < TITLE_CHARS)
+	more = FALSE;
+	while (1)
 	{
 		gunichar u;
 		
@@ -1589,11 +1591,22 @@ void pad_set_title (pad_node *pad)
 		{
 			if (g_unichar_isgraph (u))
 			{
-				result[n++] = (char) u;
+				if (n < TITLE_CHARS)
+				{
+					result[n++] = (char) u;
+				}
+				else
+				{
+					more = TRUE;
+					break;
+				}
 			}
 			else if (g_unichar_isspace (u) && n > 0)
 			{
-				result[n++] = ' ';
+				if (n < TITLE_CHARS)
+				{
+					result[n++] = ' ';
+				}
 			}
 			else if (u == '\0')
 			{
@@ -1606,7 +1619,10 @@ void pad_set_title (pad_node *pad)
 	
 	result[n] = '\0';
 	
-	sprintf (pad->title, "\"%s\"", result);
+	if (more)
+		sprintf (pad->title, "%s...", result);
+	else
+		strcpy (pad->title, result);
 	
 	gtk_window_set_title (pad->window, pad->title);
 }
