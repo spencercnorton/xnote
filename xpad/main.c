@@ -52,6 +52,7 @@ gchar *working_dir;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
+gboolean make_new_pad = TRUE;
 
 /**
  * This variable holds all the changeable settings for this session.
@@ -90,6 +91,7 @@ static gint at_gtk_exit (gpointer data)
 	
 	g_free (working_dir);
 	g_slist_free (current_settings.toolbar_buttons);
+	
 	return 0;
 }
 
@@ -154,6 +156,7 @@ print_help (void)
 	        "                          0=none, 1=moderate, 2=debug\n"
 	        "                          default is 0\n"
 	        "  -n, --new             opens a new pad\n"
+			"  --nonew               prevents xpad from making new pads if none exist to load\n"
 	        "  -q, --quit            quits all open xpad sessions\n"
 	        "  -s, --showall         brings all pads to the foreground\n");
 	exit (0);
@@ -165,6 +168,14 @@ print_version (void)
 	printf ("xpad v%s\n", VERSION);
 	exit (0);
 }
+
+
+static void
+set_nonew (void)
+{
+	make_new_pad = FALSE;
+}
+
 
 static void
 set_verbosity (gint *v)
@@ -198,7 +209,9 @@ static const argument arguments[] =
 	{TRUE, "--version", FALSE, {print_version}},
 	{TRUE, "-v", TRUE, {G_CALLBACK (set_verbosity)}},
 	{TRUE, "--verbosity", TRUE, {G_CALLBACK (set_verbosity)}},
+	{TRUE, "--nonew", FALSE, {set_nonew}},
 	
+	{FALSE, "--nonew", FALSE, {set_nonew}},	/* registered here a second time because it has effects both on local instances and remote instances */
 	{FALSE, "-n", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "-q", FALSE, {gtk_main_quit}},
@@ -238,11 +251,11 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 		 * better performance (well, perhaps more out of sheer habit).
 		 */
 		for (j = NUM_ARGUMENTS-1; 
-		     (j >= 0) && (strncmp((*argv)[i], arguments[j].name, arglen[j]) != 0);
+		     (j >= 0) && (strncmp((*argv)[i], arguments[j].name, arglen[j]) != 0 || arguments[j].local != local);
 		     j--)
 		{
 		}
-
+		
 		if (j < 0)
 		{
 		  	/* Argument not found in list.  Either its "local" setting mismatched
@@ -259,12 +272,12 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 				continue;
 			}
 		}
-
-
+		
+		
 		/* (from this point on, we know our argument was recognized) */
-
+		
 		longform = (strncmp(arguments[j].name, "--", 2) == 0);
-
+		
 		if (arguments[j].local != local)
 		{
 			/* We ignore this argument, but if it is in short form and expects a
@@ -272,7 +285,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 * next iteration.
 			 */
 			if (!longform && arguments[j].second) i++;
-
+			
 			/* Don't accept this argument, but don't complain either. */
 			continue;
 		}
@@ -504,6 +517,7 @@ newxpad_clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 			(const guchar *) args,
 			size);
 		g_free (args);
+		break;
 	default:
 		break;
 	}
@@ -706,7 +720,17 @@ static int xpad_init (gpointer data)
 	xpad_register_icons ();
 	
 	/* load all pads */
-	fio_load_pads();
+	if (!fio_load_pads ())
+	{
+		if (make_new_pad)
+		{
+			pad_new ();
+		}
+		else
+		{
+			gtk_main_quit ();
+		}
+	}
 	
 	handle_args (newdata[0], newdata[1], FALSE);
 	

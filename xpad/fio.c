@@ -515,7 +515,7 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 }
 
 
-void fio_load_pads (void)
+int fio_load_pads (void)
 {
 	gint opened = 0;
 	pad_node *pad;
@@ -559,11 +559,10 @@ void fio_load_pads (void)
 	
 	if (verbosity >= 2) printf ("Done loading files.\n");
 	
-	if (opened == 0)
-		pad_new ();
-	
 	g_pattern_spec_free (spec);
 	g_dir_close (dir);
+	
+	return opened;
 }
 
 

@@ -1,6 +1,7 @@
 1.7
 ---
 Popup alerts are more pleasing.  (HIG compliant)
+Add --nonew flag to prevent creation of new pads.
 
 
 1.6.1
