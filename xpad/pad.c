@@ -347,23 +347,13 @@ pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 static void
 pad_set_sticky (pad_node *pad, gboolean on)
 {
-	if (on)
-	{
-		gtk_window_stick (pad->window);
-		pad->sticky = 1;
-		
-		/* make sure the toolbar widget is up to date */
-		pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), TRUE);
-	}
-	else
-	{
-		gtk_window_unstick (pad->window);
-		pad->sticky = 0;
-		
-		/* make sure the toolbar widget is up to date */
-		pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), FALSE);
-	}
+	if (on) gtk_window_stick (pad->window);
+	else    gtk_window_unstick (pad->window);
 
+	pad->sticky = on;
+
+	/* make sure the toolbar widget is up to date */
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), on);
 }
 
 void pad_toggle_sticky (pad_node *pad)
@@ -483,7 +473,8 @@ void pad_destroy (pad_node *pad)
 /* returns true if pad destroyed */
 gboolean pad_confirm_destroy (pad_node *pad)
 {
-	gboolean do_destroy;
+	gboolean do_destroy = TRUE;
+
 	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
 	{
 		GtkWidget *dialog, *checkbox, *align;
@@ -513,10 +504,6 @@ gboolean pad_confirm_destroy (pad_node *pad)
 		}
 		
 		gtk_widget_destroy (dialog);
-	}
-	else
-	{
-		do_destroy = TRUE;
 	}
 
 	if (do_destroy)

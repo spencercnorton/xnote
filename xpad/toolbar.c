@@ -189,8 +189,12 @@ gboolean toolbar_is_button (GtkWidget *widget)
 
 GList *toolbar_get_buttons (xpad_toolbar *xt)
 {
-	GList *list = toolbar_get_children (xt), *tmp = list;
+	GList *list, *tmp;
 	GList *rv = NULL;
+
+	if (!xt) return NULL;
+
+	tmp = list = toolbar_get_children (xt);
 	
 	while (tmp)
 	{
