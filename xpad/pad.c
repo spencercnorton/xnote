@@ -393,16 +393,16 @@ gboolean pad_confirm_destroy (pad_node *pad)
 
 	if (do_destroy)
 		pad_destroy (pad);
-
+	
 	return do_destroy;
 }
 
 void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
-	/*
+	
 	toolbar_hide (pad);
-	*/
+	
 	fio_save_pad (pad);
 	
 	pad_free_gtk (pad);

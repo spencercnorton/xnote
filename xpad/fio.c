@@ -264,6 +264,9 @@ static void fio_save_info_file (pad_node *pad)
 	GtkTextBuffer *buf;
 	gint height;
 	
+	if (pad->hidden)	/* don't bother saving hidden pads */
+		return;
+	
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
