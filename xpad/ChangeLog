@@ -4,6 +4,7 @@ added partial Esperanto translation (by mterry@fastmail.fm)
 added Romanian translation (by eugenh@urban-grafx.ro)
 added Russian translation (by avl@cad.ru)
 added missing "include <sys/time.h>" (by netgeek@speakeasy.net)
+added missing #defines for solaris (by alan@cesma.usb.ve)
 added new icon and install icon family into new location per icon theme spec
 fixed disk-full-causes-xpad-contents-to-disappear bug
 made pads not show up in taskbar
