@@ -887,21 +887,38 @@ static void xpad_register_icons (void)
 
 static void xpad_set_default_icon (void)
 {
-	GdkPixbuf *pixbuf;
+	GList *icons = NULL;
+	GtkIconTheme *theme = gtk_icon_theme_get_default ();
 	
-	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-	                                   PACKAGE,
-	                                   48,
-	                                   0,
-	                                   NULL);
+	icons = g_list_append (icons, gtk_icon_theme_load_icon (theme,
+	                                                        PACKAGE,
+	                                                        16,
+	                                                        0,
+	                                                        NULL));
 	
-	if (pixbuf)
+	icons = g_list_append (icons, gtk_icon_theme_load_icon (theme,
+	                                                        PACKAGE,
+	                                                        24,
+	                                                        0,
+	                                                        NULL));
+	
+	icons = g_list_append (icons, gtk_icon_theme_load_icon (theme,
+	                                                        PACKAGE,
+	                                                        32,
+	                                                        0,
+	                                                        NULL));
+	
+	icons = g_list_append (icons, gtk_icon_theme_load_icon (theme,
+	                                                        PACKAGE,
+	                                                        48,
+	                                                        0,
+	                                                        NULL));
+	
+	if (icons)
 	{
-		GList *icons = g_list_append (NULL, pixbuf);
-		
 		gtk_window_set_default_icon_list (icons);
 		
-		g_object_unref (pixbuf);
+		g_list_foreach (icons, (GFunc) g_object_unref, NULL);
 		g_list_free (icons);
 	}
 }
