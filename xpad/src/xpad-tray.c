@@ -1,7 +1,7 @@
 /*
 
 Copyright (c) 2002 Jamis Buck
-Copyright (c) 2003-2004 Michael Terry
+Copyright (c) 2003-2005 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,9 +49,12 @@ xpad_tray_open (void)
 	
 	docklet = egg_status_icon_new ();
 	
-	g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
-	g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
-	g_signal_connect (docklet, "size-changed", G_CALLBACK (xpad_tray_size_changed_cb), NULL);
+	if (docklet)
+	{
+		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
+		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
+		g_signal_connect (docklet, "size-changed", G_CALLBACK (xpad_tray_size_changed_cb), NULL);
+	}
 }
 
 void
@@ -84,8 +87,11 @@ xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size)
 	                                   size,
 	                                   0,
 	                                   NULL);
-	egg_status_icon_set_from_pixbuf (icon, pixbuf);
-	g_object_unref (pixbuf);
+	if (pixbuf)
+	{
+		egg_status_icon_set_from_pixbuf (icon, pixbuf);
+		g_object_unref (pixbuf);
+	}
 }
 
 static gint
