@@ -3,6 +3,7 @@
 *features*
 allow using system text color, background color, and font
 eggtray now appears, allowing users to hide all pads (thanks jgb3@email.byu.edu)
+now we compile using autoconf
 
 *fixes*
 xpad won't take 100% cpu sometimes when idle

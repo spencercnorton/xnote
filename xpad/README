@@ -1,5 +1,5 @@
-xpad version 1.7 README
------------------------
+xpad README
+-----_-----
 
 xpad is a virtual sticky pad system using GTK+ 2.
 
@@ -7,7 +7,8 @@ xpad is a virtual sticky pad system using GTK+ 2.
 --------------------------------------------------------------------------
 INSTALLATION NOTES
 --------------------------------------------------------------------------
-     To compile, just type "make" and / or "make install".
+     To compile, just type "./configure", "make", and "make install".
+     Type "xpad" now to run.
 
      Read the INSTALL file for more information.
 

@@ -1,6 +1,9 @@
 NOTE: Make sure you have development files for gtk+ 2.0 before 
 compiling.  This includes associated packages like Pango.
 
+Type "./configure" to prepare to compile.  Read "./configure --help"
+for information about what options you have.
+
 Type "make" to compile xpad.
 
 Type "make install" as root to install the binary to /usr/local/bin.
