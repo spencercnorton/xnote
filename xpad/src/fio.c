@@ -233,15 +233,16 @@ void fio_save_pad_info (pad_node *pad)
 	
 	sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
-		"border_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
 		pad->contentname, pad->sticky,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
 		pad->style.use_back,
 		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
-		pad->style.use_text,
+		pad->style.use_text);
+	sprintf (info_file, "%sborder_red %d\nborder_green %d\n"
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
+		info_file,
 		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
 		pad->style.border_width, pad->style.padding,
 		pad->style.fontname ? pad->style.fontname : "NULL");

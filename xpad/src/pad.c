@@ -488,13 +488,13 @@ pad_set_sticky (pad_node *pad, gboolean on)
 	
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), on);
-	
-	fio_save_pad_info (pad);
 }
 
 void pad_toggle_sticky (pad_node *pad)
 {
 	pad_set_sticky (pad, pad->sticky ? 0 : 1);
+	
+	fio_save_pad_info (pad);
 }
 
 void pad_edit_cut_for_clipboard (pad_node *pad, GtkClipboard *clipboard)
