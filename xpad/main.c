@@ -218,7 +218,7 @@ print_help (void)
 static void
 print_version (void)
 {
-	fprintf (output, "xpad v%s\n", VERSION);
+	fprintf (output, "xpad %s\n", VERSION);
 	exit (0);
 }
 
@@ -240,7 +240,7 @@ set_verbosity (gint *v)
 {
 	if (*v < 0 || *v > 2)
 	{
-		fprintf (stderr, "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
+		fprintf (stderr, _("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"));
 		exit (1);
 	}
 	
@@ -302,7 +302,7 @@ static const argument arguments[] =
 
 static void missing_companion_arg(const char argname[])
 {
-	fprintf(stderr, "Missing companion argument to %s\n", argname);
+	fprintf(stderr, _("Missing companion argument to %s\n"), argname);
 	exit(1);
 }
 
@@ -346,7 +346,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 */
 			if (local)
 			{
-				fprintf (stderr, "Didn't understand argument %s.\n", (*argv)[i]);
+				fprintf (stderr, _("Didn't understand argument %s.\n"), (*argv)[i]);
 				exit (1);
 			}
 			else
@@ -403,7 +403,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			
 			if (*endptr)
 			{
-				fprintf(stderr, "Invalid number: '%s'\n", companion);
+				fprintf(stderr, _("Invalid number: '%s'\n"), companion);
 				
 				if (local)
 					exit(1);
@@ -542,21 +542,24 @@ read_from_proc_file (void)
 	bytes = read (client_fd, &size, sizeof (size));
 	if (bytes != sizeof(size))
 	{
-	  if (bytes < 0) 
-	    perror("Error on client connection");
-	  else if (bytes == 0)
-	    fprintf(stderr, "No data on client connection\n");
-	  else
-	    fprintf(stderr, "Expected %d bytes, got %d!\n",sizeof(size),bytes);
-
-	  goto close_client_fd;
+		if (verbosity >= 1)
+		{
+			if (bytes < 0) 
+				fprintf(stderr, "Error on client connection\n");
+			else if (bytes == 0)
+				fprintf(stderr, "No data on client connection\n");
+			else
+				fprintf(stderr, "Expected %d bytes, got %d!\n",sizeof(size),bytes);
+		}
+		
+		goto close_client_fd;
 	}
 	
 	/* alloc memory */
 	args = (gchar *) g_malloc (size);
 	if (!args)
 	{
-		fprintf(stderr, "Out of memory\n");
+		if (verbosity >= 2) fprintf(stderr, "Out of memory\n");
 		goto close_client_fd;
 	}
 	
@@ -564,8 +567,11 @@ read_from_proc_file (void)
 	bytes = read (client_fd, args, size);
 	if (bytes < size)
 	{
-		if (bytes < 0) perror("Error on client connection");
-		else fprintf(stderr, "Broken client connection");
+		if (verbosity >= 1)
+		{
+			if (bytes < 0) fprintf(stderr, "Error on client connection\n");
+			else fprintf(stderr, "Broken client connection\n");
+		}
 		goto close_client_fd;
 	}
 	
@@ -634,7 +640,7 @@ open_proc_file (void)
 	strcpy (master.sun_path, master_name);
 	if (bind (master_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 	{
-		perror("Failed to bind master socket");
+		if (verbosity >= 2) printf ("Failed to bind master socket.\n");
 		return 1;
 	}
 	
@@ -698,12 +704,12 @@ xpad_pass_args (int *argc, char ***argv)
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, master_name);
 	
-	if (verbosity >= 2) printf ("Connecting and sending to master socket '%s'.\n", master_name);
+	if (verbosity >= 2) fprintf (stderr, "Connecting and sending to master socket '%s'.\n", master_name);
 	
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 	{
-		fprintf (stderr, "error on connect\n");
+		if (verbosity >= 2) fprintf (stderr, "Error on connect.\n");
 		goto done;
 	}
 	
@@ -715,7 +721,7 @@ xpad_pass_args (int *argc, char ***argv)
 	/* now, write string */
 	write (client_fd, args, size);
 	
-	if (verbosity >= 2) printf ("Blocking on master socket.\n");
+	if (verbosity >= 2) fprintf (stderr, "Blocking on master socket.\n");
 	
 	do
 	{
@@ -731,7 +737,8 @@ xpad_pass_args (int *argc, char ***argv)
 			
 			if (bytesRead < 0)
 			{
-			  perror("Error reading from master socket");
+				if (verbosity >= 2)
+					fprintf (stderr, "Error reading from master socket.\n");
 			  goto done;
 			}
 
@@ -982,6 +989,10 @@ static int xpad_init (gpointer data)
 int main (int argc, char *argv[])
 {
 	gpointer args[2];
+	
+	setlocale (LC_ALL, "");
+	bindtextdomain ("", "");
+	textdomain ("");
 	
 	output = stdout;
 	

@@ -2,10 +2,17 @@
 #define DEFINES_H
 
 #include "config.h"
+#include <libintl.h>
 
 /**
  * This file is just used to hold all the common hard defines we need.
  */
+ 
+#define _(String) (String)
+#define N_(String) String
+#define textdomain(Domain)
+#define bindtextdomain(Package, Directory)
+
 
 #define DEFAULTS_FILENAME	"default-style"
 
