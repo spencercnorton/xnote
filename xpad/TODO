@@ -1,2 +1,10 @@
 make less posix-oriented (i.e. be ready for GTK+ 2 on win32)
 add socket/plug support (or some way to communicate cross-process)
+
+titlebar/resizer
+buttonbar for close/delete
+
+make no static filename buffers
+fix no-smaller-than-largest-line behavior
+fix text disappearing
+
