@@ -277,45 +277,62 @@ void help_dialog ()
 	notebook = gtk_notebook_new ();
 	
 	gtk_label_set_markup (GTK_LABEL (helptext), 
-"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which \
-you write notes or messages.\nxpad was designed with ease of use in mind, but if you \
-have troubles, here's how to do most things you would want to:\n\n\n\
-<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n\n\
-<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  \
-To change the default size for new pads, right click on a pad and select \"Global \
-Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n\n\
-<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \
-\"New Pad\" from the menu.\n\n\
-<b>colors</b>: If black on yellow isn't your thing, change \
-the default color by right clicking on the pad you want to change and selecting \"Pad \
-Preferences\" from the menu.  An options menu will now pop up and you can change the \
-background color, text color, font, and border.  These settings only affect the pad you \
-clicked on.\n\n\
-<b>defaults</b>: To change the colors and other options used when a new pad is created, \
-right click on a pad, choose \"Global Preferences\" and enjoy.\n\n\
-<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every \
-60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" \
-from the right-click menu, all contents are irrevocably lost).\n\n\
-<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from \
-the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad \
-contents -- they will be erased.\n\n\
-<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that \
-this pad contains only a copy of the file; destroying the pad does nothing to the original \
-file.\n");
+"xpad is a GTK+ 2.0 application that opens small textboxes "
+"on your desktop on which you write notes or messages.\n"
+"xpad was designed with ease of use in mind, but if you "
+"have troubles, here's how to do most things you would "
+"want to:\n\n\n"
+
+"<b>moving</b>: To move a pad, hold down CTRL and drag "
+"with the left mouse button.\n\n"
+
+"<b>resizing</b>: To resize a pad, hold down CTRL and "
+"drag with the right mouse button.  To change the default "
+"size for new pads, right click on a pad and select \"Global "
+"Preferences\".  On the tab \"Default Size\", you can change "
+"the appropriate values.\n\n"
+
+"<b>making new pads</b>: To open a new pad, right click on "
+"an existing pad.  Select \"New Pad\" from the menu.\n\n"
+
+"<b>colors</b>: If black on yellow isn't your thing, change "
+"the default color by right clicking on the pad you want to "
+"change and selecting \"Pad Preferences\" from the menu.  "
+"An options menu will now pop up and you can change the "
+"background color, text color, font, and border.  These "
+"settings only affect the pad you clicked on.\n\n"
+
+"<b>defaults</b>: To change the colors and other options "
+"used when a new pad is created, right click on a pad, "
+"choose \"Global Preferences\" and enjoy.\n\n"
+
+"<b>saving</b>: To save pads, you do nothing.  All pads "
+"are autosaved, by default every 60 seconds, and are saved "
+"when closed (not when destroyed -- if you choose \"Destroy\" "
+"from the right-click menu, all contents are irrevocably lost).\n\n"
+
+"<b>closing pads</b>: To close a pad and <i>keep</i> its "
+"contents, choose \"Close\" from the right-click menu.  "
+"Again, \"Destroy\" is only if you are sure you don't want "
+"the pad contents -- they will be erased.\n\n"
+
+"<b>opening files</b>: xpad allows you to open an arbitrary "
+"file into a pad.  Note that this pad contains only a copy "
+"of the file; destroying the pad does nothing to the original "
+"file.\n");
 
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
 	
 	gtk_label_set_markup (GTK_LABEL (keytext),
-"<b>CTRL+n</b>: Creates a new pad.\n\n\
-<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n\
-<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n\
-<b>CTRL+p</b>: Opens the pad preferences window.\n\n\
-<b>CTRL+g</b>: Opens the global preferences window.\n\n\
-<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n\
-<b>CTRL+SHIFT+a</b>: Closes all open pads.\n\n\
-<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n
-" );
+"<b>CTRL+n</b>: Creates a new pad.\n\n"
+"<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n"
+"<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n"
+"<b>CTRL+p</b>: Opens the pad preferences window.\n\n"
+"<b>CTRL+g</b>: Opens the global preferences window.\n\n"
+"<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n"
+"<b>CTRL+SHIFT+a</b>: Closes all open pads.\n\n"
+"<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n");
 	
 	gtk_label_set_line_wrap (GTK_LABEL (keytext), TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), keytext, keylabel);
