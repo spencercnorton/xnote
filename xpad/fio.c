@@ -403,7 +403,7 @@ gint fio_load_default_settings (void)
 			(toolbar_button *) get_toolbar_button_by_name ("sep"));*/
 		current_settings.toolbar_buttons = 
 			g_slist_append (current_settings.toolbar_buttons,
-			(toolbar_button *) get_toolbar_button_by_name ("Clear"));
+			(toolbar_button *) get_toolbar_button_by_name ("Quit"));
 	}
 	else
 	{
