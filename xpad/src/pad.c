@@ -1819,6 +1819,32 @@ pad_add_menu_items (pad_node *pad)
 	}
 }
 
+/**
+ * Sometimes values get screwed up.  This is here for sanity checking.
+ */
+static void
+normalize_dimensions (gint *x, gint *y, gint *width, gint *height)
+{
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
+	GdkScreen *screen;
+	gint screenw, screenh;
+	
+	screen = gdk_screen_get_default ();
+	
+	screenw = gdk_screen_get_width (screen);
+	screenh = gdk_screen_get_height (screen);
+	*width = MIN (*width, screenw);
+	*height = MIN (*height, screenh);
+	
+	if (*x >= screenw)
+		*x %= screenw;
+	
+	if (*y >= screenh)
+		*y %= screenh;
+#endif
+}
+
+
 static void
 pad_alloc_gtk (pad_node *pad, const gchar *role)
 {
@@ -2004,6 +2030,7 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	fio_open_pad_files (pad, FALSE);
 	
+	normalize_dimensions (&info->x, &info->y, &info->width, &info->height);
 	gtk_window_set_default_size (pad->window, info->width, info->height);
 	gtk_window_move (pad->window, info->x, info->y);
 	
