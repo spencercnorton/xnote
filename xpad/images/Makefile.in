@@ -147,7 +147,7 @@ pixmapdir = $(datadir)/pixmaps/
 
 pixmap_DATA = xpad.xpm
 
-EXTRA_DIST = xpad-debian.xpm lock.xpm sticky.xpm xpad.xpm
+EXTRA_DIST = xpad-debian.xpm sticky.xpm xpad.xpm
 subdir = images
 mkinstalldirs = $(SHELL) $(top_srcdir)/scripts/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

@@ -1804,28 +1804,20 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
-	printf ("hello\n");
 	
 	/* set up scrollbar */
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
 		GTK_SHADOW_NONE);
-	printf ("hello\n");
 	
 	/* add textbox to window */
 	gtk_container_add (GTK_CONTAINER (scroll), textbox);
-	printf ("hello\n");
 	gtk_container_add (GTK_CONTAINER (eventbox), scroll);
-	printf ("hello\n");
 	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
-	printf ("hello\n");
 	gtk_box_pack_start (GTK_BOX (box), eventbox1, TRUE, TRUE, 0);
-	printf ("hello\n");
 	gtk_container_add (GTK_CONTAINER (window), box);
-	printf ("hello\n");
 	
 	textbuf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textbox));
 	gtk_text_buffer_add_selection_clipboard (textbuf, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
-	printf ("hello\n");
 	
 	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
@@ -1839,12 +1831,10 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
 /*	g_signal_connect (window, "window-state-event", G_CALLBACK (state_handler), pad);*/
 	g_signal_connect (textbuf, "changed", G_CALLBACK (text_changed), pad);
-	printf ("hello\n");
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
 	gtk_window_set_role (GTK_WINDOW (window), role);
-	printf ("hello\n");
 	
 	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
@@ -1853,23 +1843,19 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	pad->toolbar = NULL;
 	pad->scrollbar = scroll;
 	pad->title = NULL;
-	printf ("hello\n");
 	
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
 	pad_add_menu_items (pad);
 	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")),
 		"deactivate", G_CALLBACK (disable_popup_handler), pad);
-	printf ("hello\n");
 	
 	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
-	printf ("setting toolbar\n");
 	if (xpad_settings_get_has_toolbar ())
 		pad_add_toolbar (pad);
-	printf ("done with toolbar\n");
 	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), xpad_settings_get_has_decorations ());
@@ -1942,9 +1928,9 @@ pad_node *pad_new (void)
 	pad = start_pad ();
 	
 	fio_open_pad_files (pad, TRUE);
-	printf ("allocating\n");
+	
 	pad_alloc_gtk (pad, pad->infoname);
-	printf ("done\n");
+	
 	pad->width = xpad_settings_style_get_padding () + 
 		xpad_settings_style_get_border_width () +
 		xpad_settings_get_default_width ();
