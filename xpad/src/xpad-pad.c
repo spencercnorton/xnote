@@ -43,10 +43,6 @@ struct XpadPadPrivate
 	gchar *contentname;
 	gboolean sticky;
 	
-	/* this was added to differentiate between a pad that has been explicitly closed,
-	 * and a pad that has been merely hidden to the system tray */
-	gboolean closed;
-	
 	/* selected child widgets */
 	GtkWidget *textview;
 	GtkWidget *scrollbar;
@@ -168,7 +164,6 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->infoname = NULL;
 	pad->priv->contentname = NULL;
 	pad->priv->sticky = FALSE;
-	pad->priv->closed = FALSE;
 	pad->priv->textview = NULL;
 	pad->priv->scrollbar = NULL;
 	pad->priv->toolbar = NULL;
@@ -476,7 +471,6 @@ static void
 xpad_pad_close (XpadPad *pad)
 {
 	gtk_widget_hide (GTK_WIDGET (pad));
-	pad->priv->closed = TRUE;
 	
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
@@ -1352,7 +1346,7 @@ menu_get_popup_no_highlight (XpadPad *pad)
 		 */
 		pads = xpad_pad_group_get_pads (pad->priv->group);
 		
-		g_slist_sort (pads, (GCompareFunc) menu_title_compare);
+		pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 		
 		/**
 		 * Populate list of windows.

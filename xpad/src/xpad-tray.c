@@ -37,7 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 static void xpad_tray_popup (GdkEventButton *event);
 static void xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpointer user_data);
 static void xpad_tray_destroyed_cb (GtkWidget *tray);
-static void xpad_tray_toggle (void);
+static void xpad_tray_pressed (void);
 
 static GtkWidget      *docklet = NULL;
 static gboolean        pads_showing;
@@ -112,13 +112,8 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 static void
 menu_show_all (XpadPadGroup *group)
 {
-	GSList *pads, *i;
-	
-	pads = xpad_pad_group_get_pads (group);
-	
-	for (i = pads; i; i = i->next)
-		gtk_window_present (GTK_WINDOW (i->data));
-	
+	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
 	g_slist_free (pads);
 }
 
@@ -170,7 +165,7 @@ xpad_tray_popup (GdkEventButton *event)
 	/**
 	 * Order pads according to title.
 	 */
-	g_slist_sort (pads, (GCompareFunc) menu_title_compare);
+	pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 	
 	/**
 	 * Populate list of windows.
@@ -220,7 +215,7 @@ xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpoin
 	
 	switch (event->button) {
 	case 1:
-		xpad_tray_toggle ();
+		xpad_tray_pressed ();
 		break;
 	case 3:
 		xpad_tray_popup (event);
@@ -242,7 +237,9 @@ xpad_tray_destroyed_cb (GtkWidget *tray)
 }
 
 static void
-xpad_tray_toggle (void)
+xpad_tray_pressed (void)
 {
-	xpad_pad_group_toggle_hide (xpad_app_get_pad_group ());
+	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
+	g_slist_free (pads);
 }

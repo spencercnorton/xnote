@@ -306,10 +306,9 @@ xpad_preferences_init (XpadPreferences *pref)
 	
 	gtk_widget_show_all (GTK_DIALOG (pref)->vbox);
 	
-	/* Make window no more tall than 150% of width */
+	/* Make window not so squished */
 	gtk_widget_size_request (GTK_WIDGET (pref), &req);
-	if (req.width * 1.5 < req.height)
-		g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height / 1.5), NULL);
+	g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height * 0.8), NULL);
 }
 
 static void

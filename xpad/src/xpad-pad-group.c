@@ -111,7 +111,8 @@ xpad_pad_group_get_pads (XpadPadGroup *group)
 void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
-	/* FIXME: should sink pad's floating ref */
+	g_object_ref(pad);
+	gtk_object_sink(GTK_OBJECT(pad));
 	
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);
@@ -124,45 +125,11 @@ xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 void
 xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 {
-	/* FIXME: should sink pad's floating ref */
-	
 	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
 	
 	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
-}
-
-
-void xpad_pad_group_hide_all (XpadPadGroup *group)
-{
-	/*g_slist_foreach (group->priv->pads, (GFunc) pad_hide, NULL);*/
-}
-
-
-void xpad_pad_group_unhide_all (XpadPadGroup *group)
-{
-/*	GSList *i;
 	
-	for (i = group->priv->pads; i; i = i->next) {
-		if (((pad_node *) i->data)->hidden &&
-		    !((pad_node *) i->data)->closed)
-			pad_show ((pad_node *) i->data);
-	}*/
-}
-
-
-void xpad_pad_group_toggle_hide (XpadPadGroup *group)
-{
-/*	GSList *i;
-	
-	for (i = group->priv->pads; i; i = i->next) {
-		if (((pad_node *) i->data)->closed)
-			continue;
-		
-		if (((pad_node *) i->data)->hidden)
-			pad_show ((pad_node *) i->data);
-		else
-			pad_hide ((pad_node *) i->data);
-	}*/
+	g_object_unref(pad);
 }
 
 
@@ -170,7 +137,7 @@ void xpad_pad_group_toggle_hide (XpadPadGroup *group)
 static void
 xpad_pad_group_destroy_pads (XpadPadGroup *group)
 {
-/*	g_slist_foreach (group->priv->pads, (GFunc) pad_close, NULL);
+	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
 	g_slist_free (group->priv->pads);
-	group->priv->pads = NULL;*/
+	group->priv->pads = NULL;
 }

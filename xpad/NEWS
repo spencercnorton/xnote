@@ -1,4 +1,6 @@
 Version 2.0
+* Fix notes list to display correct number of pads
+* Fix notification icon from not doing anything
 * Fix compilation when BinReloc is disabled
 * Fix compilation with gcc 3.4
 * Fix endianness issue with preference files
