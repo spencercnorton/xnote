@@ -36,9 +36,9 @@ static GtkItemFactoryEntry menu_items[] =
 {
 	{"/_File", 					NULL,					0,				0, 	"<Branch>"},
 	{"/File/_New",				"<control>N",			menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-	{"/File/_Open",				"<control>O",			menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
+	{"/File/_Open...",			"<control>O",			menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
 	{"/File/sep", 				NULL,					0,				0,	"<Separator>"},
-	{"/File/Save _As",			"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
+	{"/File/Save _As...",		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
 	{"/File/sep2", 				NULL,					0,				0,	"<Separator>"},
 	{"/File/_Close",			"<control>W",			menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
 	{"/File/_Delete",			NULL,					menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
@@ -47,11 +47,11 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Edit/C_ut",				"<control>X",			menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
 	{"/Edit/_Copy",				"<control>C",			menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
 	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
-	{"/Edit/Clea_r Pad",			NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
+	{"/Edit/Clea_r Pad",		NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Lock Style",		NULL,					menuitem_cb,	15,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,					0,				0,	"<Separator>"},
-	{"/Edit/_Preferences",		NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
+	{"/Edit/_Preferences...",	NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
 	{"/_Help",					NULL,					0,				0,	"<Branch>"},
 	{"/Help/_Contents",			"F1",					menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
@@ -1789,7 +1789,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	pad_set_sticky (pad, info->sticky);
 	
-	printf ("setting lock as %i, sticky as %i\n", pad->locked, pad->sticky);
 	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
 	
