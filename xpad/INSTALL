@@ -1,0 +1,9 @@
+Type "make" to compile xpad.
+
+Type "make install" as root to install the binary to /usr/local/bin.  Or, just
+copy the file to your path directory of choice.
+
+If you are upgrading from an earlier version of xpad (pre 0.2), your old notes
+will not be recognized by xpad 0.2.  You may delete the old windows* files in
+~/.xpad/.
+

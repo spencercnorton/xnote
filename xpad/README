@@ -1,0 +1,47 @@
+xpad version 0.2 README
+-----------------------
+
+xpad is a virtual sticky pad system for X using GTK+.
+
+
+----------------------------------------------------------------------------
+INSTALLATION NOTES
+----------------------------------------------------------------------------
+     To compile, just type "make" and / or "make install".
+
+     Read the INSTALL file for more.
+
+
+----------------------------------------------------------------------------
+USAGE NOTES
+----------------------------------------------------------------------------
+     Right click to obtain configuration options and open new pads.
+
+     Hold down CTRL and left drag to move a pad.  Hold down CTRL and right
+          drag to resize a pad.
+     
+     Add xpad to your ~/.xinitrc to have xpad start with every X boot.
+
+
+----------------------------------------------------------------------------
+COMMAND ARGUMENTS
+----------------------------------------------------------------------------
+	Standard GTK+ arguments are understood.  In addition, the following
+		arguments are available.
+
+	--version:	Prints version information.
+
+
+----------------------------------------------------------------------------
+LICENSE NOTES
+----------------------------------------------------------------------------
+     xpad is licensed under the terms of the GNU Public License.  See
+          COPYING for more information.
+
+     If you make any bug fixes / improvements, please email me at
+          msterry@student.umass.edu and let me know so I can implement the 
+          patch.
+
+----------------------------------------------------------------------------
+Copyright (c) 2001 Michael Terry
+

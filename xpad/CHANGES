@@ -1,0 +1,19 @@
+0.2
+---
+ported to gtk+-2.0
+now can change font color
+if xpad is already running, will open new pad, not open old pads again
+in-xpad moving and resizing now works
+xpad now recovers better from being interrupted
+remembers your preferred style
+many small bugfixes
+code reorganization
+
+0.1.9.2
+-------
+cleaner lack of decorations
+fixed "double-click on menu" bug
+fixed segfault when only a font size change was requested
+added close and destroy items to menu.  Now you can close a window without
+     losing content
+
