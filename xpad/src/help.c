@@ -18,8 +18,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "help.h"
 #include <string.h>
+#include "help.h"
 #include "defines.h"
 
 GtkWidget *help_window = NULL;

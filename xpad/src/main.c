@@ -22,16 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  Unfortunately, we lose portability... */
 #define _GNU_SOURCE	1
 
-#include "../images/xpad2.xpm"
-#include "../images/sticky.xpm"
-#include "main.h"
-#include "pad.h"
-#include "help.h"
-#include "fio.h"
-#include "sm.h"
-#include "tray.h"
-#include "settings.h"
-#include "defines.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,6 +56,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  #include <be/storage/Directory.h>
  
 #endif
+
+#include "../images/xpad2.xpm"
+#include "../images/sticky.xpm"
+#include "main.h"
+#include "pad.h"
+#include "help.h"
+#include "fio.h"
+#include "sm.h"
+#include "tray.h"
+#include "settings.h"
+#include "defines.h"
 
 gchar *working_dir;
 gint verbosity = 0; /* output level */

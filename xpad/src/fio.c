@@ -18,15 +18,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "fio.h"
 #include "pad.h"
 #include "main.h"
 #include "toolbar.h"
 #include "settings.h"
-#include <errno.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 
 /* sets filename to full path of filename (prepends working_dir to it) 

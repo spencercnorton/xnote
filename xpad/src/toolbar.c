@@ -18,11 +18,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include <string.h>
 #include "toolbar.h"
 #include "pad.h"
 #include "main.h"
 #include "settings.h"
-#include <string.h>
 
 static gboolean
 grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, xpad_toolbar *xt)

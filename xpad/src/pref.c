@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include <string.h>
 #include "main.h"
 #include "pref.h"
 #include "fio.h"
@@ -25,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include "toolbar.h"
 #include "settings.h"
-#include <string.h>
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
