@@ -1,5 +1,8 @@
 1.4
 ---
+added further optimizations to compilation.  let me know if this causes you problems
+fixed some possible buffer overflows
+fixed some warnings/errors on gcc3 compilation
 cursor icon changes when edit lock is on
 
 
