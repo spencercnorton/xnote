@@ -33,32 +33,68 @@ pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
 static void
-menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget);
+menuitem_cb (GtkAction *action, gpointer user_data);
 
-static GtkItemFactoryEntry menu_items[] = 
+void pad_edit_cut (pad_node *pad);
+void pad_edit_copy (pad_node *pad);
+void pad_edit_paste (pad_node *pad);
+static void about_dialog (pad_node *pad);
+
+static const gchar xpad_popup_ui[] =
+"<ui>"
+"  <popup name='PopupItem'>"
+"    <menu name='PadItem' action='PadMenu'>"
+"      <menuitem name='NewItem' action='NewAction' />"
+"      <separator name='sep1'/>"
+"      <menuitem name='StickyItem' action='StickyAction' />"
+"      <menuitem name='PropertiesItem' action='PropertiesAction' />"
+"      <separator name='sep2'/>"
+"      <menuitem name='CloseItem' action='CloseAction' />"
+"      <menuitem name='DeleteItem' action='DeleteAction' />"
+"    </menu>"
+"    <menu name='EditItem' action='EditMenu'>"
+"      <menuitem name='CutItem' action='CutAction'/>"
+"      <menuitem name='CopyItem' action='CopyAction'/>"
+"      <menuitem name='PasteItem' action='PasteAction'/>"
+"      <separator name='sep1'/>"
+"      <menuitem name='PreferencesItem' action='PreferencesAction'/>"
+"    </menu>"
+"    <menu name='NotesItem' action='NotesMenu'>"
+"      <menuitem name='ShowAllItem' action='ShowAllAction'/>"
+"      <menuitem name='CloseAllItem' action='CloseAllAction'/>"
+"      <separator name='sep1'/>"
+"      <placeholder name='NotesListItem'/>"
+"    </menu>"
+"    <menu name='HelpItem' action='HelpMenu'>"
+"      <menuitem name='ContentsItem' action='ContentsAction'/>"
+"      <menuitem name='AboutItem' action='AboutAction'/>"
+"    </menu>"
+"  </popup>"
+"</ui>";
+
+static GtkActionEntry pad_actions[] = 
 {
-	{N_("/_Pad"), 				NULL,			0,		0, 	"<Branch>"},
-	{N_("/Pad/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-	{N_("/Pad/sep1"),			NULL,			0,		0,	"<Separator>"},
-	{N_("/Pad/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
-	{N_("/Pad/Proper_ties"), 		NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
-	{N_("/Pad/sep2"),			NULL,			0,		0,	"<Separator>"},
-	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
-/*	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},*/
-	{N_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
-	{N_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
-	{N_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
-	{N_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
-	{N_("/Edit/sep"),			NULL,			0,		0,	"<Separator>"},
-	{N_("/Edit/Prefere_nces"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
-	{N_("/_Notes"),				NULL,			0,		0,	"<Branch>"},
-	{N_("/Notes/_Show All"),		NULL,			menuitem_cb,	10,	"<Item>"},
-	{N_("/Notes/_Close All"),		"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
-	{N_("/Notes/sep"),			NULL,			0,		0,	"<Separator>"},
-	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
-	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
-	{N_("/Help/_About"),			NULL,			menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
+	{"PadMenu", NULL, N_("_Pad"), NULL, NULL, NULL},
+	{"EditMenu", NULL, N_("_Edit"), NULL, NULL, NULL},
+	{"NotesMenu", NULL, N_("_Notes"), NULL, NULL, NULL},
+	{"HelpMenu", NULL, N_("_Help"), NULL, NULL, NULL},
+	{"NewAction", GTK_STOCK_NEW, N_("_New"), "<control>N", N_("Create a new pad"), G_CALLBACK (menuitem_cb)},
+	{"PreferencesAction", GTK_STOCK_PREFERENCES, N_("Prefere_nces"), NULL, N_("Edit xpad preferences"), G_CALLBACK (menuitem_cb)},
+	{"CloseAllAction", GTK_STOCK_QUIT, N_("_Close All"), "<control>Q", N_("Close all pads"), G_CALLBACK (menuitem_cb)},
+	{"ContentsAction", GTK_STOCK_HELP, N_("_Contents"), "F1", N_("Display information about using xpad"), G_CALLBACK (menuitem_cb)},
+	{"PropertiesAction", GTK_STOCK_PROPERTIES, N_("Proper_ties"), NULL, N_("Edit pad properties"), G_CALLBACK (menuitem_cb)},
+	{"CloseAction", GTK_STOCK_CLOSE, N_("_Close"), "<Control>W", N_("Close this pad"), G_CALLBACK (menuitem_cb)},
+	{"DeleteAction", GTK_STOCK_DELETE, N_("_Delete"), NULL, N_("Delete this pad"), G_CALLBACK (menuitem_cb)},
+	{"CutAction", GTK_STOCK_CUT, N_("C_ut"), "<Control>X", N_("Cut the selection"), G_CALLBACK (menuitem_cb)},
+	{"CopyAction", GTK_STOCK_COPY, N_("_Copy"), "<Control>C", N_("Copy the selection"), G_CALLBACK (menuitem_cb)},
+	{"PasteAction", GTK_STOCK_PASTE, N_("_Paste"), "<Control>V", N_("Paste the clipboard"), G_CALLBACK (menuitem_cb)},
+	{"ShowAllAction", NULL, N_("_Show All"), NULL, N_("Show all existing pads"), G_CALLBACK (menuitem_cb)},
+	{"AboutAction", GTK_STOCK_DIALOG_INFO, N_("_About"), NULL, N_("Display information about xpad"), G_CALLBACK (menuitem_cb)}
+};
+
+static GtkToggleActionEntry toggle_pad_actions[] = 
+{
+	{"StickyAction", "xpad-sticky", N_("_Sticky"), NULL, N_("Toggle stickiness"), G_CALLBACK (menuitem_cb), FALSE}
 };
 
 #define SHOW_ACTION_OFFSET		10000
@@ -77,8 +113,6 @@ const toolbar_button buttons[] =
 };
 
 const char num_buttons = G_N_ELEMENTS (buttons);
-
-static GtkAccelGroup *accel_group = NULL;
 
 const toolbar_button *get_toolbar_button_by_func (GCallback func)
 {
@@ -602,7 +636,7 @@ pad_free_gtk (pad_node *pad)
 	pad_remove_toolbar (pad);
 	properties_close (pad);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
-	g_free (pad->menu);
+	g_free (pad->ui_manager);
 	
 	pad->window = NULL;
 }
@@ -779,8 +813,6 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 void cleanup (void)
 {
 	pads_close_all();
-	
-	g_free (accel_group);
 }
 
 
@@ -953,194 +985,191 @@ disable_popup_handler (pad_node *pad)
 	
 	/* we must also re-enable menu widgets for cut/copy/paste, since we want the 
 	 user to be able to cut/copy/paste */
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Cut"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/CutItem");
 	gtk_widget_set_sensitive (tmp, TRUE);
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Copy"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/CopyItem");
 	gtk_widget_set_sensitive (tmp, TRUE);
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Paste"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/PasteItem");
 	gtk_widget_set_sensitive (tmp, TRUE);
 }
 
 
 static void
-menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
+menuitem_cb (GtkAction *action, gpointer user_data)
 {
-	pad_node *pad;
-	gboolean foundfocus = FALSE;
+	pad_node *pad = (pad_node *) user_data;
+	const gchar *action_name = gtk_action_get_name (action);
 	
-	/**
-	 * Sigh...  If the user presses the keyboard accelerator for one of the 
-	 * itemfactory entries, this function is run, but without a useful widget value.
-	 * Thus, we have no way of finding out what pad to use.  So, what we do is 
-	 * iterate over windows, finding the one with focus.
-	 */
-	for (pad = first_pad; pad; pad = pad->next)
-	{
-		if (!pad->hidden)
-		{
-			GtkWidget *w;
-			
-			w = gtk_window_get_focus (pad->window);
-			if (!w) continue;
-			foundfocus = GTK_WIDGET_HAS_FOCUS (w);
-			
-			if (foundfocus)
-				break;
-		}
-	}
-	
-	/* if no pad has focus, it must have been through popup menu */
-	if (!pad)
-		pad = (pad_node *) g_object_get_data (G_OBJECT (gtk_item_factory_from_widget (widget)), "pad");
-	
-	switch (callback_action)
-	{
-	case 1:
+	if (strcmp (action_name, "NewAction") == 0) {
 		pad_new ();
-		break;
-	
-	case 4:
+	}
+	else if (strcmp (action_name, "CloseAction") == 0) {
 		pad_close (pad);
-		break;
-	
-	case 5:
+	}
+	else if (strcmp (action_name, "DeleteAction") == 0) {
 		pad_confirm_destroy (pad);
-		break;
-	
-	case 6:
+	}
+	else if (strcmp (action_name, "CloseAllAction") == 0) {
 		pads_close_all ();
-		break;
-	
-	case 7:
+	}
+	else if (strcmp (action_name, "PreferencesAction") == 0) {
 		preferences_open (pad);
-		break;
-	
-	case 8:
+	}
+	else if (strcmp (action_name, "ContentsAction") == 0) {
 		show_help ();
-		break;
-	
-	case 9:
+	}
+	else if (strcmp (action_name, "AboutAction") == 0) {
 		about_dialog (pad);
-		break;
-	
-	case 10:
+	}
+	else if (strcmp (action_name, "ShowAllAction") == 0) {
 		pad_show_all (pad);
-		break;
-	
-	case 11:
+	}
+	else if (strcmp (action_name, "CutAction") == 0) {
 		pad_edit_cut (pad);
-		break;
-	
-	case 12:
+	}
+	else if (strcmp (action_name, "CopyAction") == 0) {
 		pad_edit_copy (pad);
-		break;
-	
-	case 13:
+	}
+	else if (strcmp (action_name, "PasteAction") == 0) {
 		pad_edit_paste (pad);
-		break;
-	
-	case 14:
-		pad_clear (pad);
-		break;
-	
-	case 15:
-		/* only can get here through the menu, so we can assume widget is valid */
-		if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-			pad_lock_style (pad);
-		else
-			pad_unlock_style (pad);
-		break;
-	
-	case 16:
-		/* only can get here through the menu, so we can assume widget is valid */
-		pad_set_sticky (pad, gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)));
-		break;
-
-	case 17:
+	}
+	else if (strcmp (action_name, "StickyAction") == 0) {
+		GtkToggleAction *toggle_action = GTK_TOGGLE_ACTION (action);
+		
+		pad_set_sticky (pad, gtk_toggle_action_get_active (toggle_action));
+	}
+	else if (strcmp (action_name, "PropertiesAction") == 0) {
 		properties_open (pad);
-		break;
+	}
+	else if (g_str_has_prefix (action_name, "ShowNoteAction-")) {
+		pad_show (pad);
+	}
+}
 
-	default:
-		break;
+static gchar *create_popup_ui (int start_num, int end_num)
+{
+	gchar *ui, *new_ui;
+	gint i;
+	
+	ui = g_strdup ("<ui><popup name='PopupItem'><menu name='NotesItem' action='NotesMenu'><placeholder name='NotesListItem'>");
+	
+	for (i = start_num; i <= end_num; i++) {
+		new_ui = g_strdup_printf ("%s<menuitem name='ShowNoteItem-%i' action='ShowNoteAction-%i'/>", ui, i, i);
+		g_free (ui);
+		ui = new_ui;
 	}
 	
-	if (callback_action >= SHOW_ACTION_OFFSET)
-	{
-		pad_show ((pad_node *) callback_data);
-	}
+	new_ui = g_strdup_printf ("%s</placeholder></menu></popup></ui>", ui);
+	g_free (ui);
+	ui = new_ui;
+	
+	return ui;
+}
+
+static gint pad_title_compare (pad_node *a, pad_node *b)
+{
+	gchar *title_a = g_utf8_casefold (a->title, -1);
+	gchar *title_b = g_utf8_casefold (b->title, -1);
+	
+	gint rv = g_utf8_collate (title_a, title_b);
+	
+	g_free (title_a);
+	g_free (title_b);
+	
+	return rv;
 }
 
 static void pad_popup (pad_node *pad, GdkEventButton *event)
 {
 	pad_node *p;
 	GtkWidget *tmp;
-	gint n = 0, i = SHOW_ACTION_OFFSET;
-	GtkItemFactoryEntry entry;
+	gint n = 0;
 	GtkClipboard *clipboard;
 	GtkTextBuffer *buf;
 	gboolean is_selection;
-	const gchar *submenu = _("/Notes");
+	GList *pads = NULL, *l;
+	
+	if (pad->popup_notes_actions) {
+		gtk_ui_manager_remove_action_group (pad->ui_manager, pad->popup_notes_actions);
+		g_free (pad->popup_notes_actions);
+	}
+	
+	pad->popup_notes_actions = gtk_action_group_new (PACKAGE "-notes");
 	
 	/**
-	 * Remove old items.
-	 * Here's the deal:  There is no good way to iterate through item factory, since
-	 * changes don't keep unless you use itemfactory's api.  This api does not allow
-	 * iteration.  Thus, we use guessable action numbers for temporary items, like 10000+
+	 * Order pads according to title.
 	 */
-	
-	tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
-	while (tmp)
+	for (p = first_pad; p; p = p->next)
 	{
-		gtk_item_factory_delete_item (pad->menu, 
-				gtk_item_factory_path_from_widget (tmp));
-		tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
+		pads = g_list_insert_sorted (pads, p, (GCompareFunc) pad_title_compare);
 	}
 	
 	/**
 	 * Populate list of windows.
 	 */
-	for (p = first_pad; p; p = p->next)
+	for (l = pads, n = 1; l; l = l->next, n++)
 	{
 		gchar *title;
 		gchar *tmp_title;
+		gchar *action_name;
+		GtkActionEntry entry;
 		
-		n++;
-		
-		tmp_title = g_strdup (p->title);
+		tmp_title = g_strdup (((pad_node *) l->data)->title);
 		str_replace_tokens (&tmp_title, '_', "__");
-		title = g_strdup_printf ("%s/_%i. %s", submenu, n, tmp_title);
+		if (n < 10)
+			title = g_strdup_printf ("_%i. %s", n, tmp_title);
+		else
+			title = g_strdup (tmp_title);
 		g_free (tmp_title);
 		
-		entry.path = title;
-		entry.accelerator = NULL;
-		entry.callback = menuitem_cb;
-		entry.callback_action = SHOW_ACTION_OFFSET + n - 1;
-		entry.item_type = "<Item>";
+		action_name = g_strdup_printf ("ShowNoteAction-%i", n);
 		
-		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
+		entry.name = action_name;
+		entry.stock_id = NULL;
+		entry.label = title;
+		entry.accelerator = NULL;
+		entry.tooltip = NULL;
+		entry.callback = G_CALLBACK (menuitem_cb);
+		
+		gtk_action_group_add_actions (pad->popup_notes_actions, &entry, 1, l->data);
 		
 		g_free (title);
+		g_free (action_name);
 	}
+	g_list_free (pads);
+	
+	if (n - 1 > pad->popup_notes_max) {
+		gchar *ui;
+		
+		ui = create_popup_ui (pad->popup_notes_max + 1, n - 1);
+		gtk_ui_manager_add_ui_from_string (pad->ui_manager, ui, -1, NULL);
+		g_free (ui);
+		
+		pad->popup_notes_max = n - 1;
+	}
+	
+	gtk_ui_manager_insert_action_group (pad->ui_manager, pad->popup_notes_actions, 0);
 	
 	block_toolbar_events (pad);
 	
 	/* set checkboxes */
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Pad/Sticky"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/PadItem/StickyItem");
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
 	
 	/* setup copy/cut/paste sensitivity */
 	buf = gtk_text_view_get_buffer (get_text (GTK_WINDOW (pad->window)));
 	is_selection = gtk_text_buffer_get_selection_bounds (buf, NULL, NULL);
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Cut"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/CutItem");
 	gtk_widget_set_sensitive (tmp, is_selection);
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Copy"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/CopyItem");
 	gtk_widget_set_sensitive (tmp, is_selection);
 	
 	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Paste"));
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/PasteItem");
 	gtk_widget_set_sensitive (tmp, gtk_clipboard_wait_is_text_available (clipboard));
 	
-	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
+	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem");
+	gtk_menu_popup (GTK_MENU (tmp), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
 static void pad_background_draw (pad_node *pad, gint x, gint y);
@@ -1657,7 +1686,7 @@ void pad_set_title (pad_node *pad)
 	}
 	
 	g_free (pad->title);
-	pad->title = g_strdup (content);
+	pad->title = g_strstrip (g_strdup (content));
 	g_free (content);
 	
 	gtk_window_set_title (pad->window, pad->title);
@@ -1679,21 +1708,6 @@ gboolean text_changed (GtkTextBuffer *buf, pad_node *pad)
 	return TRUE;
 }
 
-static void
-pad_add_menu_items (pad_node *pad)
-{
-	GtkItemFactoryEntry e;
-	int i;
-	
-	for (i = 0; i < G_N_ELEMENTS (menu_items); i++)
-	{
-		e = menu_items[i];
-		
-		e.path = _(menu_items[i].path);
-		
-		gtk_item_factory_create_item (pad->menu, &e, pad, 1);
-	}
-}
 
 /**
  * Sometimes values get screwed up.  This is here for sanity checking.
@@ -1729,6 +1743,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	GtkWidget *box = gtk_vbox_new (FALSE, 0);
 	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkTextBuffer *textbuf;
+	GtkActionGroup *actions;
 	
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
@@ -1772,13 +1787,24 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	pad->toolbar = NULL;
 	pad->scrollbar = scroll;
 	pad->title = NULL;
+	pad->popup_notes_actions = NULL;
+	pad->popup_notes_max = 0;
 	
-	gtk_window_add_accel_group (pad->window, accel_group);
-	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
-	pad_add_menu_items (pad);
-	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
+	/* set up action group */
+	actions = gtk_action_group_new (PACKAGE);
+	gtk_action_group_add_actions (actions, pad_actions, G_N_ELEMENTS (pad_actions), pad);
+	gtk_action_group_add_toggle_actions (actions, toggle_pad_actions, G_N_ELEMENTS (toggle_pad_actions), pad);
+	gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
 	
-	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
+	/* set up ui manager */
+	pad->ui_manager = gtk_ui_manager_new ();
+	gtk_ui_manager_insert_action_group (pad->ui_manager, actions, 0);
+	gtk_ui_manager_add_ui_from_string (pad->ui_manager, xpad_popup_ui, -1, NULL);
+	gtk_window_add_accel_group (pad->window, gtk_ui_manager_get_accel_group (pad->ui_manager));
+	g_object_unref (actions);
+	gtk_ui_manager_ensure_update (pad->ui_manager);
+	
+	g_signal_connect_swapped (G_OBJECT (gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
@@ -1827,8 +1853,6 @@ static pad_node *start_pad (void)
 	{
 		first_pad = pad;
 		last_pad = pad;
-		
-		accel_group = gtk_accel_group_new ();
 	}
 	else
 	{

@@ -891,7 +891,7 @@ static void xpad_set_default_icon (void)
 	
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
 	                                   PACKAGE,
-	                                   128, /* larger is better */
+	                                   48,
 	                                   0,
 	                                   NULL);
 	

@@ -1,6 +1,11 @@
 2003-11-10  Michael Terry  <mikix@users.sourceforge.net>
-	* src/properties.c: Change "use global" to "use custom"
 
+	* configure.ac: Use gettext 0.12.1, not 0.11.5
+	* defines.h: Use glib/gi18n.h, not gettext.h
+	* main.c, tray.c: Use an icon size of 48, not 128
+	* pad.c, pad.h: Update to use new GtkAction menus and sort notes list
+
+2003-11-10  Michael Terry  <mikix@users.sourceforge.net>
 	* configure.ac: Bump version to 1.14, define GETTEXT_PACKAGE,
 	  modify comments, and require GTK+ 2.3 or greater.
 	* Makefile.am: Take out *_DISABLE_DEPRECATED flags for now, until
@@ -21,7 +26,7 @@
 	* src/properties.c: Totally redesign, using new GtkColorButton and
 	  GtkFontButton.  Set title to use pad's title.
 	* src/settings.c: Only apply style changes to visible pads.  Change
-	  default decorations preference to 'on.'
+	  default decorations preference to on.
 
 2003-11-07  Michael Terry  <mikix@users.sourceforge.net>
 	* src/main.c, src/tray.c: Use GTK+ 2.3 GtkIconTheme instead of built

@@ -67,7 +67,9 @@ struct pad_node_def
 	 * and a pad that has been merely hidden to the system tray */
 	gboolean closed;
 
-	GtkItemFactory *menu;
+	GtkUIManager *ui_manager;
+	GtkActionGroup *popup_notes_actions;
+	gint popup_notes_max;
 	
 	/* main textbox stuff */
 	GtkWindow *window;

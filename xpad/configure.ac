@@ -33,7 +33,7 @@ AC_CHECK_FUNCS(setlocale)
 # Sets up gettext.
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.11.5)
+AM_GNU_GETTEXT_VERSION(0.12.1)
 
 # Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in])

@@ -3,7 +3,7 @@
 
 #include <gtk/gtk.h>
 #include "../config.h"
-#include "gettext.h"
+#include <glib/gi18n.h>
 
 /**
  * This file is just used to hold all the common hard defines we need.
@@ -25,17 +25,10 @@
 #endif
 
 
-/* Some gettext conveniences. */
-#define _(String) gettext (String)
-#define N_(String) gettext_noop (String)
-
-
 #define DEFAULTS_FILENAME	"default-style"
 
 /* files we use are not large */
 #define MAX_FILE_SIZE		1024
-
-#define TITLE_CHARS			10
 
 /* this is for testing the drawing support */
 #define DRAWING_ON			0
