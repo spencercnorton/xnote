@@ -34,6 +34,7 @@
 
 #include "fio.h" /* for fio_get_info_from_file */
 #include "help.h"
+#include "prefix.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
@@ -100,7 +101,7 @@ xpad_app_init (int argc, char **argv)
 	/* Set up i18n */
 #ifdef ENABLE_NLS
 	gtk_set_locale ();
-	bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
@@ -351,7 +352,14 @@ register_stock_icons (void)
 	GtkIconSource *source;
 	GtkIconSet *set;
 	GtkIconFactory *factory;
+	GtkIconTheme *theme;
 	GdkPixbuf *pixbuf;
+	gchar *icon_dir;
+	
+	theme = gtk_icon_theme_get_default ();
+	icon_dir = g_build_filename (DATADIR, "icons", NULL);
+	gtk_icon_theme_append_search_path (theme, icon_dir);
+	g_free (icon_dir);
 	
 	factory = gtk_icon_factory_new ();
 	

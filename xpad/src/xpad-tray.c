@@ -77,8 +77,11 @@ xpad_tray_open (void)
 	                                   0,
 	                                   NULL);
 	
-	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
-	g_object_unref (pixbuf);
+	if (pixbuf)
+	{
+		gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+		g_object_unref (pixbuf);
+	}
 	
 	pads_showing = TRUE;
 }
@@ -135,6 +138,7 @@ xpad_tray_popup (GdkEventButton *event)
 	gint n;
 	
 	menu = gtk_menu_new ();
+	pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
 	
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), xpad_app_get_pad_group ());
@@ -149,6 +153,8 @@ xpad_tray_popup (GdkEventButton *event)
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_show_all), xpad_app_get_pad_group ());
 	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
 	gtk_widget_show (item);
+	if (!pads)
+		gtk_widget_set_sensitive (item, FALSE);
 	
 	item = gtk_image_menu_item_new_with_mnemonic (_("_Close All"));
 	imgwidget = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
@@ -164,8 +170,6 @@ xpad_tray_popup (GdkEventButton *event)
 	/**
 	 * Order pads according to title.
 	 */
-	pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
-	
 	g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 	
 	/**
@@ -193,9 +197,12 @@ xpad_tray_popup (GdkEventButton *event)
 	}
 	g_slist_free (pads);
 	
-	item = gtk_separator_menu_item_new ();
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
-	gtk_widget_show (item);
+	if (pads)
+	{
+		item = gtk_separator_menu_item_new ();
+		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+		gtk_widget_show (item);
+	}
 	
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
 	g_signal_connect (item, "activate", G_CALLBACK (xpad_preferences_open), NULL);

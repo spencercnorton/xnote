@@ -8,6 +8,7 @@ AC_CONFIG_HEADERS([config.h:config.h.in])
 
 # Sets up automake.
 AM_INIT_AUTOMAKE([gnits dist-bzip2])
+AM_BINRELOC
 
 # Checks for programs.
 AC_PROG_CC

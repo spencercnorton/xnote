@@ -1,4 +1,5 @@
 Version 2.0-b3
+* Use BinReloc to allow any-prefix installs of xpad to work
 * Fixed a double-free bug that caused some problems with new pads
 * Updated Irish translation (Kevin Patrick Scannell)
 * Updated Spanish translation (Ramon Rey Vicente)
