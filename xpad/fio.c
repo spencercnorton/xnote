@@ -379,6 +379,12 @@ void fio_load_pads (void)
 	
 	dir = g_dir_open (working_dir, 0, NULL);
 	
+	if (!dir)
+	{
+		fprintf (stderr, "Can't open working directory [%s].\n", working_dir);
+		gtk_quit_main ();
+	}
+	
 	while ((name = g_dir_read_name (dir)))
 	{
 		if (g_pattern_match_string (spec, name) &&
@@ -397,7 +403,7 @@ void fio_load_pads (void)
 	
 	if (opened == 0)
 		pad_new ();
-
+	
 	g_pattern_spec_free (spec);
 	g_dir_close (dir);
 }
