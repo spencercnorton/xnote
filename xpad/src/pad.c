@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "help.h"
 #include "tray.h"
+#include "settings.h"
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -144,11 +145,49 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 		}
 	}
 	
-	fio_save_default_settings ();
 	gtk_window_present (GTK_WINDOW (caller));
 }
 
-static void pad_set_editable (pad_node *pad, gboolean editable)
+void pads_set_toolbar (gboolean toolbar)
+{
+	pad_node *temp;
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (toolbar)
+		{
+			pad_add_toolbar (temp);
+			
+			if (!xpad_settings_get_auto_hide_toolbar ())
+				toolbar_show (temp);
+		}
+		else
+			pad_remove_toolbar (temp);
+	}
+}
+
+void pads_set_auto_hide_toolbar (gboolean auto_hide_toolbar)
+{
+	pad_node *temp;
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (auto_hide_toolbar)
+		{
+			toolbar_start_timeout (temp);	/* safe, since the cursor is unlikely to be on the pad? */
+		}
+		else
+		{
+			if (temp->toolbar->timeout)
+				toolbar_end_timeout (temp);
+			
+			toolbar_show (temp);
+		}
+	}
+}
+
+
+void pad_set_editable (pad_node *pad, gboolean editable)
 {
 	GdkCursor *cursor;
 	
@@ -206,40 +245,87 @@ void pads_set_editable (gboolean editable)
 		pad_set_editable (temp, editable);
 }
 
+void pad_set_back_color (pad_node *pad, GdkColor *c)
+{
+	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
+	
+	gtk_widget_modify_base (text, GTK_STATE_NORMAL, c);
+	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, c);
+}
+
+void pad_set_text_color (pad_node *pad, GdkColor *c)
+{
+	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
+	
+	gtk_widget_modify_text (text, GTK_STATE_NORMAL, c);
+}
+
+void pad_set_border_color (pad_node *pad, GdkColor *c)
+{
+	gtk_widget_modify_bg (pad->eventbox_outer, GTK_STATE_NORMAL, c);
+}
+
+void pad_set_padding (pad_node *pad, gint p)
+{
+	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
+	
+	gtk_container_set_border_width (GTK_CONTAINER (text), p);
+}
+
+void pad_set_border_width (pad_node *pad, gint w)
+{
+	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), w);
+}
+
+void pad_set_fontname (pad_node *pad, const gchar *fontname)
+{
+	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
+	PangoFontDescription *fontdesc;
+	
+	fontdesc = fontname ? pango_font_description_from_string (fontname) :
+		NULL;
+	
+	gtk_widget_modify_font (text, fontdesc);
+}
+
+
 static void pad_update_style (pad_node *pad)
 {
 	GtkStyle *style;
-	pad_style *pstyle;
+	pad_style pstyle;
 	GtkWidget *text, *outline;
 	
 	if (pad->locked)
-		pstyle = &pad->style;
+		pstyle = pad->style;
 	else
-		pstyle = &current_settings.style;
+		pstyle = xpad_settings_get_style ();
 	
 	text = GTK_WIDGET (get_text (pad->window));
 	outline = pad->eventbox_outer;
 	
 	gtk_widget_modify_base (text, GTK_STATE_NORMAL, 
-		pstyle->use_back ? &pstyle->back : NULL);
+		pstyle.use_back ? &pstyle.back : NULL);
 	
 	style = gtk_widget_get_style (text);
 	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
 	
 	gtk_widget_modify_text (text, GTK_STATE_NORMAL,
-		pstyle->use_text ? &pstyle->text : NULL);
+		pstyle.use_text ? &pstyle.text : NULL);
 	
-	gtk_widget_modify_font (text, pstyle->fontname ? 
-		pango_font_description_from_string (pstyle->fontname) : NULL);
-	
-	
-	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &pstyle->border);
+	gtk_widget_modify_font (text, pstyle.fontname ? 
+		pango_font_description_from_string (pstyle.fontname) : NULL);
 	
 	
-	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
-	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
+	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &pstyle.border);
+	
+	
+	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle.padding);
+	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle.border_width);
 	
 	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
+	
+	if (!pad->locked)
+		pad_style_free (&pstyle);
 }
 
 void pad_style_copy (pad_style *dest, pad_style *source)
@@ -259,7 +345,6 @@ void pad_style_free (pad_style *style)
 	g_free (style->fontname);
 }
 
-static
 void pad_set_scrollbars (pad_node *pad, gboolean on)
 {
 	if (on)
@@ -281,18 +366,6 @@ void pad_set_scrollbars (pad_node *pad, gboolean on)
 		gtk_adjustment_set_value (h, 0);
 		gtk_adjustment_set_value (v, 0);
 	}
-}
-
-void pads_set_scrollbars (gboolean on)
-{
-	pad_node *temp;
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		pad_set_scrollbars (temp, on);
-	}
-	
-	fio_save_default_settings ();
 }
 
 void pad_toolbar_update (pad_node *pad)
@@ -493,7 +566,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 {
 	gboolean do_destroy = TRUE;
 
-	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
+	if (!pad_is_empty (pad) && xpad_settings_get_confirm_destroy ())
 	{
 		GtkWidget *dialog;
 		
@@ -620,17 +693,17 @@ void pads_close_all (void)
 
 static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 {
-	switch (current_settings.wm_close)
+	switch (xpad_settings_get_wm_close ())
 	{
-	case 0: /* close all */
+	case XPAD_WM_CLOSE_ALL: /* close all */
 		pads_close_all ();
 		return TRUE;
 		break;
-	case 1: /* close this pad */
+	case XPAD_WM_CLOSE_PAD: /* close this pad */
 		pad_close (pad);
 		return TRUE;
 		break;
-	case 2: /* delete this pad */
+	case XPAD_WM_DESTROY_PAD: /* delete this pad */
 		pad_destroy (pad);
 		return TRUE;
 		break;
@@ -805,7 +878,7 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	/**
 	 * Here we add a toolbar so the user has quick access to several features.
 	 */
-	if (current_settings.toolbar &&
+	if (xpad_settings_get_has_toolbar () &&
 		event->detail != GDK_NOTIFY_INFERIOR)
 	{
 		if (pad->toolbar->timeout)
@@ -820,12 +893,12 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 static gboolean
 leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 {
-	if (current_settings.auto_hide_toolbar)
+	if (xpad_settings_get_auto_hide_toolbar ())
 	{
 		/**
 		 * Here we remove the toolbar.
 		 */
-		if (current_settings.toolbar &&
+		if (xpad_settings_get_has_toolbar () &&
 			event->detail != GDK_NOTIFY_INFERIOR &&
 			event->mode == GDK_CROSSING_NORMAL)
 		{
@@ -891,7 +964,7 @@ disable_popup_handler (pad_node *pad)
 	{
 		unblock_toolbar_events (pad);
 		
-		if (current_settings.auto_hide_toolbar)
+		if (xpad_settings_get_auto_hide_toolbar ())
 		{
 			/**
 			 * We must check if we disabled off of pad and start the timeout if so.
@@ -1161,7 +1234,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				}
 				
 				if ((event_button->state & GDK_CONTROL_MASK) ||
-						(current_settings.edit_lock && 
+						(xpad_settings_get_edit_lock () && 
 						gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)) == FALSE)) {
 					pad_move (pad, event_button);
 					return TRUE;
@@ -1186,7 +1259,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			switch (event_button->button)
 			{
 				case 1:
-				if (current_settings.edit_lock && pad_get_editable (pad) == FALSE) {
+				if (xpad_settings_get_edit_lock () && pad_get_editable (pad) == FALSE) {
 					pad_set_editable (pad, TRUE);
 					return TRUE;
 				}
@@ -1232,7 +1305,7 @@ void
 pad_lock_style (pad_node *pad)
 {
 	pad_style_free (&pad->style);
-	pad_style_copy (&pad->style, &current_settings.style);
+	pad->style = xpad_settings_get_style ();
 	pad->locked = 1;
 	
 	/* make sure the toolbar widget is up to date */
@@ -1267,7 +1340,7 @@ focus_in_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 static gboolean
 focus_out_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 {
-	if (current_settings.edit_lock && pad_get_editable (pad))
+	if (xpad_settings_get_edit_lock () && pad_get_editable (pad))
 		pad_set_editable (pad, FALSE);
 	
 	return FALSE;
@@ -1531,12 +1604,13 @@ static void
 pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 {
 	/* set editable */
-	pad_set_editable (pad, current_settings.edit_lock == 0);
+	pad_set_editable (pad, xpad_settings_get_edit_lock () == 0);
 	
 	pad_resize_background (pad);
 	
 	/* show the toolbar now that we are realized */
-	if (current_settings.toolbar && !current_settings.auto_hide_toolbar)
+	if (xpad_settings_get_has_toolbar () && 
+	    !xpad_settings_get_auto_hide_toolbar ())
 		toolbar_show (pad);
 }
 
@@ -1741,13 +1815,13 @@ pad_alloc_gtk (pad_node *pad)
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
-	if (current_settings.toolbar)
+	if (xpad_settings_get_has_toolbar ())
 		pad_add_toolbar (pad);
 	
 	/* set wm decorations */
-	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
+	gtk_window_set_decorated (GTK_WINDOW(window), xpad_settings_get_has_decorations ());
 	
-	pad_set_scrollbars (pad, current_settings.scrollbar);
+	pad_set_scrollbars (pad, xpad_settings_get_has_scrollbar ());
 	
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
@@ -1809,26 +1883,27 @@ pad_node *pad_new (void)
 	if (verbosity >= 2) printf ("Making new pad.\n");
 	
 	pad = start_pad ();
-	gtk_window_set_default_size (pad->window, 
-		current_settings.style.padding + current_settings.style.border_width
-			+ current_settings.width,
-		current_settings.style.padding + current_settings.style.border_width
-			+ current_settings.height);
+	pad->width = xpad_settings_style_get_padding () + 
+		xpad_settings_style_get_border_width () +
+		xpad_settings_get_default_width ();
+	pad->height = xpad_settings_style_get_padding () + 
+		xpad_settings_style_get_border_width () +
+		xpad_settings_get_default_height ();
+	gtk_window_set_default_size (pad->window, pad->width, pad->height);
 	
 	fio_open_pad_files (pad, TRUE);
 	
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
 	
-	pad_style_copy (&pad->style, &current_settings.style);
-	pad_update_style (pad);
-	
-	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	pad->locked = 0;
 	pad->closed = FALSE;
 	pad->sticky = 0;
-	pad->width = current_settings.style.padding + current_settings.style.border_width + current_settings.width;
-	pad->height = current_settings.style.padding + current_settings.style.border_width + current_settings.height;
+	
+	pad->style = xpad_settings_get_style ();
+	pad_update_style (pad);
+	
+	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	
 	pad_set_title (pad);
 	

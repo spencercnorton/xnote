@@ -104,6 +104,17 @@ struct pad_info_def
 	gchar *contentname;
 };
 
+#define PAD_ITERATE_START \
+{\
+	pad_node *PAD;\
+	for (PAD = first_pad; PAD; PAD = PAD->next)\
+	{
+
+#define PAD_ITERATE_END \
+	}\
+}
+
+
 extern pad_node *first_pad;
 
 pad_node *pad_new_with_info (pad_info *info);
@@ -113,12 +124,19 @@ void cleanup (void);
 
 void pads_set_decorations (gboolean decor, GtkWidget *caller);
 void pads_set_editable (gboolean editable);
-void pads_set_scrollbars (gboolean on);
+void pads_set_toolbar (gboolean toolbar);
+void pads_set_auto_hide_toolbar (gboolean auto_hide_toolbar);
 void pads_hide_all (void);
 void pads_unhide_all (void);
 void pads_show_all (void);
 void pads_close_all (void);
 
+void pad_set_back_color (pad_node *pad, GdkColor *c);
+void pad_set_text_color (pad_node *pad, GdkColor *c);
+void pad_set_border_color (pad_node *pad, GdkColor *c);
+void pad_set_padding (pad_node *pad, gint p);
+void pad_set_border_width (pad_node *pad, gint w);
+void pad_set_fontname (pad_node *pad, const gchar *fontname);
 void pad_close (pad_node *pad);
 void pad_destroy (pad_node *pad);
 void pad_open_file (pad_node *pad);
@@ -135,6 +153,7 @@ void pad_show_by_num (gint n);
 void pad_show (pad_node *pad);
 void pad_lock_style (pad_node *pad);
 void pad_unlock_style (pad_node *pad);
+void pad_set_scrollbars (pad_node *pad, gboolean on);
 
 
 void pad_remove_toolbar (pad_node *pad);

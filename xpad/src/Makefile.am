@@ -2,7 +2,7 @@ bin_PROGRAMS = xpad
 
 xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h \
  help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c \
- eggtrayicon.h defines.h gettext.h
+ eggtrayicon.h defines.h gettext.h settings.c settings.h
 
 AM_CFLAGS = -ansi -pedantic -Wall `pkg-config --cflags gtk+-2.0`\
  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED\

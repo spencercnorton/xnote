@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "toolbar.h"
 #include "pad.h"
 #include "main.h"
+#include "settings.h"
 #include <string.h>
 
 static gboolean
@@ -243,6 +244,7 @@ toolbar_update (xpad_toolbar *xt)
 {
 	GtkRequisition req;
 	GList *list, *temp;
+	GSList *slist;
 	GtkWidget *box;
 	
 	if (!xt)
@@ -259,7 +261,9 @@ toolbar_update (xpad_toolbar *xt)
 	
 	g_list_free (list);
 	
-	g_slist_foreach (current_settings.toolbar_buttons, toolbar_add_item, xt);
+	slist = xpad_settings_get_toolbar_buttons ();
+	g_slist_foreach (slist, toolbar_add_item, xt);
+	g_slist_free (slist);
 	
 	gtk_widget_show_all (box);
 	

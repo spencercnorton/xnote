@@ -26,27 +26,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "defines.h"
 #include "pad.h"
 
-struct settings {
-	gint width;
-	gint height;
-	gint sync_time;
-	gint decorations;
-	gint confirm_destroy;
-	gint edit_lock;
-	gint wm_close;
-	pad_style style;
-	gint toolbar;
-	gint auto_hide_toolbar;
-	gint scrollbar;
-	GSList *toolbar_buttons;
-};
-
 GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary);
 void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *secondary);
 
 extern gchar *working_dir;
 extern gint verbosity;
 extern guint autosave_timeout_id;
-extern struct settings current_settings;
 
 #endif /* _MAIN_H_ */

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "help.h"
 #include "toolbar.h"
+#include "settings.h"
 #include <string.h>
 
 /* we keep a pointer around so that only one window will be open at a time */
@@ -257,141 +258,88 @@ open_help_callback (gpointer data)
 
 static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *checkbutton)
 {
-	pad_node *temp;
-	
-	current_settings.style.use_back = 
+	gboolean use_back = 
 		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)) ? 0 : 1;
+	GdkColor c;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
-		&current_settings.style.back);
+		&c);
 	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		GtkStyle *style;
-		
-		if (temp->locked) continue;
-		
-		gtk_widget_modify_base (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, current_settings.style.use_back ? 
-			&current_settings.style.back : NULL);
-		
-		style = gtk_widget_get_style (GTK_WIDGET (get_text (temp->window)));
-		gtk_widget_modify_bg (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
-	}
+	if (use_back)
+		xpad_settings_style_set_back_color (&c);
+	else
+		xpad_settings_style_set_back_color (NULL);
 	
-	gtk_widget_set_sensitive (colorsel, current_settings.style.use_back);
+	gtk_widget_set_sensitive (colorsel, use_back);
 	
 	return FALSE;
 }
 
 static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *checkbutton)
 {
-	pad_node *temp;
-	
-	current_settings.style.use_text = 
+	gboolean use_text = 
 		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)) ? 0 : 1;
+	GdkColor c;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
-		&current_settings.style.text);
+		&c);
 	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (temp->locked) continue;
-		
-		gtk_widget_modify_text (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, current_settings.style.use_text ?
-			&current_settings.style.text : NULL);
-	}
-		
-	gtk_widget_set_sensitive (colorsel, current_settings.style.use_text);
+	if (use_text)
+		xpad_settings_style_set_text_color (&c);
+	else
+		xpad_settings_style_set_text_color (NULL);
+	
+	gtk_widget_set_sensitive (colorsel, use_text);
 	
 	return FALSE;
 }
 
 static gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
 {
-	pad_node *temp;
+	GdkColor c;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
-		&current_settings.style.border);
+		&c);
 	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (temp->locked) continue;
-		
-		gtk_widget_modify_bg (GTK_WIDGET (temp->eventbox_outer),
-			GTK_STATE_NORMAL, &current_settings.style.border);
-	}
+	xpad_settings_style_set_border_color (&c);
 	
 	return FALSE;
 }
 
 static gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 {
-	pad_node *temp;
-	
-	current_settings.style.padding = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (temp->locked) continue;
-		
-		gtk_container_set_border_width (GTK_CONTAINER (get_text (temp->window)),
-			current_settings.style.padding);
-	}
+	xpad_settings_style_set_padding (
+		gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner)));
 	
 	return FALSE;
 }
 
 static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 {
-	pad_node *temp;
+	gint width;
 	
-	current_settings.style.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
+	width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
+	xpad_settings_style_set_border_width (width);
 	
-	gtk_widget_set_sensitive(colorsel, (current_settings.style.border_width != 0));
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (temp->locked) continue;
-		
-		gtk_container_set_border_width (GTK_CONTAINER (temp->eventbox),
-			current_settings.style.border_width);
-	}
+	gtk_widget_set_sensitive (colorsel, (width != 0));
 	
 	return FALSE;
 }
 
 static gboolean change_font (GtkWidget *fontsel, GtkWidget *checkbutton)
 {
-	pad_node *temp;
-	PangoFontDescription *fontdesc;
-	
-	/* free current memory used by fontname */
-	g_free (current_settings.style.fontname);
+	gchar *fontname;
 	
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)))
-	{
-		current_settings.style.fontname = NULL;
-		fontdesc = NULL;
-	}
+		fontname = NULL;
 	else
-	{
-		current_settings.style.fontname = gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel));
-		fontdesc = pango_font_description_from_string (current_settings.style.fontname);
-	}
+		fontname = gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel));
 	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (temp->locked) continue;
-		
-		gtk_widget_modify_font (GTK_WIDGET (get_text (temp->window)), fontdesc);
-	}
+	xpad_settings_style_set_fontname (fontname);
 	
-	g_free (fontdesc);
+	gtk_widget_set_sensitive (fontsel, fontname ? TRUE : FALSE);
 	
-	gtk_widget_set_sensitive (fontsel, current_settings.style.fontname ? TRUE : FALSE);
+	g_free (fontname);
 	
 	return FALSE;
 }
@@ -403,47 +351,59 @@ static gboolean change_font_3_args (GtkWidget *fontsel, gpointer middle, GtkWidg
 
 static gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 {
-	current_settings.decorations = gtk_toggle_button_get_active (
+	gboolean decor = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
 	
-	pads_set_decorations (current_settings.decorations, gtk_widget_get_toplevel (frame));
+	gtk_widget_set_sensitive (frame, decor);
 	
-	gtk_widget_set_sensitive (frame, current_settings.decorations);
+	xpad_settings_set_has_decorations (decor, gtk_widget_get_toplevel (frame));
 	
 	return FALSE;
 }
 
 static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
 {
-	current_settings.scrollbar = gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (checkbutton));
-	
-	pads_set_scrollbars (current_settings.scrollbar);
+	xpad_settings_set_has_scrollbar (gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
 }
 
 static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 {
-	current_settings.confirm_destroy = gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (checkbutton));
+	xpad_settings_set_confirm_destroy (gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
 }
 
 static gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 {
-	current_settings.edit_lock = gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (checkbutton));
-	
-	pads_set_editable (!current_settings.edit_lock);
+	xpad_settings_set_edit_lock (gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
 }
 
 static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 {
-	current_settings.wm_close = num;
+	enum XPAD_WM_CLOSE_ACTION action;
+	
+	switch (num)
+	{
+	case 0:
+		action = XPAD_WM_CLOSE_ALL;
+		break;
+	default:
+	case 1:
+		action = XPAD_WM_CLOSE_PAD;
+		break;
+	case 2:
+		action = XPAD_WM_DESTROY_PAD;
+		break;
+	}
+	
+	xpad_settings_set_wm_close (action);
 	
 	return FALSE;
 }
@@ -452,47 +412,18 @@ static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 static void
 change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 {
-	pad_node *temp;
+	gint has = gtk_toggle_button_get_active (togglebutton);
 	
-	current_settings.toolbar = gtk_toggle_button_get_active (togglebutton);
+	g_slist_foreach ((GSList *) user_data, (GFunc) gtk_widget_set_sensitive, GINT_TO_POINTER (has));
 	
-	g_slist_foreach ((GSList *) user_data, (GFunc) gtk_widget_set_sensitive, GINT_TO_POINTER (current_settings.toolbar));
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (current_settings.toolbar)
-		{
-			pad_add_toolbar (temp);
-			
-			if (!current_settings.auto_hide_toolbar)
-				toolbar_show (temp);
-		}
-		else
-			pad_remove_toolbar (temp);
-	}
+	xpad_settings_set_has_toolbar ((gboolean) has);
 }
 
 static void
 change_auto_hide_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 {
-	pad_node *temp;
-	
-	current_settings.auto_hide_toolbar = gtk_toggle_button_get_active (togglebutton);
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		if (current_settings.auto_hide_toolbar)
-		{
-			toolbar_start_timeout (temp);	/* safe, since the cursor is unlikely to be on the pad? */
-		}
-		else
-		{
-			if (temp->toolbar->timeout)
-				toolbar_end_timeout (temp);
-			
-			toolbar_show (temp);
-		}
-	}
+	xpad_settings_set_auto_hide_toolbar (
+		gtk_toggle_button_get_active (togglebutton));
 }
 
 void pref_close (void)
@@ -501,7 +432,6 @@ void pref_close (void)
 	{
 		gtk_widget_destroy (pref_window);
 		pref_window = NULL;
-		fio_save_default_settings ();
 	}
 }
 
@@ -523,7 +453,6 @@ unused_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
 	GtkWidget *parent = gtk_widget_get_parent (source);
 	const toolbar_button *tb;
-	pad_node *temp;
 	
 	gtk_widget_ref (source);
 	gtk_container_remove (GTK_CONTAINER (parent), source);
@@ -534,12 +463,7 @@ unused_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	{
 		tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
 		
-		current_settings.toolbar_buttons = 
-			g_slist_remove (current_settings.toolbar_buttons,
-			tb);
-		
-		for (temp = first_pad; temp; temp = temp->next)
-			pad_toolbar_update (temp);
+		xpad_settings_remove_toolbar_button (tb->name);
 	}
 }
 
@@ -550,7 +474,6 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
 	GtkWidget *parent = gtk_widget_get_parent (source);
 	const toolbar_button *tb;
-	pad_node *temp;
 	
 	gtk_widget_ref (source);
 	gtk_container_remove (GTK_CONTAINER (parent), source);
@@ -560,16 +483,9 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
 	
 	if (parent == GTK_WIDGET (user_data))
-		current_settings.toolbar_buttons = 
-			g_slist_remove (current_settings.toolbar_buttons,
-			tb);
+		xpad_settings_remove_toolbar_button (tb->name);
 	
-	current_settings.toolbar_buttons = 
-		g_slist_append (current_settings.toolbar_buttons,
-		(gpointer) tb);
-	
-	for (temp = first_pad; temp; temp = temp->next)
-		pad_toolbar_update (temp);
+	xpad_settings_add_toolbar_button (tb->name);	
 }
 
 
@@ -671,20 +587,21 @@ static GtkWidget *preferences_create (void)
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
 		GtkWidget *checkbutton_use = gtk_check_button_new_with_label (_("Use system text color"));
+		GdkColor c = xpad_settings_style_get_text_color ();
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 		gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), !current_settings.style.use_text);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use),  xpad_settings_style_get_system_text ());
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_text_color), (gpointer) color_text);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), separator, FALSE, FALSE, 9);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
-		gtk_widget_set_sensitive (color_text, current_settings.style.use_text);
+		gtk_widget_set_sensitive (color_text, !xpad_settings_style_get_system_text ());
 		g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) checkbutton_use);
 		
 	}
@@ -693,29 +610,32 @@ static GtkWidget *preferences_create (void)
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
 		GtkWidget *checkbutton_use = gtk_check_button_new_with_label (_("Use system background color"));
+		GdkColor c = xpad_settings_style_get_back_color ();
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 		gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), !current_settings.style.use_back);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), xpad_settings_style_get_system_back ());
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_background_color), (gpointer) color_back);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), separator, FALSE, FALSE, 9);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 9);
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
-		gtk_widget_set_sensitive (color_back, current_settings.style.use_back);
+		gtk_widget_set_sensitive (color_back, !xpad_settings_style_get_system_back ());
 		g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) checkbutton_use);
 	}
 	
 	/* border setup */
 	{
+		GdkColor c = xpad_settings_style_get_border_color ();
+		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
 		gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
 		
-		adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);
+		adjust_padding = gtk_adjustment_new (xpad_settings_style_get_padding (), 0.0, 100.0, 1.0, 5.0, 5.0);
 		spinner_padding = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_padding), 1.0, 0);
 		gtk_misc_set_alignment (GTK_MISC (label_padding), 0, 0.5);
 		gtk_entry_set_width_chars (GTK_ENTRY (spinner_padding), 3);
@@ -729,7 +649,7 @@ static GtkWidget *preferences_create (void)
 	_("Choose the number of pixels around the text region.  This space is colored "
 	"the same and surrounds it on all sides."));
 		
-		adjust_border_width = gtk_adjustment_new (current_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
+		adjust_border_width = gtk_adjustment_new (xpad_settings_style_get_border_width (), 0.0, 100.0, 1.0, 5.0, 5.0);
 		spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
 		gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 0.5);
 		gtk_entry_set_width_chars (GTK_ENTRY (spinner_border_width), 3);
@@ -751,11 +671,11 @@ static GtkWidget *preferences_create (void)
 		
 		gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 9);
 		
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 		g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
 		
-		if (current_settings.style.border_width == 0)
+		if (xpad_settings_style_get_border_width () == 0)
 			gtk_widget_set_sensitive (color_border, FALSE);
 		
 	}
@@ -769,17 +689,17 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_font), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), current_settings.style.fontname ? 0 : 1);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), xpad_settings_style_get_fontname () ? 0 : 1);
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_font), (gpointer) font_selection);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_font), separator, FALSE, FALSE, 9);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
-		gtk_widget_set_sensitive (font_selection, current_settings.style.fontname ? 1 : 0);
+		gtk_widget_set_sensitive (font_selection, xpad_settings_style_get_fontname () ? 1 : 0);
 		
-		if (current_settings.style.fontname)
+		if (xpad_settings_style_get_fontname ())
 			gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), 
-				current_settings.style.fontname);
+				xpad_settings_style_get_fontname ());
 		
 		/* this is a bit hacky, but there is no font-changed signal! */
 		g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font_3_args), (gpointer) checkbutton_use);
@@ -840,15 +760,15 @@ static GtkWidget *preferences_create (void)
 		toolbar_widgets = g_slist_append (NULL, toolbar_auto_hide);
 		toolbar_widgets = g_slist_append (toolbar_widgets, frame);
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), current_settings.toolbar);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), xpad_settings_get_has_toolbar ());
 		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), toolbar_widgets);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_auto_hide, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), current_settings.auto_hide_toolbar);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), xpad_settings_get_auto_hide_toolbar ());
 		g_signal_connect (toolbar_auto_hide, "toggled", G_CALLBACK (change_auto_hide_toolbar), NULL);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 9);
-		gtk_widget_set_sensitive (frame, current_settings.toolbar);
+		gtk_widget_set_sensitive (frame, xpad_settings_get_has_toolbar ());
 		
 		gtk_box_pack_start (GTK_BOX (hbox_buttons), label_indent, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (hbox_buttons), vbox_frame, TRUE, TRUE, 0);
@@ -884,11 +804,12 @@ static GtkWidget *preferences_create (void)
 		/* build list of all toolbar buttons not in xt */
 		for (i = 0; i < num_buttons; i++)
 		{
-			GSList *tmp;
+			GSList *tmp, *start;
 			const toolbar_button *tb;
 			GtkWidget *b;
 			
-			for (tmp = current_settings.toolbar_buttons; tmp; tmp = tmp->next)
+			tmp = start = xpad_settings_get_toolbar_buttons ();
+			for (; tmp; tmp = tmp->next)
 			{
 				tb = (const toolbar_button *) tmp->data;
 				
@@ -898,6 +819,8 @@ static GtkWidget *preferences_create (void)
 			
 			if (tmp)	/* we found it, so we don't add it to our list of unused buttons */
 				continue;
+			
+			g_slist_free (start);
 			
 			tb = &buttons[i];
 			
@@ -965,21 +888,21 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		gtk_frame_set_shadow_type (GTK_FRAME (frame_wm_close), GTK_SHADOW_NONE);
 		gtk_frame_set_label_widget (GTK_FRAME (frame_wm_close), label_frame_wm);
 		
-		switch (current_settings.wm_close)
+		switch (xpad_settings_get_wm_close ())
 		{
-		case 0: /* close all */
+		case XPAD_WM_CLOSE_ALL: /* close all */
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_all), TRUE);
 			break;
 		default:
-		case 1: /* close pad */
+		case XPAD_WM_CLOSE_PAD: /* close pad */
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_this), TRUE);
 			break;
-		case 2: /* delete pad */
+		case XPAD_WM_DESTROY_PAD: /* delete pad */
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_delete_this), TRUE);
 			break;
 		}
 		
-		gtk_widget_set_sensitive (frame_wm_close, current_settings.decorations);
+		gtk_widget_set_sensitive (frame_wm_close, xpad_settings_get_has_decorations ());
 		
 		gtk_box_pack_start (GTK_BOX (vbox_wm_close), radio_close_all, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_wm_close), radio_close_this, FALSE, FALSE, 0);
@@ -991,10 +914,10 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 			FALSE, FALSE, 0);
 		gtk_container_add (GTK_CONTAINER (frame_wm_close), label_frame_wm_hbox);
 	
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), current_settings.decorations);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), current_settings.confirm_destroy);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), current_settings.edit_lock);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), current_settings.scrollbar);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), xpad_settings_get_has_decorations ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), xpad_settings_get_confirm_destroy ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), xpad_settings_get_edit_lock ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), xpad_settings_get_has_scrollbar ());
 		gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 9);

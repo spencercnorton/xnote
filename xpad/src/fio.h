@@ -30,13 +30,12 @@ int fio_load_pads (void);
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 
-gint fio_load_default_settings (void);
-void fio_save_default_settings (void);
-
 void fio_open_pad_files (pad_node *pad, gboolean create);
 void fio_remove_pad_files (pad_node *pad);
 
 void fio_remove_file (const gchar *filename);
+
+gint fio_get_values_from_file (const gchar *filename, ...);
 
 void fio_save_pad_info (pad_node *pad);
 void fio_save_pad_content (pad_node *pad);

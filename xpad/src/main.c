@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include "fio.h"
 #include "tray.h"
+#include "settings.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,38 +72,6 @@ gint master_fd = -1;
 FILE *output;
 gchar *master_name = NULL;
 
-/**
- * This variable holds all the changeable settings for this session.
- * It should be a copy of the defaults file.
- *
- * Here, we populate it with hardcoded defaults in case we can not
- * find values in the defaults file.
- */
-struct settings current_settings =
-{
-	260, /* default width */
-	260, /* default height */
-	60, /* sync time in seconds */
-	0, /* decorations are off */
-	1, /* destroy confirmations on */
-	0, /* edit lock off */
-	1, /* close this pad */
-	{ /* default style */
-		{0, 0xe000, 0xe000, 0x5600}, /* yellow background */
-		{0, 0, 0, 0}, /* black text */
-		{0, 0, 0, 0}, /* black border */
-		1,
-		1,
-		0, /* border width */
-		5, /* padding */
-		NULL /* font */
-	},
-	1, /* toolbar on by default */
-	1, /* auto-hide on by default */
-	1, /* scrollbars on by default */
-	NULL /* list of buttons -- default is filled in upon file load*/
-};
-
 static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
@@ -121,7 +90,8 @@ static gint at_gtk_exit (gpointer data)
 	}
 	
 	g_free (working_dir);
-	g_slist_free (current_settings.toolbar_buttons);
+	
+	xpad_settings_shutdown ();
 	
 	return 0;
 }
@@ -436,14 +406,14 @@ static int sync_pads (gpointer data)
 
 static void reset_sync (void)
 {
-	if (autosave_timeout_id > 0)
+/*	if (autosave_timeout_id > 0)
 		gtk_timeout_remove (autosave_timeout_id);
 
 	if (current_settings.sync_time)
 		autosave_timeout_id = gtk_timeout_add (current_settings.sync_time * 1000, sync_pads, NULL);
 	else
 		autosave_timeout_id = -1;
-
+*/
 }
 
 /*
@@ -918,9 +888,6 @@ static void SetQuitSignals(void)
 static gboolean
 xpad_initial_save (gpointer data)
 {
-	/* we want to make sure we save any new format changes */
-	fio_save_default_settings ();
-	
 	/* save open pads */
 	fio_save_pads ();
 	
@@ -946,7 +913,7 @@ static int xpad_init (gpointer data)
 	if (xpad_check_if_others (data))
 		return 0;
 	
-	fio_load_default_settings ();
+	xpad_settings_init ();
 	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
@@ -954,10 +921,6 @@ static int xpad_init (gpointer data)
 #ifdef G_OS_UNIX
 	tray_open ();
 #endif
-	
-	if (verbosity >= 2)
-		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
-			current_settings.sync_time, verbosity, current_settings.decorations);
 	
 	xpad_set_default_icon ();
 	xpad_register_icons ();
