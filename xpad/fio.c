@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <glob.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <ctype.h>
 
@@ -149,10 +148,6 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 
 void fio_open_pad_files (pad_node *pad, gboolean create)
 {
-	struct flock fl = {F_WRLCK, SEEK_SET, 0, 0, 0};
-	
-	fl.l_pid = getpid ();
-	
 	if (create)
 	{
 		strcpy (pad->contentname, working_dir);
@@ -171,18 +166,11 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
         if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", pad->infoname);
 			return;
     }
-	
-	if (verbosity >= 2) printf ("Locking file [%s].\n", pad->infoname);
-
-	fcntl (fileno(pad->file), F_SETLK, &fl);
 }
 
 
 void fio_close_pad_files (pad_node *pad)
 {
-	struct flock fl = {F_UNLCK, SEEK_SET, 0, 0, 0};
-	fl.l_pid = getpid ();
-	fcntl (fileno(pad->file), F_SETLK, &fl);
 	fclose (pad->file);
 }
 
@@ -377,26 +365,6 @@ void fio_remove_pad_files (pad_node *pad)
 /* filename must be absolute */
 static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
-	gint fd;
-
-	/* check if there is a previous lock on this file */
-	fd = open (filename, O_RDONLY);
-
-	if (fd == -1)
-	{
-		if (verbosity >= 1) printf ("Could not open file [%s] for reading.\n", filename);
-		return 1;
-	}
-
-	/* if there is a lock, stop loading it */
-	if (lockf (fd, F_TEST, 0) == -1)
-	{
-		if (verbosity >= 2) printf ("Ignoring [%s].\n", filename);
-		return 1;
-	}
-
-	close (fd);
-
 	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
 
 	/* grab from standard defaults, not from pad's memory of what they were,
