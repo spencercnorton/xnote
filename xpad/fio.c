@@ -75,43 +75,71 @@ gint fio_set_file (const gchar *name, const gchar *value)
 }
 
 
-// a negative size means all of the file
-gint fio_get_file (const gchar *name, gchar *value, const gint size)
+gint fio_get_file(const gchar *name, gchar *value, gint size)
 {
 	gchar temp[MAX_FILENAME_SIZE + 1];
-        gchar c[2];
 	FILE *file;
-	unsigned int counter = 0;
+	size_t bytesread;
 
-	strcpy (temp, name);
-	fio_fill_filename (temp);
+	strcpy(temp, name);
+	fio_fill_filename(temp);
 
-	strcpy (value, "");
+	file = fopen(temp, "r");
+	if (!file)
+	{
+		value[0] = '\0';
+		if (verbosity >= 1)
+			printf("Could not open file [%s] "
+				"for reading.\n",
+				temp);
+	}
 
-	/* check if file exists */
-        if ( (file = fopen (temp, "r")) == NULL)
-        {
-		if (verbosity >= 1) printf ("Could not open file [%s] for reading.\n", temp);
+	if (size <= 0)
+	{
+		/* If reading 0 bytes.  Just report success but 
+		 * don't try to read anything.
+		 */
+		 fclose(file);
+		 strcpy (value, "");
+		 return 0;
+	}
+
+	clearerr(file);
+
+	/* Try to read exactly "size" bytes.  Note that we'll actually
+	 * only keep at most "size-1" so we have room for a trailing
+	 * zero.  However, attempting to read that one extra byte will
+	 * let us be absolutely sure if the file is larger than our
+	 * buffer.
+	 */
+	bytesread = fread(value, 1, size + 1, file);
+
+	if (bytesread == size + 1)
+	{
+		bytesread = size;
+		
+		if (verbosity >= 1)
+			printf ("Warning: File [%s] larger than "
+				"buffer size.",
+				temp);
+	}
+
+	value[bytesread] = '\0';
+
+	if (ferror(file))
+	{
+		fclose(file);
+		if (verbosity >= 1) 
+			printf("Error reading from [%s]: %s\n",
+				temp,
+				strerror(ferror(file)));
 		return 1;
 	}
-	else
-        {
-	        c[1] = '\0';
 
-	        while ( (c[0] = fgetc(file)) != EOF )
-	                if (size < 0 || counter++ < size)
-					strcat (value, c);
-				else
-				{
-					if (verbosity >= 1) printf ("Reached size limit for file [%s].\n", temp);
-					break;
-				}
-	}
-	
-	fclose (file);
-	
+	fclose(file);
 	return 0;
 }
+
 
 void fio_open_pad_files (pad_node *pad, gboolean create)
 {
