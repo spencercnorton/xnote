@@ -39,10 +39,12 @@ struct pad_style_def
 	GdkColor back;
 	GdkColor text;
 	GdkColor border;
+	gint use_back;
+	gint use_text;
 	gint border_width;
 	gint padding;
 	gchar *fontname;
-} current_style;
+};
 
 /* holds all the internal data we need to manipulate pads */
 struct pad_node_def

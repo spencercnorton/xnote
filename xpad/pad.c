@@ -204,30 +204,77 @@ static void pad_update_style (pad_node *pad)
 {
 	GtkRcStyle *style;
 	GtkRcStyle *style1;
+	GtkStyle *default_style;
 	pad_style *pstyle;
+	GtkWidget *text, *outline;
 	
 	if (pad->locked)
 		pstyle = &pad->style;
 	else
 		pstyle = &current_settings.style;
 	
-	style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
-	style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
+/*	style = gtk_widget_get_modifier_style (
+	style1 = gtk_widget_get_modifier_style (
+/*	default_style = gtk_widget_get_default_style ();*/
+	text = GTK_WIDGET (get_text (pad->window));
+	outline = pad->eventbox_outer;
 	
-	style->base[GTK_STATE_NORMAL] = pstyle->back;
-	style->bg[GTK_STATE_NORMAL] = pstyle->back;
-	style->text[GTK_STATE_NORMAL] = pstyle->text;
+	gtk_widget_modify_base (text, GTK_STATE_NORMAL, 
+		pstyle->use_back ? &pstyle->back : NULL);
+	
+	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, 
+		pstyle->use_back ? &pstyle->back : NULL);
+	
+	gtk_widget_modify_text (text, GTK_STATE_NORMAL,
+		pstyle->use_text ? &pstyle->text : NULL);
+	
+	gtk_widget_modify_font (text, pstyle->fontname ? 
+		pango_font_description_from_string (pstyle->fontname) : NULL);
+	
+	
+	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &pstyle->border);
+	
+/*	if (pstyle->use_back)
+	{
+		style->base[GTK_STATE_NORMAL] = pstyle->back;
+		style->bg[GTK_STATE_NORMAL] = pstyle->back;
+	}
+	else
+	{
+		style->base[GTK_STATE_NORMAL] = default_style->base[GTK_STATE_NORMAL];
+		style->bg[GTK_STATE_NORMAL] = default_style->base[GTK_STATE_NORMAL];
+	}
+	
+	if (pstyle->use_text)
+	{
+		style->text[GTK_STATE_NORMAL] = pstyle->text;
+	}
+	else
+	{
+		style->text[GTK_STATE_NORMAL] = default_style->text[GTK_STATE_NORMAL];
+	}
+	
 	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
-	style->font_desc = pango_font_description_from_string (pstyle->fontname);
+	
+	if (pstyle->fontname)
+	{
+		style->font_desc = pango_font_description_from_string (pstyle->fontname);
+	}
+	else
+	{
+		style->font_desc = default_style->font_desc;
+	}
+	*/
 	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
 	
+	/*
 	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
-	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
+	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;*/
 	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
-	
+	/*
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
 	gtk_widget_modify_style (pad->eventbox_outer, style1);
-	
+	*/
 	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
 }
 

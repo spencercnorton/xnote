@@ -90,9 +90,11 @@ struct settings current_settings =
 		{0, 0xe000, 0xe000, 0x5600}, /* yellow background */
 		{0, 0, 0, 0}, /* black text */
 		{0, 0, 0, 0}, /* black border */
+		1,
+		1,
 		0, /* border width */
 		5, /* padding */
-		"serif Bold 16" /* font */
+		NULL /* font */
 	},
 	1, /* toolbar on by default */
 	1, /* auto-hide on by default */

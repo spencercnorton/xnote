@@ -708,15 +708,18 @@ static GtkWidget *preferences_create (void)
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
 	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
-	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), current_settings.style.fontname);
+	
+	if (current_settings.style.fontname)
+		gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), 
+			current_settings.style.fontname);
 	
 	/* this is a bit hacky, but there is no font-changed signal! */
 	g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font), (gpointer) window);
 	/* key release event does not seem to be sent when I think it should */
 	gtk_widget_add_events(font_selection, GDK_KEY_RELEASE_MASK);
 	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
-
-
+	
+	
 	/* toolbar  setup */
 	{
 		GtkWidget *vbox_toolbar = gtk_vbox_new (FALSE, 3);

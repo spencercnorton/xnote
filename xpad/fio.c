@@ -167,18 +167,22 @@ void fio_save_default_settings (void)
 	
 	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
 		"sync_time %i\ndecorations %i\nauto_hide_toolbar %i\n"
-		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
+		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
+		"border_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\n"
 		"scrollbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
 		current_settings.sync_time, current_settings.decorations,
 		current_settings.auto_hide_toolbar, current_settings.width, current_settings.height,
 		current_settings.style.back.red, current_settings.style.back.green, current_settings.style.back.blue,
+		current_settings.style.use_back,
 		current_settings.style.text.red, current_settings.style.text.green, current_settings.style.text.blue,
+		current_settings.style.use_text,
 		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
 		current_settings.style.border_width, current_settings.style.padding,
-		current_settings.style.fontname, current_settings.toolbar, current_settings.scrollbar);
+		current_settings.style.fontname ? current_settings.style.fontname : "NULL", 
+		current_settings.toolbar, current_settings.scrollbar);
 	
 	tmp = current_settings.toolbar_buttons;
 	
@@ -280,16 +284,19 @@ static void fio_save_info_file (pad_node *pad)
 		height -= pad->toolbar->height;
 	
 	sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
-		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
+		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
+		"border_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
 		pad->contentname, pad->sticky,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
+		pad->style.use_back,
 		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
+		pad->style.use_text,
 		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
 		pad->style.border_width, pad->style.padding,
-		pad->style.fontname);
+		pad->style.fontname ? pad->style.fontname : "NULL");
 	
 	fio_set_file (pad->infoname, info_file);
 	
@@ -340,19 +347,21 @@ gint fio_load_default_settings (void)
 	 * We need to set up int values for all these to take the value from the file.
 	 * These will be assigned back to the appropriate values after load.
 	 */
-	gint back_R = current_settings.style.back.red,
-		 back_G = current_settings.style.back.green,
-		 back_B = current_settings.style.back.blue,
-		 
-	     text_R = current_settings.style.text.red,
-		 text_G = current_settings.style.text.green,
-		 text_B = current_settings.style.text.blue,
-		 
-	     bord_R = current_settings.style.border.red,
-		 bord_G = current_settings.style.border.green,
-		 bord_B = current_settings.style.border.blue;
-	
-	gchar *buttons = NULL;
+	gint	back_R = current_settings.style.back.red,
+		back_G = current_settings.style.back.green,
+		back_B = current_settings.style.back.blue,
+		use_back = current_settings.style.use_back,
+		
+		text_R = current_settings.style.text.red,
+		text_G = current_settings.style.text.green,
+		text_B = current_settings.style.text.blue,
+		use_text = current_settings.style.use_text,
+		
+		bord_R = current_settings.style.border.red,
+		bord_G = current_settings.style.border.green,
+		bord_B = current_settings.style.border.blue;
+		
+		gchar *buttons = NULL;
 	
 	if (fio_get_values_from_file (DEFAULTS_FILENAME, 
 						"decorations", &current_settings.decorations,
@@ -365,9 +374,11 @@ gint fio_load_default_settings (void)
 						"back_red", &back_R,
 						"back_green", &back_G,
 						"back_blue", &back_B,
+						"use_back", &use_back,
 						"text_red", &text_R,
 						"text_green", &text_G,
 						"text_blue", &text_B,
+						"use_text", &use_text,
 						"border_red", &bord_R,
 						"border_green", &bord_G,
 						"border_blue", &bord_B,
@@ -384,10 +395,12 @@ gint fio_load_default_settings (void)
 	current_settings.style.back.red = back_R;
 	current_settings.style.back.green = back_G;
 	current_settings.style.back.blue = back_B;
+	current_settings.style.use_back = use_back;
 	
 	current_settings.style.text.red = text_R;
 	current_settings.style.text.green = text_G;
 	current_settings.style.text.blue = text_B;
+	current_settings.style.use_text = use_text;
 	
 	current_settings.style.border.red = bord_R;
 	current_settings.style.border.green = bord_G;
@@ -439,17 +452,19 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 	 * We need to set up int values for all these to take the value from the file.
 	 * These will be assigned back to the appropriate values after load.
 	 */
-	gint back_R = current_settings.style.back.red,
-		 back_G = current_settings.style.back.green,
-		 back_B = current_settings.style.back.blue,
-		 
-	     text_R = current_settings.style.text.red,
-		 text_G = current_settings.style.text.green,
-		 text_B = current_settings.style.text.blue,
-		 
-	     bord_R = current_settings.style.border.red,
-		 bord_G = current_settings.style.border.green,
-		 bord_B = current_settings.style.border.blue;
+	gint 	back_R = current_settings.style.back.red,
+		back_G = current_settings.style.back.green,
+		back_B = current_settings.style.back.blue,
+		use_back = current_settings.style.use_back,
+		
+		text_R = current_settings.style.text.red,
+		text_G = current_settings.style.text.green,
+		text_B = current_settings.style.text.blue,
+		use_text = current_settings.style.use_text,
+		
+		bord_R = current_settings.style.border.red,
+		bord_G = current_settings.style.border.green,
+		bord_B = current_settings.style.border.blue;
 
 	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
 	
@@ -468,9 +483,11 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 							"back_red", &back_R,
 							"back_green", &back_G,
 							"back_blue", &back_B,
+							"use_back", &use_back,
 							"text_red", &text_R,
 							"text_green", &text_G,
 							"text_blue", &text_B,
+							"use_text", &use_text,
 							"border_red", &bord_R,
 							"border_green", &bord_G,
 							"border_blue", &bord_B,
@@ -480,16 +497,25 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 							NULL);
 	info->infoname = g_strdup (filename);
 	
-	if (!info->style.fontname)
+	if (!info->style.fontname && current_settings.style.fontname)
+	{
 		info->style.fontname = g_strdup (current_settings.style.fontname);
+	}
+	else if (strcmp (info->style.fontname, "NULL") == 0)
+	{
+		g_free (info->style.fontname);
+		info->style.fontname = NULL;
+	}
 	
 	info->style.back.red = back_R;
 	info->style.back.green = back_G;
 	info->style.back.blue = back_B;
+	info->style.use_back = use_back;
 	
 	info->style.text.red = text_R;
 	info->style.text.green = text_G;
 	info->style.text.blue = text_B;
+	info->style.use_text = use_text;
 	
 	info->style.border.red = bord_R;
 	info->style.border.green = bord_G;
