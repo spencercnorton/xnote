@@ -7,8 +7,10 @@ ShortName: xpad
 URL: http://xpad.sourceforge.net/
 Maintainer: Michael Terry <mike@mterry.name>
 Packager: Michael Terry <mike@mterry.name>
-Summary: Xpad is a sticky notes application.
-License: GPL
+Summary: Sticky notes for your desktop.
+License: GNU General Public License, Version 2
+AutopackageTarget: 1.0
+CPUArchitectures: x86
 SoftwareVersion: @VERSION@
 PackageVersion: 1
 
@@ -29,13 +31,9 @@ require @gtk.org/gtk 2.6
 
 [Install]
 installExe bin/*
-copyFiles share/locale "$prefix/share"
+copyFiles share/locale "$PREFIX/share"
 installMan 1 man/man1/*
-# The below line is correct, once 0.7 comes out.  For now, just copy to share
-#installIconTheme share/icons/*
-copyFiles share/icons "$prefix/share"
-# Doesn't seem to work yet and won't have an icon because of the above line...
-# But if they are root, it will work
+installIcon share/icons/*
 installDesktop "Utility" share/applications/*
 
 [Uninstall]
