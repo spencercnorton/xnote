@@ -156,7 +156,7 @@ pad_style *pad_get_style (pad_node *pad)
 	pstyle->border = style1->bg[GTK_STATE_NORMAL];
 	pstyle->border_width = gtk_container_get_border_width (GTK_CONTAINER (pad->eventbox));
 	pstyle->padding = gtk_container_get_border_width (GTK_CONTAINER (get_text (pad->window)));
-	strcpy (pstyle->fontname, pango_font_description_to_string (style->font_desc));
+	pstyle->fontname = pango_font_description_to_string (style->font_desc);
 
 	return pstyle;
 }
@@ -196,6 +196,14 @@ static void pad_remove (pad_node *pad)
 
 static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
 
+static void pad_free (pad_node *pad)
+{
+	gtk_widget_destroy (GTK_WIDGET (pad->window));
+	g_free (pad->contentname);
+	g_free (pad->infoname);
+	g_free (pad);
+}
+
 static void pad_destroy (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
@@ -207,8 +215,7 @@ static void pad_destroy (pad_node *pad)
 	pad_remove (pad);
 
 	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
-	gtk_widget_destroy (GTK_WIDGET(pad->window));
-	g_free (pad);
+	pad_free (pad);
 
 	quit_if_no_pads ();
 }
@@ -269,8 +276,7 @@ static void pad_close (pad_node *pad)
 	pad_remove (pad);
 
 	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
-	gtk_widget_destroy (GTK_WIDGET(pad->window));
-	g_free (pad);
+	pad_free (pad);
 
 	quit_if_no_pads ();
 }
@@ -841,8 +847,8 @@ pad_node *pad_new_with_info (pad_info *info)
 
 	pad_set_style (pad, &info->style);
 
-	strcpy (pad->infoname, info->infoname);
-	strcpy (pad->contentname, info->contentname);
+	pad->infoname = info->infoname;
+	pad->contentname = info->contentname;
 
 	fio_open_pad_files (pad, FALSE);
 

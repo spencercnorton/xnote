@@ -35,8 +35,8 @@ struct pad_node_def
 	pad_node *next;
 	//FILE *file;
 	gint x, y, width, height;
-	gchar infoname[MAX_FILENAME_SIZE + 1];
-	gchar contentname[MAX_FILENAME_SIZE + 1];
+	gchar *infoname;
+	gchar *contentname;
 	
 	GtkWindow *window;
 	GtkWidget *eventbox;
@@ -52,7 +52,7 @@ struct pad_style_def
 	GdkColor border;
 	gint border_width;
 	gint padding;
-	gchar fontname[MAX_FILENAME_SIZE + 1];
+	gchar *fontname;
 };
 
 /* used to keep all the persistant data we need for one pad */
@@ -63,8 +63,8 @@ struct pad_info_def
 	gint width;
 	gint height;
 	pad_style style;
-	gchar infoname[MAX_FILENAME_SIZE + 1];
-	gchar contentname[MAX_FILENAME_SIZE + 1];
+	gchar *infoname;
+	gchar *contentname;
 };
 
 extern pad_node *first_pad;

@@ -45,7 +45,7 @@ static gint fio_fill_filename (gchar *filename)
 		return 0;
 	}
 	
-	memmove(filename + working_dir_len, filename, filename_len + 1);
+	g_memmove(filename + working_dir_len, filename, filename_len + 1);
 	memcpy(filename, working_dir, working_dir_len);
 	
 	return 1;
@@ -143,34 +143,56 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 	return 0;
 }
 
+/**
+ * Unfortunately, this function is necessary, since mkstemp() is not portable,
+ * and g_mkstemp() makes the file and opens it, which for some god-forsaken reason,
+ * requires you to close it with close (), which is not portable, ruining the point of 
+ * providing a cross-platform mkstemp.
+ * 
+ * This will return a string that must be g_free'd.  This filename is guaranteed to be
+ * non-existant.
+ */ 
+gchar *fio_find_free_filename (gchar *pattern)
+{
+	gchar *s = NULL;
+	
+	do	{
+		guint32 num = g_random_int ();
+		gchar numstr[15];
+		
+		sprintf (numstr, "%s%i", pattern, num);
+		
+		if (!s)
+			g_free (s);
+		
+		s = g_build_filename (working_dir, numstr);
+	}
+	while (!g_file_test (s, G_FILE_TEST_EXISTS));
+	
+	return s;
+}
 
+
+/**
+ * This opens any persistant pad files.  It also optionally assigns their names if
+ * the |create| flag is true.
+ */
 void fio_open_pad_files (pad_node *pad, gboolean create)
 {
 	if (create)
 	{
-		int fd;
-		
-		strcpy (pad->contentname, working_dir);
-		strcat (pad->contentname, "content-XXXXXX");
-		fd = g_mkstemp (pad->contentname);
-		
-		if (fd != -1)
-			close (fd);
-		
+		pad->contentname = fio_find_free_filename ("content-");
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
 		
-		strcpy (pad->infoname, working_dir);
-		strcat (pad->infoname, "info-XXXXXX");
-		fd = g_mkstemp (pad->infoname);
-		
-		if (fd != -1)
-			close (fd);
-		
+		pad->infoname = fio_find_free_filename ("info-");
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
 	}
 }
 
 
+/**
+ * This closes any persistant pad files.
+ */
 void fio_close_pad_files (pad_node *pad)
 {
 }
@@ -198,16 +220,19 @@ void fio_save_as_defaults (struct settings *set)
 }
 
 
-/* list is a variable number of (gchar *) / (gchar * or gint *) groups, 
+/* list is a variable number of (gchar *) / (gchar ** or gint *) groups, 
 	terminated by a NULL variable */
+/**
+ * each gchar ** pointer will hereafter point to memory that must be g_free'd.
+ */
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 	va_list ap;
-
+	
 	if (fio_get_file (filename, buf, MAX_FILE_SIZE))
 		return 1;
-
+	
 	va_start (ap, filename);
 
 	while (1)
@@ -217,26 +242,26 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		gchar *where;
 		gchar *temp;
 		gint size;
-
+		
 		item = va_arg (ap, gchar *);
 		if (!item)
 			break;
 		value = va_arg (ap, void *);
 		where  = strstr (buf, item);
-
+		
 		if (!where) continue;
-
+		
 		where = strstr (where, " ") + 1;
-
+		
 		temp = (gchar *) g_malloc ((size = strcspn (where, "\n")) + 1);
 		strncpy (temp, where, size);
 		temp[size] = '\0';
-
+		
 		if (g_ascii_isdigit (temp[0]))
 			*((gint *) value) = atoi (temp);
 		else
-			strcpy ((gchar *) value, temp);
-
+			*((gchar **) value) = g_strdup (temp);
+		
 		g_free (temp);
 	}
 
@@ -265,7 +290,7 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 								"border_blue", &bord_B,
 								"border_width", &starter->border_width,
 								"padding", &starter->padding,
-								"fontname", starter->fontname,
+								"fontname", &starter->fontname,
 								NULL );
 	if (Result == 0)
 	{
@@ -375,9 +400,9 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 							"y", &info->y,
 							"width", &info->width,
 							"height", &info->height,
-							"content", info->contentname,
+							"content", &info->contentname,
 							NULL);
-	strcpy (info->infoname, filename);
+	info->infoname = g_strdup (filename);
 
 	return 0;
 }
@@ -412,6 +437,11 @@ void fio_load_pads (void)
 			/* some older versions of xpad only had relative filename
 				so, we have to add full path if it isn't there. */
 			fio_fill_filename (info.contentname);
+			
+			/**
+			 * Fill pad from the info struct.  We don't need to free strings
+			 * because the new pad takes over their care.
+			 */
 			pad = pad_new_with_info (&info);
 			opened ++;
 		}

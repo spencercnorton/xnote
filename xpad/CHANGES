@@ -1,5 +1,7 @@
 1.4
 ---
+should take up a little less memory
+fixed several memory leaks
 new xpad processes now handled gracefully.
 added further optimizations to compilation.  let me know if this causes you problems
 fixed some possible buffer overflows
