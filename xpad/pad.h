@@ -58,6 +58,8 @@ struct pad_node_def
 	
 	pad_style style;
 	
+	GtkItemFactory *menu;
+	
 	GtkWindow *window;
 	GtkWidget *eventbox;
 	GtkWidget *eventbox_outer;

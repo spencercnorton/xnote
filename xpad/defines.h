@@ -12,6 +12,8 @@
 
 #define VERSION				"1.6"
 
+#define TITLE_CHARS			10
+
 /* this is for testing the drawing support */
 #define DRAWING_ON			0
 
