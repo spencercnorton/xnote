@@ -1204,7 +1204,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		
 		n++;
 		
-		title = g_strdup_printf ("%s/%i. %s", submenu, n, p->title);
+		title = g_strdup_printf ("%s/_%i. %s", submenu, n, p->title);
 		
 		entry.path = title;
 		entry.accelerator = NULL;
