@@ -1,5 +1,6 @@
 1.4
 ---
+new xpad processes now handled gracefully.
 added further optimizations to compilation.  let me know if this causes you problems
 fixed some possible buffer overflows
 fixed some warnings/errors on gcc3 compilation
