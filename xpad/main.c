@@ -167,8 +167,7 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 {
 	GtkWidget *dialog;
 	
-	fprintf (stderr, primary);
-	fprintf (stderr, "\n");
+	fprintf (stderr, "%s\n", primary);
 	
 	dialog = xpad_alert_new (parent, GTK_STOCK_DIALOG_ERROR,
 		primary,
@@ -698,7 +697,7 @@ xpad_pass_args (int *argc, char ***argv)
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 	{
-		printf ("error on connect\n");
+		fprintf (stderr, "error on connect\n");
 		goto done;
 	}
 	

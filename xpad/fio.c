@@ -68,9 +68,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		errtext = g_strerror (errno);
 		
 		sprintf (usertext, "Could not write to file %s:  %s.", temp, errtext);
-		
-		fprintf (stderr, usertext);
-		fprintf (stderr, "\n");
+		fprintf (stderr, "%s\n", usertext);
 		
 		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
 			usertext,
