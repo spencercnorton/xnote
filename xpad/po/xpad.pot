@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-05 21:00-0500\n"
+"POT-Creation-Date: 2003-02-06 00:03-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,144 +258,144 @@ msgstr ""
 msgid "/Pad/_New"
 msgstr ""
 
-#: src/pad.c:45
-msgid "/Pad/_Close"
+#: src/pad.c:43
+msgid "/Pad/_Sticky"
+msgstr ""
+
+#: src/pad.c:44
+msgid "/Pad/_Properties"
 msgstr ""
 
 #: src/pad.c:46
-msgid "/Pad/_Destroy"
+msgid "/Pad/_Close"
 msgstr ""
 
-#: src/pad.c:48
-msgid "/_Edit"
+#: src/pad.c:47
+msgid "/Pad/_Delete"
 msgstr ""
 
 #: src/pad.c:49
-msgid "/Edit/C_ut"
+msgid "/_Edit"
 msgstr ""
 
 #: src/pad.c:50
-msgid "/Edit/_Copy"
+msgid "/Edit/C_ut"
 msgstr ""
 
 #: src/pad.c:51
+msgid "/Edit/_Copy"
+msgstr ""
+
+#: src/pad.c:52
 msgid "/Edit/_Paste"
 msgstr ""
 
-#: src/pad.c:53
-msgid "/Edit/_Sticky"
-msgstr ""
-
-#: src/pad.c:55
+#: src/pad.c:54
 msgid "/Edit/_Preferences"
 msgstr ""
 
-#: src/pad.c:56
+#: src/pad.c:55
 msgid "/_Notes"
 msgstr ""
 
-#: src/pad.c:57
+#: src/pad.c:56
 msgid "/Notes/_Show All"
 msgstr ""
 
-#: src/pad.c:58
+#: src/pad.c:57
 msgid "/Notes/_Close All"
 msgstr ""
 
-#: src/pad.c:60
+#: src/pad.c:59
 msgid "/_Help"
 msgstr ""
 
-#: src/pad.c:61
+#: src/pad.c:60
 msgid "/Help/_Contents"
 msgstr ""
 
-#: src/pad.c:62
+#: src/pad.c:61
 msgid "/Help/_About"
 msgstr ""
 
-#: src/pad.c:69
+#: src/pad.c:68
 msgid "Open New Pad"
 msgstr ""
 
-#: src/pad.c:70
+#: src/pad.c:69
 msgid "Close and Save Pad"
 msgstr ""
 
-#: src/pad.c:71
-msgid "Destroy Pad"
+#: src/pad.c:70
+msgid "Delete Pad"
 msgstr ""
 
-#: src/pad.c:72
+#: src/pad.c:71
 msgid "Clear Pad Contents"
 msgstr ""
 
-#: src/pad.c:73
+#: src/pad.c:72
 msgid "Edit Global Preferences"
 msgstr ""
 
-#: src/pad.c:74
+#: src/pad.c:73
 msgid "Edit Pad Properties"
 msgstr ""
 
-#: src/pad.c:75
+#: src/pad.c:74
 msgid "Close All Pads"
 msgstr ""
 
-#: src/pad.c:76
-msgid "Show Help"
-msgstr ""
-
-#: src/pad.c:77
+#: src/pad.c:75
 msgid "Toggle Stickiness"
 msgstr ""
 
-#: src/pad.c:78
+#: src/pad.c:76
 msgid "Minimize Pads to System Tray"
 msgstr ""
 
-#: src/pad.c:634
+#: src/pad.c:632
 msgid "Delete this pad?"
 msgstr ""
 
-#: src/pad.c:635
+#: src/pad.c:633
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:814
+#: src/pad.c:812
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:819
+#: src/pad.c:817
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:860
+#: src/pad.c:858
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:911
+#: src/pad.c:909
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1170
+#: src/pad.c:1168
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1212
-msgid "/Edit/Sticky"
+#: src/pad.c:1210
+msgid "/Pad/Sticky"
 msgstr ""
 
-#: src/pad.c:1218
+#: src/pad.c:1216
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1220
+#: src/pad.c:1218
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1224
+#: src/pad.c:1222
 msgid "/Edit/Paste"
 msgstr ""
 

@@ -6,6 +6,7 @@ now use gettext, allowing easy translation of xpad
 now auto-apply any pad changes to hard drive, making xpad a tad more reliable
 now can easily change settings for only one pad
 a little more sane title generation -- now just uses first line
+X session management support
 
 *fixes*
 popup menu is decluttered and altered, with the HIG in mind
