@@ -121,7 +121,8 @@ void pad_style_free (pad_style *dest);
 void pad_background_clear (pad_node *pad);
 void pad_toggle_sticky (pad_node *pad);
 void pads_show_all (void);
-void pad_show_all (pad_node *pad);
+void pad_show_by_num (gint n);
+void pad_show (pad_node *pad);
 void pad_lock_style (pad_node *pad);
 void pad_unlock_style (pad_node *pad);
 

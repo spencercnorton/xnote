@@ -524,6 +524,23 @@ void pad_show (pad_node *pad)
 	gtk_window_present (pad->window);
 }
 
+void pad_show_by_num (gint n)
+{
+	pad_node *temp = first_pad;
+	
+	while (n > 1 && temp)
+	{
+		temp = temp->next;
+		
+		n--;
+	}
+	
+	if (n > 0 && temp)
+		pad_show (temp);
+	
+	/* else, silently ignore */
+}
+
 void pads_show_all (void)
 {
 	pad_node *temp = first_pad;

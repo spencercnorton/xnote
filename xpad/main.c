@@ -190,6 +190,12 @@ set_verbosity (gint *v)
 	verbosity = *v;
 }
 
+static void
+pad_show_p_to_i (gint *n)
+{
+	pad_show_by_num (*n);
+}
+
 struct argument_def
 {
 	gboolean local;
@@ -217,7 +223,8 @@ static const argument arguments[] =
 	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "-q", FALSE, {gtk_main_quit}},
 	{FALSE, "--quit", FALSE, {gtk_main_quit}},
-	{FALSE, "-s", FALSE, {G_CALLBACK (pads_show_all)}},
+	{FALSE, "-s", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
+	{FALSE, "--show", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
 	{FALSE, "--showall", FALSE, {G_CALLBACK (pads_show_all)}}
 };
 
@@ -233,7 +240,7 @@ static void missing_companion_arg(const char argname[])
 
 static gint handle_args (int *argc, char ***argv, gboolean local)
 {
-	gint i, j;
+	gint i, j, recognized_at;
 	gint rv = 0;
 	size_t arglen[NUM_ARGUMENTS];
 
@@ -247,17 +254,24 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 	for (i = 1; i < *argc; i++)
 	{
 		gboolean longform;
-
-		/* Find matching argument; there can be only one.  Loop reversed for 
-		 * better performance (well, perhaps more out of sheer habit).
+		
+		printf ("handling %s\n", (*argv)[i]);
+		
+		/* Find matching argument; there can be only one.
 		 */
-		for (j = NUM_ARGUMENTS-1; 
-		     (j >= 0) && (strncmp((*argv)[i], arguments[j].name, arglen[j]) != 0 || arguments[j].local != local);
-		     j--)
+		recognized_at = -1;
+		for (j = NUM_ARGUMENTS-1; j >= 0; j--)
 		{
+			if (strncmp ((*argv)[i], arguments[j].name, arglen[j]) == 0)
+			{
+				recognized_at = j;
+				
+				if (arguments[j].local == local)
+					break;
+			}
 		}
 		
-		if (j < 0)
+		if (recognized_at < 0)
 		{
 		  	/* Argument not found in list.  Either its "local" setting mismatched
 			 * the one passed to us, or we got an invalid argument.  Check for the
@@ -266,18 +280,21 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			if (local)
 			{
 				fprintf (stderr, "Didn't understand argument %s.\n", (*argv)[i]);
-				exit(1);
+				exit (1);
 			}
 			else
 			{
 				continue;
 			}
 		}
-		
+		else
+		{
+			j = recognized_at;
+		}
 		
 		/* (from this point on, we know our argument was recognized) */
 		
-		longform = (strncmp(arguments[j].name, "--", 2) == 0);
+		longform = (strncmp (arguments[j].name, "--", 2) == 0);
 		
 		if (arguments[j].local != local)
 		{
@@ -294,7 +311,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 		if (arguments[j].second)
 		{
 			/* right now we only do integer arguments... */
-			gint arg;
+			long int arg;
 			char *companion, *endptr;
 			
 			if (longform)
@@ -317,13 +334,19 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			
 			arg = strtol(companion, &endptr, 10);
 			
+			printf ("%s to %i\n", companion, (int) arg);
+			
 			if (*endptr)
 			{
 				fprintf(stderr, "Invalid number: '%s'\n", companion);
-				exit(1);
+				
+				if (local)
+					exit(1);
 			}
-			
-			arguments[j].callbacks.func_arg(&arg);
+			else
+			{
+				arguments[j].callbacks.func_arg (&arg);
+			}
 		}
 		else
 		{
@@ -381,7 +404,7 @@ args_to_string (int *argc, char ***argv, char **dest)
 	*dest = g_malloc (size + extra);
 	
 	strcpy (*dest, num);
-	p = *dest + extra;
+	p = (*dest) + extra;
 	
 	for (i = 0; i < *argc; i++)
 	{
