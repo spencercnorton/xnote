@@ -1,11 +1,31 @@
+ideally, next release will see:
+-------------------------------
 automake
-freedesktop.org stuff (egg tray)
-x session protocol
-arbitrary drawing
-transparency
-applet
-better theme support  (CHECK?)
+pref window redesign
+a property window, allowing one-pad-only changes
+
+
+
+on the horizon:
+---------------
+freedesktop.org stuff
+	x session protocol
+
+
+
+when I get to it:
+-----------------
+arbitrary drawing (would probably want xinput support)
 undo
+
+
+
+ideas that I don't currently plan to implement:
+-----------------------------------------------
+applets for various WMs (hopefully we can standardize on eggtray)
+transparency (only when X can really support it.  current hacks are bad)
+
+
 
 Let us know at xpad-devel@lists.sourceforge.net
 what you would like to see!
