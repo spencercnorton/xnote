@@ -272,7 +272,31 @@ void help_dialog ()
 	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 
 	gtk_label_set_markup (GTK_LABEL (label), 
-"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which you write notes or messages.\nxpad was designed with ease of use in mind, but if you have troubles, here's how to do most things you would want to:\n\n<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  To change the default size for new pads, right click on a pad and select \"Global Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \"New Pad\" from the menu.\n<b>colors</b>: If black on yellow isn't your thing, change the default color by right clicking on the pad you want to change and selecting \"Pad Preferences\" from the menu.  An options menu will now pop up and you can change the background color, text color, font, and border.  These settings only affect the pad you clicked on.\n<b>defaults</b>: To change the colors and other options used when a new pad is created, right click on a pad, choose \"Global Preferences\" and enjoy.\n<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every 60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" from the right-click menu, all contents are irrevocably lost).\n<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad contents -- they will be erased.\n<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that this pad contains only a copy of the file; destroying the pad does nothing to the original file.\n");
+"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which \
+you write notes or messages.\nxpad was designed with ease of use in mind, but if you \
+have troubles, here's how to do most things you would want to:\n\n\n\
+<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n\n\
+<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  \
+To change the default size for new pads, right click on a pad and select \"Global \
+Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n\n\
+<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \
+\"New Pad\" from the menu.\n\n\
+<b>colors</b>: If black on yellow isn't your thing, change \
+the default color by right clicking on the pad you want to change and selecting \"Pad \
+Preferences\" from the menu.  An options menu will now pop up and you can change the \
+background color, text color, font, and border.  These settings only affect the pad you \
+clicked on.\n\n\
+<b>defaults</b>: To change the colors and other options used when a new pad is created, \
+right click on a pad, choose \"Global Preferences\" and enjoy.\n\n\
+<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every \
+60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" \
+from the right-click menu, all contents are irrevocably lost).\n\n\
+<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from \
+the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad \
+contents -- they will be erased.\n\n\
+<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that \
+this pad contains only a copy of the file; destroying the pad does nothing to the original \
+file.\n");
 
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
@@ -408,7 +432,7 @@ void save_as_file_callback (GtkWidget *button, pad_node *pad)
 
 	filename = (gchar *) gtk_file_selection_get_filename (selector);
 
-	/* test if we can read it. */
+	/* test if we can write to it. */
 	if (open (filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR) == -1)
 	{
 		display_dialog_with_text (pad, "Cannot write to file.");
@@ -453,8 +477,10 @@ void save_as_file (pad_node *pad)
 	gtk_widget_show (filedialog);
 }
 
-GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
+void pad_popup (pad_node *pad, GdkEventButton *event)
 {
+	GtkWidget *menu = gtk_menu_new ();
+	
 	GtkWidget *menu_item_about;
 	GtkWidget *menu_item_help;
 	GtkWidget *menu_item_new_pad;
@@ -465,9 +491,10 @@ GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
 	GtkWidget *menu_item_open;
 	GtkWidget *menu_item_pad_preferences;
 	GtkWidget *menu_item_global_preferences;
-	GtkWidget *separator1, *separator2, *separator3, *separator4;
-
-	separator1 = gtk_separator_menu_item_new ();
+	//GtkWidget *menu_item_edit;
+	GtkWidget *separator2, *separator3, *separator4;
+	
+//	separator1 = gtk_separator_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
         separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
@@ -491,23 +518,21 @@ GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_global_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_save_as), gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
-
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator1);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_save_as);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_open);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_new_pad);
-
-        gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator2);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_pad_preferences);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_global_preferences);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator4);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close_all);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_destroy);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator3);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_help);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_about);
-
+	
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
+        gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_pad_preferences);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_global_preferences);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator3);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_help);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_about);
+	
 	g_signal_connect_swapped (menu_item_destroy, "activate", G_CALLBACK (pad_confirm_destroy), pad);
 	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
 	g_signal_connect_swapped (menu_item_close_all, "activate", G_CALLBACK (pad_close_all), NULL);
@@ -518,16 +543,10 @@ GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
 	g_signal_connect_swapped (menu_item_save_as, "activate", G_CALLBACK (save_as_file), pad);
 	g_signal_connect_swapped (menu_item_pad_preferences, "activate", G_CALLBACK (pad_preferences_open), pad);
 	g_signal_connect_swapped (menu_item_global_preferences, "activate", G_CALLBACK (global_preferences_open), pad);
-
-	gtk_widget_show_all (GTK_WIDGET(menu));
-
-	return menu;
-}
-
-
-GtkMenu *textbox_populate_popup (GtkTextView *textview, GtkMenu *menu, pad_node *pad)
-{
-	return pad_create_popup (pad, menu);
+	
+	gtk_widget_show_all (menu);
+	
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
 static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
@@ -553,6 +572,11 @@ static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 		else if (event_button->button == 3 && (event_button->state & GDK_CONTROL_MASK) )
 		{
 			pad_resize (pad, event);
+			return TRUE;
+		}
+		else if (event_button->button == 3)
+		{
+			pad_popup (pad, event_button);
 			return TRUE;
 		}
 	}
@@ -582,7 +606,7 @@ pad_node *start_pad ()
 
 	g_signal_connect (textbox, "event", G_CALLBACK (pad_event_handler), pad);
 	g_signal_connect (eventbox, "event", G_CALLBACK (pad_event_handler), pad);
-	g_signal_connect (textbox, "populate-popup", G_CALLBACK (textbox_populate_popup), pad);
+	//g_signal_connect (textbox, "populate-popup", G_CALLBACK (textbox_populate_popup), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 
 	pad->next = NULL;
