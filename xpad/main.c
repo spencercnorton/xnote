@@ -61,19 +61,17 @@ struct settings current_settings =
 	}
 };
 
-void xpad_exit (void)
+gint at_gtk_exit (gpointer data)
 {
-	if (verbosity >= 2) printf ("Initiating shutdown.\n");
+	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	cleanup ();
-	if (verbosity >= 2) printf ("Exiting GTK+.\n");
-	gtk_exit (0);
+	return 0;
 }
 
 static void sigcatch (int signum)
 {
 	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
-	cleanup ();
-	gtk_exit (0);
+	gtk_main_quit ();
 }
 
 
@@ -92,7 +90,7 @@ static void handle_args (int *argc, char ***argv)
 		if (!strcmp ((*argv)[i], "--version") || (shortform = !strcmp ((*argv)[i], "-V")))
 		{
 			printf ("xpad v%s\n", VERSION);
-			xpad_exit ();
+			gtk_main_quit ();
 		}
 		else if (!strcmp ((*argv)[i], "--help") || (shortform = !strcmp ((*argv)[i], "-h")))
 		{
@@ -103,7 +101,7 @@ static void handle_args (int *argc, char ***argv)
 			printf ("  -v N, --verbosity=N   set level of output\n");
 			printf ("                          0=none, 1=moderate, 2=debug\n");
 			printf ("                          default is 0\n");
-			xpad_exit ();
+			gtk_main_quit ();
 		}
 		else if (!strncmp ((*argv)[i], "--verbosity=", 12) || (shortform = !strcmp ((*argv)[i], "-v")))
 		{
@@ -115,7 +113,7 @@ static void handle_args (int *argc, char ***argv)
 				if (++i == *argc)
 				{
 					printf ("Missing companion argument to -v.\n");
-					xpad_exit ();
+					gtk_main_quit ();
 				}
 
 				value = (*argv)[i];
@@ -128,7 +126,7 @@ static void handle_args (int *argc, char ***argv)
 			if (temp < 0 || temp > 2)
 			{
 				printf ("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
-				xpad_exit ();
+				gtk_main_quit ();
 			}
 			else
 				verbosity = temp;
@@ -186,9 +184,16 @@ static void xpad_set_default_icon (void)
 }
 
 
-static void xpad_init (void)
+/* data is an array of void pointers, indicating the argc and argv */
+static int xpad_init (gpointer data)
 {
+	gpointer *newdata;
 	struct sigaction sa;
+	
+	gtk_quit_add (0, at_gtk_exit, NULL);
+	
+	newdata = (gpointer *) data;
+	handle_args (newdata[0], newdata[1]);
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -201,7 +206,7 @@ static void xpad_init (void)
 	sigaction (SIGABRT, &sa, NULL); /* 6 abort */
 	sigaction (SIGKILL, &sa, NULL); /* 9 kill */
 	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
-
+	
 	working_dir[sizeof(working_dir)-1] = '\0';
 	strncpy (working_dir, getenv("HOME"), sizeof(working_dir));
 
@@ -246,20 +251,22 @@ static void xpad_init (void)
 	
 	/* load all pads */
 	fio_load_pads();
+	
+	return 0;
 }
 
 int main (int argc, char *argv[])
 {
-	handle_args (&argc, &argv);
+	gpointer args[2];
 	
 	gtk_set_locale ();
 	gtk_init(&argc, &argv);
 	
-	xpad_init ();
+	args[0] = &argc;
+	args[1] = &argv;
+	gtk_init_add (xpad_init, args);
 	
 	gtk_main ();
-	
-	xpad_exit ();
 	
 	return 0;
 }
