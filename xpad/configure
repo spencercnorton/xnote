@@ -1920,7 +1920,7 @@ cat >> $CONFIG_STATUS <<EOF
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 test -z "$CONFIG_HEADERS" || echo timestamp > src/stamp-h
-echo timestamp > autoconf/stamp-h
+
 exit 0
 EOF
 chmod +x $CONFIG_STATUS

@@ -30,4 +30,4 @@ dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
-AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile, echo timestamp > autoconf/stamp-h)
+AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile)
