@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <glob.h>
 #include <unistd.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 
 const gchar *TEMP_PAD_INFO_PREFIX = "temp-info";
@@ -67,10 +68,12 @@ int set_file (const char *name, const char *value)
                 fprintf (stderr, "Cannot open %s.\n", temp);
                 return 1;
         }
-         
+        
         fputs (value, file);
 
         fclose (file);
+
+	printf ("setting file %s\n", temp);
 
 	return 0;
 }
@@ -110,6 +113,38 @@ int get_file (const char *name, char *value)
 	return 0;
 }
 
+void open_pad_files (pad_node *pad, gboolean create)
+{
+	struct flock fl = {F_WRLCK, SEEK_SET, 0, 0, getpid()};
+
+	if (create == TRUE)
+	{
+		strcpy (pad->infoname, working_dir);
+		strcat (pad->infoname, "info-XXXXXX");
+		mkstemp (pad->infoname);
+	
+		strcpy (pad->contentname, working_dir);
+		strcat (pad->contentname, "content-XXXXXX");
+		mkstemp (pad->contentname);
+	}
+
+	if ( (pad->file = fopen (pad->infoname, "a")) == NULL)
+        {
+                fprintf (stderr, "Cannot open %s.\n", pad->infoname);
+                return;
+        }
+
+	fcntl (fileno(pad->file), F_SETLK, &fl);
+}
+
+void close_pad_files (pad_node *pad)
+{
+	struct flock fl = {F_UNLCK, SEEK_SET, 0, 0, getpid()};
+	fcntl (fileno(pad->file), F_SETLK, &fl);
+	fclose (pad->file);
+}
+
+
 void set_default_style (pad_style *style)
 {
 	gchar buf[MAX_FILE_SIZE];
@@ -122,7 +157,7 @@ void set_default_style (pad_style *style)
 	set_file ("default-style", buf);
 }
 
-pad_style get_default_style ()
+pad_style *get_default_style ()
 {
 	gchar buf[MAX_FILE_SIZE];
 	gchar *item, *value;
@@ -130,7 +165,7 @@ pad_style get_default_style ()
 	
 	if (get_file ("default-style", buf) > 0)
 	{
-		return DEFAULT_INFO.style;
+		return &DEFAULT_INFO.style;
 	}
 
 	item = strtok (buf, " ");
@@ -157,10 +192,10 @@ pad_style get_default_style ()
 		value = strtok (NULL, "\n");
 	}
 	
-	return *style;
+	return style;
 }
 
-void save_info_file (pad_node *pad, gchar *infoname, gchar *contentname)
+void save_info_file (pad_node *pad)
 {
         gchar info_file[MAX_FILE_SIZE] = "";
         gint x, y, height, width;
@@ -186,25 +221,20 @@ void save_info_file (pad_node *pad, gchar *infoname, gchar *contentname)
 	gtk_text_buffer_get_end_iter (buf, &e);
         content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	sprintf (temp, "content %s\n", contentname);
+	sprintf (temp, "content %s\n", pad->contentname);
 	strcat (info_file, temp);
 
-        set_file (contentname, content);
+        set_file (pad->contentname, content);
         g_free (content);
 
-	set_file (infoname, info_file);
+	rewind (pad->file);
+	fputs (info_file, pad->file);
 }
 
 /* save contents and locations of a pad */
 void save_pad (pad_node *pad)
 {
-	gint pid = getpid();
-	gchar infoname[256], contentname[256];
-
-	sprintf (infoname, "%s-%d-%d", TEMP_PAD_INFO_PREFIX, pid, pad->num);
-	sprintf (contentname, "%s-%d-%d", TEMP_PAD_CONTENT_PREFIX, pid, pad->num);
-
-	save_info_file (pad, infoname, contentname);
+	save_info_file (pad);
 }
 
 /* save contents and locations of all pads */
@@ -215,42 +245,6 @@ void save_pads ()
 	while (current != NULL)
 	{
 		save_pad (current);
-		current = current->next;
-	}
-}
-
-void remove_pad_files (pad_node *pad)
-{
-	gint pid = getpid();
-	gchar infoname[256], contentname[256];
-
-	sprintf (infoname, "%s-%d-%d", TEMP_PAD_INFO_PREFIX, pid, pad->num);
-	sprintf (contentname, "%s-%d-%d", TEMP_PAD_CONTENT_PREFIX, pid, pad->num);
-
-	remove (infoname);
-	remove (contentname);
-
-}
-
-void commit_pads ()
-{
-	gint pid = getpid();
-	gchar infoname[256], contentname[256];
-	gchar tempinfoname[256], tempcontentname[256];
-	pad_node *current = first_pad;
-
-	while (current != NULL)
-	{
-		sprintf (infoname, "%s%s-%d-%d", working_dir, PAD_INFO_PREFIX, pid, current->num);
-		sprintf (contentname, "%s%s-%d-%d", working_dir, PAD_CONTENT_PREFIX, pid, current->num);
-		sprintf (tempinfoname, "%s%s-%d-%d", working_dir, TEMP_PAD_INFO_PREFIX, pid, current->num);
-		sprintf (tempcontentname, "%s%s-%d-%d", working_dir, TEMP_PAD_CONTENT_PREFIX, pid, current->num);
-
-		if (strcmp (tempinfoname, infoname) != 0)
-			rename (tempinfoname, infoname);
-		if (strcmp (tempcontentname, contentname) != 0)
-			rename (tempcontentname, contentname);
-
 		current = current->next;
 	}
 }
@@ -268,6 +262,13 @@ void remove_file (gchar *filename)
 	remove (long_filename);
 }
 
+void remove_pad_files (pad_node *pad)
+{
+	remove_file (pad->infoname);
+	remove_file (pad->contentname);
+}
+
+/* filename must be absolute */
 pad_node *load_info_file (gchar *filename)
 {
         gchar info_file[MAX_FILE_SIZE];
@@ -275,12 +276,20 @@ pad_node *load_info_file (gchar *filename)
 	gchar *item, *value;
 	gint retvalue;
 	pad_node *pad;
+	FILE *file;
+	struct flock lock;
 
 	if ( (retvalue = get_file (filename, info_file)) > 0)
 		return NULL;
 
-	/* get rid of file, now that we've read it. */
-	remove_file (filename);
+	/* check if there is a previous lock on this file */
+	file = fopen (filename, "r");
+	fcntl (fileno (file), F_GETLK, &lock);
+	fclose (file);
+
+	/* there is a lock, so stop loading it */
+	if (lock.l_type != F_UNLCK)
+		return NULL;
 
 	info = DEFAULT_INFO;
 
@@ -314,12 +323,14 @@ pad_node *load_info_file (gchar *filename)
                 else if (strcmp (item, "content") == 0)
 		{
                         get_file (value, info.content);
-			remove_file (value);
+			strcpy (info.contentname, value);
 		}
 
 		item = strtok (NULL, " ");
 		value = strtok (NULL, "\n");
 	}
+
+	strcpy (info.infoname, filename);
 
 	pad = create_pad_with_info (&info);
 
@@ -329,7 +340,7 @@ pad_node *load_info_file (gchar *filename)
 
 void load_pads ()
 {
-	gint counter = 0;
+	gint counter = 0, opened = 0;
 	glob_t globbuf;
 	gchar pattern[1024];
 	pad_node *pad;
@@ -338,21 +349,28 @@ void load_pads ()
 	mkdir (working_dir, 00777);
 
 	strcpy (pattern, working_dir);
-	strcat (pattern, "info*");
+	strcat (pattern, "info-*");
 
 	glob (pattern, GLOB_NOSORT, NULL, &globbuf);
 
 	while (counter < globbuf.gl_pathc)
 	{
 		pad = load_info_file (globbuf.gl_pathv[counter++]);
-		save_pad (pad);
+		
+		if (pad != NULL)
+		{
+			opened ++;
+			save_pad (pad);
+		}
 	}
 
-	if (counter == 0)
+	if (opened == 0)
 		create_pad ();
 
 	globfree (&globbuf);
 }
+
+
 
 
 

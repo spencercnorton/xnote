@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _PAD_H_
 #define _PAD_H_
 
+#include <stdio.h>
 #include <gtk/gtk.h>
 #include "main.h"
 
@@ -33,7 +34,9 @@ struct pad_node_def
         pad_node *next;
 	gchar fontname[1024];
 	gboolean hidden;
-	unsigned char num;
+	FILE *file;
+	gchar infoname[1024];
+	gchar contentname[1024];
         GtkWindow *window;
 };
 
@@ -51,6 +54,8 @@ struct pad_info_def
         gint width;
         gint height;
 	pad_style style;
+	gchar infoname[1024];
+	gchar contentname[1024];
         gchar content[MAX_FILE_SIZE];
 };
 
@@ -64,6 +69,7 @@ pad_node *create_pad ();
 void cleanup ();
 
 #endif /* _PAD_H_ */
+
 
 
 

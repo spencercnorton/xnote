@@ -1,7 +1,7 @@
-xpad version 0.2.2 README
+xpad version 0.2.3 README
 -----------------------
 
-xpad is a virtual sticky pad system for X using GTK+.
+xpad is a virtual sticky pad system for X using GTK+ 2.0.
 
 
 ----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ USAGE NOTES
      Right click to obtain configuration options and open new pads.
 		You can also run xpad again to open a new pad.
 
-	Closing a pad saves the contents for later.  Destroying one destroys
+     Closing a pad saves the contents for later.  Destroying one destroys
 		the contents.
 
      Hold down CTRL and left drag to move a pad.  Hold down CTRL and right

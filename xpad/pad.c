@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include <stdio.h>
 
-pad_info DEFAULT_INFO = {0, 0, 260, 260, { {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "charter Medium 12"}, ""};
+pad_info DEFAULT_INFO = {0, 0, 260, 260, { {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "annstone 12"}, ""};
 pad_info current_info;
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -58,15 +58,13 @@ void free_all_pads ()
 
 		gtk_widget_destroy (GTK_WIDGET(current->window));
 
+		close_pad_files (current);
 		g_free (current);
 	}
 }
 
 void cleanup ()
 {
-	/* save all pads we own */
-	commit_pads();
-
 	free_all_pads();
 }
 
@@ -132,6 +130,7 @@ void pad_destroy (pad_node *node)
 	/* then, destroy the widget */
 	gtk_widget_destroy (GTK_WIDGET(window));
 	node->window = NULL;
+	close_pad_files (node);
 
 	g_free(node);
 
@@ -154,6 +153,7 @@ void pad_close (pad_node *node)
 	(get_pad (window))->hidden = TRUE;
 
 	save_pad (node);
+	close_pad_files (node);
 
 	quit_if_no_pads ();
 }
@@ -245,12 +245,12 @@ void popup (GtkTextView *textview, GtkMenu *menu, pad_node *node)
 	menu_item_font = gtk_menu_item_new_with_mnemonic ("_Font");
 
 	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator1);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_font);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_text_color);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_back_color);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator2);
 	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_new_pad);
 
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator2);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_back_color);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_text_color);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_font);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_destroy);
@@ -276,13 +276,6 @@ void popup (GtkTextView *textview, GtkMenu *menu, pad_node *node)
 	gtk_widget_show (menu_item_font);
 	gtk_widget_show (menu_item_close);
 	gtk_widget_show (menu_item_about);
-}
-
-
-void test (gchar *s)
-{
-	static int i = 0;
-	printf ("%s %d\n", s, i++);
 }
 
 
@@ -320,8 +313,7 @@ pad_node *start_pad ()
 	node->hidden = FALSE;
 	node->next = NULL;
 	node->window = GTK_WINDOW(window);
-	node->num = pad_num++;
-	
+
 	/* check if this is first pad made */
 	if (first_pad == NULL)
 	{
@@ -344,19 +336,23 @@ pad_node *create_pad ()
 {
 	pad_node *pad = start_pad ();
 	GtkStyle *style = gtk_style_new ();
-	pad_style pstyle = get_default_style ();
+	pad_style *pstyle = get_default_style ();
 
 	gtk_window_set_default_size (pad->window, DEFAULT_INFO.width, DEFAULT_INFO.height);
-	gtk_window_set_position (pad->window, GTK_WIN_POS_CENTER);
+	gtk_window_set_position (pad->window, GTK_WIN_POS_NONE);
 
-	style->base[GTK_STATE_NORMAL] = pstyle.back;
-	style->text[GTK_STATE_NORMAL] = pstyle.text;
-	style->font_desc = pango_font_description_from_string (pstyle.fontname);
-	strcpy (pad->fontname, pstyle.fontname);
+	style->base[GTK_STATE_NORMAL] = pstyle->back;
+	style->text[GTK_STATE_NORMAL] = pstyle->text;
+	style->font_desc = pango_font_description_from_string (pstyle->fontname);
+	strcpy (pad->fontname, pstyle->fontname);
 	gtk_widget_set_style (GTK_WIDGET(get_text (pad->window)), style);
 
 	gtk_widget_show (GTK_WIDGET(pad->window));
 	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
+
+	g_free (pstyle);
+
+	open_pad_files (pad, TRUE);
 
 	return pad;
 }
@@ -384,8 +380,14 @@ pad_node *create_pad_with_info (pad_info *info)
 	gtk_widget_show (GTK_WIDGET(pad->window));
 	gtk_widget_grab_focus (GTK_WIDGET(textbox));
 
+	strcpy (pad->infoname, info->infoname);
+	strcpy (pad->contentname, info->contentname);
+	
+	open_pad_files (pad, FALSE);
+
 	return pad;
 }
+
 
 
 

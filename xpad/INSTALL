@@ -10,3 +10,9 @@ If you are upgrading from an earlier version of xpad (pre 0.2), your old notes
 will not be recognized by xpad 0.2.  You may delete the old windows* files in
 ~/.xpad/.
 
+If you're upgrading from a previous version of xpad, be aware that
+xpad v0.2.3 has a new file-naming system.  Old notes will
+not carry over, and you're free to delete old note files.   
+This will not be done for you, and since previous versions 
+of xpad had some issues with leaving dangling files, you   
+might want to do so.                                    
