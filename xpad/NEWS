@@ -230,6 +230,7 @@ Version 0.2.2
 * Debian-friendly Makefile fixes
 * Cleaned up code
 
+
 Version 0.2.1
 * Changed saving to be more fault-tolerant
 * Added about screen with version info
