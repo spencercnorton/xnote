@@ -478,6 +478,14 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 		pad_toolbar_update (temp);
 }
 
+
+/**
+ * Note to the uncautious:  The following function is ugly as hell.  There are a lot of 
+ * widgets define at the top that are not used until several pages down, there are random
+ * statement blocks in the middle because it was easier to code it that way.  No consistent
+ * naming scheme is used, and there is no order to most of the gtk function calls.  Proceed
+ * at your own risk.  I am not responsible for any mental illness as a result.
+ */
 static GtkWidget *preferences_create (void)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -513,16 +521,16 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *radio_delete_this;
 	GtkWidget *vbox_wm_close;
 	GtkWidget *frame_wm_close;
-	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 3);
-	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 3);
-	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_border = gtk_hbox_new (FALSE, 3);
-	GtkWidget *vbox_font = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_font = gtk_hbox_new (FALSE, 3);
-	GtkWidget *vbox_misc = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_misc = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 0);
+	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 0);
+	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox_border = gtk_hbox_new (FALSE, 0);
+	GtkWidget *vbox_font = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox_font = gtk_hbox_new (FALSE, 0);
+	GtkWidget *vbox_misc = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox_misc = gtk_hbox_new (FALSE, 0);
 	GtkWidget *hbox_padding = gtk_hbox_new (FALSE, 3);
 	GtkWidget *hbox_border_width = gtk_hbox_new (FALSE, 3);
 	GtkWidget *hbox_border_entries = gtk_hbox_new (FALSE, 3);
@@ -568,7 +576,7 @@ static GtkWidget *preferences_create (void)
 	/* text setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
 	g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
@@ -576,7 +584,7 @@ static GtkWidget *preferences_create (void)
 	/* background setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 9);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 	g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) window);
@@ -584,7 +592,7 @@ static GtkWidget *preferences_create (void)
 	/* border setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
 	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 9);
 	
 	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 1);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
@@ -626,12 +634,12 @@ static GtkWidget *preferences_create (void)
 
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
-	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 9);
 
 	/* font setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
 	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
 	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), current_settings.style.fontname);
 	
 	/* this is a bit hacky, but there is no font-changed signal! */
@@ -689,11 +697,11 @@ static GtkWidget *preferences_create (void)
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
 		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, TRUE, TRUE, 0);
 		
-		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 9);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), current_settings.toolbar);
 		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), frame);
 		
-		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 15);
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 9);
 		gtk_widget_set_sensitive (frame, current_settings.toolbar);
 		
 		gtk_box_pack_start (GTK_BOX (hbox_buttons), label_indent, FALSE, FALSE, 0);
@@ -783,6 +791,10 @@ static GtkWidget *preferences_create (void)
 				G_CALLBACK (toolbar_data_receive), cont);
 		}
 		
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tt), toolbar_on, 
+"If on, a toolbar will appear below each pad when the mouse hovers over it.",
+"If on, a toolbar will appear below each pad when the mouse hovers over it.");
+		
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_frame), 6);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_unused_frame), 6);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar_frame), 6);
@@ -838,9 +850,9 @@ static GtkWidget *preferences_create (void)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), current_settings.confirm_destroy);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), current_settings.edit_lock);
 		gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 3);
-		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 3);
+		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 9);
+		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 9);
+		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), frame_wm_close, FALSE, FALSE, 3);
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 	
