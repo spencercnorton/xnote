@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <unistd.h>	/* for getuid */
 #include <pwd.h>	/* for getpwuid */
 #include <sys/types.h>	/* for getuid and getpwuid */
+#include <sys/time.h>	/* for struct timeval */
 
 static SmcConn xpad_sm_conn = NULL;
 static int xpad_interact_style;
