@@ -326,21 +326,25 @@ void pad_confirm_destroy (pad_node *pad)
 {
 	if (current_settings.confirm_destroy)
 	{
-		GtkWidget *dialog, *checkbox;
+		GtkWidget *dialog, *checkbox, *align;
 		gboolean said_yes;
 
 		/* Create the widgets */
 		dialog = gtk_message_dialog_new (pad->window,
         		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
-        		GTK_MESSAGE_QUESTION,
-        		GTK_BUTTONS_YES_NO,
-        		"Are you sure you want\nto delete this pad?");
+        		GTK_MESSAGE_WARNING,
+        		GTK_BUTTONS_OK_CANCEL,
+        		"All contents are lost\nupon deletion.");
 
-		checkbox = gtk_check_button_new_with_label ("Do not ask this again");
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), checkbox, FALSE, FALSE, 3);
-		gtk_widget_show (checkbox);
-		
-		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
+		align = gtk_alignment_new (1, 0.5, 0, 0);
+		checkbox = gtk_check_button_new_with_label ("Don't show this warning again");
+		gtk_container_add (GTK_CONTAINER (align), checkbox);
+		gtk_container_set_border_width (GTK_CONTAINER (align), 6);
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), align, FALSE, FALSE, 3);
+		gtk_widget_show_all (align);
+
+		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
 
 		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
 		fio_save_as_defaults (&current_settings);
@@ -521,7 +525,6 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
-	//gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator3);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_help);
