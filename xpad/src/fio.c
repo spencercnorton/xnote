@@ -29,11 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "xpad-app.h"
 
-
-/* A cache of whether we can use the .xpad directory */
-static gboolean can_write = TRUE;
-
-
 /* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
    returns 0 if filename was full path, 1 if we added to it.
    
