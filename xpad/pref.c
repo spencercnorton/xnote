@@ -30,19 +30,17 @@ GtkWidget *pref_window = NULL;
 
 static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
 		&current_settings.style.back);
 	
-	while (temp)
+	for (temp = first_pad; temp; temp = temp->next)
 	{
 		gtk_widget_modify_base (GTK_WIDGET (get_text (temp->window)),
 			GTK_STATE_NORMAL, &current_settings.style.back);
 		gtk_widget_modify_bg (GTK_WIDGET (get_text (temp->window)),
 			GTK_STATE_NORMAL, &current_settings.style.back);
-
-		temp = temp->next;
 	}
 	
 	return FALSE;
@@ -50,92 +48,72 @@ static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 
 static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
 		&current_settings.style.text);
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		gtk_widget_modify_text (GTK_WIDGET (get_text (temp->window)),
 			GTK_STATE_NORMAL, &current_settings.style.text);
-		
-		temp = temp->next;
-	}
 	
 	return FALSE;
 }
 
 static gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
 		&current_settings.style.border);
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		gtk_widget_modify_bg (GTK_WIDGET (temp->eventbox_outer),
 			GTK_STATE_NORMAL, &current_settings.style.border);
-		
-		temp = temp->next;
-	}
 	
 	return FALSE;
 }
 
 static gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	current_settings.style.padding = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		gtk_container_set_border_width (GTK_CONTAINER (get_text (temp->window)),
 			current_settings.style.padding);
-		
-		temp = temp->next;
-	}
 	
 	return FALSE;
 }
 
 static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	current_settings.style.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	
 	gtk_widget_set_sensitive(colorsel, (current_settings.style.border_width != 0));
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		gtk_container_set_border_width (GTK_CONTAINER (temp->eventbox),
 			current_settings.style.border_width);
-		
-		temp = temp->next;
-	}
 	
 	return FALSE;
 }
 
 static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 {
-	pad_node *temp = first_pad;
+	pad_node *temp;
 	
 	strncpy (current_settings.style.fontname, 
 		gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel)),
 		MAX_FILENAME_SIZE);
 	current_settings.style.fontname[MAX_FILENAME_SIZE] = '\0';
 	
-	while (temp)
-	{
+	for (temp = first_pad; temp; temp = temp->next)
 		gtk_widget_modify_font (GTK_WIDGET (get_text (temp->window)),
 			pango_font_description_from_string (current_settings.style.fontname));
-		
-		temp = temp->next;
-	}
 	
 	return FALSE;
 }
