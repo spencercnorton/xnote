@@ -335,6 +335,7 @@ static GtkWidget *preferences_create (pad_node *pad)
 	frame_wm_close = gtk_frame_new ("Window Manager Close Action");
 	vbox_wm_close = gtk_vbox_new (FALSE, 3);
 	
+
 	switch (current_settings.wm_close)
 	{
 	case 0: /* close all */
