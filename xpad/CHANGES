@@ -1,3 +1,8 @@
+0.2.2
+-----
+debian-friendly Makefile fixes
+cleaned up code
+
 0.2.1
 -----
 changed saving to be more fault-tolerant
