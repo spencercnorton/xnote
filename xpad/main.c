@@ -107,7 +107,9 @@ static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	pref_close ();
+#ifdef G_OS_UNIX
 	tray_close ();
+#endif
 	cleanup ();
 	
 	if (master_name)
@@ -941,8 +943,10 @@ static int xpad_init (gpointer data)
 	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
-	
+
+#ifdef G_OS_UNIX
 	tray_open ();
+#endif
 	
 	if (verbosity >= 2)
 		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
