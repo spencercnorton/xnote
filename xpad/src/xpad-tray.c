@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "eggstatusicon.h"
+#include "fio.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
@@ -38,7 +39,13 @@ static EggStatusIcon  *docklet = NULL;
 void
 xpad_tray_open (void)
 {
+	GtkIconTheme *theme;
+	
 	xpad_tray_close ();
+	
+	theme = gtk_icon_theme_get_default ();
+	if (!gtk_icon_theme_has_icon (theme, PACKAGE))
+		return;
 	
 	docklet = egg_status_icon_new ();
 	
@@ -78,7 +85,7 @@ xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size)
 	                                   0,
 	                                   NULL);
 	egg_status_icon_set_from_pixbuf (icon, pixbuf);
-	gdk_pixbuf_unref (pixbuf);
+	g_object_unref (pixbuf);
 }
 
 static gint
