@@ -146,7 +146,7 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 	
 	fl.l_pid = getpid ();
 	
-	if (create == TRUE)
+	if (create)
 	{
 		strcpy (pad->infoname, working_dir);
 		strcat (pad->infoname, "info-XXXXXX");
