@@ -25,14 +25,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pref.h"
 #include "fio.h"
 #include "help.h"
-#include "xpad-tray.h"
 #include "settings.h"
 #include "properties.h"
+#include "xpad-app.h"
 #include "xpad-dashboard-frontend.h"
+#include "xpad-tray.h"
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
+void pad_spawn (void);
 void pad_edit_cut (pad_node *pad);
 void pad_edit_copy (pad_node *pad);
 void pad_edit_paste (pad_node *pad);
@@ -69,7 +71,7 @@ static GtkToggleActionEntry toggle_pad_actions[] =
 
 const toolbar_button buttons[] =
 {
-	{"New", "gtk-new", 0, G_CALLBACK (pad_new), N_("Open New Pad")},
+	{"New", "gtk-new", 0, G_CALLBACK (pad_spawn), N_("Open New Pad")},
 	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
 	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
@@ -267,6 +269,25 @@ void pad_set_back_color (pad_node *pad, GdkColor *c)
 
 void pad_set_text_color (pad_node *pad, GdkColor *c)
 {
+	gchar *style_string;
+	
+	if (c)
+	{
+		style_string = g_strdup_printf ("style '%s' {GtkWidget::cursor_color = {%i, %i, %i}} widget '*%s' style '%s'", gtk_widget_get_name (pad->textview), c->red, c->green, c->blue, gtk_widget_get_name (pad->textview), gtk_widget_get_name (pad->textview));
+	}
+	else
+	{
+		style_string = g_strdup_printf ("style '%s' {GtkWidget::cursor_color = {%i, %i, %i}} widget '*%s' style '%s'",
+			gtk_widget_get_name (pad->textview),
+			gtk_widget_get_default_style ()->text[GTK_STATE_NORMAL].red,
+			gtk_widget_get_default_style ()->text[GTK_STATE_NORMAL].green,
+			gtk_widget_get_default_style ()->text[GTK_STATE_NORMAL].blue,
+			gtk_widget_get_name (pad->textview), gtk_widget_get_name (pad->textview));
+	}
+	gtk_rc_parse_string (style_string);
+	g_free (style_string);
+	/* should update widget style at this point, but the modify_text call below does it for us */
+	
 	gtk_widget_modify_text (pad->textview, GTK_STATE_NORMAL, c);
 	
 	if (pad->locked)
@@ -312,15 +333,9 @@ static void pad_update_style (pad_node *pad)
 	else
 		pstyle = xpad_settings_get_style ();
 	
-	gtk_widget_modify_base (pad->textview, GTK_STATE_NORMAL, pstyle.use_back ? &pstyle.back : NULL);
-	gtk_widget_modify_bg (pad->textview, GTK_STATE_NORMAL, pstyle.use_back ? &pad->textview->style->base[GTK_STATE_NORMAL] : &gtk_widget_get_default_style ()->base[GTK_STATE_NORMAL]);
-	gtk_widget_modify_text (pad->textview, GTK_STATE_NORMAL, pstyle.use_text ? &pstyle.text : NULL);
-	gtk_widget_modify_font (pad->textview, pstyle.fontname ? pango_font_description_from_string (pstyle.fontname) : NULL);
-	
-	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
-	
-	if (pad->locked)
-		fio_save_pad_info (pad);
+	pad_set_back_color (pad, pstyle.use_back ? &pstyle.back : NULL);
+	pad_set_text_color (pad, pstyle.use_text ? &pstyle.text : NULL);
+	pad_set_fontname (pad, pstyle.fontname);
 	
 	pad_style_free (&pstyle);
 }
@@ -558,12 +573,9 @@ static void pad_free (pad_node *pad)
 
 void pad_destroy (pad_node *pad)
 {
-	if (verbosity >= 1) g_print ("Destroying pad [%s].\n", pad->infoname);
-
 	fio_remove_pad_files (pad);
 	pad_remove (pad);
 
-	if (verbosity >= 2) g_print ("Freeing pad's memory [%s].\n", pad->infoname);
 	pad_free (pad);
 
 	quit_if_no_pads ();
@@ -578,7 +590,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 	{
 		GtkWidget *dialog;
 		
-		dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_WARNING,
+		dialog = xpad_app_alert_new (pad->window, GTK_STOCK_DIALOG_WARNING,
 			_("Delete this pad?"),
 			_("All text of this pad will be irrevocably lost."));
 		
@@ -600,8 +612,6 @@ gboolean pad_confirm_destroy (pad_node *pad)
 
 void pad_hide (pad_node *pad)
 {
-	if (verbosity >= 1) g_print ("Closing pad [%s].\n", pad->infoname);
-	
 	toolbar_hide (pad);
 	
 	pad_free_gtk (pad);
@@ -642,29 +652,6 @@ void pad_show_by_num (gint n)
 		pad_show (temp);
 	
 	/* else, silently ignore */
-}
-
-void pads_hide_all (void)
-{
-	pad_node *temp = first_pad;
-	
-	while (temp)
-	{
-		if (temp->window)
-			pad_hide (temp);
-		
-		temp = temp->next;
-	}
-}
-
-void pads_unhide_all (void)
-{
-	PAD_ITERATE_START
-	if (!PAD->closed)
-	{
-		pad_show (PAD);
-	}
-	PAD_ITERATE_END
 }
 
 void pads_show_all (void)
@@ -761,7 +748,7 @@ static void about_dialog (pad_node *pad)
 	text = g_strdup_printf (_("You are using xpad %s with GTK+ %i.%i.%i."),
 		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
 	
-	dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
+	dialog = xpad_app_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
 		text,
 		_("Visit http://xpad.sourceforge.net for more information about xpad."));
 	g_free (text);
@@ -904,7 +891,8 @@ menuitem_cb (GtkAction *action, gpointer user_data)
 	const gchar *action_name = gtk_action_get_name (action);
 	
 	if (strcmp (action_name, "NewAction") == 0) {
-		pad_new ();
+		pad_node *newpad = pad_new ();
+		xpad_pad_group_add (xpad_app_get_pad_group (), newpad);
 	}
 	else if (strcmp (action_name, "CloseAction") == 0) {
 		pad_close (pad);
@@ -1524,8 +1512,6 @@ grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 void
 pad_remove_toolbar (pad_node *pad)
 {
-	if (verbosity >= 2) g_print ("Removing toolbar from pad.\n");
-
 	if (pad->toolbar)
 	{
 		disconnect_toolbar_events (pad);
@@ -1540,8 +1526,6 @@ pad_remove_toolbar (pad_node *pad)
 void
 pad_add_toolbar (pad_node *pad)
 {
-	if (verbosity >= 2) g_print ("Adding toolbar to pad.\n");
-	
 	if (!pad->toolbar)
 	{
 		pad->toolbar = toolbar_new ();
@@ -1644,6 +1628,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
 	gtk_container_set_border_width (GTK_CONTAINER (textbox), 5);
+	gtk_widget_set_name (textbox, role);
 	
 	/* set up scrollbar */
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
@@ -1756,11 +1741,15 @@ static pad_node *start_pad (void)
 	return pad;
 }
 
+void pad_spawn (void)
+{
+	pad_node *pad = pad_new ();
+	xpad_pad_group_add (xpad_app_get_pad_group (), pad);
+}
+
 pad_node *pad_new (void)
 {
 	pad_node *pad;
-	
-	if (verbosity >= 2) g_print ("Making new pad.\n");
 	
 	pad = start_pad ();
 	
@@ -1793,8 +1782,6 @@ pad_node *pad_new (void)
 pad_node *pad_new_with_info (pad_info *info)
 {
 	pad_node *pad;
-	
-	if (verbosity >= 2) g_print ("Making new pad with info.\n");
 	
 	pad = start_pad ();
 	
@@ -1834,8 +1821,6 @@ pad_node *pad_new_with_info (pad_info *info)
 static void
 pad_renew (pad_node *pad)
 {
-	if (verbosity >= 2) g_print ("Refreshing pad.\n");
-	
 	pad_alloc_gtk (pad, pad->infoname);
 	
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);

@@ -22,11 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _FIO_H_
 
 #include <gtk/gtk.h>
-#include "main.h"
 #include "pad.h"
 #include "pref.h"
 
-int fio_load_pads (void);
+gint fio_get_info_from_file (const gchar *filename, pad_info *info);
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 

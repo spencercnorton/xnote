@@ -124,8 +124,6 @@ void cleanup (void);
 void pads_set_editable (gboolean editable);
 void pads_set_toolbar (gboolean toolbar);
 void pads_set_auto_hide_toolbar (gboolean auto_hide_toolbar);
-void pads_hide_all (void);
-void pads_unhide_all (void);
 void pads_show_all (void);
 void pads_close_all (void);
 

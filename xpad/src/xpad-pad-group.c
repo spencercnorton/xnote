@@ -1,0 +1,152 @@
+/**
+ * Copyright (c) 2004 Michael Terry
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+#include "xpad-pad-group.h"
+
+G_DEFINE_TYPE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
+
+#define XPAD_PAD_GROUP_GET_PRIVATE(object)  (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PAD_GROUP, XpadPadGroupPrivate))
+
+struct XpadPadGroupPrivate
+{
+	GList *pads;
+};
+
+static void     xpad_pad_group_dispose           (GObject *object);
+static void     xpad_pad_group_finalize          (GObject *object);
+
+static void     xpad_pad_group_destroy_pads      (XpadPadGroup *group);
+
+enum {
+	PROP_0
+};
+
+enum
+{
+	PAD_ADDED,
+	LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0 };
+
+XpadPadGroup *
+xpad_pad_group_new (void)
+{
+	return XPAD_PAD_GROUP (g_object_new (XPAD_TYPE_PAD_GROUP, NULL));
+}
+
+static void
+xpad_pad_group_class_init (XpadPadGroupClass *klass)
+{
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	
+	object_class->dispose = xpad_pad_group_dispose;
+	object_class->finalize = xpad_pad_group_finalize;
+	
+	signals[PAD_ADDED] =
+		g_signal_new ("pad_added",
+		              G_OBJECT_CLASS_TYPE (object_class),
+		              G_SIGNAL_RUN_FIRST,
+		              G_STRUCT_OFFSET (XpadPadGroupClass, pad_added),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__OBJECT,
+		              G_TYPE_NONE,
+		              1,
+		              GTK_TYPE_WIDGET);
+	
+	g_type_class_add_private (object_class, sizeof (XpadPadGroupPrivate));
+}
+
+static void
+xpad_pad_group_dispose (GObject *object)
+{
+	XpadPadGroup *group = XPAD_PAD_GROUP (object);
+
+	xpad_pad_group_destroy_pads (group);
+}
+
+static void
+xpad_pad_group_finalize (GObject *object)
+{
+}
+
+static void
+xpad_pad_group_init (XpadPadGroup *group)
+{
+	group->priv = XPAD_PAD_GROUP_GET_PRIVATE (group);
+	
+	group->priv->pads = NULL;
+}
+
+
+
+
+/* Subsumes a pad into this group */
+void
+xpad_pad_group_add (XpadPadGroup *group, pad_node *pad)
+{
+	/* FIXME: should sink pad's floating ref */
+	
+	group->priv->pads = g_list_append (group->priv->pads, pad);
+	
+	g_signal_emit (group, signals[PAD_ADDED], 0, pad);
+}
+
+
+void xpad_pad_group_hide_all (XpadPadGroup *group)
+{
+	g_list_foreach (group->priv->pads, (GFunc) pad_hide, NULL);
+}
+
+
+void xpad_pad_group_unhide_all (XpadPadGroup *group)
+{
+	GList *i;
+	
+	for (i = group->priv->pads; i; i = i->next) {
+		if (((pad_node *) i->data)->hidden &&
+		    !((pad_node *) i->data)->closed)
+			pad_show ((pad_node *) i->data);
+	}
+}
+
+
+void xpad_pad_group_toggle_hide (XpadPadGroup *group)
+{
+	GList *i;
+	
+	for (i = group->priv->pads; i; i = i->next) {
+		if (((pad_node *) i->data)->closed)
+			continue;
+		
+		if (((pad_node *) i->data)->hidden)
+			pad_show ((pad_node *) i->data);
+		else
+			pad_hide ((pad_node *) i->data);
+	}
+}
+
+
+/* Deletes all the current pads in the group */
+static void
+xpad_pad_group_destroy_pads (XpadPadGroup *group)
+{
+	g_list_foreach (group->priv->pads, (GFunc) pad_close, NULL);
+	g_list_free (group->priv->pads);
+	group->priv->pads = NULL;
+}

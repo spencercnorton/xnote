@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include "toolbar.h"
 #include "pad.h"
-#include "main.h"
 #include "settings.h"
 
 static gboolean
@@ -243,8 +242,6 @@ toolbar_update (xpad_toolbar *xt)
 	
 	if (!xt)
 		return;
-	
-	if (verbosity >= 2) g_print ("Updating toolbar.\n");
 	
 	box = toolbar_get_container (xt);
 	

@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "defines.h"
 #include "eggtrayicon.h"
 #include "pad.h"
+#include "xpad-app.h"
+#include "xpad-pad-group.h"
 #include "xpad-tray.h"
 
 /* much of this code is shamelessly copied from docklet.c, in the gaim/plugins/docklet
@@ -233,14 +235,5 @@ xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpoin
 static void
 xpad_tray_toggle (void)
 {
-	if (pads_showing)
-	{
-		pads_showing = FALSE;
-		pads_hide_all();
-	}
-	else
-	{
-		pads_showing = TRUE;
-		pads_unhide_all();
-	}
+	xpad_pad_group_toggle_hide (xpad_app_get_pad_group ());
 }

@@ -24,12 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include "fio.h"
 #include "pad.h"
-#include "main.h"
 #include "toolbar.h"
 #include "settings.h"
+#include "xpad-app.h"
 
 
-/* sets filename to full path of filename (prepends working_dir to it) 
+/* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
    returns 0 if filename was full path, 1 if we added to it.
    
    returned name must be g_free'd
@@ -39,7 +39,7 @@ static gchar *fio_fill_filename (const gchar *filename)
 	if (g_path_is_absolute (filename))
 		return g_strdup (filename);
 	
-	return g_build_filename (working_dir, filename, NULL);
+	return g_build_filename (xpad_app_get_config_dir (), filename, NULL);
 }
 
 /* This callously overwrites name.bak -- but this is fine since this function is for
@@ -82,7 +82,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		}
 		
 		usertext = g_strdup_printf (_("Could not write to file %s."), fullpath);
-		xpad_show_error (NULL, usertext, NULL);
+		xpad_app_error (NULL, usertext, NULL);
 		g_free (usertext);
 	}
 	
@@ -108,7 +108,7 @@ gchar *fio_get_file (const gchar *name)
 		gchar *usertext;
 		
 		usertext = g_strdup_printf (_("Could not read from file %s."), fullname);
-		xpad_show_error (NULL, usertext, NULL);
+		xpad_app_error (NULL, usertext, NULL);
 		g_free (usertext);
 		
 		rv = NULL;
@@ -142,7 +142,7 @@ gchar *fio_find_free_filename (gchar *pattern)
 		if (s)
 			g_free (s);
 		
-		s = g_build_filename (working_dir, numstr, NULL);
+		s = g_build_filename (xpad_app_get_config_dir (), numstr, NULL);
 		
 		g_free (numstr);
 	}
@@ -161,11 +161,9 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 	if (create)
 	{
 		pad->contentname = fio_find_free_filename ("content-");
-		if (verbosity >= 2) g_print ("Creating file [%s].\n", pad->contentname);
 		fio_set_file (pad->contentname, "");
 		
 		pad->infoname = fio_find_free_filename ("info-");
-		if (verbosity >= 2) g_print ("Creating file [%s].\n", pad->infoname);
 		fio_set_file (pad->infoname, "");
 	}
 }
@@ -243,8 +241,6 @@ void fio_save_pad_info (pad_node *pad)
 	
 	if (!pad || pad->hidden || !pad->infoname)	/* don't bother saving hidden pads */
 		return;
-	
-	if (verbosity >= 2) g_print ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
 	if (toolbar_is_visible (pad->toolbar))
@@ -330,7 +326,7 @@ void fio_remove_pad_files (pad_node *pad)
 
 
 /* filename must be absolute */
-static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
+gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
 	/**
 	 * We need to set up int values for all these to take the value from the file.
@@ -346,8 +342,6 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 		text_G = text.green,
 		text_B = text.blue;
 
-	if (verbosity >= 2) g_print ("Loading [%s].\n", filename);
-	
 	info->style.fontname = NULL;
 	
 	fio_get_values_from_file (  filename,
@@ -390,62 +384,3 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 	
 	return 0;
 }
-
-
-int fio_load_pads (void)
-{
-	gint opened = 0;
-	pad_node *pad;
-	pad_info info;
-	GDir *dir;
-	G_CONST_RETURN gchar *name;
-	
-	/* set up some sort of defaults for these.  if xpad works
-	   right, these won't be used. */
-	info.x = 0;
-	info.y = 0;
-	info.width = 260;
-	info.height = 260;
-	info.sticky = 0;
-	info.locked = 0;
-	
-	dir = g_dir_open (working_dir, 0, NULL);
-	
-	if (!dir)
-	{
-		gchar *errtext;
-		
-		errtext = g_strdup_printf (_("Could not open directory %s."), working_dir);
-		
-		xpad_show_error (NULL, errtext,
-			_("This directory is needed to store preference and pad information.  Xpad will close now."));
-		g_free (errtext);
-		
-		gtk_main_quit ();
-		return -1;
-	}
-	
-	while ((name = g_dir_read_name (dir)))
-	{
-		/* if it's an info file, but not a backup info file... */
-		if (!strncmp (name, "info-", 5) &&
-			name[strlen (name) - 1] != '~' &&
-			!fio_get_info_from_file (name, &info))
-		{
-			/**
-			 * Fill pad from the info struct.  We don't need to free strings
-			 * because the new pad takes over their care.
-			 */
-			pad = pad_new_with_info (&info);
-			opened ++;
-		}
-	}
-	
-	if (verbosity >= 2) g_print ("Done loading files.\n");
-	
-	g_dir_close (dir);
-	
-	return opened;
-}
-
-
