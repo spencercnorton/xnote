@@ -1,5 +1,5 @@
-xpad version 1.6.1 README
--------------------------
+xpad version 1.7 README
+-----------------------
 
 xpad is a virtual sticky pad system using GTK+ 2.
 
@@ -30,23 +30,9 @@ USAGE NOTES
 --------------------------------------------------------------------------
 COMMAND ARGUMENTS
 --------------------------------------------------------------------------
-	Standard GTK+ arguments are understood.  In addition, the following
-		arguments are available.
+	Standard GTK+ arguments are understood.  For more information,
+		read the man page -- xpad(1).
 
-	--help, -h:          Prints usage information and exits.
-
-	--version, -V:       Prints version information and exits.
-
-	--verbosity=N, -v:   Where N is the amount of output you desire.
-                              0 is none; 1 is moderate; 2 is debug.  
-                              Default is 0
-	
-	--new, -n:           Opens a new pad.
-	
-	--quit, -q:          Quits all xpad sessions.
-	
-        --showall, -s:       Presents all the pads to the foreground.
-	
 
 --------------------------------------------------------------------------
 KNOWN BUGS

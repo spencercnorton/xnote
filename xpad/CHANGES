@@ -2,9 +2,10 @@
 ---
 Popup alerts are more pleasing.  (HIG compliant)
 Added --nonew flag to prevent creation of new pads.
+Changed --new flag to only open a new pad, not try to open old pads too.
 Changed window titles from quoted to ellipses at the end.
 Option to turn off toolbar auto-hide.
-Added --list, -l, --showall, --show, -s
+Added --list, -l, --show, -s.
 
 
 1.6.1
