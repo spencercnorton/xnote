@@ -273,8 +273,10 @@ egg_tray_icon_send_message (EggTrayIcon *icon,
 			    gint         len)
 {
   guint stamp;
-  
-  g_return_val_if_fail (EGG_IS_TRAY_ICON (icon), 0);
+  gboolean is_tray_icon;
+
+  is_tray_icon = EGG_IS_TRAY_ICON (icon);
+  g_return_val_if_fail (is_tray_icon, 0);
   g_return_val_if_fail (timeout >= 0, 0);
   g_return_val_if_fail (message != NULL, 0);
 		     
@@ -334,7 +336,10 @@ void
 egg_tray_icon_cancel_message (EggTrayIcon *icon,
 			      guint        id)
 {
-  g_return_if_fail (EGG_IS_TRAY_ICON (icon));
+  gboolean is_tray_icon;
+
+  is_tray_icon = EGG_IS_TRAY_ICON (icon);
+  g_return_val_if_fail (is_tray_icon, 0);
   g_return_if_fail (id > 0);
   
   egg_tray_icon_send_manager_message (icon, SYSTEM_TRAY_CANCEL_MESSAGE,
