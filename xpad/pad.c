@@ -1543,7 +1543,6 @@ pad_remove_toolbar (pad_node *pad)
 		
 		toolbar_hide (pad);
 		gtk_container_remove (GTK_CONTAINER (pad->box), pad->toolbar->bar);
-		/*g_free (pad->toolbar->bar);*/
 		g_free (pad->toolbar);
 		pad->toolbar = NULL;
 	}

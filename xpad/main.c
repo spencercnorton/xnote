@@ -64,6 +64,7 @@ gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
 gboolean make_new_pad = TRUE;
+gboolean open_old_pads = TRUE;
 gint master_fd;
 FILE *output;
 gchar *master_name = NULL;
@@ -217,6 +218,11 @@ set_nonew (void)
 	make_new_pad = FALSE;
 }
 
+static void
+set_new (void)
+{
+	open_old_pads = FALSE;
+}
 
 static void
 set_verbosity (gint *v)
@@ -270,6 +276,8 @@ static const argument arguments[] =
 	{TRUE, "-v", TRUE, {G_CALLBACK (set_verbosity)}},
 	{TRUE, "--verbosity", TRUE, {G_CALLBACK (set_verbosity)}},
 	{TRUE, "--nonew", FALSE, {set_nonew}},
+	{TRUE, "-n", FALSE, {set_new}},
+	{TRUE, "--new", FALSE, {set_new}},
 	
 	{FALSE, "--nonew", FALSE, {set_nonew}},	/* registered here a second time because it has effects both on local instances and remote instances */
 	{FALSE, "-n", FALSE, {G_CALLBACK (pad_new)}},
@@ -909,8 +917,9 @@ static int xpad_init (gpointer data)
 	xpad_register_icons ();
 	
 	/* load all pads */
-	if (!fio_load_pads ())
+	if (open_old_pads && fio_load_pads () == 0)
 	{
+		printf ("hello\n");
 		if (make_new_pad)
 		{
 			pad_new ();
@@ -927,7 +936,7 @@ static int xpad_init (gpointer data)
 	g_idle_add (xpad_initial_save, NULL);
 	
 	if (first_time)
-		show_help ();	/* if no defaults file, assume it is their first time and show some help */
+		show_help ();
 	
 	return 0;
 }

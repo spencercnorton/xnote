@@ -514,9 +514,11 @@ int fio_load_pads (void)
 	GDir *dir;
 	G_CONST_RETURN gchar *name;
 	GPatternSpec *spec;
-
+	
+	printf ("opening old pads\n");
+	
 	spec = g_pattern_spec_new ("info-*");
-
+	
 	/* set up some sort of defaults for these.  if xpad works
 	   right, these won't be used. */
 	info.x = 0;
@@ -531,17 +533,11 @@ int fio_load_pads (void)
 	if (!dir)
 	{
 		gchar errtext [500];
-		GtkWidget *dialog;
 		
 		sprintf (errtext, "Could not open xpad directory '%s'.\n", working_dir);
 		
-		fprintf (stderr, errtext);
-		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR, errtext, 
+		xpad_show_error (NULL, errtext,
 			"This directory is needed to store preference and pad information.  Xpad will close now.");
-		
-		gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_OK, 1);
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		gtk_widget_destroy (dialog);
 		
 		gtk_main_quit ();
 		return -1;
