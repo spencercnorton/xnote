@@ -38,6 +38,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <unistd.h>
 
+#if HAVE_SETLOCALE
+#include <locale.h>
+#endif
+
 #if defined (G_OS_UNIX)
  
  #include <signal.h>

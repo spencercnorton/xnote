@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "main.h"
 #include <X11/SM/SMlib.h>
 #include <stdio.h>	/* only for printf */
+#include <sys/types.h> /* for getuid and getpwuid */
 #include <sys/select.h>	/* for select */
 #include <stdlib.h>	/* for free */
 #include <string.h>	/* for strlen */
