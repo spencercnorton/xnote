@@ -86,6 +86,25 @@ gboolean pad_get_editable (pad_node *pad)
 	return gtk_text_view_get_editable (get_text (pad->window));
 }
 
+gboolean pad_is_empty (pad_node *pad)
+{
+	GtkTextIter s, e;
+	GtkTextBuffer *buf;
+	gchar *content;
+	gboolean rv;
+	
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	gtk_text_buffer_get_start_iter (buf, &s);
+	gtk_text_buffer_get_end_iter (buf, &e);
+	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+
+	rv = strcmp (content, "") == 0;
+	
+	g_free (content);
+	
+	return rv;
+}
+
 void pads_set_editable (gboolean editable)
 {
 	pad_node *temp = first_pad;
@@ -324,7 +343,7 @@ void about_dialog (pad_node *pad)
 
 void pad_confirm_destroy (pad_node *pad)
 {
-	if (current_settings.confirm_destroy)
+	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
 	{
 		GtkWidget *dialog, *checkbox, *align;
 		gboolean said_yes;
@@ -361,9 +380,6 @@ void pad_confirm_destroy (pad_node *pad)
 
 void open_file_callback (GtkWidget *button, pad_node *pad)
 {
-	GtkTextIter s, e;
-	GtkTextBuffer *buf;
-	gchar *content;
 	const gchar *filename;
 	GtkFileSelection *selector;
 
@@ -378,20 +394,13 @@ void open_file_callback (GtkWidget *button, pad_node *pad)
 		return;
 	}
 
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
-	gtk_text_buffer_get_start_iter (buf, &s);
-	gtk_text_buffer_get_end_iter (buf, &e);
-        content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
-
-	if (!strcmp (content, ""))
+	if (pad_is_empty (pad))
 		pad_fill_with_file (pad, filename);
 	else
 	{
 		pad_node *newpad = pad_new ();
 		pad_fill_with_file (newpad, filename);
 	}
-
-	g_free (content);
 }
 
 void open_file (pad_node *pad)
