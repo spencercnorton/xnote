@@ -1938,6 +1938,7 @@ pad_node *pad_new (void)
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	
 	pad_set_title (pad);
+	gtk_window_set_role (pad->window, pad->infoname);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
@@ -1974,6 +1975,7 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad_update_style (pad);
 	
 	pad_set_title (pad);
+	gtk_window_set_role (pad->window, pad->infoname);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
@@ -2003,6 +2005,7 @@ pad_renew (pad_node *pad)
 	pad_update_style (pad);
 	
 	pad_set_title (pad);
+	gtk_window_set_role (pad->window, pad->infoname);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
