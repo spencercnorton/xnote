@@ -78,6 +78,7 @@ gboolean open_old_pads = TRUE;
 gint master_fd = -1;
 FILE *output;
 gchar *master_name = NULL;
+gchar *program_name = NULL;
 
 
 static void print_help (void);
@@ -1002,6 +1003,8 @@ static gboolean xpad_init (gpointer data)
 int main (int argc, char *argv[])
 {
 	gpointer args[2];
+	
+	program_name = argv[0];
 	
 #if HAVE_SETLOCALE
 	setlocale (LC_ALL, "");

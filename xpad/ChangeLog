@@ -1,3 +1,6 @@
+2003-10-10  Michael Terry  <mikix@users.sourceforge.net>
+	* src/main.c: Fix broken compile by adding back program_name
+
 2003-10-08  Michael Terry  <mikix@users.sourceforge.net>
 	* po/es.po, po/ga.po, po/nl.po: Update translations
 
