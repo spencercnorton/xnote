@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _PREF_H_
 
 void preferences_open (void);
+void pref_close (void);
 
 #endif /* _PREF_H_ */
 

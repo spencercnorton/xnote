@@ -101,6 +101,9 @@ void pad_toggle_lock (pad_node *pad);
 void pad_style_copy (pad_style *dest, pad_style *source);
 void pad_style_free (pad_style *dest);
 
+void pad_remove_toolbar (pad_node *pad);
+void pad_add_toolbar (pad_node *pad);
+
 struct toolbar_button_def
 {
 	const gchar *name;
@@ -112,20 +115,22 @@ struct toolbar_button_def
 
 static const toolbar_button buttons[] =
 {
-	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), "Close and Save Pad"},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), "Delete Pad"},
-	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Open Help"},
-	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Open Preferences"},
 	{"New", "gtk-new", 0, G_CALLBACK (pad_new), "Open New Pad"},
 	{"Open", "gtk-open", 0, G_CALLBACK (pad_open_file), "Open File"},
 	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), "Save Pad As File"},
-	{"Quit", "gtk-quit", 0, G_CALLBACK (pad_close_all), "Close and Save All Pads"},
+	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), "Close and Save Pad"},
+	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), "Delete Pad"},
+	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), "Clear Pad Contents"},
 	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), "Lock Style"},
-	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), "Clear Pad Contents"}
+	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Open Preferences"},
+	{"Quit", "gtk-quit", 0, G_CALLBACK (pad_close_all), "Quit"},
+	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Open Help"}
 };
 
 
 #define NUM_BUTTONS (sizeof (buttons) / sizeof (toolbar_button))
+
+const toolbar_button *get_toolbar_button (GCallback func);
 
 #endif /* _PAD_H_ */
 

@@ -181,24 +181,94 @@ static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 	return FALSE;
 }
 
-static void pref_close (void)
+static void
+change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 {
-	pref_window = NULL;
-	fio_save_default_settings ();
+	pad_node *temp;
+	
+	current_settings.toolbar = gtk_toggle_button_get_active (togglebutton);
+	
+	gtk_widget_set_sensitive (GTK_WIDGET (user_data), current_settings.toolbar);
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (current_settings.toolbar)
+			pad_add_toolbar (temp);
+		else
+			pad_remove_toolbar (temp);
+	}
+}
+
+void pref_close (void)
+{
+	if (pref_window)
+	{
+		pref_window = NULL;
+		fio_save_default_settings ();
+	}
+}
+
+static void
+remove_button (GCallback func)
+{
+	pad_node *temp;
+	const toolbar_button *tb;
+	
+	/* find toolbar button */
+	tb = get_toolbar_button (func);
+	
+	if (!tb)
+		return;
+	
+	/*current_settings.toolbar_buttons
+	
+	current_settings.toolbar_buttons = 
+		g_slist_remove (current_settings.toolbar_buttons,
+		(void *) tb->name);*/
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+	/*	GtkWidget *cont = toolbar_get_container (temp->toolbar);*/
+		
+	}
+	
 }
 
 static void
 data_get (GtkWidget *widget, GdkDragContext *drag_context, 
 	GtkSelectionData *data, guint info, guint time, gpointer user_data)
 {
-	printf ("sent data\n");
+	gtk_selection_data_set (data, 
+		gdk_atom_intern ("_XPAD_TOOLBAR_PREF", FALSE),
+		8,
+		(const guchar *) "",
+		0);
 }
-	
+
 static void
-data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
+unused_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data)
 {
-	printf ("got data\n");
+	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
+	GtkWidget *parent = gtk_widget_get_parent (source);
+	
+	gtk_widget_ref (source);
+	gtk_container_remove (GTK_CONTAINER (parent), source);
+	gtk_box_pack_start (GTK_BOX (user_data), source, FALSE, FALSE, 0);
+	gtk_widget_unref (source);
+}
+
+static void
+toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
+	gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data)
+{
+	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
+	GtkWidget *parent = gtk_widget_get_parent (source);
+	
+	gtk_widget_ref (source);
+	gtk_container_remove (GTK_CONTAINER (parent), source);
+	gtk_container_add (GTK_CONTAINER (user_data), source);
+	gtk_widget_unref (source);
 }
 
 static GtkWidget *preferences_create (void)
@@ -238,8 +308,6 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *frame_wm_close;
 	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 3);
-	GtkWidget *vbox_toolbar = gtk_vbox_new (FALSE, 3);
-	GtkWidget *hbox_toolbar = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 3);
@@ -251,7 +319,7 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *hbox_padding = gtk_hbox_new (FALSE, 3);
 	GtkWidget *hbox_border_width = gtk_hbox_new (FALSE, 3);
 	GtkWidget *hbox_border_entries = gtk_hbox_new (FALSE, 3);
-
+	
 	GtkTooltips *tooltips_border = gtk_tooltips_new ();
 	GtkTooltips *tooltips_options = gtk_tooltips_new ();
 	
@@ -259,8 +327,6 @@ static GtkWidget *preferences_create (void)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_background), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_text), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_text), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox_toolbar), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_border), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_font), 6);
@@ -364,50 +430,73 @@ static GtkWidget *preferences_create (void)
 	/* this is a bit hacky, but there is no font-changed signal! */
 	g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font), (gpointer) window);
 	/* key release event does not seem to be sent when I think it should */
+	gtk_widget_add_events(font_selection, GDK_KEY_RELEASE_MASK);
 	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
 
 
 	/* toolbar  setup */
 	{
+		GtkWidget *vbox_toolbar = gtk_vbox_new (FALSE, 3);
+		GtkWidget *hbox_toolbar = gtk_hbox_new (FALSE, 3);
 		GtkWidget *frame = gtk_frame_new ("Buttons");
 		xpad_toolbar *xt = toolbar_new ();
 		gint i;
 		GList *inxt, *tmp, *inxt_funcs = NULL;
-		GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-		GtkWidget *buttonbox = gtk_hbox_new (TRUE, 2);
+		GtkWidget *buttonbox = gtk_hbox_new (FALSE, 3);
 		GtkTooltips *tt = gtk_tooltips_new ();
 		GtkTargetEntry entry;
-		GtkWidget *eventbox = gtk_event_box_new ();
+		GtkWidget *unused_frame = gtk_frame_new ("Unused Buttons");
+		GtkWidget *toolbar_frame = gtk_frame_new ("Toolbar Buttons");
+		GtkWidget *vbox_frame = gtk_vbox_new (FALSE, 0);
+		GtkWidget *vbox_unused_frame = gtk_vbox_new (FALSE, 0);
+		GtkWidget *vbox_toolbar_frame = gtk_vbox_new (FALSE, 0);
+		GtkWidget *toolbar_on = gtk_check_button_new_with_label ("Enable toolbar");
 		
-		entry.target = "tbbutton";
+		entry.target = "_XPAD_TOOLBAR_PREF";
 		entry.flags = GTK_TARGET_SAME_APP;
 		entry.info = 2;
 		
+		gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar), 6);
+		gtk_container_set_border_width (GTK_CONTAINER (hbox_toolbar), 6);
+		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
-		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, FALSE, FALSE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, TRUE, TRUE, 0);
 		
-		gtk_container_add (GTK_CONTAINER (frame), vbox);
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 3);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), current_settings.toolbar);
+		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), frame);
 		
-		gtk_box_pack_start (GTK_BOX (vbox), xt->bar, FALSE, FALSE, 3);
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 3);
+		gtk_widget_set_sensitive (frame, current_settings.toolbar);
+
+		gtk_container_add (GTK_CONTAINER (frame), vbox_frame);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_frame), toolbar_frame, FALSE, FALSE, 3);
+		gtk_container_add (GTK_CONTAINER (toolbar_frame), vbox_toolbar_frame);
+		gtk_container_add (GTK_CONTAINER (vbox_toolbar_frame), xt->bar);
 		toolbar_update (xt);
 		
-		gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new (), FALSE, FALSE, 3);
-		gtk_box_pack_start (GTK_BOX (vbox), eventbox, FALSE, FALSE, 3);
-		gtk_container_add (GTK_CONTAINER (eventbox), buttonbox);
+		gtk_box_pack_start (GTK_BOX (vbox_frame), gtk_hseparator_new (), FALSE, FALSE, 3);
+		gtk_box_pack_start (GTK_BOX (vbox_frame), unused_frame, FALSE, FALSE, 3);
+		gtk_container_add (GTK_CONTAINER (unused_frame), vbox_unused_frame);
+		gtk_container_add (GTK_CONTAINER (vbox_unused_frame), buttonbox);
 		
 		inxt = tmp = toolbar_get_children (xt);
 		
 		while (tmp)
 		{
-			if (toolbar_is_button (GTK_WIDGET (tmp->data)))
-				inxt_funcs = g_list_append (inxt_funcs,
-					g_object_get_data (G_OBJECT (tmp->data), "func"));
+			GtkWidget *widget = GTK_WIDGET (tmp->data);
 			
-			gtk_drag_source_set (GTK_WIDGET (tmp->data),
+			if (toolbar_is_button (widget))
+				inxt_funcs = g_list_append (inxt_funcs,
+					g_object_get_data (G_OBJECT (widget), "func"));
+			else
+				widget = gtk_bin_get_child (GTK_BIN (widget));
+			
+			gtk_drag_source_set (widget,
 				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
 			
-			g_signal_connect (GTK_WIDGET (tmp->data), "drag-data-get", 
+			g_signal_connect (widget, "drag-data-get", 
 				G_CALLBACK (data_get), NULL);
 			
 			tmp = tmp->next;
@@ -422,7 +511,14 @@ static GtkWidget *preferences_create (void)
 			{
 				GtkWidget *b = toolbar_button_new (&buttons[i]);
 				
-				gtk_box_pack_start_defaults (GTK_BOX (buttonbox), b);
+				gtk_box_pack_start (GTK_BOX (buttonbox), b, FALSE,
+					FALSE, 0);
+				
+				gtk_drag_source_set (b,
+					GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
+				
+				g_signal_connect (b, "drag-data-get", 
+					G_CALLBACK (data_get), NULL);
 				
 				gtk_tooltips_set_tip (tt, b, buttons[i].desc, buttons[i].desc);
 			}
@@ -430,16 +526,23 @@ static GtkWidget *preferences_create (void)
 		
 		g_list_free (inxt_funcs);
 		
-		/* now set up drag and dropping */
 		{
+			GtkWidget *cont = toolbar_get_container (xt);
 			
+			gtk_drag_dest_set (unused_frame, GTK_DEST_DEFAULT_ALL,
+				&entry, 1, GDK_ACTION_MOVE);
+			gtk_drag_dest_set (toolbar_frame, GTK_DEST_DEFAULT_ALL,
+				&entry, 1, GDK_ACTION_MOVE);
 			
-			gtk_drag_dest_set (eventbox, GTK_DEST_DEFAULT_HIGHLIGHT | 
-				GTK_DEST_DEFAULT_DROP, &entry, 1, GDK_ACTION_MOVE);
-			
-			g_signal_connect (eventbox, "drag-data-received",
-				G_CALLBACK (data_receive), NULL);
+			g_signal_connect (unused_frame, "drag-data-received",
+				G_CALLBACK (unused_data_receive), buttonbox);
+			g_signal_connect (toolbar_frame, "drag-data-received",
+				G_CALLBACK (toolbar_data_receive), cont);
 		}
+		
+		gtk_container_set_border_width (GTK_CONTAINER (vbox_frame), 6);
+		gtk_container_set_border_width (GTK_CONTAINER (vbox_unused_frame), 6);
+		gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar_frame), 6);
 	}
 	
 	/* misc. setup */

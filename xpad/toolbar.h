@@ -24,5 +24,8 @@ gboolean toolbar_is_button (GtkWidget *widget);
 void toolbar_update (xpad_toolbar *xt);
 
 GtkWidget * toolbar_button_new (const toolbar_button *tb);
+GtkWidget * toolbar_separator_new (void);
+
+GtkWidget *toolbar_get_container (xpad_toolbar *xt);
 
 #endif /* TOOLBAR_H */

@@ -76,6 +76,7 @@ struct settings current_settings =
 		5, /* padding */
 		"serif Bold 16" /* font */
 	},
+	1,
 	NULL /* list of buttons -- default is filled in upon file load*/
 };
 
@@ -87,11 +88,12 @@ static void g_free_helper (gpointer p1, gpointer p2)
 static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
+	pref_close ();
 	cleanup ();
 	g_free (working_dir);
 	
-	g_slist_foreach (current_settings.toolbar, g_free_helper, NULL);
-	g_slist_free (current_settings.toolbar);
+	g_slist_foreach (current_settings.toolbar_buttons, g_free_helper, NULL);
+	g_slist_free (current_settings.toolbar_buttons);
 	return 0;
 }
 

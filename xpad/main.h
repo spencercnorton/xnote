@@ -35,7 +35,8 @@ struct settings {
 	gint edit_lock;
 	gint wm_close;
 	pad_style style;
-	GSList *toolbar;
+	gint toolbar;
+	GSList *toolbar_buttons;
 };
 
 void xpad_display_dialog_with_text (GtkMessageType type, const gchar *text);

@@ -29,6 +29,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
+const toolbar_button *get_toolbar_button (GCallback func)
+{
+	gint i;
+	
+	for (i = 0; i < NUM_BUTTONS; i++)
+	{
+		if (buttons[i].func == func)
+		{
+			return &buttons[i];
+		}
+	}
+	
+	return NULL;
+}
+
 /* helper func to get textbox from window */
 GtkTextView *get_text (GtkWindow *window)
 {
@@ -254,10 +269,10 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
 static void pad_free (pad_node *pad)
 {
 	g_signal_handlers_destroy (pad->window);
+	pad_remove_toolbar (pad);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
 	g_free (pad->contentname);
 	g_free (pad->infoname);
-	g_free (pad->toolbar);
 	g_free (pad);
 }
 
@@ -521,7 +536,8 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	/**
 	 * Here we add a toolbar so the user has quick access to several features.
 	 */
-	if (event->detail != GDK_NOTIFY_INFERIOR)
+	if (current_settings.toolbar &&
+		event->detail != GDK_NOTIFY_INFERIOR)
 	{
 		if (pad->toolbar->timeout)
 			toolbar_end_timeout (pad);
@@ -538,9 +554,10 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	/**
 	 * Here we remove the toolbar.
 	 */
-	if ((event->detail != GDK_NOTIFY_INFERIOR) &&
-	    (event->mode == GDK_CROSSING_NORMAL) &&
-	    !pad->toolbar->timeout)
+	if (current_settings.toolbar &&
+		event->detail != GDK_NOTIFY_INFERIOR &&
+		event->mode == GDK_CROSSING_NORMAL &&
+		!pad->toolbar->timeout)
 	{
 	    toolbar_start_timeout (pad);
 	}
@@ -567,20 +584,21 @@ disable_popup_handler (pad_node *pad)
 {
 	GdkRectangle rect;
 	
-	reenable_toolbar_events (pad);
-	
-	/**
-	 * We must check if we disabled off of pad and start the timeout if so.
-	 */
-	gdk_window_get_pointer (GTK_WIDGET (pad->window)->window,
-		&rect.x, &rect.y, NULL);
-	
-	rect.width = 1;
-	rect.height = 1;
-	
-	if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL) &&
-	    !pad->toolbar->timeout)
+	if (pad->toolbar)
 	{
+		reenable_toolbar_events (pad);
+		
+		/**
+		 * We must check if we disabled off of pad and start the timeout if so.
+		 */
+		gdk_window_get_pointer (GTK_WIDGET (pad->window)->window,
+			&rect.x, &rect.y, NULL);
+		
+		rect.width = 1;
+		rect.height = 1;
+		
+		if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL) &&
+			!pad->toolbar->timeout)
 			toolbar_start_timeout (pad);
 	}
 }
@@ -597,6 +615,8 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_save_as;
 	GtkWidget *menu_item_open;
 	GtkWidget *menu_item_preferences;
+	GtkWidget *menu_item_lock;
+	GtkWidget *menu_item_clear;
 	GtkWidget *separator2, *separator3, *separator4;
 	GtkWidget *tearoff;
 	
@@ -612,6 +632,8 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Delete");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Quit");
 	menu_item_preferences = gtk_image_menu_item_new_with_mnemonic ("_Preferences...");
+	menu_item_clear = gtk_image_menu_item_new_with_mnemonic ("_Clear");
+	menu_item_lock = gtk_check_menu_item_new_with_mnemonic ("_Lock Style");
 	
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
@@ -621,12 +643,17 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_save_as), gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_about), gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_clear), gtk_image_new_from_stock (GTK_STOCK_CLEAR, GTK_ICON_SIZE_MENU));
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item_lock), pad->locked);
 	
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), tearoff);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_clear);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_lock);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
@@ -642,7 +669,9 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_open, "activate", G_CALLBACK (pad_open_file), pad);
 	g_signal_connect_swapped (menu_item_save_as, "activate", G_CALLBACK (pad_save_as_file), pad);
 	g_signal_connect_swapped (menu_item_preferences, "activate", G_CALLBACK (preferences_open), pad);
-	
+	g_signal_connect_swapped (menu_item_clear, "activate", G_CALLBACK (pad_clear), pad);
+	g_signal_connect_swapped (menu_item_lock, "toggled", G_CALLBACK (pad_toggle_lock), pad);
+
 	disable_toolbar_events (pad);
 	g_signal_connect_swapped (menu, "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
@@ -783,7 +812,6 @@ static gboolean window_button_handler (GtkWidget *widget, GdkEventButton *event,
 void
 pad_lock_style (pad_node *pad)
 {
-	printf ("locking\n");
 	pad_style_free (&pad->style);
 	pad_style_copy (&pad->style, &current_settings.style);
 	pad->locked = 1;
@@ -792,7 +820,6 @@ pad_lock_style (pad_node *pad)
 void
 pad_unlock_style (pad_node *pad)
 {
-	printf ("unlocking\n");
 	pad->locked = 0;
 	pad_update_style (pad);
 }
@@ -831,7 +858,8 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	return FALSE;
 }
 
-static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
+static void
+pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 {
 	/* set editable */
 	pad_set_editable (pad, current_settings.edit_lock == 0);
@@ -862,6 +890,38 @@ grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 	return TRUE;
 }
 
+void
+pad_remove_toolbar (pad_node *pad)
+{
+	if (verbosity >= 2) printf ("Removing toolbar from pad.\n");
+
+	if (pad->toolbar)
+	{
+		gtk_widget_ref (pad->toolbar->bar);
+		gtk_container_remove (GTK_CONTAINER (pad->box), pad->toolbar->bar);
+		g_free (pad->toolbar->bar);
+		g_free (pad->toolbar);
+		pad->toolbar = NULL;
+	}
+}
+
+void
+pad_add_toolbar (pad_node *pad)
+{
+	if (verbosity >= 2) printf ("Adding toolbar to pad.\n");
+	
+	if (!pad->toolbar)
+	{
+		pad->toolbar = toolbar_new ();
+		
+		gtk_box_pack_start (GTK_BOX (pad->box), pad->toolbar->bar, FALSE, FALSE, 0);
+		
+		g_signal_connect (G_OBJECT (pad->toolbar->grip), "button-press-event", 
+			G_CALLBACK (grip_press_handler), pad);
+		
+		pad_toolbar_update (pad);
+	}
+}
 
 /*
    creates and returns a pad with an *unshown* window -- to 
@@ -918,6 +978,7 @@ static pad_node *start_pad (void)
 	pad->eventbox_outer = eventbox1;
 	pad->scrollbar = scroll;
 	pad->box = box;
+	pad->toolbar = NULL;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -936,14 +997,11 @@ static pad_node *start_pad (void)
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
+	if (current_settings.toolbar)
+		pad_add_toolbar (pad);
+	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
-	
-	pad->toolbar = toolbar_new ();
-	g_signal_connect (G_OBJECT (pad->toolbar->grip), "button-press-event", 
-		G_CALLBACK (grip_press_handler), pad);
-	
-	gtk_box_pack_end (GTK_BOX (pad->box), pad->toolbar->bar, FALSE, FALSE, 0);
 	
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
@@ -955,11 +1013,11 @@ static pad_node *start_pad (void)
 pad_node *pad_new (void)
 {
 	pad_node *pad;
-
+	
 	if (verbosity >= 2) printf ("Making new pad.\n");
-
+	
 	pad = start_pad ();
-
+	
 	gtk_window_set_default_size (pad->window, 
 		current_settings.style.padding + current_settings.style.border_width
 			+ current_settings.width,
@@ -974,13 +1032,11 @@ pad_node *pad_new (void)
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	pad->locked = 0;
 	
-	pad_toolbar_update (pad);
-	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
 	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
-
+	
 	return pad;
 }
 
@@ -1004,14 +1060,12 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad_style_copy (&pad->style, &info->style);
 	pad_update_style (pad);
 	
-	pad_toolbar_update (pad);
-	
 	fio_open_pad_files (pad, FALSE);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
 	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
-
+	
 	return pad;
 }

@@ -174,7 +174,7 @@ void fio_save_default_settings (void)
 		"sync_time %i\ndecorations %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\nbuttons ",
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
 		current_settings.sync_time, current_settings.decorations,
 		current_settings.width, current_settings.height,
@@ -182,9 +182,9 @@ void fio_save_default_settings (void)
 		current_settings.style.text.red, current_settings.style.text.green, current_settings.style.text.blue,
 		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
 		current_settings.style.border_width, current_settings.style.padding,
-		current_settings.style.fontname);
+		current_settings.style.fontname, current_settings.toolbar);
 	
-	tmp = current_settings.toolbar;
+	tmp = current_settings.toolbar_buttons;
 	
 	while (tmp)
 	{
@@ -266,13 +266,13 @@ static void fio_save_info_file (pad_node *pad)
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
-	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	if (pad->toolbar && GTK_WIDGET_VISIBLE (pad->toolbar->bar))
 		height -= pad->toolbar->height;
 	
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"back_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\nbuttons ",
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, height, pad->locked,
 		pad->contentname,
 		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
@@ -368,6 +368,7 @@ gint fio_load_default_settings (void)
 						"border_width", &current_settings.style.border_width,
 						"padding", &current_settings.style.padding,
 						"fontname", &current_settings.style.fontname,
+						"toolbar", &current_settings.toolbar,
 						"buttons", &buttons,
 						NULL ))
 		return 1;
@@ -386,10 +387,14 @@ gint fio_load_default_settings (void)
 	
 	if (!buttons) /* no buttons specified, so we make our own */
 	{
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("New"));
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("Delete"));
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("sep"));
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("Clear"));
+		current_settings.toolbar_buttons = 
+			g_slist_append (current_settings.toolbar_buttons, g_strdup ("New"));
+		current_settings.toolbar_buttons = 
+			g_slist_append (current_settings.toolbar_buttons, g_strdup ("Delete"));
+/*		current_settings.toolbar_buttons = 
+			g_slist_append (current_settings.toolbar_buttons, g_strdup ("sep"));*/
+		current_settings.toolbar_buttons = 
+			g_slist_append (current_settings.toolbar_buttons, g_strdup ("Clear"));
 	}
 	else
 	{
@@ -405,7 +410,8 @@ gint fio_load_default_settings (void)
 		{
 			dup = g_strstrip (g_strdup (temp));
 			
-			current_settings.toolbar = g_slist_append (current_settings.toolbar, dup);
+			current_settings.toolbar_buttons = 
+				g_slist_append (current_settings.toolbar_buttons, dup);
 		}
 		
 		g_strfreev  (button_names);
