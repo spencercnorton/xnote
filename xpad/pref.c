@@ -36,6 +36,8 @@ static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 	
 	for (temp = first_pad; temp; temp = temp->next)
 	{
+		if (temp->locked) continue;
+		
 		gtk_widget_modify_base (GTK_WIDGET (get_text (temp->window)),
 			GTK_STATE_NORMAL, &current_settings.style.back);
 		gtk_widget_modify_bg (GTK_WIDGET (get_text (temp->window)),
@@ -53,8 +55,12 @@ static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
 		&current_settings.style.text);
 	
 	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (temp->locked) continue;
+		
 		gtk_widget_modify_text (GTK_WIDGET (get_text (temp->window)),
 			GTK_STATE_NORMAL, &current_settings.style.text);
+	}
 	
 	return FALSE;
 }
@@ -67,8 +73,12 @@ static gboolean change_border_color (GtkWidget *colorsel, GtkWidget *window)
 		&current_settings.style.border);
 	
 	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (temp->locked) continue;
+		
 		gtk_widget_modify_bg (GTK_WIDGET (temp->eventbox_outer),
 			GTK_STATE_NORMAL, &current_settings.style.border);
+	}
 	
 	return FALSE;
 }
@@ -80,8 +90,12 @@ static gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 	current_settings.style.padding = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
 	
 	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (temp->locked) continue;
+		
 		gtk_container_set_border_width (GTK_CONTAINER (get_text (temp->window)),
 			current_settings.style.padding);
+	}
 	
 	return FALSE;
 }
@@ -95,8 +109,12 @@ static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 	gtk_widget_set_sensitive(colorsel, (current_settings.style.border_width != 0));
 	
 	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (temp->locked) continue;
+		
 		gtk_container_set_border_width (GTK_CONTAINER (temp->eventbox),
 			current_settings.style.border_width);
+	}
 	
 	return FALSE;
 }
@@ -114,7 +132,11 @@ static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	fontdesc = pango_font_description_from_string (current_settings.style.fontname);
 	
 	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (temp->locked) continue;
+		
 		gtk_widget_modify_font (GTK_WIDGET (get_text (temp->window)), fontdesc);
+	}
 	
 	g_free (fontdesc);
 	

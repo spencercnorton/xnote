@@ -69,11 +69,26 @@ toolbar_end_timeout (pad_node *pad)
 GtkWidget *
 toolbar_button_new (const toolbar_button *tb)
 {
-	GtkWidget *rv = gtk_button_new ();
-	GtkWidget *image = gtk_image_new_from_stock (tb->stock, 
+	GtkWidget *rv;
+	GtkWidget *image;
+	
+	switch (tb->type)
+	{
+	default:
+	case 0:
+		rv = gtk_button_new ();
+		break;
+	case 1:
+		rv = gtk_toggle_button_new ();
+		break;
+	}
+	
+	image = gtk_image_new_from_stock (tb->stock, 
 		GTK_ICON_SIZE_SMALL_TOOLBAR);
 	
 	gtk_container_add (GTK_CONTAINER (rv), image);
+	
+	g_object_set_data (G_OBJECT (rv), "func", (void *) tb->func);
 	
 	return rv;
 }
@@ -81,20 +96,20 @@ toolbar_button_new (const toolbar_button *tb)
 static void
 toolbar_add_separator (xpad_toolbar *xt)
 {
-/*	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_get_box (xt->bar)));*/
-	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
-		gtk_vseparator_new (), NULL, NULL);
+	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_get_box (xt->bar)));
+/*	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
+		gtk_vseparator_new (), NULL, NULL);*/
 }
 
 static void
 toolbar_add_button (xpad_toolbar *xt, const toolbar_button *tb)
 {
-	GtkWidget *button = toolbar_button_new (tb);
+	GtkWidget *button;
+	
+	button = toolbar_button_new (tb);
 	
 	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
 		button, tb->desc, tb->desc);
-	
-	g_object_set_data (G_OBJECT (button), "func", (void *) tb->func);
 }
 
 void
@@ -142,9 +157,11 @@ GList *toolbar_get_buttons (xpad_toolbar *xt)
 	while (tmp)
 	{
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
+		const gchar *type;
 		
-		if (strcmp (GTK_OBJECT_TYPE_NAME
-			(GTK_OBJECT (widget)), "GtkButton"))
+		type = GTK_OBJECT_TYPE_NAME (GTK_OBJECT (widget));
+		
+		if (strcmp (type, "GtkButton") && strcmp (type, "GtkToggleButton"))
 		{
 			GList *backup = tmp->next;
 			

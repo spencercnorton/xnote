@@ -132,46 +132,93 @@ void pads_set_editable (gboolean editable)
 
 static void pad_update_style (pad_node *pad)
 {
-	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
-	GtkRcStyle *style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
-
-	style->base[GTK_STATE_NORMAL] = current_settings.style.back;
-	style->text[GTK_STATE_NORMAL] = current_settings.style.text;
-	style->bg[GTK_STATE_NORMAL] = current_settings.style.back;
+	GtkRcStyle *style;
+	GtkRcStyle *style1;
+	pad_style *pstyle;
+	
+	if (pad->locked)
+		pstyle = &pad->style;
+	else
+		pstyle = &current_settings.style;
+	
+	style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
+	style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
+	
+	style->base[GTK_STATE_NORMAL] = pstyle->back;
+	style->text[GTK_STATE_NORMAL] = pstyle->text;
+	style->bg[GTK_STATE_NORMAL] = pstyle->back;
 	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
-	style->font_desc = pango_font_description_from_string (current_settings.style.fontname);
-	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), current_settings.style.padding);
-
-	style1->bg[GTK_STATE_NORMAL] = current_settings.style.border;
+	style->font_desc = pango_font_description_from_string (pstyle->fontname);
+	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
+	
+	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
 	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
-	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), current_settings.style.border_width);
+	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
 	
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
 	gtk_widget_modify_style (pad->eventbox_outer, style1);
 	
-	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); /* this is necessary to show the changed border color */
+	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
+}
+
+void pad_style_copy (pad_style *dest, pad_style *source)
+{
+	dest->back = source->back;
+	dest->text = source->text;
+	dest->border = source->border;
+	dest->border_width = source->border_width;
+	dest->padding = source->padding;
+	dest->fontname = g_strdup (source->fontname);
+}
+
+void pad_style_free (pad_style *style)
+{
+	g_free (style->fontname);
+}
+
+static void pad_toolbar_update (pad_node *pad)
+{
+	GList *list, *tmp;
 	
+	list = tmp = toolbar_get_buttons (pad->toolbar);
+	
+	while (tmp)
 	{
-		GList *list, *tmp;
+		GCallback func;
+		GtkWidget *widget = GTK_WIDGET (tmp->data);
 		
-		toolbar_update (pad->toolbar);
+		func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
 		
-		list = tmp = toolbar_get_buttons (pad->toolbar);
+		g_signal_handlers_disconnect_by_func (widget, (void *) func, pad);
 		
-		while (tmp)
+		tmp = tmp->next;
+	}
+	
+	g_list_free (list);
+	
+	toolbar_update (pad->toolbar);
+	
+	list = tmp = toolbar_get_buttons (pad->toolbar);
+	
+	while (tmp)
+	{
+		GCallback func;
+		GtkWidget *widget = GTK_WIDGET (tmp->data);
+		
+		func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
+		
+		if (func == G_CALLBACK (pad_toggle_lock))
 		{
-			GCallback func;
-			GtkWidget *widget = GTK_WIDGET (tmp->data);
-			
-			func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
-			
-			g_signal_connect (widget, "clicked", func, pad);
-			
-			tmp = tmp->next;
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+				pad->locked);
 		}
 		
-		g_list_free (list);
+		g_signal_connect_swapped (widget, "clicked", func, pad);
+		
+		tmp = tmp->next;
 	}
+	
+	g_list_free (list);
 }
 
 static void quit_if_no_pads (void)
@@ -751,14 +798,27 @@ static gboolean window_button_handler (GtkWidget *widget, GdkEventButton *event,
 void
 pad_lock_style (pad_node *pad)
 {
-	pad->locked = TRUE;
+	printf ("locking\n");
+	pad_style_free (&pad->style);
+	pad_style_copy (&pad->style, &current_settings.style);
+	pad->locked = 1;
 }
 
 void
 pad_unlock_style (pad_node *pad)
 {
-	pad->locked = FALSE;
+	printf ("unlocking\n");
+	pad->locked = 0;
 	pad_update_style (pad);
+}
+
+void
+pad_toggle_lock (pad_node *pad)
+{
+	if (pad->locked)
+		pad_unlock_style (pad);
+	else
+		pad_lock_style (pad);
 }
 
 static gboolean
@@ -770,8 +830,6 @@ focus_in_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 static gboolean
 focus_out_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 {
-	printf ("If pad won't leave edit mode, hopefully you see this message still.\n");
-	       
 	if (current_settings.edit_lock && pad_get_editable (pad))
 		pad_set_editable (pad, FALSE);
 	
@@ -902,8 +960,6 @@ static pad_node *start_pad (void)
 	
 	gtk_box_pack_end (GTK_BOX (pad->box), pad->toolbar->bar, FALSE, FALSE, 0);
 	
-	pad_update_style (pad);
-	
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
@@ -924,10 +980,16 @@ pad_node *pad_new (void)
 			+ current_settings.width,
 		current_settings.style.padding + current_settings.style.border_width
 			+ current_settings.height);
-
+	
 	fio_open_pad_files (pad, TRUE);
-
+	
+	pad_style_copy (&pad->style, &current_settings.style);
+	pad_update_style (pad);
+	
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
+	pad->locked = 0;
+	
+	pad_toolbar_update (pad);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
@@ -940,21 +1002,27 @@ pad_node *pad_new (void)
 pad_node *pad_new_with_info (pad_info *info)
 {
 	pad_node *pad;
-
+	
 	if (verbosity >= 2) printf ("Making new pad with info.\n");
-
+	
 	pad = start_pad ();
-
+	
 	gtk_window_set_default_size (pad->window, info->width, info->height);
 	gtk_window_move (pad->window, info->x, info->y);
-
+	
 	pad_fill_with_file (pad, info->contentname);
-
+	
+	pad->locked = info->locked;
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
-
+	
+	pad_style_copy (&pad->style, &info->style);
+	pad_update_style (pad);
+	
+	pad_toolbar_update (pad);
+	
 	fio_open_pad_files (pad, FALSE);
-
+	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));

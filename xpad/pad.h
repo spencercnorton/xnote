@@ -33,24 +33,6 @@ typedef struct pad_style_def pad_style;
 typedef struct toolbar_button_def toolbar_button;
 
 
-/* holds all the internal data we need to manipulate pads */
-struct pad_node_def
-{
-	pad_node *next;
-	gint x, y, width, height;
-	gchar *infoname;
-	gchar *contentname;
-	gboolean locked;
-	
-	GtkWindow *window;
-	GtkWidget *eventbox;
-	GtkWidget *eventbox_outer;
-	GtkWidget *scrollbar;
-	GtkWidget *box;	/* holds textbox stuff and toolbar */
-	
-	xpad_toolbar *toolbar;
-};
-
 /* describes the custom styles of a pad */
 struct pad_style_def
 {
@@ -62,6 +44,26 @@ struct pad_style_def
 	gchar *fontname;
 } current_style;
 
+/* holds all the internal data we need to manipulate pads */
+struct pad_node_def
+{
+	pad_node *next;
+	gint x, y, width, height;
+	gchar *infoname;
+	gchar *contentname;
+	gint locked;
+	
+	pad_style style;
+	
+	GtkWindow *window;
+	GtkWidget *eventbox;
+	GtkWidget *eventbox_outer;
+	GtkWidget *scrollbar;
+	GtkWidget *box;	/* holds textbox stuff and toolbar */
+	
+	xpad_toolbar *toolbar;
+};
+
 /* used to keep all the persistant data we need for one pad */
 struct pad_info_def
 {
@@ -69,6 +71,10 @@ struct pad_info_def
 	gint y;
 	gint width;
 	gint height;
+	gint locked;
+	
+	pad_style style;
+	
 	gchar *infoname;
 	gchar *contentname;
 };
@@ -91,28 +97,31 @@ void pad_save_as_file (pad_node *pad);
 void pad_close_all (void);
 gboolean pad_confirm_destroy (pad_node *pad);
 void pad_clear (pad_node *pad);
-void pad_lock_style (pad_node *pad);
+void pad_toggle_lock (pad_node *pad);
+void pad_style_copy (pad_style *dest, pad_style *source);
+void pad_style_free (pad_style *dest);
 
 struct toolbar_button_def
 {
 	const gchar *name;
 	const gchar *stock;
+	guint type;
 	GCallback func;
 	const gchar *desc;
 };
 
 static const toolbar_button buttons[] =
 {
-	{"Close", "gtk-close", G_CALLBACK (pad_close), "Close and Save Pad"},
-	{"Delete", "gtk-delete", G_CALLBACK (pad_confirm_destroy), "Delete Pad"},
-	{"Help", "gtk-help", G_CALLBACK (show_help), "Open Help"},
-	{"Preferences", "gtk-preferences", G_CALLBACK (preferences_open), "Open Preferences"},
-	{"New", "gtk-new", G_CALLBACK (pad_new), "Open New Pad"},
-	{"Open", "gtk-open", G_CALLBACK (pad_open_file), "Open File"},
-	{"Save As", "gtk-save-as", G_CALLBACK (pad_save_as_file), "Save Pad As File"},
-	{"Quit", "gtk-quit", G_CALLBACK (pad_close_all), "Close and Save All Pads"},
-	{"Lock", "xpad-lock", G_CALLBACK (pad_lock_style), "Lock Style"},
-	{"Clear", "gtk-clear", G_CALLBACK (pad_clear), "Clear Pad Contents"}
+	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), "Close and Save Pad"},
+	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), "Delete Pad"},
+	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Open Help"},
+	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Open Preferences"},
+	{"New", "gtk-new", 0, G_CALLBACK (pad_new), "Open New Pad"},
+	{"Open", "gtk-open", 0, G_CALLBACK (pad_open_file), "Open File"},
+	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), "Save Pad As File"},
+	{"Quit", "gtk-quit", 0, G_CALLBACK (pad_close_all), "Close and Save All Pads"},
+	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), "Lock Style"},
+	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), "Clear Pad Contents"}
 };
 
 

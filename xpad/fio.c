@@ -277,11 +277,17 @@ static void fio_save_info_file (pad_node *pad)
 	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
 		height -= pad->toolbar->height;
 	
-	/* we don't really need to save the style, since we don't use it, but it makes
-	   later running an older version of xpad nice.  At some point this will be removed. */
-    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\ncontent %s\n",
-		pad->x, pad->y, pad->width, height, 
-		pad->contentname);
+    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
+		"back_red %d\nback_green %d\nback_blue %d\n"
+		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\nbuttons ",
+		pad->x, pad->y, pad->width, height, pad->locked,
+		pad->contentname,
+		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
+		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
+		pad->style.border.red, pad->style.border.green, pad->style.border.blue,
+		pad->style.border_width, pad->style.padding,
+		pad->style.fontname);
 	
 	fio_set_file (pad->infoname, info_file);
 	
@@ -420,17 +426,65 @@ gint fio_load_default_settings (void)
 /* filename must be absolute */
 static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
-	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
+	/**
+	 * We need to set up int values for all these to take the value from the file.
+	 * These will be assigned back to the appropriate values after load.
+	 */
+	gint back_R = current_settings.style.back.red,
+		 back_G = current_settings.style.back.green,
+		 back_B = current_settings.style.back.blue,
+		 
+	     text_R = current_settings.style.text.red,
+		 text_G = current_settings.style.text.green,
+		 text_B = current_settings.style.text.blue,
+		 
+	     bord_R = current_settings.style.border.red,
+		 bord_G = current_settings.style.border.green,
+		 bord_B = current_settings.style.border.blue;
 
+	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
+	
+	info->style.fontname = NULL;
+	info->style.padding = current_settings.style.padding;
+	info->style.border_width = current_settings.style.border_width;
+	
 	fio_get_values_from_file (  filename,
 							"x", &info->x,
 							"y", &info->y,
 							"width", &info->width,
 							"height", &info->height,
 							"content", &info->contentname,
+							"locked", &info->locked,
+							"back_red", &back_R,
+							"back_green", &back_G,
+							"back_blue", &back_B,
+							"text_red", &text_R,
+							"text_green", &text_G,
+							"text_blue", &text_B,
+							"border_red", &bord_R,
+							"border_green", &bord_G,
+							"border_blue", &bord_B,
+							"border_width", &info->style.border_width,
+							"padding", &info->style.padding,
+							"fontname", &info->style.fontname,
 							NULL);
 	info->infoname = g_strdup (filename);
-
+	
+	if (!info->style.fontname)
+		info->style.fontname = g_strdup (current_settings.style.fontname);
+	
+	info->style.back.red = back_R;
+	info->style.back.green = back_G;
+	info->style.back.blue = back_B;
+	
+	info->style.text.red = text_R;
+	info->style.text.green = text_G;
+	info->style.text.blue = text_B;
+	
+	info->style.border.red = bord_R;
+	info->style.border.green = bord_G;
+	info->style.border.blue = bord_B;
+	
 	return 0;
 }
 
