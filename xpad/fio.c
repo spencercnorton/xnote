@@ -158,16 +158,18 @@ gchar *fio_find_free_filename (gchar *pattern)
 	
 	do	{
 		guint32 num = g_random_int ();
-		gchar numstr[15];
+		gchar *numstr = (gchar *) g_malloc (strlen (pattern) + 11); // 10 for size of largest num, 1 for null byte
 		
-		sprintf (numstr, "%s%i", pattern, num);
+		sprintf (numstr, "%s%u", pattern, num);
 		
-		if (!s)
+		if (s)
 			g_free (s);
 		
-		s = g_build_filename (working_dir, numstr);
+		s = g_build_filename (working_dir, numstr, NULL);
+		
+		g_free (numstr);
 	}
-	while (!g_file_test (s, G_FILE_TEST_EXISTS));
+	while (g_file_test (s, G_FILE_TEST_EXISTS));
 	
 	return s;
 }
@@ -316,23 +318,30 @@ static void fio_save_info_file (pad_node *pad)
 	gchar info_file[MAX_FILE_SIZE + 1];
 	gchar *content;
 	gchar temp[MAX_FILENAME_SIZE + 1];
-	pad_style *pstyle;
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
 
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 
-	pstyle = pad_get_style (pad);
-
 	/* we don't really need to save the style, since we don't use it, but it makes
 	   later running an older version of xpad nice.  At some point this will be removed. */
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		pad->x, pad->y, pad->width, pad->height, 
-		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
-		pstyle->text.red, pstyle->text.green, pstyle->text.blue,
-		pstyle->border.red, pstyle->border.green, pstyle->border.blue,
-		pstyle->border_width, pstyle->padding,
-		pstyle->fontname);
+		current_settings.style.back.red, 
+		current_settings.style.back.green,
+		current_settings.style.back.blue,
+		
+		current_settings.style.text.red,
+		current_settings.style.text.green,
+		current_settings.style.text.blue,
+		
+		current_settings.style.border.red,
+		current_settings.style.border.green,
+		current_settings.style.border.blue,
+		
+		current_settings.style.border_width,
+		current_settings.style.padding,
+		current_settings.style.fontname);
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
@@ -346,8 +355,6 @@ static void fio_save_info_file (pad_node *pad)
     g_free (content);
 	
 	fio_set_file (pad->infoname, info_file);
-	
-	g_free (pstyle);
 }
 
 /* save contents and locations of a pad */

@@ -110,12 +110,10 @@ static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	/* free current memory used by fontname */
 	g_free (current_settings.style.fontname);
 	
-	/* warning: make sure this returned string can safely be g_free'd at our leisure */
 	current_settings.style.fontname = gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel));
 	
 	fontdesc = pango_font_description_from_string (current_settings.style.fontname);
 	
-	/* another warning: make sure that i don't have to do anything about this fontdesc */
 	for (temp = first_pad; temp; temp = temp->next)
 		gtk_widget_modify_font (GTK_WIDGET (get_text (temp->window)), fontdesc);
 	

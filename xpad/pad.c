@@ -122,43 +122,26 @@ void pads_set_editable (gboolean editable)
 	}
 }
 
-static void pad_set_style (pad_node *pad, pad_style *pstyle)
+static void pad_update_style (pad_node *pad)
 {
 	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
 	GtkRcStyle *style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
 
-	style->base[GTK_STATE_NORMAL] = pstyle->back;
-	style->text[GTK_STATE_NORMAL] = pstyle->text;
-	style->bg[GTK_STATE_NORMAL] = pstyle->back;
+	style->base[GTK_STATE_NORMAL] = current_settings.style.back;
+	style->text[GTK_STATE_NORMAL] = current_settings.style.text;
+	style->bg[GTK_STATE_NORMAL] = current_settings.style.back;
 	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
-	style->font_desc = pango_font_description_from_string (pstyle->fontname);
-	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
+	style->font_desc = pango_font_description_from_string (current_settings.style.fontname);
+	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), current_settings.style.padding);
 
-	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
+	style1->bg[GTK_STATE_NORMAL] = current_settings.style.border;
 	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
-	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
+	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), current_settings.style.border_width);
 	
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
 	gtk_widget_modify_style (pad->eventbox_outer, style1);
 
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
-}
-
-// returned pad_style must be g_free'd
-pad_style *pad_get_style (pad_node *pad)
-{
-	pad_style *pstyle = (pad_style *) g_malloc (sizeof (pad_style));
-	GtkStyle *style = gtk_widget_get_style (GTK_WIDGET(get_text(pad->window)));
-	GtkStyle *style1 = gtk_widget_get_style (GTK_WIDGET(pad->eventbox_outer));
-
-	pstyle->back = style->base[GTK_STATE_NORMAL];
-	pstyle->text = style->text[GTK_STATE_NORMAL];
-	pstyle->border = style1->bg[GTK_STATE_NORMAL];
-	pstyle->border_width = gtk_container_get_border_width (GTK_CONTAINER (pad->eventbox));
-	pstyle->padding = gtk_container_get_border_width (GTK_CONTAINER (get_text (pad->window)));
-	pstyle->fontname = pango_font_description_to_string (style->font_desc);
-
-	return pstyle;
 }
 
 static void quit_if_no_pads (void)
@@ -797,6 +780,8 @@ static pad_node *start_pad (void)
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
+	pad_update_style (pad);
+	
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
@@ -817,8 +802,6 @@ pad_node *pad_new (void)
 			+ current_settings.width,
 		current_settings.style.padding + current_settings.style.border_width
 			+ current_settings.height);
-
-	pad_set_style (pad, &current_settings.style);
 
 	fio_open_pad_files (pad, TRUE);
 
@@ -844,8 +827,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	gtk_window_move (pad->window, info->x, info->y);
 
 	pad_fill_with_file (pad, info->contentname);
-
-	pad_set_style (pad, &info->style);
 
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
