@@ -17,7 +17,7 @@ TryExec=xpad
 Exec=xpad
 
 Terminal=false
-Icon=xpad/xpad.xpm
+Icon=xpad.xpm
 StartupNotify=true
 
 Type=Application
