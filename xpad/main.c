@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
+#include <string.h>
 
 /* static data */
 gchar working_dir[1024];
@@ -41,7 +42,6 @@ void sigcatch (int signum)
 void handle_args (int *argc, char ***argv)
 {
 	gint i;
-	char *arg;
 
 	for (i = 0; i < *argc; i++)
 	{
@@ -69,6 +69,8 @@ void handle_args (int *argc, char ***argv)
 int checkup (gpointer data)
 {
 	save_pads ();
+
+	return 0;
 }
 
 void xpad_init (int *argc, char ***argv)
@@ -119,5 +121,6 @@ int main (int argc, char *argv[])
 
 	return 0;
 }
+
 
 

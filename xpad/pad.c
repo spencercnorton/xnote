@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "font.h"
 #include "color.h"
 #include "fio.h"
+#include <stdio.h>
 
 pad_info DEFAULT_INFO = {0, 0, 260, 260, { {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "charter Medium 12"}, ""};
 pad_info current_info;
@@ -170,7 +171,7 @@ void pad_move (pad_node *node, GdkEvent *event)
 
 void pad_resize (pad_node *node, GdkEvent *event)
 {
-	gint x, y, mousex, mousey;
+	gint x, y;
 	GdkEventButton *eb = (GdkEventButton *) event;
 
 	gdk_window_get_root_origin (GTK_WIDGET(node->window)->window, &x, &y);
@@ -385,6 +386,7 @@ pad_node *create_pad_with_info (pad_info *info)
 
 	return pad;
 }
+
 
 
 

@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "color.h"
 #include "pad.h"
+#include "fio.h"
+#include <stdio.h>
 
 /* coupling is nothing more than a convenience struct, bundling a widget with 
    its original style. */
@@ -120,7 +122,7 @@ void color_select (GtkWidget *widget, gboolean is_base)
 	gchar title[30];
 	coupling *c = (coupling *) g_malloc (sizeof (coupling));
 
-	c->widget = GTK_WIDGET (get_text (widget));
+	c->widget = GTK_WIDGET (get_text (GTK_WINDOW(widget)));
 	c->is_base = is_base;
 	
 	if (is_base == TRUE)
@@ -156,6 +158,7 @@ void text_color_select (GtkWidget *widget)
 {
 	color_select (widget, FALSE);
 }
+
 
 
 

@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <glob.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 const gchar *TEMP_PAD_INFO_PREFIX = "temp-info";
 const gchar *TEMP_PAD_CONTENT_PREFIX = "content";
@@ -351,6 +353,8 @@ void load_pads ()
 
 	globfree (&globbuf);
 }
+
+
 
 
 
