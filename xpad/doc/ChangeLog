@@ -1,3 +1,8 @@
+1.11
+-----
+add new icon and install icon family into new location per icon theme spec
+add russian translation and fix up code to be able to use it
+
 1.10
 ----
 rewrote applet popup menu to be more consistent and hopefully useful
