@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/file.h>
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
-#include <unistd.h>
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -301,17 +300,15 @@ void cleanup (void)
 	pad_close_all();
 }
 
-/* must be full filename */
 static void pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
-	struct stat statbuf;
 	GtkTextBuffer *buffer;
 	GtkTextView *textbox = get_text (pad->window);
 	
-	stat (filename, &statbuf);
-	contentbuf = (gchar *) g_malloc (statbuf.st_size + 1);
-	fio_get_file (filename, contentbuf, statbuf.st_size);
+	printf ("filling with file %s\n", filename);
+	
+	contentbuf = fio_get_file (filename);
 	buffer = gtk_text_view_get_buffer (textbox);
 	gtk_text_buffer_set_text (buffer, contentbuf, -1);
 	g_free (contentbuf);
@@ -363,21 +360,20 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 {
 	const gchar *filename;
 	GtkFileSelection *selector;
-	int tempfile;
+	FILE *tempfile;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can read it. */
-	tempfile = open(filename, O_RDONLY);
-	if (tempfile == -1)
+	tempfile = fopen(filename, "r");
+	if (tempfile == NULL)
 	{
 		display_dialog_with_text (pad, "Cannot open file.");
 		return;
 	}
-
-	close(tempfile);
+	fclose(tempfile);
 
 	if (pad_is_empty (pad))
 		pad_fill_with_file (pad, filename);
@@ -424,21 +420,20 @@ static void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	gchar *content;
 	const gchar *filename;
 	GtkFileSelection *selector;
-	int tempfile;
+	FILE *tempfile;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can write to it. */
-	tempfile = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-	if (tempfile == -1)
+	tempfile = fopen(filename, "w");
+	if (tempfile == NULL)
 	{
 		display_dialog_with_text (pad, "Cannot write to file.");
 		return;
 	}
-
-	close(tempfile);
+	fclose(tempfile);
 
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);

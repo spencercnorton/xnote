@@ -24,124 +24,72 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 
 
 /* sets filename to full path of filename (prepends working_dir to it) 
    returns 0 if filename was full path, 1 if we added to it.
+   
+   returned name must be g_free'd
 */
-static gint fio_fill_filename (gchar *filename)
+static gchar *fio_fill_filename (const gchar *filename)
 {
-	size_t filename_len;
-
 	if (g_path_is_absolute (filename))
-		return 0;
-	
-	filename_len = strlen(filename);
-	
-	if ((filename_len + working_dir_len) > MAX_FILENAME_SIZE)
 	{
-		fprintf(stderr, "Full path to file is too long!\n");
-		return 0;
+		return g_strdup (filename);
 	}
 	
-	g_memmove(filename + working_dir_len, filename, filename_len + 1);
-	memcpy(filename, working_dir, working_dir_len);
-	
-	return 1;
+	return g_build_filename (working_dir, filename, NULL);
 }
 
 gint fio_set_file (const gchar *name, const gchar *value)
 {
 	FILE *file;
-	gchar temp[MAX_FILENAME_SIZE + 1];
+	gchar *temp;
 	
-	strcpy (temp, name);
-	fio_fill_filename (temp);
+	temp = fio_fill_filename (name);
 	
-	if ( (file = fopen (temp, "w+")) == NULL)
+	if ( (file = fopen (temp, "w")) == NULL)
 	{
-		if (verbosity >= 1) 
-			printf ("Could not open file [%s] for writing.\n", temp);
-			return 1;
+		fprintf (stderr, "Could not open file [%s] for writing.\n", temp);
+		g_free (temp);
+		return 1;
 	}
 	
 	if (fputs (value, file) == EOF)
 	{
-		fprintf(stderr, "Failed to write file [%s].\n", name);
-		return 1;
+		fprintf (stderr, "Failed to write file [%s].\n", name);
 	}
-
+	
 	fclose (file);
+	g_free (temp);
 	
 	return 0;
 }
 
 
-gint fio_get_file(const gchar *name, gchar *value, gint size)
+/**
+ * Returned gchar * must be g_free'd.
+ */
+gchar *fio_get_file (const gchar *name)
 {
-	gchar temp[MAX_FILENAME_SIZE + 1];
-	FILE *file;
-	size_t bytesread;
-
-	strcpy(temp, name);
-	fio_fill_filename(temp);
-
-	file = fopen(temp, "r");
-	if (!file)
+	gchar *fullname;
+	gchar *contents;
+	
+	fullname = fio_fill_filename (name);
+	
+	if (!g_file_get_contents (fullname, &contents, NULL, NULL))
 	{
-		value[0] = '\0';
-		if (verbosity >= 1)
-			printf("Could not open file [%s] "
-				"for reading.\n",
-				temp);
-		return 1;
+		fprintf (stderr, "Failed to read file [%s].\n", name);
+		g_free (fullname);
+		return NULL;
 	}
-
-	if (size <= 0)
+	else
 	{
-		/* If reading 0 bytes.  Just report success but 
-		 * don't try to read anything.
-		 */
-		 fclose(file);
-		 strcpy (value, "");
-		 return 0;
+		g_free (fullname);
+		return contents;
 	}
-
-	clearerr(file);
-
-	/* Try to read exactly "size + 1" bytes.  Note that we'll actually
-	 * only keep at most "size" However, attempting to read that 
-	 * one extra byte will let us be absolutely sure if the file is larger
-	 * than our buffer.
-	 */
-	bytesread = fread(value, 1, size + 1, file);
-
-	if (bytesread >= size + 1)
-	{
-		bytesread = size;
-		
-		if (verbosity >= 1)
-			printf ("Warning: File [%s] larger than "
-				"buffer size.",
-				temp);
-	}
-
-	value[bytesread] = '\0';
-
-	if (ferror(file))
-	{
-		fclose(file);
-		if (verbosity >= 1) 
-			printf("Error reading from [%s]: %s\n",
-				temp,
-				g_strerror(ferror(file)));
-		return 1;
-	}
-
-	fclose(file);
-	return 0;
 }
+
 
 /**
  * Unfortunately, this function is necessary, since mkstemp() is not portable,
@@ -229,10 +177,12 @@ void fio_save_as_defaults (struct settings *set)
  */
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
-	gchar buf[MAX_FILE_SIZE + 1];
+	gchar *buf;
 	va_list ap;
 	
-	if (fio_get_file (filename, buf, MAX_FILE_SIZE))
+	buf = fio_get_file (filename);
+	
+	if (!buf)
 		return 1;
 	
 	va_start (ap, filename);
@@ -268,6 +218,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	}
 
 	va_end (ap);
+	g_free (buf);
 
 	return 0;
 }
@@ -377,14 +328,13 @@ void fio_save_pads (void)
 
 static void fio_remove_file (gchar *filename)
 {
-	gchar long_filename[MAX_FILENAME_SIZE + 1];
-
-	if (filename[0] == '/')
-		strcpy (long_filename, filename);
-	else
-		sprintf (long_filename, "%s%s", working_dir, filename);
-
-	remove (long_filename);
+	gchar *temp;
+	
+	temp = fio_fill_filename (filename);
+	
+	remove (temp);
+	
+	g_free (temp);
 }
 
 void fio_remove_pad_files (pad_node *pad)
@@ -443,7 +393,7 @@ void fio_load_pads (void)
 		{
 			/* some older versions of xpad only had relative filename
 				so, we have to add full path if it isn't there. */
-			fio_fill_filename (info.contentname);
+			//info.contentname = fio_fill_filename );
 			
 			/**
 			 * Fill pad from the info struct.  We don't need to free strings
@@ -453,7 +403,9 @@ void fio_load_pads (void)
 			opened ++;
 		}
 	}
-
+	
+	if (verbosity >= 2) printf ("Done loading files.\n");
+	
 	if (opened == 0)
 		pad_new ();
 
