@@ -504,7 +504,7 @@ read_from_proc_file (void)
 	
 	/* accept waiting connection */
 	client_fd = accept (master_fd, (struct sockaddr *) &client, &client_len);
-	if (client_fd == -1) return;
+	if (client_fd == -1) return ;
 	
 	/* get size of args */
 	bytes = read (client_fd, &size, sizeof (size));
@@ -577,18 +577,9 @@ close_client_fd:
 }
 
 static gboolean
-poll_master_fd (gpointer data)
+can_read_from_master_fd (GIOChannel *source, GIOCondition condition, gpointer data)
 {
-	fd_set fdset;
-	struct timeval tv = {0, 1000};	/* (almost) non-blocking mode */
-	gint num;
-	
-	FD_ZERO (&fdset);
-	FD_SET (master_fd, &fdset);
-	num = select (master_fd + 1, &fdset, NULL, NULL, &tv);
-	
-	if ((num > 0) && FD_ISSET (master_fd, &fdset))
-		read_from_proc_file ();
+	read_from_proc_file ();
 	
 	return TRUE;
 }
@@ -596,6 +587,7 @@ poll_master_fd (gpointer data)
 static gint
 open_proc_file (void)
 {
+	GIOChannel *channel;
 	struct sockaddr_un master;
 	
 	if (verbosity >= 2) printf ("Creating master socket '%s'.\n", master_name);
@@ -615,7 +607,10 @@ open_proc_file (void)
 	/* listen for connections */
 	listen (master_fd, 5);
 	
-	gtk_idle_add (poll_master_fd, NULL);
+	/* set up input loop, waiting for read */
+	channel = g_io_channel_unix_new (master_fd);
+	g_io_add_watch (channel, G_IO_IN, can_read_from_master_fd, NULL);
+	g_io_channel_unref (channel);
 	
 	return 0;
 }
