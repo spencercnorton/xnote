@@ -482,15 +482,25 @@ GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
         separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
 	menu_item_about = gtk_menu_item_new_with_mnemonic ("_About");
-	menu_item_help = gtk_menu_item_new_with_mnemonic ("_Help");
-	menu_item_new_pad = gtk_menu_item_new_with_mnemonic ("_New Pad");
-	menu_item_save_as = gtk_menu_item_new_with_mnemonic ("_Save As");
-	menu_item_open = gtk_menu_item_new_with_mnemonic ("_Open");
-	menu_item_destroy = gtk_menu_item_new_with_mnemonic ("Destroy");
-	menu_item_close = gtk_menu_item_new_with_mnemonic ("Close");
-	menu_item_close_all = gtk_menu_item_new_with_mnemonic ("Close All");
-	menu_item_pad_preferences = gtk_menu_item_new_with_mnemonic ("Pad Preferences");
-	menu_item_global_preferences = gtk_menu_item_new_with_mnemonic ("Global Preferences");
+	menu_item_help = gtk_image_menu_item_new_with_mnemonic ("_Help");
+	menu_item_new_pad = gtk_image_menu_item_new_with_mnemonic ("_New Pad");
+	menu_item_save_as = gtk_image_menu_item_new_with_mnemonic ("_Save As");
+	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open");
+	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
+	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
+	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
+	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("Pad Preferences");
+	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("Global Preferences");
+	
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_help), gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_open), gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_pad_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_global_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_save_as), gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
 
 	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator1);
 	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_save_as);
@@ -656,14 +666,3 @@ pad_node *pad_new_with_info (pad_info *info)
 
 	return pad;
 }
-
-
-
-
-
-
-
-
-
-
-
