@@ -853,111 +853,6 @@ static void about_dialog (pad_node *pad)
 	gtk_widget_destroy (dialog);
 }
 
-static void open_file_callback (GtkWidget *button, pad_node *pad)
-{
-	const gchar *filename;
-	GtkFileSelection *selector;
-	gboolean newPad;
-
-	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
-	
-	filename = gtk_file_selection_get_filename (selector);
-	
-	newPad = !pad_is_empty(pad);
-	if (newPad)
-	{
-		pad = pad_new();
-		if (!pad)
-		{
-			if (verbosity >= 1) g_printerr ("Could not open new pad\n");
-			return;
-		}
-	}
-	
-	if (!pad_fill_with_file(pad, filename) && newPad)
-		pad_destroy (pad);	/* no need to open a new pad, if no content */
-}
-
-void pad_open_file (pad_node *pad)
-{
-	GtkWidget *filedialog;
-
-	filedialog = gtk_file_selection_new (_("Open which file?"));
-
-	g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->ok_button),
-			"clicked",
-			G_CALLBACK (open_file_callback),
-			(gpointer) pad);
-
-	/* Ensure that the dialog box is destroyed when the user clicks a button. */
-
-	g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->ok_button),
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy), 
-                             (gpointer) filedialog); 
-
-	g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->cancel_button),
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy),
-                             (gpointer) filedialog);
-	
-   	gtk_window_set_position (GTK_WINDOW (filedialog), GTK_WIN_POS_CENTER);
-	
-	/* Display that dialog */
-	gtk_widget_show (filedialog);
-}
-
-static void save_as_file_callback (GtkWidget *button, pad_node *pad)
-{
-	GtkTextIter s, e;
-	GtkTextBuffer *buf;
-	gchar *content;
-	const gchar *filename;
-	GtkFileSelection *selector;
-
-	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
-
-	filename = gtk_file_selection_get_filename (selector);
-
-	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
-	gtk_text_buffer_get_start_iter (buf, &s);
-	gtk_text_buffer_get_end_iter (buf, &e);
-        content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
-
-	fio_set_file (filename, content);
-
-	g_free (content);
-}
-
-void pad_save_as_file (pad_node *pad)
-{
-	GtkWidget *filedialog;
-
-	filedialog = gtk_file_selection_new (_("Save as which file?"));
-
-	g_signal_connect (GTK_FILE_SELECTION (filedialog)->ok_button,
-			"clicked",
-			G_CALLBACK (save_as_file_callback),
-			pad);
-
-	/* Ensure that the dialog box is destroyed when the user clicks a button. */
-
-	g_signal_connect_swapped (GTK_FILE_SELECTION (filedialog)->ok_button,
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy), 
-                             filedialog); 
-
-	g_signal_connect_swapped (GTK_FILE_SELECTION (filedialog)->cancel_button,
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy),
-                             filedialog); 
-	
-	gtk_window_set_position (GTK_WINDOW (filedialog), GTK_WIN_POS_CENTER);
-	
-	/* Display that dialog */
-	gtk_widget_show (filedialog);
-}
-
 static gboolean
 enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 {
@@ -1885,7 +1780,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
 /*	g_signal_connect (window, "window-state-event", G_CALLBACK (state_handler), pad);*/
-	g_signal_connect (textbuf, "changed", G_CALLBACK (text_changed), pad);
+	g_signal_connect (textbuf, "end-user-action", G_CALLBACK (text_changed), pad);
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
@@ -1893,8 +1788,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	
 #if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
 	/*gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);*/
-	/*gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);*/
-	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
 #endif
 	
 	pad->window = GTK_WINDOW (window);

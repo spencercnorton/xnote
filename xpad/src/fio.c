@@ -42,15 +42,25 @@ static gchar *fio_fill_filename (const gchar *filename)
 	return g_build_filename (working_dir, filename, NULL);
 }
 
+/* This calously overwrites name.bak -- but this is fine since this function is for
+   our private .xpad directory anyway */
 gboolean fio_set_file (const gchar *name, const gchar *value)
 {
-	FILE *file;
-	gchar *temp;
-	gboolean error = FALSE;
+	FILE *file = NULL;
+	gchar *fullpath, *backup;
+	gboolean error = FALSE, moved = TRUE;
 	
-	temp = fio_fill_filename (name);
+	fullpath = fio_fill_filename (name);
+	backup = g_build_filename (fullpath, ".bak", NULL);
 	
-	if ((file = fopen (temp, "w")) == NULL)
+	/* we first move the file away so that if the write doesn't succeed, we don't lose data */
+	if (rename (fullpath, backup))
+	{
+		error = TRUE;
+		moved = FALSE;
+	}
+	
+	if (!error && (file = fopen (fullpath, "w")) == NULL)
 	{
 		error = TRUE;
 	}
@@ -64,12 +74,19 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	{
 		gchar *usertext;
 		
+		/* move the file back */
+		if (moved)
+		{
+			rename (backup, fullpath);
+		}
+		
 		usertext = g_strdup_printf (_("Could not write to file %s."), temp);
 		xpad_show_error (NULL, usertext, NULL);
 		g_free (usertext);
 	}
 	
-	g_free (temp);
+	g_free (fullpath);
+	g_free (backup);
 	if (file) fclose (file);
 	return !error;
 }
