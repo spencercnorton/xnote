@@ -132,6 +132,9 @@ void reset_sync ()
 
 	if (sync_time)
 		autosave_timeout_id = gtk_timeout_add (sync_time * 1000, sync_pads, NULL);
+	else
+		autosave_timeout_id = -1;
+
 }
 
 
@@ -141,17 +144,21 @@ void xpad_set_default_icon ()
 	GdkPixbuf *pixbuf;
 	GdkPixbuf *pixbuf_full;
 
-	pixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, gdk_colormap_get_system (), NULL, NULL, xpad_icon_xpm);
-
-	pixbuf = gdk_pixbuf_get_from_drawable (NULL, pixmap, NULL, 0, 0, 0, 0, -1, -1);
-
-	pixbuf_full = gdk_pixbuf_add_alpha (pixbuf, TRUE, 0, 0, 0);
-
-	gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf_full));
-
-	g_object_unref (pixbuf);
+	pixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, gdk_colormap_get_system (), NULL, NULL, xpad_xpm);
+	
+	pixbuf = gdk_pixbuf_get_from_drawable (NULL, pixmap, NULL, 0, 0, 0, 0, 48, 48);
+	
+	if (pixbuf)
+	{
+		pixbuf_full = gdk_pixbuf_add_alpha (pixbuf, TRUE, 0, 0, 0);
+		
+		gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf_full));
+		
+		g_object_unref (pixbuf);
+		g_object_unref (pixbuf_full);
+	}
+	
 	g_object_unref (pixmap);
-	g_object_unref (pixbuf_full);
 }
 
 
@@ -189,7 +196,7 @@ void xpad_init ()
 		fio_save_defaults ();
 		help_dialog ();
 	}
-
+	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
 	
@@ -218,10 +225,3 @@ int main (int argc, char *argv[])
 
 	return 0;
 }
-
-
-
-
-
-
-
