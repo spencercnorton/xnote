@@ -486,7 +486,7 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_help;
 	GtkWidget *menu_item_new_pad;
 	GtkWidget *menu_item_destroy;
-	GtkWidget *menu_item_close;
+//	GtkWidget *menu_item_close;
 	GtkWidget *menu_item_close_all;
 	GtkWidget *menu_item_save_as;
 	GtkWidget *menu_item_open;
@@ -496,7 +496,7 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	
 	tearoff = gtk_tearoff_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
-        separator3 = gtk_separator_menu_item_new ();
+	separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
 	menu_item_about = gtk_image_menu_item_new_with_mnemonic ("_About...");
 	menu_item_help = gtk_image_menu_item_new_with_mnemonic ("_Help...");
@@ -504,11 +504,11 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	menu_item_save_as = gtk_image_menu_item_new_with_mnemonic ("_Save As...");
 	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open...");
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
-	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
+//	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
 	menu_item_preferences = gtk_image_menu_item_new_with_mnemonic ("_Preferences...");
 	
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
+//	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_help), gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
@@ -525,7 +525,7 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close);
+//	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator3);
@@ -533,7 +533,7 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_about);
 	
 	g_signal_connect_swapped (menu_item_destroy, "activate", G_CALLBACK (pad_confirm_destroy), pad);
-	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
+//	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
 	g_signal_connect_swapped (menu_item_close_all, "activate", G_CALLBACK (pad_close_all), NULL);
 	g_signal_connect (menu_item_new_pad, "activate", G_CALLBACK (pad_new), NULL);
 	g_signal_connect_swapped (menu_item_about, "activate", G_CALLBACK (about_dialog), pad);	
@@ -612,16 +612,9 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		
 			switch (event_key->keyval)
 			{
-				case GDK_a: // CTRL + SHIFT + a == close all pads
-				if (event_key->state & GDK_SHIFT_MASK) {
-					pad_close_all ();
-					return TRUE;
-				}
-				break;
-
 		  		case GDK_c: // CTRL + SHIFT + c == close pad
 				if (event_key->state & GDK_SHIFT_MASK) {
-					pad_close (pad);
+					pad_close_all ();
 					return TRUE;
 				}
 				break;

@@ -54,8 +54,8 @@ void show_help_at_page (gint page)
 "<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n"
 "<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n"
 "<b>CTRL+p</b>: Opens the preferences window.\n\n"
-"<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n"
-"<b>CTRL+SHIFT+a</b>: Closes all open pads.\n\n"
+//"<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n"
+"<b>CTRL+SHIFT+c</b>: Closes all open pads.\n\n"
 "<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n");
 	
 	gtk_label_set_line_wrap (GTK_LABEL (keytext), TRUE);

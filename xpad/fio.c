@@ -180,7 +180,7 @@ void fio_close_pad_files (pad_node *pad)
 void fio_save_as_defaults (struct settings *set)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
-
+	
 	sprintf (buf, "edit_lock %i\nconfirm_destroy %i\nsync_time %i\ndecorations %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
