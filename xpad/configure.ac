@@ -31,4 +31,4 @@ AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
 ALL_LINGUAS="eo ro ru"
 AM_GNU_GETTEXT
-AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile intl/Makefile po/Makefile.in m4/Makefile)
+AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in)

@@ -1,0 +1,505 @@
+# Esperanto translations for xpad.
+# Copyright (C) 2003 Michael Terry
+# This file is distributed under the same license as the xpad package.
+# Michael Terry <mterry@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xpad 1.11\n"
+"POT-Creation-Date: 2003-04-02 15:36-0500\n"
+"PO-Revision-Date: 2003-07-01 20:19-0500\n"
+"Last-Translator:  <>\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:178
+msgid ""
+"Usage: xpad [OPTIONS]\n"
+"\n"
+"  -V, --version         prints xpad version; exits\n"
+"  -h, --help            prints this usage information; exits\n"
+"  -v N, --verbosity=N   sets level of output\n"
+"                          0=none, 1=moderate, 2=debug\n"
+"                          default is 0\n"
+"  -n, --new             opens a new pad only\n"
+msgstr ""
+
+#: src/main.c:187
+#, fuzzy
+msgid ""
+"  --nonew               prevents xpad from making a new pad\n"
+"  -q, --quit            quits all open xpad sessions\n"
+"  -l, --list            lists the titles of all pads\n"
+"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
+"  --showall             brings all pads to the foreground\n"
+msgstr ""
+"  --nonew               prevents xpad from making a new pad\n"
+"  -q, --quit            quits all open xpad sessions\n"
+"  -l, --list            lists the titles of all pads\n"
+"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
+"  --showall             brings all pads to the foreground\n"
+
+#: src/main.c:230
+msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
+msgstr ""
+
+#: src/main.c:317
+#, fuzzy, c-format
+msgid "Missing companion argument to %s\n"
+msgstr "Forestas kuna ARGUMENT al %s\n"
+
+#: src/main.c:361
+#, c-format
+msgid "Didn't understand argument %s.\n"
+msgstr ""
+
+#: src/main.c:418
+#, c-format
+msgid "Invalid number: '%s'\n"
+msgstr "Malvalida numero: '%s'\n"
+
+#: src/fio.c:67
+#, c-format
+msgid "Could not write to file %s."
+msgstr ""
+
+#: src/fio.c:92
+#, c-format
+msgid "Could not read from file %s."
+msgstr ""
+
+#: src/fio.c:414
+#, c-format
+msgid "Could not open xpad directory %s."
+msgstr ""
+
+#: src/fio.c:417
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgstr ""
+
+#: src/pref.c:281
+#: src/properties.c:228
+msgid "Background Color"
+msgstr "Fona Koloro"
+
+#: src/pref.c:282
+#: src/properties.c:229
+msgid "Text Color"
+msgstr "Teksta Koloro"
+
+#: src/pref.c:283
+#: src/properties.c:230
+msgid "Border"
+msgstr "Rando"
+
+#: src/pref.c:284
+#: src/properties.c:231
+msgid "Border _width:"
+msgstr ""
+
+#: src/pref.c:285
+#: src/pref.c:290
+#: src/properties.c:232
+#: src/properties.c:235
+msgid "pixels"
+msgstr "bilderoj"
+
+#: src/pref.c:286
+#: src/properties.c:233
+msgid "Font Face"
+msgstr ""
+
+#: src/pref.c:287
+msgid "Options"
+msgstr ""
+
+#: src/pref.c:288
+msgid "Toolbar"
+msgstr ""
+
+#: src/pref.c:289
+#: src/properties.c:234
+msgid "_Padding:"
+msgstr ""
+
+#: src/pref.c:296
+msgid "Allow _window manager decorations"
+msgstr ""
+
+#: src/pref.c:297
+msgid "Con_firm pad destruction"
+msgstr ""
+
+#: src/pref.c:298
+msgid "_Edit lock"
+msgstr ""
+
+#: src/pref.c:343
+msgid "Global Preferences"
+msgstr ""
+
+#: src/pref.c:362
+#: src/properties.c:303
+msgid "_Use system text color"
+msgstr ""
+
+#: src/pref.c:385
+#: src/properties.c:324
+msgid "_Use system background color"
+msgstr ""
+
+#: src/pref.c:421
+#: src/properties.c:357
+msgid "The amount of space you want between the border and text."
+msgstr ""
+
+#: src/pref.c:422
+#: src/properties.c:358
+msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
+msgstr ""
+
+#: src/pref.c:435
+#: src/properties.c:374
+msgid "The amount of space you want surrounding the pad."
+msgstr ""
+
+#: src/pref.c:436
+#: src/properties.c:375
+msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
+msgstr ""
+
+#: src/pref.c:462
+#: src/properties.c:397
+msgid "_Use system font face"
+msgstr ""
+
+#: src/pref.c:498
+msgid "Click and drag a button to move it."
+msgstr ""
+
+#: src/pref.c:504
+msgid "_Enable toolbar"
+msgstr ""
+
+#: src/pref.c:505
+msgid "_Auto-hide toolbar"
+msgstr ""
+
+#: src/pref.c:515
+msgid "<b>Toolbar Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:516
+msgid "<b>Used Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:517
+msgid "<b>Unused Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:634
+#: src/pref.c:635
+msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr ""
+
+#: src/pref.c:638
+#: src/pref.c:639
+msgid "If on, the toolbar will disappear when you are not using the pad."
+msgstr ""
+
+#: src/pref.c:651
+msgid "Allow _scrollbars"
+msgstr ""
+
+#: src/pref.c:654
+msgid "Close and save _all pads"
+msgstr "Fermu kaj konservu cxiujn blokojn"
+
+#: src/pref.c:656
+msgid "Close and save _pad"
+msgstr "Fermu kaj konservu blokon"
+
+#: src/pref.c:658
+msgid "_Destroy pad (no confirmation)"
+msgstr "Forvisxu blokon (ne konfirmo)"
+
+#: src/pref.c:663
+msgid "<b>Window Manager Close Action:</b>"
+msgstr ""
+
+#: src/pref.c:706
+#: src/pref.c:708
+msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
+msgstr ""
+
+#: src/pref.c:712
+#: src/pref.c:713
+msgid "If on, choosing to destroy a pad will prompt for conformation."
+msgstr ""
+
+#: src/pref.c:716
+#: src/pref.c:718
+msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
+msgstr ""
+
+#: src/pref.c:722
+#: src/pref.c:725
+msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
+msgstr ""
+
+#: src/pref.c:730
+#: src/pref.c:731
+msgid "All pads will close, saving contents first."
+msgstr ""
+
+#: src/pref.c:734
+#: src/pref.c:735
+msgid "The pad you clicked the close button on will close, saving contents."
+msgstr ""
+
+#: src/pref.c:738
+#: src/pref.c:740
+msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
+msgstr ""
+
+#: src/pad.c:40
+msgid "/_Pad"
+msgstr "/Bloko"
+
+#: src/pad.c:41
+msgid "/Pad/_New"
+msgstr "/Bloko/_Nova"
+
+#: src/pad.c:42
+msgid "/Pad/sep1"
+msgstr "/Bloko/sep"
+
+#: src/pad.c:43
+msgid "/Pad/_Sticky"
+msgstr "/Bloko/Glueca"
+
+#: src/pad.c:44
+msgid "/Pad/Proper_ties"
+msgstr "/Bloko/Ecoj"
+
+#: src/pad.c:45
+msgid "/Pad/sep2"
+msgstr "/Bloko/sep2"
+
+#: src/pad.c:46
+msgid "/Pad/_Close"
+msgstr "/Bloko/Fermu"
+
+#: src/pad.c:47
+#, fuzzy
+msgid "/Pad/_Delete"
+msgstr "/Bloko/Forvisxi"
+
+#: src/pad.c:49
+msgid "/_Edit"
+msgstr "/R_edakto"
+
+#: src/pad.c:50
+msgid "/Edit/C_ut"
+msgstr "/Redakto/Tondu"
+
+#: src/pad.c:51
+msgid "/Edit/_Copy"
+msgstr "/Redakto/Kopiu"
+
+#: src/pad.c:52
+msgid "/Edit/_Paste"
+msgstr "/Redakto/Algluu"
+
+#: src/pad.c:53
+msgid "/Edit/sep"
+msgstr "/Redakto/sep"
+
+#: src/pad.c:54
+msgid "/Edit/Prefere_nces"
+msgstr "/Redakto/Preferoj_n"
+
+#: src/pad.c:55
+msgid "/_Notes"
+msgstr "/_Notoj"
+
+#: src/pad.c:56
+#, fuzzy
+msgid "/Notes/_Show All"
+msgstr "/Notoj/Manifestu Cxion"
+
+#: src/pad.c:57
+#, fuzzy
+msgid "/Notes/_Close All"
+msgstr "/Notoj/Fermu Cxion"
+
+#: src/pad.c:58
+msgid "/Notes/sep"
+msgstr "/Notoj/sep"
+
+#: src/pad.c:59
+msgid "/_Help"
+msgstr "/_Helpo"
+
+#: src/pad.c:60
+msgid "/Help/_Contents"
+msgstr "/Helpo/Enhavo"
+
+#: src/pad.c:61
+msgid "/Help/_About"
+msgstr "/Helpo/Pri"
+
+#: src/pad.c:68
+msgid "Open New Pad"
+msgstr "Malfermu Novan Blokon"
+
+#: src/pad.c:69
+msgid "Close and Save Pad"
+msgstr "Fermu kaj Konservu Blokon"
+
+#: src/pad.c:70
+msgid "Delete Pad"
+msgstr "Forvisxu Blokon"
+
+#: src/pad.c:71
+msgid "Clear Pad Contents"
+msgstr ""
+
+#: src/pad.c:72
+msgid "Edit Global Preferences"
+msgstr "Redaktu Terglobajn Preferojn"
+
+#: src/pad.c:73
+msgid "Edit Pad Properties"
+msgstr "Redaktu Blokajn Ecojn"
+
+#: src/pad.c:74
+msgid "Close All Pads"
+msgstr "Fermu Cxiujn Blokojn"
+
+#: src/pad.c:75
+#, fuzzy
+msgid "Toggle Stickiness"
+msgstr "Baskulu "
+
+#: src/pad.c:76
+msgid "Minimize Pads to System Tray"
+msgstr ""
+
+#: src/pad.c:657
+msgid "Delete this pad?"
+msgstr "Cxu forvisxu tiun cxi blokon?"
+
+#: src/pad.c:658
+msgid "All text of this pad will be irrevocably lost."
+msgstr ""
+
+#: src/pad.c:838
+#, c-format
+msgid "You are using xpad %s with GTK+ %i.%i.%i."
+msgstr "Vi uzas xpad %s kun GTK+ %i.%i.%i."
+
+#: src/pad.c:843
+msgid "Visit http://xpad.sourceforge.net for more information about xpad."
+msgstr "Vizitu http://xpad.sourceforge.net por pli informo pri xpad."
+
+#: src/pad.c:885
+msgid "Open which file?"
+msgstr "Cxu malfermu kiun dosieron?"
+
+#: src/pad.c:936
+msgid "Save as which file?"
+msgstr "Cxu konservu keil kiun dosieron?"
+
+#: src/pad.c:1073
+#: src/pad.c:1259
+msgid "/Edit/Cut"
+msgstr "/Redakto/Tondu"
+
+#: src/pad.c:1075
+#: src/pad.c:1261
+msgid "/Edit/Copy"
+msgstr "/Redakto/Kopiu"
+
+#: src/pad.c:1077
+#: src/pad.c:1265
+msgid "/Edit/Paste"
+msgstr "/Redakto/Algluu"
+
+#: src/pad.c:1207
+msgid "/Notes"
+msgstr "/Notoj"
+
+#: src/pad.c:1253
+msgid "/Pad/Sticky"
+msgstr "/Bloko/Glueca"
+
+#: src/help.c:46
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:50
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:54
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:60
+msgid ""
+"Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
+"\n"
+msgstr ""
+"Plej agoj estas haveblaj per la menuo ke aperas kiam vi dekstraklaki sur blokon.  Provu gxin kaj amuzigxu.\n"
+"\n"
+
+#: src/help.c:64
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr "Bonvolu sendi komentojn aux cimajn raportojn al xpad-devel@lists.sourceforge.net"
+
+#: src/help.c:73
+msgid "Help"
+msgstr "Helpo"
+
+#: src/tray.c:123
+msgid "No_tes"
+msgstr "No_toj"
+
+#: src/tray.c:127
+#, fuzzy
+msgid "_Show All"
+msgstr "Manifestu Cxion"
+
+#: src/tray.c:131
+#, fuzzy
+msgid "_Hide All"
+msgstr "Kasxu Cxion"
+
+#: src/tray.c:203
+msgid "xpad: right click for more options..."
+msgstr "xpad: dekstraklaku por pli alternativoj..."
+
+#: src/tray.c:204
+#, fuzzy
+msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
+msgstr "Dekstraklaku "
+
+#: src/properties.c:276
+msgid "Pad Properties"
+msgstr "Blokaj Ecoj"
+
