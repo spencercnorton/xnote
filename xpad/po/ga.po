@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-29 18:42-0400\n"
+"POT-Creation-Date: 2004-08-29 20:13-0400\n"
 "PO-Revision-Date: 2003-10-21 21:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -27,11 +27,6 @@ msgstr ""
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
-
-#: src/fio.c:112
-#, c-format
-msgid "Could not read from file %s."
-msgstr "Níorbh fhéidir aon rud a léamh as an gcomhad %s."
 
 #: src/pad.c:54
 #, fuzzy
@@ -268,26 +263,26 @@ msgstr "Ceadaigh maisiúcháin ón bhainisteoir _fuinneoga"
 msgid "Whether pads have window manager decorations"
 msgstr "Ceadaigh maisiúcháin ón bhainisteoir _fuinneoga"
 
-#: src/pad.c:341
+#: src/pad.c:344
 msgid "Delete this pad?"
 msgstr "Ar mhaith leat an ceap seo a scriosadh?"
 
-#: src/pad.c:342
+#: src/pad.c:345
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Scriosfaidh an téacs uile atá sa cheap seo, gan fáil ar ais."
 
-#: src/pad.c:482
+#: src/pad.c:485
 #, fuzzy, c-format
 msgid "You are using Xpad %s with GTK+ %i.%i.%i."
 msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
 
-#: src/pad.c:487
+#: src/pad.c:490
 #, fuzzy
 msgid "Visit http://xpad.sourceforge.net/ for more information about Xpad."
 msgstr ""
 "Féach ar http://xpad.sourceforge.net chun tuilleadh eolais faoi xpad a fháil."
 
-#: src/pad.c:1182 src/properties.c:154
+#: src/pad.c:1185 src/properties.c:154
 #, fuzzy, c-format
 msgid "%s Properties"
 msgstr "Airíonna an Chip"
@@ -371,16 +366,16 @@ msgstr ""
 msgid "Use custom _appearance"
 msgstr ""
 
-#: src/xpad-app.c:107 xpad.desktop.in.h:3
+#: src/xpad-app.c:108 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:382
+#: src/xpad-app.c:421
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
 
-#: src/xpad-app.c:385
+#: src/xpad-app.c:424
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -388,33 +383,33 @@ msgstr ""
 "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na "
 "ceapa agus na hairíonna.  Druidfidh Xpad anois."
 
-#: src/xpad-app.c:791
+#: src/xpad-app.c:830
 msgid "Prints usage information and exits"
 msgstr "Taispeáin eolas faoin úsáid agus éirigh as"
 
-#: src/xpad-app.c:792
+#: src/xpad-app.c:831
 msgid "Prints xpad version and exits"
 msgstr "Taispeáin an leagan xpad agus éirigh as"
 
-#: src/xpad-app.c:793
+#: src/xpad-app.c:832
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
 
-#: src/xpad-app.c:799
+#: src/xpad-app.c:838
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 
-#: src/xpad-app.c:800
+#: src/xpad-app.c:839
 msgid "Causes all running xpad instances to close"
 msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
 
-#: src/xpad-app.c:816
+#: src/xpad-app.c:855
 #, fuzzy, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad"
 
-#: src/xpad-app.c:860
+#: src/xpad-app.c:899
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -423,17 +418,17 @@ msgstr ""
 "Úsáid: xpad [ROGHANNA]\n"
 "\n"
 
-#: src/xpad-app.c:898
+#: src/xpad-app.c:937
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Ní foláir argóint don rogha %s\n"
 
-#: src/xpad-app.c:942
+#: src/xpad-app.c:981
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Argóint anaithnid %s.\n"
 
-#: src/xpad-app.c:991
+#: src/xpad-app.c:1030
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Uimhir neamhbhailí: '%s'\n"
@@ -526,6 +521,9 @@ msgstr "Breac nótaí le léamh ar ball"
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Nótaí Greamaitheacha"
+
+#~ msgid "Could not read from file %s."
+#~ msgstr "Níorbh fhéidir aon rud a léamh as an gcomhad %s."
 
 #~ msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
 #~ msgstr ""

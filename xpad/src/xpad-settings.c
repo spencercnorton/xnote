@@ -258,6 +258,8 @@ xpad_settings_finalize (GObject *object)
 	gdk_color_free (settings->priv->text);
 	gdk_color_free (settings->priv->back);
 	g_free (settings->priv->fontname);
+	
+	G_OBJECT_CLASS (xpad_settings_parent_class)->finalize (object);
 }
 
 void xpad_settings_set_width (XpadSettings *settings, guint width)
@@ -636,11 +638,11 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		break;
 	
 	case PROP_BACK_COLOR:
-		g_value_set_boxed (value, xpad_settings_get_back_color (settings));
+		g_value_set_static_boxed (value, xpad_settings_get_back_color (settings));
 		break;
 	
 	case PROP_TEXT_COLOR:
-		g_value_set_boxed (value, xpad_settings_get_text_color (settings));
+		g_value_set_static_boxed (value, xpad_settings_get_text_color (settings));
 		break;
 	
 	case PROP_FONTNAME:

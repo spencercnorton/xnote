@@ -51,8 +51,10 @@ GType xpad_text_view_get_type (void);
 
 GtkWidget *xpad_text_view_new (void);
 
-void xpad_text_view_set_follow_global_style (XpadTextView *view, gboolean follow);
-gboolean xpad_text_view_get_follow_global_style (XpadTextView *view);
+void xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow);
+gboolean xpad_text_view_get_follow_font_style (XpadTextView *view);
+void xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow);
+gboolean xpad_text_view_get_follow_color_style (XpadTextView *view);
 
 G_END_DECLS
 

@@ -56,6 +56,8 @@ struct XpadToolbarClass
 	void (*activate_properties) (XpadToolbar *toolbar);
 	void (*activate_quit) (XpadToolbar *toolbar);
 	void (*activate_sticky) (XpadToolbar *toolbar);
+	void (*popup) (XpadToolbar *toolbar, GtkMenu *menu);
+	void (*popdown) (XpadToolbar *toolbar, GtkMenu *menu);
 };
 
 GType xpad_toolbar_get_type (void);
@@ -64,26 +66,6 @@ GtkWidget *xpad_toolbar_new (void);
 
 gboolean xpad_toolbar_get_sticky_active (XpadToolbar *toolbar);
 void xpad_toolbar_set_sticky_active (XpadToolbar *toolbar, gboolean active);
-
-#if 0
-void toolbar_show (pad_node *pad);
-void toolbar_hide (pad_node *pad);
-
-void toolbar_start_timeout (pad_node *pad);
-void toolbar_end_timeout (pad_node *pad);
-
-xpad_toolbar *toolbar_new (void);
-void toolbar_update (xpad_toolbar *xt);
-
-GList *toolbar_get_buttons (xpad_toolbar *xt);
-GList *toolbar_get_children (xpad_toolbar *xt);
-GtkWidget *toolbar_get_container (xpad_toolbar *xt);
-
-gboolean toolbar_is_button (GtkWidget *widget);
-GtkToolItem *toolbar_button_new (const toolbar_button *tb, GtkTooltips *tooltips);
-GtkToolItem *toolbar_separator_new (void);
-gboolean toolbar_is_visible (xpad_toolbar *xt);
-#endif
 
 G_END_DECLS
 

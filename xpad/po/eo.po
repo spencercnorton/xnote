@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-29 18:42-0400\n"
+"POT-Creation-Date: 2004-08-29 20:13-0400\n"
 "PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -26,11 +26,6 @@ msgstr ""
 #: src/fio.c:86
 #, c-format
 msgid "Could not write to file %s."
-msgstr ""
-
-#: src/fio.c:112
-#, c-format
-msgid "Could not read from file %s."
 msgstr ""
 
 #: src/pad.c:54
@@ -258,25 +253,25 @@ msgstr ""
 msgid "Whether pads have window manager decorations"
 msgstr ""
 
-#: src/pad.c:341
+#: src/pad.c:344
 msgid "Delete this pad?"
 msgstr "Cxu forvisxu tiun cxi blokon?"
 
-#: src/pad.c:342
+#: src/pad.c:345
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:482
+#: src/pad.c:485
 #, fuzzy, c-format
 msgid "You are using Xpad %s with GTK+ %i.%i.%i."
 msgstr "Vi uzas ekspadon %s kun GTK+ %i.%i.%i."
 
-#: src/pad.c:487
+#: src/pad.c:490
 #, fuzzy
 msgid "Visit http://xpad.sourceforge.net/ for more information about Xpad."
 msgstr "Vizitu http://xpad.sourceforge.net por pli informo pri ekspado."
 
-#: src/pad.c:1182 src/properties.c:154
+#: src/pad.c:1185 src/properties.c:154
 #, fuzzy, c-format
 msgid "%s Properties"
 msgstr "Blokaj Ecoj"
@@ -353,66 +348,66 @@ msgstr ""
 msgid "Use custom _appearance"
 msgstr ""
 
-#: src/xpad-app.c:107 xpad.desktop.in.h:3
+#: src/xpad-app.c:108 xpad.desktop.in.h:3
 #, fuzzy
 msgid "Xpad"
 msgstr "Ekspado"
 
-#: src/xpad-app.c:382
+#: src/xpad-app.c:421
 #, c-format
 msgid "Could not open directory %s."
 msgstr ""
 
-#: src/xpad-app.c:385
+#: src/xpad-app.c:424
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
 
-#: src/xpad-app.c:791
+#: src/xpad-app.c:830
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/xpad-app.c:792
+#: src/xpad-app.c:831
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/xpad-app.c:793
+#: src/xpad-app.c:832
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
-#: src/xpad-app.c:799
+#: src/xpad-app.c:838
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/xpad-app.c:800
+#: src/xpad-app.c:839
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/xpad-app.c:816
+#: src/xpad-app.c:855
 #, fuzzy, c-format
 msgid "Xpad %s\n"
 msgstr "Ekspado"
 
-#: src/xpad-app.c:860
+#: src/xpad-app.c:899
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/xpad-app.c:898
+#: src/xpad-app.c:937
 #, fuzzy, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Forestas kuna ARGUMENT al %s\n"
 
-#: src/xpad-app.c:942
+#: src/xpad-app.c:981
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr ""
 
-#: src/xpad-app.c:991
+#: src/xpad-app.c:1030
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Malvalida numero: '%s'\n"

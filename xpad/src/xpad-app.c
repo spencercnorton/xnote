@@ -33,7 +33,9 @@
 #include <glib/gi18n.h>
 
 #include "fio.h" /* for fio_get_info_from_file */
+#include "help.h"
 #include "xpad-app.h"
+#include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-session-manager.h"
 #include "xpad-tray.h"
@@ -137,8 +139,8 @@ xpad_app_init (int argc, char **argv)
 	pad_group = NULL;
 	if (xpad_app_load_pads () == 0) {
 		if (make_new_pad_if_none) {
-			pad_node *pad = pad_new ();
-			xpad_pad_group_add (pad_group, pad);
+			GtkWidget *pad = xpad_pad_new (pad_group);
+			gtk_widget_show (pad);
 		}
 		else if (!xpad_tray_is_open ())
 			exit (0);
@@ -359,34 +361,39 @@ set_default_icon (void)
 {
 	GList *icons = NULL;
 	GtkIconTheme *theme = gtk_icon_theme_get_default ();
+	GdkPixbuf *pixbuf;
 	
-	icons = g_list_append (icons,
-	                       gtk_icon_theme_load_icon (theme,
-	                                                 PACKAGE,
-	                                                 16,
-	                                                 0,
-	                                                 NULL));
+	pixbuf = gtk_icon_theme_load_icon (theme,
+	                                   PACKAGE,
+	                                   16,
+	                                   0,
+	                                   NULL);
+	if (pixbuf)
+		icons = g_list_append (icons, pixbuf);
 	
-	icons = g_list_append (icons,
-	                       gtk_icon_theme_load_icon (theme,
-	                                                 PACKAGE,
-	                                                 24,
-	                                                 0,
-	                                                 NULL));
+	pixbuf = gtk_icon_theme_load_icon (theme,
+	                                   PACKAGE,
+	                                   24,
+	                                   0,
+	                                   NULL);
+	if (pixbuf)
+		icons = g_list_append (icons, pixbuf);
 	
-	icons = g_list_append (icons,
-	                       gtk_icon_theme_load_icon (theme,
-	                                                 PACKAGE,
-	                                                 32,
-	                                                 0,
-	                                                 NULL));
+	pixbuf = gtk_icon_theme_load_icon (theme,
+	                                   PACKAGE,
+	                                   32,
+	                                   0,
+	                                   NULL);
+	if (pixbuf)
+		icons = g_list_append (icons, pixbuf);
 	
-	icons = g_list_append (icons,
-	                       gtk_icon_theme_load_icon (theme,
-	                                                 PACKAGE,
-	                                                 48,
-	                                                 0,
-	                                                 NULL));
+	pixbuf = gtk_icon_theme_load_icon (theme,
+	                                   PACKAGE,
+	                                   48,
+	                                   0,
+	                                   NULL);
+	if (pixbuf)
+		icons = g_list_append (icons, pixbuf);
 	
 	if (icons) {
 		gtk_window_set_default_icon_list (icons);
@@ -403,7 +410,6 @@ static gint
 xpad_app_load_pads (void)
 {
 	gint opened = 0;
-	pad_info info;
 	GDir *dir;
 	G_CONST_RETURN gchar *name;
 	
@@ -431,16 +437,10 @@ xpad_app_load_pads (void)
 	{
 		/* if it's an info file, but not a backup info file... */
 		if (!strncmp (name, "info-", 5) &&
-		    name[strlen (name) - 1] != '~' &&
-		    !fio_get_info_from_file (name, &info))
+		    name[strlen (name) - 1] != '~')
 		{
-			/**
-			 * Fill pad from the info struct.  We don't need to free strings
-			 * because the new pad takes over their care.
-			 */
-			pad_node *pad = pad_new_with_info (&info);
-			
-			xpad_pad_group_add (pad_group, pad);
+			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name);
+			gtk_widget_show (pad);
 			
 			opened ++;
 		}
@@ -844,8 +844,8 @@ static const struct argument arguments[] =
 static void
 xpad_app_args_spawn_pad (void)
 {
-	pad_node *pad = pad_new ();
-	xpad_pad_group_add (pad_group, pad);
+	GtkWidget *pad = xpad_pad_new (pad_group);
+	gtk_widget_show (pad);
 }
 
 

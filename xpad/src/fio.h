@@ -22,26 +22,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _FIO_H_
 
 #include <gtk/gtk.h>
-#include "pad.h"
-#include "pref.h"
 
-gint fio_get_info_from_file (const gchar *filename, pad_info *info);
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);
-
-void fio_open_pad_files (pad_node *pad, gboolean create);
-void fio_remove_pad_files (pad_node *pad);
-
 void fio_remove_file (const gchar *filename);
 
 gint fio_get_values_from_file (const gchar *filename, ...);
 gint fio_set_values_to_file (const gchar *filename, ...);
 
-void fio_save_pad_info (pad_node *pad);
-void fio_save_pad_content (pad_node *pad);
-void fio_save_pad (pad_node *pad);
-void fio_save_pads (void);
-
+gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement);
 
 #endif /* _FIO_H_ */
 

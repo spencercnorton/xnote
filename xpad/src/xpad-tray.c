@@ -23,9 +23,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "eggtrayicon.h"
-#include "pad.h"
+#include "fio.h"
 #include "xpad-app.h"
+#include "xpad-pad.h"
 #include "xpad-pad-group.h"
+#include "xpad-preferences.h"
 #include "xpad-tray.h"
 
 /* much of this code is shamelessly copied from docklet.c, in the gaim/plugins/docklet
@@ -38,10 +40,6 @@ static void xpad_tray_toggle (void);
 
 static GtkWidget      *docklet = NULL;
 static gboolean        pads_showing;
-
-static GtkUIManager   *ui_manager = NULL;
-static GtkActionGroup *popup_notes_actions = NULL;
-static gint            popup_notes_merge_id;
 
 
 gboolean
@@ -56,8 +54,6 @@ xpad_tray_open (void)
 	GtkWidget      *box;
 	GtkWidget      *image;
 	GdkPixbuf      *pixbuf;
-	GtkActionGroup *actions;
-	gchar          *ui_filename;
 	
 	xpad_tray_close ();
 	
@@ -82,21 +78,6 @@ xpad_tray_open (void)
 	gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
 	g_object_unref (pixbuf);
 	
-	/* set up action group */
-	actions = gtk_action_group_new (PACKAGE "-tray");
-	gtk_action_group_add_actions (actions, pad_actions, num_pad_actions, NULL);
-	gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
-	
-	/* set up ui manager */
-	ui_filename = g_build_filename (PKGDATADIR, "xpad-tray.ui", NULL);
-	ui_manager = gtk_ui_manager_new ();
-	gtk_ui_manager_insert_action_group (ui_manager, actions, 0);
-	gtk_ui_manager_add_ui_from_file (ui_manager, ui_filename, NULL);
-/*	gtk_window_add_accel_group (pad->window, gtk_ui_manager_get_accel_group (ui_manager));*/
-	g_object_unref (actions);
-	gtk_ui_manager_ensure_update (ui_manager);
-	g_free (ui_filename);
-	
 	pads_showing = TRUE;
 }
 
@@ -104,41 +85,16 @@ void
 xpad_tray_close (void)
 {
 	if (docklet) {
-    		g_object_unref (docklet);
-    		g_object_unref (ui_manager);
-    		g_object_unref (popup_notes_actions);
+    	g_object_unref (docklet);
 		docklet = NULL;
-		ui_manager = NULL;
-		popup_notes_actions = NULL;
 	}
-}
-
-static gchar *
-create_popup_ui (int num_pads)
-{
-	gchar *ui, *new_ui;
-	gint i;
-	
-	ui = g_strdup ("<ui><popup name='TrayPopupItem'><placeholder name='NotesListItem'>");
-	
-	for (i = 1; i <= num_pads; i++) {
-		new_ui = g_strdup_printf ("%s<menuitem name='ShowNoteItem-%i' action='ShowNoteAction-%i'/>", ui, i, i);
-		g_free (ui);
-		ui = new_ui;
-	}
-	
-	new_ui = g_strdup_printf ("%s</placeholder></popup></ui>", ui);
-	g_free (ui);
-	ui = new_ui;
-	
-	return ui;
 }
 
 static gint
-pad_title_compare (pad_node *a, pad_node *b)
+menu_title_compare (GtkWindow *a, GtkWindow *b)
 {
-	gchar *title_a = g_utf8_casefold (a->title, -1);
-	gchar *title_b = g_utf8_casefold (b->title, -1);
+	gchar *title_a = g_utf8_casefold (gtk_window_get_title (a), -1);
+	gchar *title_b = g_utf8_casefold (gtk_window_get_title (b), -1);
 	
 	gint rv = g_utf8_collate (title_a, title_b);
 	
@@ -149,29 +105,66 @@ pad_title_compare (pad_node *a, pad_node *b)
 }
 
 static void
+menu_show_all (XpadPadGroup *group)
+{
+	GSList *pads, *i;
+	
+	pads = xpad_pad_group_get_pads (group);
+	
+	for (i = pads; i; i = i->next)
+		gtk_window_present (GTK_WINDOW (i->data));
+	
+	g_slist_free (pads);
+}
+
+static void
+menu_spawn (XpadPadGroup *group)
+{
+	GtkWidget *pad = xpad_pad_new (group);
+	gtk_widget_show (pad);
+}
+
+static void
 xpad_tray_popup (GdkEventButton *event)
 {
-	pad_node *p;
-	GtkWidget *tmp;
-	gint n = 0;
-	GList *pads = NULL, *l;
-	gchar *ui;
+	GtkWidget *menu, *item, *imgwidget;
+	gint i = 0;
+	GSList *pads, *l;
+	gint n;
 	
-	if (popup_notes_actions) {
-		gtk_ui_manager_remove_ui (ui_manager, popup_notes_merge_id);
-		gtk_ui_manager_remove_action_group (ui_manager, popup_notes_actions);
-		g_free (popup_notes_actions);
-	}
+	menu = gtk_menu_new ();
 	
-	popup_notes_actions = gtk_action_group_new (PACKAGE "-tray-notes");
+	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), xpad_app_get_pad_group ());
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
+	
+	item = gtk_separator_menu_item_new ();
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
+	
+	item = gtk_menu_item_new_with_mnemonic (_("_Show All"));
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_show_all), xpad_app_get_pad_group ());
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
+	
+	item = gtk_image_menu_item_new_with_mnemonic (_("_Close All"));
+	imgwidget = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), imgwidget);
+	g_signal_connect (item, "activate", G_CALLBACK (gtk_main_quit), NULL);
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
+	
+	item = gtk_separator_menu_item_new ();
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
 	
 	/**
 	 * Order pads according to title.
 	 */
-	for (p = first_pad; p; p = p->next)
-	{
-		pads = g_list_insert_sorted (pads, p, (GCompareFunc) pad_title_compare);
-	}
+	pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	
+	g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 	
 	/**
 	 * Populate list of windows.
@@ -180,10 +173,8 @@ xpad_tray_popup (GdkEventButton *event)
 	{
 		gchar *title;
 		gchar *tmp_title;
-		gchar *action_name;
-		GtkActionEntry entry;
 		
-		tmp_title = g_strdup (((pad_node *) l->data)->title);
+		tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (l->data)));
 		str_replace_tokens (&tmp_title, '_', "__");
 		if (n < 10)
 			title = g_strdup_printf ("_%i. %s", n, tmp_title);
@@ -191,30 +182,25 @@ xpad_tray_popup (GdkEventButton *event)
 			title = g_strdup_printf ("%i. %s", n, tmp_title);
 		g_free (tmp_title);
 		
-		action_name = g_strdup_printf ("ShowNoteAction-%i", n);
-		
-		entry.name = action_name;
-		entry.stock_id = NULL;
-		entry.label = title;
-		entry.accelerator = NULL;
-		entry.tooltip = NULL;
-		entry.callback = G_CALLBACK (menuitem_cb);
-		
-		gtk_action_group_add_actions (popup_notes_actions, &entry, 1, l->data);
+		item = gtk_menu_item_new_with_mnemonic (title);
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (gtk_window_present), l->data);
+		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+		gtk_widget_show (item);
 		
 		g_free (title);
-		g_free (action_name);
 	}
-	g_list_free (pads);
+	g_slist_free (pads);
 	
-	ui = create_popup_ui (n - 1);
-	popup_notes_merge_id = gtk_ui_manager_add_ui_from_string (ui_manager, ui, -1, NULL);
-	g_free (ui);
+	item = gtk_separator_menu_item_new ();
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
 	
-	gtk_ui_manager_insert_action_group (ui_manager, popup_notes_actions, 0);
+	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
+	g_signal_connect (item, "activate", G_CALLBACK (xpad_preferences_open), NULL);
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
+	gtk_widget_show (item);
 	
-	tmp = gtk_ui_manager_get_widget (ui_manager, "/TrayPopupItem");
-	gtk_menu_popup (GTK_MENU (tmp), NULL, NULL, NULL, NULL, event->button, event->time);
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
 static void

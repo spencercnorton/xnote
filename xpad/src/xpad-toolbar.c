@@ -74,6 +74,8 @@ enum
 	ACTIVATE_PROPERTIES,
 	ACTIVATE_QUIT,
 	ACTIVATE_STICKY,
+	POPUP,
+	POPDOWN,
 	LAST_SIGNAL
 };
 
@@ -83,7 +85,7 @@ static const XpadToolbarButton buttons[] =
 	{"Close", "gtk-close", ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
 	{"Delete", "gtk-delete", ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
 	{"New", "gtk-new", ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
-	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Global Preferences"), N_("Add Pr_eferences to Toolbar")},
+	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
 	{"Properties", "gtk-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
 	{"Quit", "gtk-quit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add _Quit to Toolbar")},
 	{"Sticky", "xpad-sticky", ACTIVATE_STICKY, XPAD_BUTTON_TYPE_TOGGLE, N_("Toggle Stickiness"), N_("Add _Sticky to Toolbar")},
@@ -104,7 +106,7 @@ static void xpad_toolbar_add_button (const gchar *button_name);
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
 static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
-static gboolean xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event);
+static gboolean xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar);
 
 static gboolean xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button);
 static gboolean xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event);
@@ -207,6 +209,22 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	
+	signals[POPUP] = 
+		g_signal_new ("popup",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, popup),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GTK_TYPE_MENU);
+	
+	signals[POPDOWN] = 
+		g_signal_new ("popdown",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, popdown),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GTK_TYPE_MENU);
+	
 	g_type_class_add_private (gobject_class, sizeof (XpadToolbarPrivate));
 }
 
@@ -223,8 +241,6 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
 	
-	/* Hmm...  This is bad to set the value directly; I only do it to compile with DEPRECATED flags. */
-	/*gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);*/
 	gtk_toolbar_set_tooltips (GTK_TOOLBAR (toolbar), TRUE);
 	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), FALSE);
@@ -243,6 +259,10 @@ xpad_toolbar_finalize (GObject *object)
 	
 	if (toolbar->priv->move_button)
 		g_object_unref (toolbar->priv->move_button);
+	
+	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, toolbar);
+	
+	G_OBJECT_CLASS (xpad_toolbar_parent_class)->finalize (object);
 }
 
 static gboolean
@@ -251,7 +271,8 @@ xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event)
 	/* Ignore double-clicks and triple-clicks */
 	if (event->button == 3 && event->type == GDK_BUTTON_PRESS)
 	{
-		xpad_toolbar_popup_button_menu (widget, event);
+		XpadToolbar *toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (widget), "xpad-toolbar"));
+		xpad_toolbar_popup_button_menu (widget, event, toolbar);
 		return TRUE;
 	}
 	else if (event->button == 2 && event->type == GDK_BUTTON_PRESS)
@@ -391,7 +412,8 @@ xpad_toolbar_remove_button (GtkWidget *button)
 	xpad_settings_remove_toolbar_button (xpad_settings (), button_num);
 }
 
-static gboolean xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button)
+static gboolean
+xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button)
 {
 	GdkGrabStatus  status;
 	GdkCursor     *fleur_cursor;
@@ -426,7 +448,8 @@ static gboolean xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget 
 	return TRUE;
 }
 
-static gboolean xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event)
+static gboolean
+xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event)
 {
 	if (event->keyval == GDK_Left || event->keyval == GDK_KP_Left)
 	{
@@ -467,7 +490,8 @@ static gboolean xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, Gd
 	return TRUE;
 }
 
-static gboolean xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event)
+static gboolean
+xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event)
 {
 	gint max;
 	
@@ -488,7 +512,8 @@ static gboolean xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMot
 	return TRUE;
 }
 
-static gboolean xpad_toolbar_move_button_end (XpadToolbar *toolbar)
+static gboolean
+xpad_toolbar_move_button_end (XpadToolbar *toolbar)
 {
 	gint old_spot;
 	gint max;
@@ -532,8 +557,14 @@ move_menu_item_activated (GtkWidget *button)
 	xpad_toolbar_move_button_start (toolbar, button);
 }
 
+static void
+menu_deactivated (GtkWidget *menu, GtkToolbar *toolbar)
+{
+	g_signal_emit (toolbar, signals[POPDOWN], 0, menu);
+}
+
 static gboolean
-xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event)
+xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar)
 {
 	GtkWidget *menu;
 	GtkWidget *item, *image;
@@ -557,7 +588,11 @@ xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event)
 	gtk_widget_show (item);
 	
 	
+	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
+	
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event ? event->button : 0, gtk_get_current_event_time ());
+	
+	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 	
 	return TRUE;
 }
@@ -604,7 +639,11 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		gtk_widget_show (item);
 	}
 	
+	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
+	
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, (button < 0) ? 0 : button, gtk_get_current_event_time ());
+	
+	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 	
 	return TRUE;
 }

@@ -38,9 +38,8 @@ typedef struct XpadSettings XpadSettings;
 
 struct XpadSettings
 {
-	GObject parent;
-	
 	/* private */
+	GObject parent;
 	XpadSettingsPrivate *priv;
 };
 

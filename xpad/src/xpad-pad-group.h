@@ -20,7 +20,6 @@
 #define __XPAD_PAD_GROUP_H__
 
 #include <gtk/gtk.h>
-#include "pad.h"
 
 G_BEGIN_DECLS
 
@@ -49,18 +48,20 @@ struct XpadPadGroupClass
 	
 	/* Signals */
 	void (* pad_added)      (XpadPadGroup *group,
-	                         pad_node *pad);
+	                         GtkWidget *pad);
 };
 
 GType    xpad_pad_group_get_type (void);
 
 XpadPadGroup *xpad_pad_group_new      (void);
 
-void     xpad_pad_group_add      (XpadPadGroup *group, pad_node *pad);
+void     xpad_pad_group_add      (XpadPadGroup *group, GtkWidget *pad);
+void     xpad_pad_group_remove   (XpadPadGroup *group, GtkWidget *pad);
 
 void     xpad_pad_group_hide_all    (XpadPadGroup *group);
 void     xpad_pad_group_unhide_all  (XpadPadGroup *group);
 void     xpad_pad_group_toggle_hide (XpadPadGroup *group);
+GSList * xpad_pad_group_get_pads    (XpadPadGroup *group);
 
 G_END_DECLS
 
