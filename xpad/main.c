@@ -943,7 +943,7 @@ static int xpad_init (gpointer data)
 	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
-
+	
 #ifdef G_OS_UNIX
 	tray_open ();
 #endif
