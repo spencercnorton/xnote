@@ -15,6 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+VERSION = @VERSION@
+VERNAME = xpad-$(VERSION)
+
 SHELL = /bin/sh
 top_srcdir = @top_srcdir@
 srcdir = @srcdir@
@@ -73,6 +76,26 @@ distclean: clean
 mostlyclean: clean
 
 maintainer-clean: clean
+
+
+# the next several rules are taken from the aterm project's Makefile.in
+tar.gz: ../$(VERNAME).tar.gz
+../$(VERNAME).tar.gz: distclean
+	(cd ..; tar cf - main | gzip --best > $(VERNAME).tar.gz)
+
+tar.Z: ../$(VERNAME).tar.Z
+../$(VERNAME).tar.Z: distclean
+	(cd ..; tar cf - main | compress > $(VERNAME).tar.Z)
+
+tar.bz2: ../$(VERNAME).tar.bz2
+../$(VERNAME).tar.bz2: distclean
+	(cd ..; tar cf - main | bzip2 -f9 > $(VERNAME).tar.bz2)
+
+uuencode: tar.gz
+	uuencode ../$(VERNAME).tar.gz $(VERNAME).tar.gz > ../$(VERNAME).tgz.uu
+
+
+
 
 # automatic re-running of configure if the configure.in file has changed
 ${srcdir}/configure: configure.in #aclocal.m4
