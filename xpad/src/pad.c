@@ -1015,14 +1015,14 @@ menuitem_cb (GtkAction *action, gpointer user_data)
 	}
 }
 
-static gchar *create_popup_ui (int start_num, int end_num)
+static gchar *create_popup_ui (int num_pads)
 {
 	gchar *ui, *new_ui;
 	gint i;
 	
 	ui = g_strdup ("<ui><popup name='PopupItem'><menu name='NotesItem' action='NotesMenu'><placeholder name='NotesListItem'>");
 	
-	for (i = start_num; i <= end_num; i++) {
+	for (i = 1; i <= num_pads; i++) {
 		new_ui = g_strdup_printf ("%s<menuitem name='ShowNoteItem-%i' action='ShowNoteAction-%i'/>", ui, i, i);
 		g_free (ui);
 		ui = new_ui;
@@ -1057,8 +1057,10 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkTextBuffer *buf;
 	gboolean is_selection;
 	GList *pads = NULL, *l;
+	gchar *ui;
 	
 	if (pad->popup_notes_actions) {
+		gtk_ui_manager_remove_ui (pad->ui_manager, pad->popup_notes_merge_id);
 		gtk_ui_manager_remove_action_group (pad->ui_manager, pad->popup_notes_actions);
 		g_free (pad->popup_notes_actions);
 	}
@@ -1107,15 +1109,9 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	}
 	g_list_free (pads);
 	
-	if (n - 1 > pad->popup_notes_max) {
-		gchar *ui;
-		
-		ui = create_popup_ui (pad->popup_notes_max + 1, n - 1);
-		gtk_ui_manager_add_ui_from_string (pad->ui_manager, ui, -1, NULL);
-		g_free (ui);
-		
-		pad->popup_notes_max = n - 1;
-	}
+	ui = create_popup_ui (n - 1);
+	pad->popup_notes_merge_id = gtk_ui_manager_add_ui_from_string (pad->ui_manager, ui, -1, NULL);
+	g_free (ui);
 	
 	gtk_ui_manager_insert_action_group (pad->ui_manager, pad->popup_notes_actions, 0);
 	
@@ -1758,7 +1754,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	pad->scrollbar = scroll;
 	pad->title = NULL;
 	pad->popup_notes_actions = NULL;
-	pad->popup_notes_max = 0;
+	pad->popup_notes_merge_id = 0;
 	
 	/* set up action group */
 	actions = gtk_action_group_new (PACKAGE);

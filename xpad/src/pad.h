@@ -69,7 +69,7 @@ struct pad_node_def
 
 	GtkUIManager *ui_manager;
 	GtkActionGroup *popup_notes_actions;
-	gint popup_notes_max;
+	gint popup_notes_merge_id;
 	
 	/* main textbox stuff */
 	GtkWindow *window;

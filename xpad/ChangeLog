@@ -1,3 +1,7 @@
+2004-01-26  Michael Terry  <mikix@users.sourceforge.net>
+
+	* pad.c: Remove old ui for popup when popping
+
 2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
 
 	* pad.c: Fix mismanagement of memory causing a crash on pad close
