@@ -103,14 +103,14 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	backup = g_strconcat (fullpath, "~", NULL);
 	
 	/* we first move the file away so that if the write doesn't succeed, we don't lose data */
-	if (g_file_test (fullpath, G_FILE_TEST_EXISTS) && rename (fullpath, backup))
+	if (g_file_test (fullpath, G_FILE_TEST_EXISTS) && g_rename (fullpath, backup))
 	{
 		printf ("errno is %i - from %s to %s\n", errno, fullpath, backup);
 		error = TRUE;
 		moved = FALSE;
 	}
 	
-	if (!error && (file = fopen (fullpath, "w")) == NULL)
+	if (!error && (file = g_fopen (fullpath, "w")) == NULL)
 	{
 		error = TRUE;
 	}
@@ -127,7 +127,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		/* move the file back */
 		if (moved)
 		{
-			rename (backup, fullpath);
+			g_rename (backup, fullpath);
 		}
 		
 		usertext = g_strdup_printf (_("Could not write to file %s."), fullpath);
@@ -318,8 +318,8 @@ void fio_remove_file (const gchar *filename)
 	temp = fio_fill_filename (filename);
 	backup = g_strconcat (temp, "~", NULL);
 	
-	remove (temp);
-	remove (backup);
+	g_unlink (temp);
+	g_unlink (backup);
 	
 	g_free (temp);
 	g_free (backup);

@@ -43,19 +43,6 @@
 
 #include "../images/sticky.xpm"
 
-#if defined (G_OS_UNIX)
-  /* required by mkdir */
- #include <sys/stat.h>
- #include <sys/types.h>
-#elif defined (G_OS_WIN32)
- /* required by CreateDirectory */
- #include <Winbase.h>
-#elif defined (G_OS_BEOS)
- /* required by CreateDirectory */
- #include <be/storage/Directory.h>
-#endif
-
-
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
    These were provided by Alan Mizrahi <alan@cesma.usb.ve>.
 */
@@ -237,22 +224,15 @@ config_dir_exists (void)
 	
 #if defined (G_OS_UNIX)
 	
-	/* create a hidden directory under the user's home */
-	dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
+	/* create a hidden directory under the user's config dir (usually $HOME) */
+	dir = g_build_filename (g_get_user_config_dir (), ".xpad", NULL);
 	
 	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
 	
-#elif defined (G_OS_WIN32)
+#else
 	
 	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
-	
-	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
-	
-#elif defined (G_OS_BEOS)
-	
-	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
+	dir = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
 	
 	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
 	
@@ -275,28 +255,17 @@ make_config_dir (void)
 #if defined (G_OS_UNIX)
 	
 	/* create a hidden directory under the user's home */
-	dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
+	dir = g_build_filename (g_get_user_config_dir (), ".xpad", NULL);
 	
-	/* make sure directory exists */
-	mkdir (dir, 0700); /* give user all rights */
-	
-#elif defined (G_OS_WIN32)
+#else
 	
 	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
-	
-	/* make sure directory exists */
-	CreateDirectory (dir, NULL); /* default security rights */
-	
-#elif defined (G_OS_BEOS)
-	
-	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
-	
-	/* make sure directory exists */
-	CreateDirectory (dir, NULL);
+	dir = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
 	
 #endif
+	
+	/* make sure directory exists */
+	g_mkdir (dir, 0700); /* give user all rights */
 	
 	return dir;
 }
@@ -625,7 +594,7 @@ xpad_app_open_proc_file (void)
 	GIOChannel *channel;
 	struct sockaddr_un master;
 	
-	unlink (server_filename);
+	g_unlink (server_filename);
 	
 	/* create the socket */
 	server_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
