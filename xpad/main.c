@@ -76,7 +76,8 @@ struct settings current_settings =
 		5, /* padding */
 		"serif Bold 16" /* font */
 	},
-	1,
+	1, /* toolbar on by default */
+	1, /* scrollbars on by default */
 	NULL /* list of buttons -- default is filled in upon file load*/
 };
 

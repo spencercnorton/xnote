@@ -241,6 +241,20 @@ void pad_toggle_sticky (pad_node *pad)
 	}
 }
 
+void pad_set_scrollbars (pad_node *pad, gboolean on)
+{
+	if (on)
+	{
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->scrollbar), 
+			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	}
+	else
+	{
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->scrollbar), 
+			GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+	}
+}
+
 void pad_toolbar_update (pad_node *pad)
 {
 	GList *list, *tmp;
@@ -264,6 +278,40 @@ void pad_toolbar_update (pad_node *pad)
 		}
 		
 		g_signal_connect_swapped (widget, "clicked", func, pad);
+		
+		tmp = tmp->next;
+	}
+	
+	g_list_free (list);
+}
+
+/* sets a toggleable widget to a particular value */
+static void
+pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
+{
+	GList *list, *tmp;
+	
+	list = tmp = toolbar_get_buttons (pad->toolbar);
+	
+	while (tmp)
+	{
+		GCallback func;
+		GtkWidget *widget = GTK_WIDGET (tmp->data);
+		
+		func = ((const toolbar_button *) g_object_get_data 
+			(G_OBJECT (widget), "tb"))->func;
+		
+		if (func == target_func)
+		{
+			g_signal_handlers_block_by_func (widget, (gpointer) func, pad);
+			
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+				value);
+			
+			g_signal_handlers_unblock_by_func (widget, (gpointer) func, pad);
+			
+			break;
+		}
 		
 		tmp = tmp->next;
 	}
@@ -1030,6 +1078,9 @@ pad_lock_style (pad_node *pad)
 	pad_style_free (&pad->style);
 	pad_style_copy (&pad->style, &current_settings.style);
 	pad->locked = 1;
+	
+	/* make sure the toolbar widget is up to date */
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), TRUE);
 }
 
 void
@@ -1037,6 +1088,9 @@ pad_unlock_style (pad_node *pad)
 {
 	pad->locked = 0;
 	pad_update_style (pad);
+	
+	/* make sure the toolbar widget is up to date */
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), FALSE);
 }
 
 void
@@ -1455,8 +1509,8 @@ pad_alloc_gtk (pad_node *pad)
 	GtkWidget *textbox = gtk_text_view_new ();
 	GtkWidget *eventbox = gtk_event_box_new ();
 	GtkWidget *eventbox1 = gtk_event_box_new ();
-	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkWidget *box = gtk_vbox_new (FALSE, 0);
+	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkTextBuffer *textbuf;
 	
 	/* set textbox's properties */
@@ -1464,8 +1518,6 @@ pad_alloc_gtk (pad_node *pad)
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
 	
 	/* set up scrollbar */
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), 
-		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroll),
 		GTK_SHADOW_NONE);
 	
@@ -1496,9 +1548,9 @@ pad_alloc_gtk (pad_node *pad)
 	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
 	pad->eventbox_outer = eventbox1;
-	pad->scrollbar = scroll;
 	pad->box = box;
 	pad->toolbar = NULL;
+	pad->scrollbar = scroll;
 	
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
@@ -1515,6 +1567,8 @@ pad_alloc_gtk (pad_node *pad)
 	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
+	
+	pad_set_scrollbars (pad, current_settings.scrollbar);
 	
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
@@ -1583,6 +1637,9 @@ pad_node *pad_new (void)
 	
 	fio_open_pad_files (pad, TRUE);
 	
+	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
+	
 	pad_style_copy (&pad->style, &current_settings.style);
 	pad_update_style (pad);
 	
@@ -1616,6 +1673,9 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->infoname = info->infoname;
 	pad->contentname = info->contentname;
 	
+	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
+	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
+	
 	pad_style_copy (&pad->style, &info->style);
 	pad_update_style (pad);
 	
@@ -1644,8 +1704,6 @@ pad_renew (pad_node *pad)
 	pad_fill_with_file (pad, pad->contentname);
 	
 	pad_update_style (pad);
-	
-	pad->locked = 0;
 	
 	pad_set_title (pad);
 	

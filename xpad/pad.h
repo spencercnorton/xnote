@@ -106,6 +106,7 @@ void cleanup (void);
 
 void pads_set_decorations (gboolean decor, GtkWidget *caller);
 void pads_set_editable (gboolean editable);
+void pad_set_scrollbars (pad_node *pad, gboolean on);
 
 void pad_close (pad_node *pad);
 void pad_destroy (pad_node *pad);

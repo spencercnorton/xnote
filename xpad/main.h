@@ -36,6 +36,7 @@ struct settings {
 	gint wm_close;
 	pad_style style;
 	gint toolbar;
+	gint scrollbar;
 	GSList *toolbar_buttons;
 };
 
