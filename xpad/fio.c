@@ -35,36 +35,47 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 gint fio_fill_filename (gchar *filename)
 {
+	size_t filename_len;
+
 	if (filename[0] == '/')
 		return 0;
-	else
+
+	filename_len = strlen(filename);
+
+	if ((filename_len + working_dir_len) > MAX_FILENAME_SIZE)
 	{
-		gchar temp[MAX_FILENAME_SIZE + 1];
-		
-		strcpy (temp, filename);
-	        strcpy (filename, working_dir);
-        	strcat (filename, temp);
-        	
-        	return 1;
+		fprintf(stderr, "Full path to file is too long!\n");
+		return 0;
 	}
+
+	filename_len = strlen(filename);
+	memmove(filename + working_dir_len, filename, filename_len);
+	memcpy(filename, working_dir, working_dir_len);
+        	
+       	return 1;
 }
 
 gint fio_set_file (const gchar *name, const gchar *value)
 {
-    FILE *file;
-    gchar temp[MAX_FILENAME_SIZE + 1];
+	FILE *file;
+	gchar temp[MAX_FILENAME_SIZE + 1];
 	
 	strcpy (temp, name);
 	fio_fill_filename (temp);
 	
-    if ( (file = fopen (temp, "w+")) == NULL)
-    {
-        if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", temp);
+	if ( (file = fopen (temp, "w+")) == NULL)
+	{
+		if (verbosity >= 1) 
+			printf ("Could not open file [%s] for writing.\n", temp);
 			return 1;
-    }
+	}
 	
-    fputs (value, file);
-	
+	if (fputs (value, file) == EOF)
+	{
+		fprintf(stderr, "Failed to write file [%s].\n", name);
+		return 1;
+	}
+
 	fclose (file);
 	
 	return 0;

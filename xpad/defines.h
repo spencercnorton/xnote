@@ -9,9 +9,10 @@
 
 #define MAX_FILENAME_SIZE	1024
 
-// files we use are not large
+/* files we use are not large */
 #define MAX_FILE_SIZE		1024
 
 #define VERSION				"1.3"
 
 #endif
+

@@ -42,6 +42,7 @@ int sync_pads (gpointer data);
 void reset_sync (void);
 
 extern gchar working_dir[MAX_FILENAME_SIZE];
+extern size_t working_dir_len;
 extern gint verbosity;
 extern guint autosave_timeout_id;
 extern struct settings current_settings;

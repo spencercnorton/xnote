@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gdk/gdkkeysyms.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
+size_t working_dir_len = 0;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
@@ -43,20 +44,20 @@ guint autosave_timeout_id = -1;
  */
 struct settings current_settings =
 {
-	260, // default width
-	260, // default height
-	60, // sync time in seconds
-	0, // decorations are off
-	1, // destroy confirmations on
-	0, // edit lock off
-	1, // close this pad
-	{ // default style
-		{0, 0xe000, 0xe000, 0x5600}, // yellow background
-		{0, 0, 0, 0}, // black text
-		{0, 0, 0, 0}, // black border
-		0, // border width
-		0, // padding
-		"serif Bold 16" // font
+	260, /* default width */
+	260, /* default height */
+	60, /* sync time in seconds */
+	0, /* decorations are off */
+	1, /* destroy confirmations on */
+	0, /* edit lock off */
+	1, /* close this pad */
+	{ /* default style */
+		{0, 0xe000, 0xe000, 0x5600}, /* yellow background */
+		{0, 0, 0, 0}, /* black text */
+		{0, 0, 0, 0}, /* black border */
+		0, /* border width */
+		0, /* padding */
+		"serif Bold 16" /* font */
 	}
 };
 
@@ -201,10 +202,20 @@ void xpad_init (void)
 	sigaction (SIGKILL, &sa, NULL); /* 9 kill */
 	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
 
-	strcpy (working_dir, getenv("HOME"));
+	working_dir[sizeof(working_dir)-1] = '\0';
+	strncpy (working_dir, getenv("HOME"), sizeof(working_dir));
+
+	/* Oops--working dir is too long!  Use . instead (which sucks...) */
+	if (working_dir[sizeof(working_dir)-1])
+	{
+		fprintf(stderr, "Working directory too long, using '.'\n");
+		strcpy(working_dir, ".");
+	}
+
 	strcat (working_dir, "/.xpad/");
+	working_dir_len = strlen(working_dir);
 	
-	/* make sure directory exists */
+	/* try to make sure directory exists */
 	mkdir (working_dir, 00777);
 
 	fio_get_values_from_file (DEFAULTS_FILENAME, 
@@ -219,7 +230,7 @@ void xpad_init (void)
 
 	if (fio_get_style_from_file (DEFAULTS_FILENAME, &current_settings.style))
 	{
-		// this happens if there isn't a ~/.xpad directory (i.e. first run)
+		/* this happens if there isn't a ~/.xpad directory (i.e. first run) */
 		fio_save_as_defaults (&current_settings);
 		show_help ();
 	}

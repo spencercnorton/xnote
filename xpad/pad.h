@@ -29,7 +29,7 @@ typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;
 typedef struct pad_style_def pad_style;
 
-// holds all the internal data we need to manipulate pads
+/* holds all the internal data we need to manipulate pads */
 struct pad_node_def
 {
 	pad_node *next;
@@ -43,7 +43,7 @@ struct pad_node_def
 	GtkWidget *eventbox_outer;
 };
 
-// describes the custom styles of a pad
+/* describes the custom styles of a pad */
 struct pad_style_def
 {
 	GdkColor back;
@@ -54,7 +54,7 @@ struct pad_style_def
 	gchar fontname[MAX_FILENAME_SIZE + 1];
 };
 
-// used to keep all the persistant data we need for one pad
+/* used to keep all the persistant data we need for one pad */
 struct pad_info_def
 {
 	gint x;
