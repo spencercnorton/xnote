@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-19 16:45-0500\n"
+"POT-Creation-Date: 2004-12-23 21:50-0500\n"
 "PO-Revision-Date: 2004-01-06 16:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -15,29 +15,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8-bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/eggtrayicon.c:118
-msgid "Orientation"
-msgstr ""
-
-#: src/eggtrayicon.c:119
-msgid "The orientation of the tray."
-msgstr ""
-
-#: src/fio.c:133
+#: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr "N'a pu écrire dans le fichier %s."
 
-#: src/xpad-app.c:114 xpad.desktop.in.h:3
+#: src/xpad-app.c:125
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr ""
+
+#: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:479
+#: src/xpad-app.c:410
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Ne peut ouvrir le répertoire %s."
 
-#: src/xpad-app.c:482
+#: src/xpad-app.c:413
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,82 +41,59 @@ msgstr ""
 "Ce répertoire est nécessaire pour stocker les préférences et les information "
 "du pad. Xpad va maintenant fermer."
 
-#: src/xpad-app.c:882
-msgid "Prints usage information and exits"
-msgstr "Afficher l'aide-mémoire et quitter"
-
-#: src/xpad-app.c:883
-msgid "Prints xpad version and exits"
+#: src/xpad-app.c:717
+#, fuzzy
+msgid "Show version number and quit"
 msgstr "Afficher la version de xpad et quitter"
 
-#: src/xpad-app.c:884
-msgid ""
-"Prevents xpad from creating a new pad on startup if no previous pads exist"
+#: src/xpad-app.c:718
+msgid "Hide existing pads on startup"
+msgstr ""
+
+#: src/xpad-app.c:719
+#, fuzzy
+msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Bloquer la création d'un nouveau pad lors du démarrage si aucun pad n'existe"
 
-#: src/xpad-app.c:890
-msgid "Causes xpad to create a new pad on startup even if pads already exist"
+#: src/xpad-app.c:725
+#, fuzzy
+msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Provoque la craétion d'un nouveau pad lors du démarrage si un pad existe déjà"
 
-#: src/xpad-app.c:891
-msgid "Causes all running xpad instances to close"
-msgstr "Provoque la fermeture de toutes les instances xpad"
+#: src/xpad-app.c:726
+#, fuzzy
+msgid "Close all pads"
+msgstr "Fermer tous les pads"
 
-#: src/xpad-app.c:907
+#: src/xpad-app.c:749
 #, fuzzy, c-format
-msgid "Xpad %s\n"
+msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-app.c:951
-#, fuzzy, c-format
-msgid ""
-"Usage: %s [OPTIONS]\n"
-"\n"
-msgstr ""
-"Usage: xpad [OPTIONS]\n"
-"\n"
-
-#: src/xpad-app.c:989
-#, c-format
-msgid "Missing companion argument to %s\n"
-msgstr "Argument compagnon manquant à %s\n"
-
-#: src/xpad-app.c:1033
-#, c-format
-msgid "Didn't understand argument '%s'\n"
-msgstr "Argument mal compris '%s'.\n"
-
-#: src/xpad-app.c:1082
-#, c-format
-msgid "Invalid number: '%s'\n"
-msgstr "Nombre invalide: « %s »\n"
-
-#: src/xpad-pad.c:512
+#: src/xpad-pad.c:510
 msgid "Delete this pad?"
 msgstr "Détruire ce pad?"
 
-#: src/xpad-pad.c:513
+#: src/xpad-pad.c:511
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Tous les texts de ce pad sont irrévocablement perdus."
 
-#: src/xpad-pad.c:544
+#: src/xpad-pad.c:542
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Propriétés du pad"
 
-#: src/xpad-pad.c:1064
-#, fuzzy, c-format
-msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Vous utilisez xpad %s avec GTK+ %i.%i.%i."
-
-#: src/xpad-pad.c:1069
+#: src/xpad-pad.c:1046
 #, fuzzy
-msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+msgid "Sticky notes"
+msgstr "Notes autocollantes"
+
+#. Translators: please translate this as your own name and optionally email
+#: src/xpad-pad.c:1064
+msgid "translator-credits"
 msgstr ""
-"Visiter http://xpad.sourceforge.net pour plus d'informations à porpos de "
-"xpad."
 
 #: src/xpad-pad.c:1285
 #, fuzzy
@@ -128,9 +101,8 @@ msgid "_Pad"
 msgstr "/_Pad"
 
 #: src/xpad-pad.c:1294
-#, fuzzy
-msgid "_Sticky"
-msgstr "/Pad/_Autocollant"
+msgid "Show on _All Workspaces"
+msgstr ""
 
 #: src/xpad-pad.c:1301
 #, fuzzy
@@ -167,11 +139,11 @@ msgstr "Permettre l'utilisation des décorations du gestionnaire de _fenêtres"
 msgid "_Notes"
 msgstr "/_Notes"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:133
+#: src/xpad-pad.c:1335 src/xpad-tray.c:140
 msgid "_Show All"
 msgstr "_afficher tout"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:140
+#: src/xpad-pad.c:1336 src/xpad-tray.c:147
 #, fuzzy
 msgid "_Close All"
 msgstr "Fermer tous les pads"
@@ -268,83 +240,75 @@ msgstr "Préférences globales"
 msgid "Options"
 msgstr "Options"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 msgid "Clear Pad Contents"
 msgstr "Effacer le contenu du pad"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 #, fuzzy
 msgid "Add C_lear to Toolbar"
 msgstr "_Autoriser la barre d'outils"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 msgid "Close and Save Pad"
 msgstr "Fermer et sauvegarder le pad"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 #, fuzzy
 msgid "Add _Close to Toolbar"
 msgstr "_Autoriser la barre d'outils"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Delete Pad"
 msgstr "Détruire le pad"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Add _Delete to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Open New Pad"
 msgstr "Ouvrir un nouveau pad"
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Add _New to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "Éditer les préférences globales"
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 #, fuzzy
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Préférences globales"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Edit Pad Properties"
 msgstr "Éditer les propriétés de pad"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Add Proper_ties to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Close All Pads"
 msgstr "Fermer tous les pads"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Add _Quit to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:91
-msgid "Toggle Stickiness"
-msgstr "Basculer le mode collant"
-
-#: src/xpad-toolbar.c:91
-msgid "Add _Sticky to Toolbar"
-msgstr ""
-
-#: src/xpad-toolbar.c:92
+#: src/xpad-toolbar.c:83
 msgid "Add a Se_parator to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:575
+#: src/xpad-toolbar.c:544
 msgid "_Remove From Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:585
+#: src/xpad-toolbar.c:554
 msgid "_Move"
 msgstr ""
 
@@ -357,16 +321,56 @@ msgid "Sticky Notes"
 msgstr "Notes autocollantes"
 
 #, fuzzy
+#~ msgid "Virtual sticky notes"
+#~ msgstr "Notes autocollantes"
+
+#, fuzzy
+#~ msgid "_Sticky"
+#~ msgstr "/Pad/_Autocollant"
+
+#~ msgid "Toggle Stickiness"
+#~ msgstr "Basculer le mode collant"
+
+#~ msgid "Prints usage information and exits"
+#~ msgstr "Afficher l'aide-mémoire et quitter"
+
+#~ msgid "Causes all running xpad instances to close"
+#~ msgstr "Provoque la fermeture de toutes les instances xpad"
+
+#, fuzzy
+#~ msgid ""
+#~ "Usage: %s [OPTIONS]\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Usage: xpad [OPTIONS]\n"
+#~ "\n"
+
+#~ msgid "Missing companion argument to %s\n"
+#~ msgstr "Argument compagnon manquant à %s\n"
+
+#~ msgid "Didn't understand argument '%s'\n"
+#~ msgstr "Argument mal compris '%s'.\n"
+
+#~ msgid "Invalid number: '%s'\n"
+#~ msgstr "Nombre invalide: « %s »\n"
+
+#, fuzzy
+#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
+#~ msgstr "Vous utilisez xpad %s avec GTK+ %i.%i.%i."
+
+#, fuzzy
+#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+#~ msgstr ""
+#~ "Visiter http://xpad.sourceforge.net pour plus d'informations à porpos de "
+#~ "xpad."
+
+#, fuzzy
 #~ msgid "_New"
 #~ msgstr "/Pad/_Nouveau"
 
 #, fuzzy
 #~ msgid "Prefere_nces"
 #~ msgstr "/Editer/Préfére_nces"
-
-#, fuzzy
-#~ msgid "Close all pads"
-#~ msgstr "Fermer tous les pads"
 
 #, fuzzy
 #~ msgid "Proper_ties"

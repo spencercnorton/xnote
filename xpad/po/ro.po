@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-19 16:45-0500\n"
+"POT-Creation-Date: 2004-12-23 21:50-0500\n"
 "PO-Revision-Date: 2003-10-26 10:09+0200\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -15,29 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/eggtrayicon.c:118
-msgid "Orientation"
-msgstr ""
-
-#: src/eggtrayicon.c:119
-msgid "The orientation of the tray."
-msgstr ""
-
-#: src/fio.c:133
+#: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Nu am putut scrie în fiºierul %s."
 
-#: src/xpad-app.c:114 xpad.desktop.in.h:3
+#: src/xpad-app.c:125
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr ""
+
+#: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:479
+#: src/xpad-app.c:410
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Nu am putut deschide directorul %s."
 
-#: src/xpad-app.c:482
+#: src/xpad-app.c:413
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,80 +41,59 @@ msgstr ""
 "Acest director este necesar pentru stocare preferinþe ºi informaþii. Xpad "
 "seva închide acum."
 
-#: src/xpad-app.c:882
-msgid "Prints usage information and exits"
-msgstr "Afiºeazã informaþii de folosire ºi iese"
-
-#: src/xpad-app.c:883
-msgid "Prints xpad version and exits"
+#: src/xpad-app.c:717
+#, fuzzy
+msgid "Show version number and quit"
 msgstr "Afiºeazã versiunea xpad ºi iese"
 
-#: src/xpad-app.c:884
-msgid ""
-"Prevents xpad from creating a new pad on startup if no previous pads exist"
+#: src/xpad-app.c:718
+msgid "Hide existing pads on startup"
+msgstr ""
+
+#: src/xpad-app.c:719
+#, fuzzy
+msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Împiedicã xpad sã creeze un nou pad la start dacã nu existã paduri anterioare"
 
-#: src/xpad-app.c:890
-msgid "Causes xpad to create a new pad on startup even if pads already exist"
+#: src/xpad-app.c:725
+#, fuzzy
+msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Face ca xpad sã creeze un nou pad la start chiar dacã existã pad-uri deja"
 
-#: src/xpad-app.c:891
-msgid "Causes all running xpad instances to close"
-msgstr "Face ca toate instanþele xpad în execuþie sã se închidã"
+#: src/xpad-app.c:726
+#, fuzzy
+msgid "Close all pads"
+msgstr "Închide toate pad-urile"
 
-#: src/xpad-app.c:907
+#: src/xpad-app.c:749
 #, fuzzy, c-format
-msgid "Xpad %s\n"
+msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-app.c:951
-#, fuzzy, c-format
-msgid ""
-"Usage: %s [OPTIONS]\n"
-"\n"
-msgstr ""
-"Folosire: xpad [OPÞIUNI]\n"
-"\n"
-
-#: src/xpad-app.c:989
-#, c-format
-msgid "Missing companion argument to %s\n"
-msgstr "Lipseºte parametrul pereche pentru %s\n"
-
-#: src/xpad-app.c:1033
-#, c-format
-msgid "Didn't understand argument '%s'\n"
-msgstr "Nu am înþeles parametrul '%s'\n"
-
-#: src/xpad-app.c:1082
-#, c-format
-msgid "Invalid number: '%s'\n"
-msgstr "Numãr invalid: '%s'\n"
-
-#: src/xpad-pad.c:512
+#: src/xpad-pad.c:510
 msgid "Delete this pad?"
 msgstr "ªtergeþi acest pad?"
 
-#: src/xpad-pad.c:513
+#: src/xpad-pad.c:511
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Toate textele din acest pad vor fi pierdute irevocabil."
 
-#: src/xpad-pad.c:544
+#: src/xpad-pad.c:542
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Proprietãþi Pad"
 
-#: src/xpad-pad.c:1064
-#, fuzzy, c-format
-msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Folosiþi xpad %s cu GTK+ %i/%i.%i."
-
-#: src/xpad-pad.c:1069
+#: src/xpad-pad.c:1046
 #, fuzzy
-msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-msgstr "Vizitaþi http://xpad.sourceforge.net pentru mai multe informaþii."
+msgid "Sticky notes"
+msgstr "Note Lipicioase(sticky)"
+
+#. Translators: please translate this as your own name and optionally email
+#: src/xpad-pad.c:1064
+msgid "translator-credits"
+msgstr ""
 
 #: src/xpad-pad.c:1285
 #, fuzzy
@@ -126,9 +101,8 @@ msgid "_Pad"
 msgstr "/_Pad"
 
 #: src/xpad-pad.c:1294
-#, fuzzy
-msgid "_Sticky"
-msgstr "/Pad/Lipicios(_Sticky)"
+msgid "Show on _All Workspaces"
+msgstr ""
 
 #: src/xpad-pad.c:1301
 #, fuzzy
@@ -165,11 +139,11 @@ msgstr "Permite decoraþiuni fereastrã (_window)"
 msgid "_Notes"
 msgstr "/_Note"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:133
+#: src/xpad-pad.c:1335 src/xpad-tray.c:140
 msgid "_Show All"
 msgstr "Afiºare Toate(_Show All)"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:140
+#: src/xpad-pad.c:1336 src/xpad-tray.c:147
 #, fuzzy
 msgid "_Close All"
 msgstr "Închide toate pad-urile"
@@ -266,83 +240,75 @@ msgstr "Preferinþe globale"
 msgid "Options"
 msgstr "Opþiuni"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 msgid "Clear Pad Contents"
 msgstr "ªterge Conþinut pad"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 #, fuzzy
 msgid "Add C_lear to Toolbar"
 msgstr "Activare (_Enable) barã unelte"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 msgid "Close and Save Pad"
 msgstr "Închide ºi Salveazã pad"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 #, fuzzy
 msgid "Add _Close to Toolbar"
 msgstr "Activare (_Enable) barã unelte"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Delete Pad"
 msgstr "ªterge pad"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Add _Delete to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Open New Pad"
 msgstr "Deschide pad nou"
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Add _New to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "Editeaxã preferinþe globale"
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 #, fuzzy
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Preferinþe globale"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Edit Pad Properties"
 msgstr "Editeazã proprietãþi pad"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Add Proper_ties to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Close All Pads"
 msgstr "Închide toate pad-urile"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Add _Quit to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:91
-msgid "Toggle Stickiness"
-msgstr "Schimbã(toggle) comportament(stickiness)"
-
-#: src/xpad-toolbar.c:91
-msgid "Add _Sticky to Toolbar"
-msgstr ""
-
-#: src/xpad-toolbar.c:92
+#: src/xpad-toolbar.c:83
 msgid "Add a Se_parator to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:575
+#: src/xpad-toolbar.c:544
 msgid "_Remove From Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:585
+#: src/xpad-toolbar.c:554
 msgid "_Move"
 msgstr ""
 
@@ -355,16 +321,54 @@ msgid "Sticky Notes"
 msgstr "Note Lipicioase(sticky)"
 
 #, fuzzy
+#~ msgid "Virtual sticky notes"
+#~ msgstr "Note Lipicioase(sticky)"
+
+#, fuzzy
+#~ msgid "_Sticky"
+#~ msgstr "/Pad/Lipicios(_Sticky)"
+
+#~ msgid "Toggle Stickiness"
+#~ msgstr "Schimbã(toggle) comportament(stickiness)"
+
+#~ msgid "Prints usage information and exits"
+#~ msgstr "Afiºeazã informaþii de folosire ºi iese"
+
+#~ msgid "Causes all running xpad instances to close"
+#~ msgstr "Face ca toate instanþele xpad în execuþie sã se închidã"
+
+#, fuzzy
+#~ msgid ""
+#~ "Usage: %s [OPTIONS]\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Folosire: xpad [OPÞIUNI]\n"
+#~ "\n"
+
+#~ msgid "Missing companion argument to %s\n"
+#~ msgstr "Lipseºte parametrul pereche pentru %s\n"
+
+#~ msgid "Didn't understand argument '%s'\n"
+#~ msgstr "Nu am înþeles parametrul '%s'\n"
+
+#~ msgid "Invalid number: '%s'\n"
+#~ msgstr "Numãr invalid: '%s'\n"
+
+#, fuzzy
+#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
+#~ msgstr "Folosiþi xpad %s cu GTK+ %i/%i.%i."
+
+#, fuzzy
+#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+#~ msgstr "Vizitaþi http://xpad.sourceforge.net pentru mai multe informaþii."
+
+#, fuzzy
 #~ msgid "_New"
 #~ msgstr "/Pad/_Nou"
 
 #, fuzzy
 #~ msgid "Prefere_nces"
 #~ msgstr "/Edit/Preferi_nþe"
-
-#, fuzzy
-#~ msgid "Close all pads"
-#~ msgstr "Închide toate pad-urile"
 
 #, fuzzy
 #~ msgid "Proper_ties"

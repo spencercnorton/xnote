@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-19 16:45-0500\n"
+"POT-Creation-Date: 2004-12-23 21:50-0500\n"
 "PO-Revision-Date: 2004-03-02 15:23+0200\n"
 "Last-Translator: Petri Jooste <rkwjpj@puk.ac.za>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
@@ -15,29 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/eggtrayicon.c:118
-msgid "Orientation"
-msgstr ""
-
-#: src/eggtrayicon.c:119
-msgid "The orientation of the tray."
-msgstr ""
-
-#: src/fio.c:133
+#: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Kon nie na lêer %s skryf nie."
 
-#: src/xpad-app.c:114 xpad.desktop.in.h:3
+#: src/xpad-app.c:125
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr ""
+
+#: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:479
+#: src/xpad-app.c:410
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Kon nie gids %s oopmaak nie."
 
-#: src/xpad-app.c:482
+#: src/xpad-app.c:413
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,84 +41,63 @@ msgstr ""
 "Hierdie gids word benodig om voorkeure en boekie-inligting te stoor.  Xpad "
 "sal nou afsluit."
 
-#: src/xpad-app.c:882
-msgid "Prints usage information and exits"
-msgstr "Vertoon gebruik-inligting en stop"
-
-#: src/xpad-app.c:883
-msgid "Prints xpad version and exits"
+#: src/xpad-app.c:717
+#, fuzzy
+msgid "Show version number and quit"
 msgstr "Vertoon xpad weergawe en stop"
 
-#: src/xpad-app.c:884
-msgid ""
-"Prevents xpad from creating a new pad on startup if no previous pads exist"
+#: src/xpad-app.c:718
+msgid "Hide existing pads on startup"
+msgstr ""
+
+#: src/xpad-app.c:719
+#, fuzzy
+msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Keer dat xpad 'n nuwe boekie maak wanneer dit begin uitvoer, as daar nog nie "
 "'n boekie bestaan nie."
 
 #  registered here a second time because it has effects both on local instances and remote instances
 #  registered here a second time because it has effects both on local instances and remote instances
-#: src/xpad-app.c:890
-msgid "Causes xpad to create a new pad on startup even if pads already exist"
+#: src/xpad-app.c:725
+#, fuzzy
+msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Sorg dat xpad 'n nuwe boekie maak wanneer dit begin uitvoer, self al bestaan "
 "daar reeds 'n boekie."
 
-#: src/xpad-app.c:891
-msgid "Causes all running xpad instances to close"
-msgstr "Maak alle xpad-eksemplare toe"
+#: src/xpad-app.c:726
+#, fuzzy
+msgid "Close all pads"
+msgstr "Maak alle boekies toe"
 
-#: src/xpad-app.c:907
+#: src/xpad-app.c:749
 #, fuzzy, c-format
-msgid "Xpad %s\n"
+msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-app.c:951
-#, fuzzy, c-format
-msgid ""
-"Usage: %s [OPTIONS]\n"
-"\n"
-msgstr ""
-"Gebruik so:  xpad [OPSIES]\n"
-"\n"
-
-#: src/xpad-app.c:989
-#, c-format
-msgid "Missing companion argument to %s\n"
-msgstr "Parameter %s moet 'n maatjie hê\n"
-
-#: src/xpad-app.c:1033
-#, c-format
-msgid "Didn't understand argument '%s'\n"
-msgstr "Parameter '%s'was onverstaanbaar\n"
-
-#: src/xpad-app.c:1082
-#, c-format
-msgid "Invalid number: '%s'\n"
-msgstr "Ongeldige nommer '%s'\n"
-
-#: src/xpad-pad.c:512
+#: src/xpad-pad.c:510
 msgid "Delete this pad?"
 msgstr "Vee hierdie boekie uit?"
 
-#: src/xpad-pad.c:513
+#: src/xpad-pad.c:511
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle teks in hierdie boekie sal onherroeplik verlore wees."
 
-#: src/xpad-pad.c:544
+#: src/xpad-pad.c:542
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Boekie-eienskappe"
 
-#: src/xpad-pad.c:1064
-#, fuzzy, c-format
-msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Jy gebruik xpad %s met GTK+ %i.%i.%i."
-
-#: src/xpad-pad.c:1069
+#: src/xpad-pad.c:1046
 #, fuzzy
-msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-msgstr "Besoek http://xpad.sourceforge.net vir meer inligting oor xpad."
+msgid "Sticky notes"
+msgstr "Plaknotas (klewerig)"
+
+#. Translators: please translate this as your own name and optionally email
+#: src/xpad-pad.c:1064
+msgid "translator-credits"
+msgstr ""
 
 #: src/xpad-pad.c:1285
 #, fuzzy
@@ -130,9 +105,8 @@ msgid "_Pad"
 msgstr "/_Boekie"
 
 #: src/xpad-pad.c:1294
-#, fuzzy
-msgid "_Sticky"
-msgstr "/Boekie/_Klewerig"
+msgid "Show on _All Workspaces"
+msgstr ""
 
 #  {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 #  {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
@@ -170,11 +144,11 @@ msgstr "Laat _vensterbestuurderversierings toe"
 msgid "_Notes"
 msgstr "/_Notas"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:133
+#: src/xpad-pad.c:1335 src/xpad-tray.c:140
 msgid "_Show All"
 msgstr "_Wys Alles"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:140
+#: src/xpad-pad.c:1336 src/xpad-tray.c:147
 #, fuzzy
 msgid "_Close All"
 msgstr "Maak alle boekies toe"
@@ -271,83 +245,75 @@ msgstr "Globale voorkeure"
 msgid "Options"
 msgstr "Opsies"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 msgid "Clear Pad Contents"
 msgstr "Maak boekie leeg"
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:76
 #, fuzzy
 msgid "Add C_lear to Toolbar"
 msgstr "_Aktiveer nutsbalk"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 msgid "Close and Save Pad"
 msgstr "Maak toe en stoor boekie"
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:77
 #, fuzzy
 msgid "Add _Close to Toolbar"
 msgstr "_Aktiveer nutsbalk"
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Delete Pad"
 msgstr "Vee boekie uit."
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:78
 msgid "Add _Delete to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Open New Pad"
 msgstr "Open nuwe boekie"
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:79
 msgid "Add _New to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "Redigeer globale voorkeure"
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:80
 msgid "Add Pr_eferences to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 msgid "Edit Pad Properties"
 msgstr "Redigeer boekie-eienskappe"
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:81
 #, fuzzy
 msgid "Add Proper_ties to Toolbar"
 msgstr "Boekie-eienskappe"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Close All Pads"
 msgstr "Maak alle boekies toe"
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:82
 msgid "Add _Quit to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:91
-msgid "Toggle Stickiness"
-msgstr "Wissel die klewerigheid"
-
-#: src/xpad-toolbar.c:91
-msgid "Add _Sticky to Toolbar"
-msgstr ""
-
-#: src/xpad-toolbar.c:92
+#: src/xpad-toolbar.c:83
 msgid "Add a Se_parator to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:575
+#: src/xpad-toolbar.c:544
 msgid "_Remove From Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:585
+#: src/xpad-toolbar.c:554
 msgid "_Move"
 msgstr ""
 
@@ -360,16 +326,54 @@ msgid "Sticky Notes"
 msgstr "Plaknotas (klewerig)"
 
 #, fuzzy
+#~ msgid "Virtual sticky notes"
+#~ msgstr "Plaknotas (klewerig)"
+
+#, fuzzy
+#~ msgid "_Sticky"
+#~ msgstr "/Boekie/_Klewerig"
+
+#~ msgid "Toggle Stickiness"
+#~ msgstr "Wissel die klewerigheid"
+
+#~ msgid "Prints usage information and exits"
+#~ msgstr "Vertoon gebruik-inligting en stop"
+
+#~ msgid "Causes all running xpad instances to close"
+#~ msgstr "Maak alle xpad-eksemplare toe"
+
+#, fuzzy
+#~ msgid ""
+#~ "Usage: %s [OPTIONS]\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Gebruik so:  xpad [OPSIES]\n"
+#~ "\n"
+
+#~ msgid "Missing companion argument to %s\n"
+#~ msgstr "Parameter %s moet 'n maatjie hê\n"
+
+#~ msgid "Didn't understand argument '%s'\n"
+#~ msgstr "Parameter '%s'was onverstaanbaar\n"
+
+#~ msgid "Invalid number: '%s'\n"
+#~ msgstr "Ongeldige nommer '%s'\n"
+
+#, fuzzy
+#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
+#~ msgstr "Jy gebruik xpad %s met GTK+ %i.%i.%i."
+
+#, fuzzy
+#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+#~ msgstr "Besoek http://xpad.sourceforge.net vir meer inligting oor xpad."
+
+#, fuzzy
 #~ msgid "_New"
 #~ msgstr "/Boekie/_Nuwe"
 
 #, fuzzy
 #~ msgid "Prefere_nces"
 #~ msgstr "/Redigeer/Voor_keure"
-
-#, fuzzy
-#~ msgid "Close all pads"
-#~ msgstr "Maak alle boekies toe"
 
 #, fuzzy
 #~ msgid "Proper_ties"
