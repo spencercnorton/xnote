@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.12\n"
-"POT-Creation-Date: 2003-10-01 15:09-0400\n"
+"POT-Creation-Date: 2003-10-20 22:04-0400\n"
 "PO-Revision-Date: 2003-10-07 18:02+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -29,11 +29,15 @@ msgstr "Versie van xpad weergeven en afsluiten"
 
 #: src/main.c:269
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
-msgstr "Hoeveelheid debug-uitvoer instellen (kan 0, 1 of 2 zijn; standaard is 0)"
+msgstr ""
+"Hoeveelheid debug-uitvoer instellen (kan 0, 1 of 2 zijn; standaard is 0)"
 
 #: src/main.c:270
-msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
-msgstr "Voorkomen dat xpad een nieuw kladblok opent bij het starten, als er nog geen kladblok was"
+msgid ""
+"Prevents xpad from creating a new pad on startup if no previous pads exist"
+msgstr ""
+"Voorkomen dat xpad een nieuw kladblok opent bij het starten, als er nog geen "
+"kladblok was"
 
 #. registered here a second time because it has effects both on local instances and remote instances
 #: src/main.c:274
@@ -49,8 +53,12 @@ msgid "Lists the titles of all open pads"
 msgstr "De namen van alle open kladblokken opsommen"
 
 #: src/main.c:277
-msgid "Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\""
-msgstr "Zorgen dat het N-de kladblok (1-gebaseerd) zichzelf aan de gebruiker toont; kladbloknummers kunnen worden opgesomd met \"--list\""
+msgid ""
+"Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
+"be seen by using \"--list\""
+msgstr ""
+"Zorgen dat het N-de kladblok (1-gebaseerd) zichzelf aan de gebruiker toont; "
+"kladbloknummers kunnen worden opgesomd met \"--list\""
 
 #: src/main.c:278
 msgid "Causes all pads to present themselves to the user"
@@ -95,8 +103,12 @@ msgid "Could not open directory %s."
 msgstr "Kon map %s niet openen."
 
 #: src/fio.c:441
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Deze map is nodig om de voorkeuren- en kladblokinformatie in op te slaan. Xpad sluit nu af."
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Deze map is nodig om de voorkeuren- en kladblokinformatie in op te slaan. "
+"Xpad sluit nu af."
 
 #: src/pref.c:288 src/properties.c:228
 msgid "Background Color"
@@ -163,16 +175,24 @@ msgid "The amount of space you want between the border and text."
 msgstr "De hoeveelheid ruimte die u wilt tussen rand en tekst."
 
 #: src/pref.c:429 src/properties.c:358
-msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
-msgstr "Kies het aantal beeldpunten om een tekstgebied.  Deze ruimte heeft dezelfde kleur en omvat het tekstgebied aan alle kanten."
+msgid ""
+"Choose the number of pixels around the text region.  This space is colored "
+"the same and surrounds it on all sides."
+msgstr ""
+"Kies het aantal beeldpunten om een tekstgebied.  Deze ruimte heeft dezelfde "
+"kleur en omvat het tekstgebied aan alle kanten."
 
 #: src/pref.c:442 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
 msgstr "De hoeveelheid ruimte die u wilt om het kladblok."
 
 #: src/pref.c:443 src/properties.c:375
-msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
-msgstr "Kies het aantal beeldpunten om het kladblok.  Deze ruimte heeft een onafhankelijke kleur en omvat het kladblok aan alle kanten. "
+msgid ""
+"Choose the number of pixels around the pad.  This space is colored "
+"independently and surrounds it on all sides."
+msgstr ""
+"Kies het aantal beeldpunten om het kladblok.  Deze ruimte heeft een "
+"onafhankelijke kleur en omvat het kladblok aan alle kanten. "
 
 #: src/pref.c:469 src/properties.c:397
 msgid "_Use system font face"
@@ -203,12 +223,16 @@ msgid "<b>Unused Buttons:</b>"
 msgstr "<b>Ongebruikte knoppen:</b>"
 
 #: src/pref.c:642 src/pref.c:643
-msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
-msgstr "Als dit aan staat, verschijnt een werkbalk onderaan elk kladblok als de muis over dat gebied gaat."
+msgid ""
+"If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr ""
+"Als dit aan staat, verschijnt een werkbalk onderaan elk kladblok als de muis "
+"over dat gebied gaat."
 
 #: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
-msgstr "Als dit aan staat, verdwijnt de werkbalk als u het kladblok niet gebruikt."
+msgstr ""
+"Als dit aan staat, verdwijnt de werkbalk als u het kladblok niet gebruikt."
 
 #: src/pref.c:659
 msgid "Allow _scrollbars"
@@ -235,24 +259,42 @@ msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Sluit-opdracht vensterbeheerder:</b>"
 
 #: src/pref.c:717 src/pref.c:719
-msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
-msgstr "Als dit aan staat, zal uw vensterbeheerder aan elk kladblok zijn eigen versieringen toevoegen, bijvoorbeeld een titelbalk en een Sluiten-knop."
+msgid ""
+"If on, your window manager will add its own decorations to each pad.  For "
+"example, a titlebar and close button."
+msgstr ""
+"Als dit aan staat, zal uw vensterbeheerder aan elk kladblok zijn eigen "
+"versieringen toevoegen, bijvoorbeeld een titelbalk en een Sluiten-knop."
 
 #: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
-msgstr "Als dit aan staat, wordt er om bevestiging gevraagd als u gekozen heeft een kladblok te vernietigen."
+msgstr ""
+"Als dit aan staat, wordt er om bevestiging gevraagd als u gekozen heeft een "
+"kladblok te vernietigen."
 
 #: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
 msgstr "Als dit aan staat, zijn nieuwe kladblokken standaard klevend."
 
 #: src/pref.c:731 src/pref.c:733
-msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
-msgstr "Als dit aan staat, verschijnen schuifbalken als de tekst groter is dan het kladblok.  Als dit uit staat, wordt de grootte van het kladblok aan de tekst aangepast, zodat het past."
+msgid ""
+"If on, scrollbars appear when text is larger than the pad.  If off, the pad "
+"resizes to fit the text."
+msgstr ""
+"Als dit aan staat, verschijnen schuifbalken als de tekst groter is dan het "
+"kladblok.  Als dit uit staat, wordt de grootte van het kladblok aan de tekst "
+"aangepast, zodat het past."
 
 #: src/pref.c:737 src/pref.c:740
-msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
-msgstr "Als dit aan staat, wordt een kladblok onbewerkbaar als het focus verliest.  Dit maakt het mogelijk om het kladblok te verplaatsen door het te slepen met de linker-muisknop ingedrukt.  Dubbelklik op het kladblok om het weer bewerkbaar te maken.  Als dit uit staat zijn kladblokken altijd bewerkbaar."
+msgid ""
+"If on, when a pad loses focus, it will become uneditable.  This allows you "
+"to move it by left dragging.  To make it editable again, double-click the "
+"pad.  If off, pads are always editable."
+msgstr ""
+"Als dit aan staat, wordt een kladblok onbewerkbaar als het focus verliest.  "
+"Dit maakt het mogelijk om het kladblok te verplaatsen door het te slepen met "
+"de linker-muisknop ingedrukt.  Dubbelklik op het kladblok om het weer "
+"bewerkbaar te maken.  Als dit uit staat zijn kladblokken altijd bewerkbaar."
 
 #: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
@@ -260,11 +302,17 @@ msgstr "Alle kladblokken zullen sluiten nadat de inhoud is opgeslagen."
 
 #: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
-msgstr "Het kladblok waarvan u op de sluitknop heeft gedrukt, wordt gesloten nadat de inhoud is opgeslagen."
+msgstr ""
+"Het kladblok waarvan u op de sluitknop heeft gedrukt, wordt gesloten nadat "
+"de inhoud is opgeslagen."
 
 #: src/pref.c:753 src/pref.c:755
-msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
-msgstr "Het kladblok waarvan u op de sluitknop heeft gedrukt, wordt vernietigd waarbij de inhoud verloren gaat.  Er zal geen bevestiging worden gevraagd."
+msgid ""
+"The pad you clicked the close button on will be destroyed, losing contents.  "
+"There will be no confirmation."
+msgstr ""
+"Het kladblok waarvan u op de sluitknop heeft gedrukt, wordt vernietigd "
+"waarbij de inhoud verloren gaat.  Er zal geen bevestiging worden gevraagd."
 
 #: src/pad.c:40
 msgid "/_Pad"
@@ -387,49 +435,50 @@ msgstr "Klevendheid kiezen"
 msgid "Minimize Pads to System Tray"
 msgstr "Kladblokken minimaliseren naar systeemvak"
 
-#: src/pad.c:657
+#: src/pad.c:658
 msgid "Delete this pad?"
 msgstr "Dit kladblok verwijderen?"
 
-#: src/pad.c:658
+#: src/pad.c:659
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle tekst van dit kladblok zal onherstelbaar verloren zijn."
 
-#: src/pad.c:838
+#: src/pad.c:839
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr "U gebruikt xpad %s met GTK+ %i.%i.%i."
 
-#: src/pad.c:843
+#: src/pad.c:844
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr "Bezoek http://xpad.sourceforge.net voor meer informatie over xpad."
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
-#: src/pad.c:968 src/pad.c:1146
+#: src/pad.c:969 src/pad.c:1147
 msgid "/Edit/Cut"
 msgstr "/Bewerken/Knippen"
 
-#: src/pad.c:970 src/pad.c:1148
+#: src/pad.c:971 src/pad.c:1149
 msgid "/Edit/Copy"
 msgstr "/Bewerken/Kopiëren"
 
-#: src/pad.c:972 src/pad.c:1152
+#: src/pad.c:973 src/pad.c:1153
 msgid "/Edit/Paste"
 msgstr "/Bewerken/Plakken"
 
-#: src/pad.c:1094
+#: src/pad.c:1095
 msgid "/Notes"
 msgstr "/Notities"
 
 #. set checkboxes
-#: src/pad.c:1140
+#: src/pad.c:1141
 msgid "/Pad/Sticky"
 msgstr "/Kladblok/Klevend"
 
 #: src/help.c:46
 msgid ""
-"Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically sticky notes on your desktop in which you can write memos.\n"
 "\n"
 msgstr ""
 "Elke xpad sessie bestaat uit een of meer open kladblokken.\n"
@@ -439,23 +488,31 @@ msgstr ""
 
 #: src/help.c:50
 msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+"the bottom right, or hold down CTRL while left dragging anywhere on the "
+"pad.\n"
 "\n"
 msgstr ""
-"<b>Om een kladblok te verplaatsen</b>, kunt u met links de werkbalk verslepen, met rechts de resizer verslepen aan de rechter onderkant, of CTRL ingedrukt houden terwijl u het kladblok met links ergens heen sleept.\n"
+"<b>Om een kladblok te verplaatsen</b>, kunt u met links de werkbalk "
+"verslepen, met rechts de resizer verslepen aan de rechter onderkant, of CTRL "
+"ingedrukt houden terwijl u het kladblok met links ergens heen sleept.\n"
 "\n"
 
 #: src/help.c:54
 msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
-"<b>Om de grootte van een kladblok aan te passen</b>, kunt u met links de resizer verslepen of CTRL ingedrukt houden terwijl u het kladblok met rechts ergens heen sleept.\n"
+"<b>Om de grootte van een kladblok aan te passen</b>, kunt u met links de "
+"resizer verslepen of CTRL ingedrukt houden terwijl u het kladblok met rechts "
+"ergens heen sleept.\n"
 "\n"
 
 #: src/help.c:57
 msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
+"<b>To change color settings</b>, right click on a pad and choose Edit-"
+">Preferences.\n"
 "\n"
 msgstr ""
 "<b>Om kleurinstellingen te wijzigen</b>, kunt u met rechts\n"
@@ -464,39 +521,47 @@ msgstr ""
 
 #: src/help.c:60
 msgid ""
-"Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy.\n"
 "\n"
 msgstr ""
-"De meeste opdrachten zijn beschikbaar via het popup menu dat verschijnt als u met rechts klikt op een kladblok. Probeer het uit en geniet.\n"
+"De meeste opdrachten zijn beschikbaar via het popup menu dat verschijnt als "
+"u met rechts klikt op een kladblok. Probeer het uit en geniet.\n"
 "\n"
 
 #: src/help.c:64
 msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr "Zend alstublieft opmerkingen en foutrapportages naar xpad-devel@lists.sourceforge.net"
+msgstr ""
+"Zend alstublieft opmerkingen en foutrapportages naar xpad-devel@lists."
+"sourceforge.net"
 
 #: src/help.c:73
 msgid "Help"
 msgstr "Hulp"
 
-#: src/tray.c:123
+#: src/tray.c:129
 msgid "No_tes"
 msgstr "Notities"
 
-#: src/tray.c:127
+#: src/tray.c:133
 msgid "_Show All"
 msgstr "Alle weergeven"
 
-#: src/tray.c:131
+#: src/tray.c:137
 msgid "_Hide All"
 msgstr "Alle verbergen"
 
-#: src/tray.c:203
+#: src/tray.c:209
 msgid "xpad: right click for more options..."
 msgstr "xpad: klik met rechts voor meer opties..."
 
-#: src/tray.c:204
-msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
-msgstr "Klik met rechts op dit pictogram voor een menu met opties. Klik met links om kladblokken aan of uit te zetten."
+#: src/tray.c:210
+msgid ""
+"Right click this icon for a menu of options pertaining to XPad. Left click "
+"it to toggle whether or not the pads are displayed."
+msgstr ""
+"Klik met rechts op dit pictogram voor een menu met opties. Klik met links om "
+"kladblokken aan of uit te zetten."
 
 #: src/properties.c:276
 msgid "Pad Properties"
@@ -511,5 +576,6 @@ msgid "Sticky Notes"
 msgstr "Klevende notities"
 
 #: xpad.desktop.in.h:3
-msgid "xpad"
+#, fuzzy
+msgid "Xpad"
 msgstr "xpad"

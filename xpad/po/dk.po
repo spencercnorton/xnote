@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
-"POT-Creation-Date: 2003-10-01 14:51-0400\n"
+"POT-Creation-Date: 2003-10-20 22:04-0400\n"
 "PO-Revision-Date: 2003-07-10 11:05-0500\n"
 "Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -404,43 +404,43 @@ msgstr ""
 msgid "Minimize Pads to System Tray"
 msgstr ""
 
-#: src/pad.c:657
+#: src/pad.c:658
 msgid "Delete this pad?"
 msgstr ""
 
-#: src/pad.c:658
+#: src/pad.c:659
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:838
+#: src/pad.c:839
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:843
+#: src/pad.c:844
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
-#: src/pad.c:968 src/pad.c:1146
+#: src/pad.c:969 src/pad.c:1147
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:970 src/pad.c:1148
+#: src/pad.c:971 src/pad.c:1149
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:972 src/pad.c:1152
+#: src/pad.c:973 src/pad.c:1153
 msgid "/Edit/Paste"
 msgstr ""
 
-#: src/pad.c:1094
+#: src/pad.c:1095
 msgid "/Notes"
 msgstr ""
 
 #. set checkboxes
-#: src/pad.c:1140
+#: src/pad.c:1141
 msgid "/Pad/Sticky"
 msgstr ""
 
@@ -488,23 +488,23 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/tray.c:123
+#: src/tray.c:129
 msgid "No_tes"
 msgstr ""
 
-#: src/tray.c:127
+#: src/tray.c:133
 msgid "_Show All"
 msgstr ""
 
-#: src/tray.c:131
+#: src/tray.c:137
 msgid "_Hide All"
 msgstr ""
 
-#: src/tray.c:203
+#: src/tray.c:209
 msgid "xpad: right click for more options..."
 msgstr ""
 
-#: src/tray.c:204
+#: src/tray.c:210
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
@@ -523,5 +523,5 @@ msgid "Sticky Notes"
 msgstr "Selvklæbende Noter"
 
 #: xpad.desktop.in.h:3
-msgid "xpad"
+msgid "Xpad"
 msgstr ""
