@@ -25,8 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <glob.h>
-#include <unistd.h>
-#include <ctype.h>
 
 
 /* sets filename to full path of filename (prepends working_dir to it) 
@@ -137,7 +135,7 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 		if (verbosity >= 1) 
 			printf("Error reading from [%s]: %s\n",
 				temp,
-				strerror(ferror(file)));
+				g_strerror(ferror(file)));
 		return 1;
 	}
 
@@ -154,7 +152,7 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 		strcat (pad->contentname, "content-XXXXXX");
 		mkstemp (pad->contentname);
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
-
+		
 		strcpy (pad->infoname, working_dir);
 		strcat (pad->infoname, "info-XXXXXX");
 		mkstemp (pad->infoname);
@@ -231,7 +229,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		strncpy (temp, where, size);
 		temp[size] = '\0';
 
-		if (isdigit (temp[0]))
+		if (g_ascii_isdigit (temp[0]))
 			*((gint *) value) = atoi (temp);
 		else
 			strcpy ((gchar *) value, temp);

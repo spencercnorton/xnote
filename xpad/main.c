@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -34,8 +33,6 @@ gchar working_dir[MAX_FILENAME_SIZE];
 size_t working_dir_len = 0;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
-
-gchar xid_str [5]; // holds a string representation of our xid
 
 /**
  * This variable holds all the changeable settings for this session.
@@ -261,7 +258,7 @@ static int xpad_init (gpointer data)
 	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
 	
 	working_dir[sizeof(working_dir)-1] = '\0';
-	strncpy (working_dir, getenv("HOME"), sizeof(working_dir));
+	strncpy (working_dir, g_get_home_dir (), sizeof(working_dir));
 
 	/* Oops--working dir is too long!  Use . instead (which sucks...) */
 	if (working_dir[sizeof(working_dir)-1])
@@ -297,8 +294,8 @@ static int xpad_init (gpointer data)
 	reset_sync ();
 	
 	if (verbosity >= 2)
-		printf ("PID is %i.\nSync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
-			(int) getpid (), current_settings.sync_time, verbosity, current_settings.decorations);
+		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
+			current_settings.sync_time, verbosity, current_settings.decorations);
 	
 	xpad_set_default_icon ();
 	
