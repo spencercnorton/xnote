@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gdk/gdkkeysyms.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
-const gchar *VERSION = "xpad v1.2.1";
+const gchar *VERSION = "1.2.1";
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
@@ -90,7 +90,7 @@ void handle_args (int *argc, char ***argv)
 
 		if (!strcmp ((*argv)[i], "--version") || (shortform = !strcmp ((*argv)[i], "-V")))
 		{
-			printf ("%s\n", VERSION);
+			printf ("xpad v%s\n", VERSION);
 			xpad_exit ();
 		}
 		else if (!strcmp ((*argv)[i], "--help") || (shortform = !strcmp ((*argv)[i], "-h")))

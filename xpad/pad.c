@@ -63,6 +63,10 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 		{
 			gtk_window_set_decorated (temp->window, decor);
 			gtk_widget_hide (GTK_WIDGET (temp->window));
+			
+			// we move it so wm's know where to place it
+			gtk_window_move (temp->window, temp->x, temp->y);
+			
 			gtk_widget_show (GTK_WIDGET (temp->window));
 		}
 		temp = temp->next;
@@ -302,12 +306,13 @@ void display_dialog_with_text (pad_node *pad, const gchar *text)
 	gtk_widget_destroy (dialog);
 }
 
-
 void about_dialog (pad_node *pad)
 {
 	gchar text[100];
 
-	sprintf (text, "%s\n%s\n\n%s", VERSION, "http://xpad.sourceforge.net", "licensed under the terms of the GPL");
+	sprintf (text, "xpad %s\n%s\n\nUsing GTK+ %i.%i.%i",
+		VERSION, "http://xpad.sourceforge.net", 
+		gtk_major_version, gtk_minor_version, gtk_micro_version);
 
 	display_dialog_with_text (pad, text);
 }
@@ -316,31 +321,20 @@ void pad_confirm_destroy (pad_node *pad)
 {
 	if (current_settings.confirm_destroy)
 	{
-		GtkWidget *dialog, *label, *checkbox, *align, *vbox;
-		gboolean said_yes = FALSE;
+		GtkWidget *dialog, *checkbox;
+		gboolean said_yes;
 
 		/* Create the widgets */
+		dialog = gtk_message_dialog_new (pad->window,
+        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+        		GTK_MESSAGE_QUESTION,
+        		GTK_BUTTONS_YES_NO,
+        		"Are you sure you want\nto delete this pad?");
 
-		dialog = gtk_dialog_new_with_buttons ("Destroy Confirmation",
-				pad->window,
-				GTK_DIALOG_MODAL,
-				GTK_STOCK_YES,
-				GTK_RESPONSE_YES,
-				GTK_STOCK_NO,
-				GTK_RESPONSE_NO,
-				NULL);
+		checkbox = gtk_check_button_new_with_label ("Do not ask this again");
+		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), checkbox, FALSE, FALSE, 3);
+		gtk_widget_show (checkbox);
 		
-		vbox = gtk_vbox_new (FALSE, 0);
-		label = gtk_label_new ("Are you sure you want\nto destroy this pad?\n\n");
-		align = gtk_alignment_new (0.5, 0.5, 0, 0);
-		checkbox = gtk_check_button_new_with_label ("Don't ask this again");
-		
-		gtk_container_add (GTK_CONTAINER (align), label);
-		gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 5);
-		gtk_box_pack_start (GTK_BOX (vbox), checkbox, FALSE, FALSE, 5);
-		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), vbox);
-		gtk_widget_show_all (dialog);
-
 		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
 
 		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
@@ -486,7 +480,6 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_help;
 	GtkWidget *menu_item_new_pad;
 	GtkWidget *menu_item_destroy;
-//	GtkWidget *menu_item_close;
 	GtkWidget *menu_item_close_all;
 	GtkWidget *menu_item_save_as;
 	GtkWidget *menu_item_open;
@@ -500,15 +493,13 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	separator4 = gtk_separator_menu_item_new ();
 	menu_item_about = gtk_image_menu_item_new_with_mnemonic ("_About...");
 	menu_item_help = gtk_image_menu_item_new_with_mnemonic ("_Help...");
-	menu_item_new_pad = gtk_image_menu_item_new_with_mnemonic ("_New Pad");
+	menu_item_new_pad = gtk_image_menu_item_new_with_mnemonic ("_New");
 	menu_item_save_as = gtk_image_menu_item_new_with_mnemonic ("_Save As...");
-	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open...");
-	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
-//	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
-	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
+	menu_item_open = gtk_image_menu_item_new_with_mnemonic ("_Open Copy...");
+	menu_item_destroy = gtk_image_menu_item_new_with_label ("Delete");
+	menu_item_close_all = gtk_image_menu_item_new_with_label ("Quit");
 	menu_item_preferences = gtk_image_menu_item_new_with_mnemonic ("_Preferences...");
 	
-//	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_help), gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
@@ -522,18 +513,16 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
     gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
-//	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close);
+	//gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_destroy);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator3);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_help);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_about);
 	
 	g_signal_connect_swapped (menu_item_destroy, "activate", G_CALLBACK (pad_confirm_destroy), pad);
-//	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
 	g_signal_connect_swapped (menu_item_close_all, "activate", G_CALLBACK (pad_close_all), NULL);
 	g_signal_connect (menu_item_new_pad, "activate", G_CALLBACK (pad_new), NULL);
 	g_signal_connect_swapped (menu_item_about, "activate", G_CALLBACK (about_dialog), pad);	

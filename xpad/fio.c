@@ -145,23 +145,23 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 	
 	if (create)
 	{
-		strcpy (pad->infoname, working_dir);
-		strcat (pad->infoname, "info-XXXXXX");
-		mkstemp (pad->infoname);
-		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
-		
 		strcpy (pad->contentname, working_dir);
 		strcat (pad->contentname, "content-XXXXXX");
 		mkstemp (pad->contentname);
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
+
+		strcpy (pad->infoname, working_dir);
+		strcat (pad->infoname, "info-XXXXXX");
+		mkstemp (pad->infoname);
+		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
 	}
-
+	
 	if ( (pad->file = fopen (pad->infoname, "w")) == NULL)
-        {
-                if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", pad->infoname);
-                return;
-        }
-
+    {
+        if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", pad->infoname);
+			return;
+    }
+	
 	if (verbosity >= 2) printf ("Locking file [%s].\n", pad->infoname);
 
 	fcntl (fileno(pad->file), F_SETLK, &fl);

@@ -1,11 +1,13 @@
 #include "help.h"
 
-void show_help (void)
+GtkWidget *help_window = NULL;
+
+void help_close ()
 {
-	show_help_at_page (0);
+	help_window = NULL;
 }
 
-void show_help_at_page (gint page)
+GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
 	GtkWidget *edittext, *editlabel;
@@ -23,27 +25,16 @@ void show_help_at_page (gint page)
 	notebook = gtk_notebook_new ();
 	
 	gtk_label_set_markup (GTK_LABEL (helptext), 
-"xpad is a GTK+ 2.0 application that opens small textboxes "
-"on your desktop in which you write notes or messages.\n\n"
-"xpad was designed with ease of use in mind, but if you "
+"\nxpad was designed with ease of use in mind, but if you "
 "have troubles, here's how to do most things you would "
-"want to:\n\n\n"
+"want to:\n\n"
 
 "<b>moving</b>: To move a pad, hold down CTRL and drag "
 "with the left mouse button.\n\n"
 
 "<b>resizing</b>: To resize a pad, hold down CTRL and "
 "drag with the right mouse button.\n\n"
-
-"<b>closing pads</b>: To close a pad and <i>keep</i> its "
-"contents, choose \"Close\" from the right-click menu.  "
-"Again, \"Destroy\" is only if you are sure you don't want "
-"the pad contents -- they will be erased.\n\n"
-
-"<b>opening files</b>: xpad allows you to open an arbitrary "
-"file into a pad.  Note that this pad contains only a copy "
-"of the file; destroying the pad does nothing to the original "
-"file.\n");
+);
 
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
@@ -54,7 +45,6 @@ void show_help_at_page (gint page)
 "<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n"
 "<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n"
 "<b>CTRL+p</b>: Opens the preferences window.\n\n"
-//"<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n"
 "<b>CTRL+SHIFT+c</b>: Closes all open pads.\n\n"
 "<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n");
 	
@@ -87,11 +77,24 @@ void show_help_at_page (gint page)
 	gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
 	
 	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-	gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
 	
 	gtk_widget_show_all (dialog);
 	
-	gtk_dialog_run (GTK_DIALOG(dialog));
-	
-	gtk_widget_destroy (dialog);
+	g_signal_connect (GTK_OBJECT (dialog), "destroy", 
+		G_CALLBACK (help_close), NULL);
+		
+	return dialog;
+}
+
+void show_help (void)
+{
+	show_help_at_page (0);
+}
+
+void show_help_at_page (gint page)
+{
+	if (help_window == NULL)
+		help_window = create_help (page);
+	else
+		gtk_window_present (GTK_WINDOW (help_window));
 }

@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include <string.h>
 
+// we keep a pointer around so that only one window will be open at a time
+GtkWidget *pref_window = NULL;
 
 gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
 {
@@ -164,7 +166,13 @@ gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 	return FALSE;
 }
 
-void preferences_open (pad_node *pad)
+void pref_close ()
+{
+	pref_window = NULL;
+	fio_save_as_defaults (&current_settings);
+}
+
+GtkWidget *preferences_create (pad_node *pad)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *notebook = gtk_notebook_new ();
@@ -188,27 +196,42 @@ void preferences_open (pad_node *pad)
 	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_label ("Allow window manager decorations");
 	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label ("Confirm pad destructions");
 	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_label ("Edit lock");
-	GtkWidget *hbox_padding = gtk_hbox_new (FALSE, 0);
-	GtkWidget *hbox_border_width = gtk_hbox_new (FALSE, 0);
-	GtkWidget *hbox_border_entries = gtk_hbox_new (FALSE, 0);
 	GtkWidget *separator_border = gtk_hseparator_new ();
 	GtkObject *adjust_padding;
 	GtkWidget *spinner_padding;
 	GtkObject *adjust_border_width;
 	GtkWidget *spinner_border_width;
-	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 0);
-	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 0);
-	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 0);
-	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 0);
-	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 0);
-	GtkWidget *hbox_border = gtk_hbox_new (FALSE, 0);
-	GtkWidget *vbox_font = gtk_vbox_new (FALSE, 0);
-	GtkWidget *hbox_font = gtk_hbox_new (FALSE, 0);
-	GtkWidget *vbox_misc = gtk_vbox_new (FALSE, 0);
-	GtkWidget *hbox_misc = gtk_hbox_new (FALSE, 0);
+	GtkWidget *vbox_background = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_background = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_text = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_border = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_font = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_font = gtk_hbox_new (FALSE, 3);
+	GtkWidget *vbox_misc = gtk_vbox_new (FALSE, 3);
+	GtkWidget *hbox_misc = gtk_hbox_new (FALSE, 3);
+	GtkWidget *hbox_padding = gtk_hbox_new (FALSE, 3);
+	GtkWidget *hbox_border_width = gtk_hbox_new (FALSE, 3);
+	GtkWidget *hbox_border_entries = gtk_hbox_new (FALSE, 3);
+
 	GtkTooltips *tooltips_border = gtk_tooltips_new ();
 	GtkTooltips *tooltips_options = gtk_tooltips_new ();
-		
+	
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_background), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_background), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_text), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_text), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_border), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_border), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_font), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_font), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_misc), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_misc), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_padding), 0);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_width), 0);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_entries), 0);
+	
 	gtk_window_set_title (GTK_WINDOW(window), "xpad Preferences");
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
 
@@ -217,8 +240,8 @@ void preferences_open (pad_node *pad)
 		G_CALLBACK (gtk_widget_destroy), (gpointer) window);
 	g_signal_connect_swapped (GTK_OBJECT (button_help), "clicked", 
 		G_CALLBACK (show_help), NULL);
-	g_signal_connect_swapped (GTK_OBJECT (window), "destroy", 
-		G_CALLBACK (fio_save_as_defaults), (gpointer) &current_settings);
+	g_signal_connect (GTK_OBJECT (window), "destroy", 
+		G_CALLBACK (pref_close), NULL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
 	gtk_box_set_spacing (GTK_BOX(buttonbox), 10);
 	gtk_box_pack_start_defaults (GTK_BOX(buttonbox), button_help);
@@ -232,39 +255,39 @@ void preferences_open (pad_node *pad)
 
 	// text setup
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
-	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 0);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
 	g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
 
 	// background setup
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
-	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 0);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 	g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) window);
 
 	// border setup
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
-	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 0);
 	
 	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 1);
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 	g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
 
-	gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 5);
+	gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 9);
 	
 	adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);
 	spinner_padding = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_padding), 1.0, 0);
 	gtk_misc_set_alignment (GTK_MISC (label_padding), 0, 0.5);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_padding), 3);
 
-	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding, FALSE, FALSE, 2);
-	gtk_box_pack_start (GTK_BOX (hbox_padding), spinner_padding, FALSE, FALSE, 2);
+	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox_padding), spinner_padding, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
 	g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) window);
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
@@ -277,8 +300,8 @@ void preferences_open (pad_node *pad)
 	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 0.5);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_border_width), 3);
 
-	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width, FALSE, FALSE, 2);
-	gtk_box_pack_start (GTK_BOX (hbox_border_width), spinner_border_width, FALSE, FALSE, 2);
+	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox_border_width), spinner_border_width, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
 	g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) window);
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
@@ -288,12 +311,12 @@ void preferences_open (pad_node *pad)
 
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
-	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 0);
 
 	// font setup
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
-	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 0);
 	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), current_settings.style.fontname);
 	
 	// this is a bit hacky, but there is no font-changed signal!
@@ -305,10 +328,10 @@ void preferences_open (pad_node *pad)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), current_settings.decorations);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), current_settings.confirm_destroy);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), current_settings.edit_lock);
-	gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 10);
-	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 10);
+	gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 3);
+	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 3);
+	gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 3);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_decorations, 
@@ -335,4 +358,14 @@ void preferences_open (pad_node *pad)
 
 	gtk_window_set_position (GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_widget_show_all (window);
+	
+	return window;
+}
+
+void preferences_open (pad_node *pad)
+{
+	if (pref_window == NULL)
+		pref_window = preferences_create (pad);
+	else
+		gtk_window_present (GTK_WINDOW (pref_window));
 }
