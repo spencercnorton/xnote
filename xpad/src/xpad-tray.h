@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2002 Jamis Buck
+Copyright (c) 2003-2004 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#ifndef _TRAY_H_
-#define _TRAY_H_
+#ifndef __XPAD_TRAY_H__
+#define __XPAD_TRAY_H__
 
-void tray_open   (void);
-void tray_close  (void);
-void tray_toggle (void);
-gboolean tray_is_open (void);
+#include <gtk/gtk.h>
 
-#endif /* _TRAY_H_ */
+void     xpad_tray_open    (void);
+void     xpad_tray_close   (void);
+gboolean xpad_tray_is_open (void);
 
+#endif /* __TRAY_H__ */
