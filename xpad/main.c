@@ -39,7 +39,7 @@ gboolean confirm_destroy = 1;
 gint dwidth = 260;
 gint dheight = 260;
 
-void xpad_exit ()
+void xpad_exit (void)
 {
 	if (verbosity >= 2) printf ("Initiating shutdown.\n");
 	cleanup ();
@@ -127,7 +127,7 @@ int sync_pads (gpointer data)
 }
 
 
-void reset_sync ()
+void reset_sync (void)
 {
 	if (autosave_timeout_id > 0)
 		gtk_timeout_remove (autosave_timeout_id);
@@ -140,7 +140,7 @@ void reset_sync ()
 }
 
 
-void xpad_set_default_icon ()
+void xpad_set_default_icon (void)
 {
 	GdkPixmap *pixmap;
 	GdkPixbuf *pixbuf;
@@ -164,7 +164,7 @@ void xpad_set_default_icon ()
 }
 
 
-void xpad_init ()
+void xpad_init (void)
 {
 	struct sigaction sa;
 

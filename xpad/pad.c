@@ -105,7 +105,7 @@ pad_node *get_pad (GtkWindow *window)
 	return NULL;
 }
 
-void quit_if_no_pads ()
+void quit_if_no_pads (void)
 {
 	if (!first_pad)
 		xpad_exit();
@@ -189,7 +189,7 @@ void pad_close (pad_node *pad)
 }
 
 
-void pad_close_all ()
+void pad_close_all (void)
 {
 	pad_node *temp = first_pad;
 
@@ -200,7 +200,7 @@ void pad_close_all ()
 	}
 }
 
-void cleanup ()
+void cleanup (void)
 {
 	pad_close_all();
 }
@@ -262,7 +262,7 @@ void about_dialog (pad_node *pad)
 	display_dialog_with_text (pad, text);
 }
 
-void help_dialog ()
+void help_dialog (void)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
 	
@@ -629,7 +629,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			// CTRL + SHIFT + a == close all pads
 			if ((event_key->state & GDK_CONTROL_MASK) &&
 			    (event_key->state & GDK_SHIFT_MASK)) {
-				pad_close_all (pad);
+				pad_close_all ();
 				return TRUE;
 			}
 		}
@@ -735,7 +735,7 @@ static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
 */
-pad_node *start_pad ()
+pad_node *start_pad (void)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();
@@ -778,7 +778,7 @@ pad_node *start_pad ()
 	return pad;
 }
 
-pad_node *pad_new ()
+pad_node *pad_new (void)
 {
 	pad_node *pad;
 

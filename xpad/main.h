@@ -29,9 +29,9 @@ enum {
 	MAX_FILE_SIZE = 1024
 };
 
-void xpad_exit ();
+void xpad_exit (void);
 int sync_pads (gpointer data);
-void reset_sync ();
+void reset_sync (void);
 
 extern gchar working_dir[MAX_FILENAME_SIZE];
 extern const gchar *VERSION;

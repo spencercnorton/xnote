@@ -64,11 +64,11 @@ extern pad_node *last_pad;
 extern pad_style default_style;
 extern const pad_style DEFAULT_STYLE;
 
-void help_dialog ();
+void help_dialog (void);
 pad_node *pad_new_with_info (pad_info *info);
-pad_node *pad_new ();
+pad_node *pad_new (void);
 GtkTextView *get_text (GtkWindow *window);
-void cleanup ();
+void cleanup (void);
 void pad_set_style (pad_node *pad, pad_style *pstyle);
 pad_style *pad_get_style (pad_node *pad);
 void pad_set_decorations (gboolean decor);
