@@ -435,7 +435,7 @@ int fio_load_pads (void)
 	{
 		gchar *errtext;
 		
-		errtext = g_strdup_printf (_("Could not open xpad directory %s."), working_dir);
+		errtext = g_strdup_printf (_("Could not open directory %s."), working_dir);
 		
 		xpad_show_error (NULL, errtext,
 			_("This directory is needed to store preference and pad information.  Xpad will close now."));
