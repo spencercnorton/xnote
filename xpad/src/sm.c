@@ -49,8 +49,8 @@ static void xpad_sm_save_complete (SmcConn smc_conn, SmPointer client_data);
 
 static void xpad_sm_block ();
 
-#define RETURN_IF_BAD_CONN(conn)	{if (xpad_sm_conn != conn) {return;}}
-#define RETURN_IF_NOT_SAVING()		{if (!xpad_saving) {return;}}
+#define RETURN_IF_BAD_CONN(conn)	{if (xpad_sm_conn != conn) {printf ("bad conn\n");return;}}
+#define RETURN_IF_NOT_SAVING()		{if (!xpad_saving) {printf ("not saving, so ignored\n");return;}}
 
 static gboolean xpad_sm_cycle (gpointer data)
 {
@@ -165,8 +165,6 @@ void xpad_sm_ice_connection_watch (IceConn ice_conn,
 {
 	int fd = IceConnectionNumber (ice_conn);
 	
-	printf ("connection changed -- %i is %s\n", fd, 
-		opening ? "opening" : "closing");
 	if (opening)
 	{
 		xpad_ice_fd = fd;
@@ -300,7 +298,7 @@ void xpad_sm_shutdown (void)
 	
 	if (client_id)
 	{
-		free (client_id);
+		g_free (client_id);
 		client_id = NULL;
 	}
 	
@@ -327,6 +325,7 @@ static void xpad_sm_save_local (Bool fast)
 static void xpad_sm_save_yourself (SmcConn smc_conn, SmPointer client_data,
 	int save_type, Bool shutdown, int interact_style, Bool fast)
 {
+	printf ("got save_yourself\n");
 	RETURN_IF_BAD_CONN (smc_conn);
 	
 	xpad_interact_style = interact_style;
@@ -357,6 +356,7 @@ static void xpad_sm_save_yourself (SmcConn smc_conn, SmPointer client_data,
 
 static void xpad_sm_die (SmcConn smc_conn, SmPointer client_data)
 {
+	printf ("got die\n");
 	RETURN_IF_BAD_CONN (smc_conn);
 	xpad_shutdown = True;
 	
@@ -369,6 +369,7 @@ static void xpad_sm_die (SmcConn smc_conn, SmPointer client_data)
 
 static void xpad_sm_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 {
+	printf ("got shutdown_cancelled\n");
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	xpad_shutdown = False;
@@ -380,6 +381,7 @@ static void xpad_sm_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 
 static void xpad_sm_save_complete (SmcConn smc_conn, SmPointer client_data)
 {
+	printf ("got save_complete\n");
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	
