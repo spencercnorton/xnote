@@ -146,7 +146,7 @@ set_verbosity (gint *v)
 {
 	if (*v < 0 || *v > 2)
 	{
-		printf ("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
+		fprintf (stderr, "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
 		exit (1);
 	}
 	
@@ -165,9 +165,6 @@ struct argument_def
 };
 typedef struct argument_def argument;
 
-void (*one_arg_func) (void *);
-#define ONE_ARG(f) ((one_arg_func) (f))
-
 static const argument arguments[] =
 {
 	{TRUE, "-h", FALSE, {print_help}},
@@ -185,97 +182,113 @@ static const argument arguments[] =
 
 #define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
 
+
+static void missing_companion_arg(const char argname[])
+{
+	fprintf(stderr, "Missing companion argument to %s\n", argname);
+	exit(1);
+}
+
+
 static gint handle_args (int *argc, char ***argv, gboolean local)
 {
 	gint i, j;
 	gint rv = 0;
-	
+	size_t arglen[NUM_ARGUMENTS];
+
+	/* Set up array of argument lengths to avoid having to compute them every 
+	 * time through our inner loop.  This probably ought to be global, but it
+	 * won't matter all that much.
+	 */
+	for (j = NUM_ARGUMENTS-1; j >= 0; j--)
+		arglen[j] = strlen(arguments[j].name);
+
 	for (i = 1; i < *argc; i++)
 	{
-		for (j = 0; j < NUM_ARGUMENTS; j++)
+		gboolean longform;
+
+		/* Find matching argument; there can be only one.  Loop reversed for 
+		 * better performance (well, perhaps more out of sheer habit).
+		 */
+		for (j = NUM_ARGUMENTS-1; 
+		     (j >= 0) && (strncmp((*argv)[i], arguments[j].name, arglen[j]) != 0);
+		     j--)
 		{
-			gint len = strlen (arguments[j].name);
-			
-			if (arguments[j].local != local)
+		}
+
+		if (j < 0)
+		{
+		  	/* Argument not found in list.  Either its "local" setting mismatched
+			 * the one passed to us, or we got an invalid argument.  Check for the
+			 * latter only if we're doing local; otherwise just ignore the argument.
+			 */
+			if (local)
 			{
-				if (!strncmp ((*argv)[i], arguments[j].name, len))
-				{
-					if (strncmp (arguments[j].name, "--", 2) &&
-						arguments[j].second)
-						i++;
-					
-					break;
-				}
-				
+				fprintf (stderr, "Didn't understand argument %s.\n", (*argv)[i]);
+				exit(1);
+			}
+			else
+			{
 				continue;
 			}
-			
-			if (!strncmp ((*argv)[i], arguments[j].name, len))
-			{
-				if (!strncmp (arguments[j].name, "--", 2))
-				{
-					if (arguments[j].second)
-					{
-						if (((*argv)[i] + len)[0] == '=')
-						{
-							gint arg;
-							
-							/* right now we only do integer arguments... */
-							arg = atoi ((*argv)[i] + len + 1);
-							
-							arguments[j].callbacks.func_arg ((void *) &arg);
-							rv ++;
-							
-							break;
-						}
-					}
-					else
-					{
-						arguments[j].callbacks.func ();
-						rv ++;
-						
-						break;
-					}
-				}
-				else
-				{
-					if (arguments[j].second)
-					{
-						gint arg;
-						
-						i += 1;
-						
-						if (i == (*argc))
-						{
-							fprintf (stderr,
-							         "Missing companion argument to %s\n",
-								 arguments[j].name);
-							exit (1);
-						}
-						
-						arg = atoi ((*argv)[i++]);
-						
-						arguments[j].callbacks.func_arg ((void *) &arg);
-						rv ++;
-						
-						break;
-					}
-					else
-					{
-						arguments[j].callbacks.func ();
-						rv ++;
-						
-						break;
-					}
-				}
-			}
 		}
-		
-		if (j == NUM_ARGUMENTS && local) /* only check on a local pass */
+
+
+		/* (from this point on, we know our argument was recognized) */
+
+		longform = (strncmp(arguments[j].name, "--", 2) == 0);
+
+		if (arguments[j].local != local)
 		{
-			fprintf (stderr, "Didn't understand argument %s.\n", (*argv)[i]);
-			exit (1);
+			/* We ignore this argument, but if it is in short form and expects a
+			 * companion argument, make sure we skip the companion argument on our
+			 * next iteration.
+			 */
+			if (!longform && arguments[j].second) i++;
+
+			/* Don't accept this argument, but don't complain either. */
+			continue;
 		}
+
+		if (arguments[j].second)
+		{
+			/* right now we only do integer arguments... */
+			gint arg;
+			char *companion, *endptr;
+			
+			if (longform)
+			{
+				if ((*argv)[i][arglen[j]] != '=') 
+				  	missing_companion_arg(arguments[j].name);
+				
+				companion = (*argv)[i] + arglen[j] + 1;
+			}
+			else
+			{
+				i++;
+				if (i >= *argc)
+				  	missing_companion_arg(arguments[j].name);
+				
+				companion = (*argv)[i];
+			}
+			
+			if (!*companion) missing_companion_arg(arguments[j].name);
+			
+			arg = strtol(companion, &endptr, 10);
+			
+			if (*endptr)
+			{
+				fprintf(stderr, "Invalid number: '%s'\n", companion);
+				exit(1);
+			}
+			
+			arguments[j].callbacks.func_arg(&arg);
+		}
+		else
+		{
+			arguments[j].callbacks.func();
+		}
+		rv++;
 	}
 	
 	return rv;
