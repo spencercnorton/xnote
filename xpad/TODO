@@ -1,12 +1,11 @@
 ideally, next release will see:
 -------------------------------
-return of command line options
 
 
 on the horizon:
 ---------------
 creating new notes with preset content (from command line, from files, from middle click)
-continue even if ~/.xpad is unavailable
+continue even if ~/.config/xpad is unavailable
 transparency
 documentation rewrite
 

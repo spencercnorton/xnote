@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001-2004 Michael Terry
+Copyright (c) 2001-2005 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 #include <glib/gi18n.h>
+#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include "fio.h"
 #include "help.h"
@@ -55,6 +56,10 @@ struct XpadPadPrivate
 	/* properties window */
 	GtkWidget *properties;
 	
+	/* menus */
+	GtkWidget *menu;
+	GtkWidget *highlight_menu;
+	
 	XpadPadGroup *group;
 };
 
@@ -74,6 +79,8 @@ static void load_info (XpadPad *pad);
 static void save_info (XpadPad *pad);
 static void load_content (XpadPad *pad);
 static void save_content (XpadPad *pad);
+static GtkWidget *menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
+static GtkWidget *menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
 static void xpad_pad_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_pad_finalize (GObject *object);
@@ -83,6 +90,7 @@ static gboolean xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *eve
 static gboolean xpad_pad_window_state_event (XpadPad *pad, GdkEventWindowState *event);
 static gboolean xpad_pad_delete_event (XpadPad *pad, GdkEvent *event);
 static gboolean xpad_pad_popup_menu (XpadPad *pad);
+static void xpad_pad_popup_deactivate (GtkWidget *menu, XpadPad *pad);
 static gboolean xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event);
 static gboolean xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad);
 static void xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer);
@@ -153,6 +161,7 @@ static void
 xpad_pad_init (XpadPad *pad)
 {
 	GtkWidget *vbox;
+	GtkAccelGroup *accel_group;
 	
 	pad->priv = XPAD_PAD_GET_PRIVATE (pad);
 	
@@ -187,6 +196,12 @@ xpad_pad_init (XpadPad *pad)
 	
 	pad->priv->toolbar = GTK_WIDGET (g_object_new (XPAD_TYPE_TOOLBAR,
 		NULL));
+	
+	accel_group = gtk_accel_group_new ();
+	gtk_window_add_accel_group (GTK_WINDOW (pad), accel_group);
+	g_object_unref (G_OBJECT (accel_group));
+	pad->priv->menu = menu_get_popup_no_highlight (pad, accel_group);
+	pad->priv->highlight_menu = menu_get_popup_highlight (pad, accel_group);
 	
 	vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
 		"homogeneous", FALSE,
@@ -244,6 +259,9 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect (pad->priv->toolbar, "popup", G_CALLBACK (xpad_pad_toolbar_popup), pad);
 	g_signal_connect (pad->priv->toolbar, "popdown", G_CALLBACK (xpad_pad_toolbar_popdown), pad);
 	
+	g_signal_connect (pad->priv->menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
+	g_signal_connect (pad->priv->highlight_menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
+	
 	if (xpad_settings_get_sticky (xpad_settings ()))
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
@@ -293,6 +311,8 @@ xpad_pad_finalize (GObject *object)
 	
 	g_free (pad->priv->infoname);
 	g_free (pad->priv->contentname);
+	g_free (pad->priv->menu);
+	g_free (pad->priv->highlight_menu);
 	
 	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 	
@@ -1042,9 +1062,9 @@ static void
 menu_about (XpadPad *pad)
 {
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
-	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", NULL};
+	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", "Jeroen Vermeulen <jtv@xs4all.nl>", NULL};
 	const gchar *comments = _("Sticky notes");
-	const gchar *copyright = "© 2001-2004 Michael Terry";
+	const gchar *copyright = "© 2001-2005 Michael Terry";
 	/* we use g_strdup_printf because C89 has size limits on static strings */
 	gchar *license = g_strdup_printf ("%s\n%s\n%s",
 "This program is free software; you can redistribute it and/or\n"
@@ -1060,7 +1080,8 @@ menu_about (XpadPad *pad)
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.");
-	/* Translators: please translate this as your own name and optionally email */
+	/* Translators: please translate this as your own name and optionally email
+	   like so: "Your Name <your@email.com>" */
 	const gchar *translator_credits = _("translator-credits");
 	const gchar *website = "http://xpad.sourceforge.net/";
 	
@@ -1240,21 +1261,23 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	return rv;
 }
 
-#define MENU_ADD(mnemonic, image, callback) {\
+#define MENU_ADD(mnemonic, image, key, mask, callback) {\
 	item = gtk_image_menu_item_new_with_mnemonic (mnemonic);\
 	if (image) {\
 		GtkWidget *imgwidget = gtk_image_new_from_stock (image, GTK_ICON_SIZE_MENU);\
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), imgwidget);\
 	}\
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;\
+	if (key)\
+		gtk_widget_add_accelerator(item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
+	gtk_container_add (GTK_CONTAINER (menu), item);\
 	gtk_widget_show (item);\
 	}
 
 #define MENU_ADD_STOCK(stock, callback) {\
-	item = gtk_image_menu_item_new_from_stock (stock, NULL);\
+	item = gtk_image_menu_item_new_from_stock (stock, accel_group);\
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;\
+	gtk_container_add (GTK_CONTAINER (menu), item);\
 	gtk_widget_show (item);\
 	}
 
@@ -1262,28 +1285,26 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	item = gtk_check_menu_item_new_with_mnemonic (mnemonic);\
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), active);\
 	g_signal_connect_swapped (item, "toggled", G_CALLBACK (callback), pad);\
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;\
+	gtk_container_add (GTK_CONTAINER (menu), item);\
 	gtk_widget_show (item);\
 	}
 
 #define MENU_ADD_SEP() {\
 	item = gtk_separator_menu_item_new ();\
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;\
+	gtk_container_add (GTK_CONTAINER (menu), item);\
 	gtk_widget_show (item);\
 	}
 
 static GtkWidget *
-menu_get_popup_no_highlight (XpadPad *pad)
+menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 {
 	GtkWidget *uppermenu, *menu, *item;
-	GtkClipboard *clipboard;
-	gint i = 0;
 	
 	uppermenu = gtk_menu_new ();
-	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_Pad"));
-	gtk_menu_attach (GTK_MENU (uppermenu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	gtk_widget_show (item);
 	
 	menu = gtk_menu_new ();
@@ -1299,20 +1320,20 @@ menu_get_popup_no_highlight (XpadPad *pad)
 	
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
-	gtk_menu_attach (GTK_MENU (uppermenu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	gtk_widget_show (item);
 	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	
 	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
-	gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
+	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
 	MENU_ADD_SEP ();
 	MENU_ADD_STOCK (GTK_STOCK_PREFERENCES, xpad_pad_open_preferences);
 	
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_View"));
-	gtk_menu_attach (GTK_MENU (uppermenu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	gtk_widget_show (item);
 	
 	menu = gtk_menu_new ();
@@ -1326,25 +1347,72 @@ menu_get_popup_no_highlight (XpadPad *pad)
 	
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
-	gtk_menu_attach (GTK_MENU (uppermenu), item, 0, 1, i, i + 1); i++;
+	gtk_container_add (GTK_CONTAINER (uppermenu), item);
+	gtk_widget_show (item);
+	
+	menu = gtk_menu_new ();
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
+	
+	MENU_ADD (_("_Show All"), NULL, 0, 0, menu_show_all);
+	MENU_ADD (_("_Close All"), GTK_STOCK_QUIT, GDK_q, GDK_CONTROL_MASK, xpad_pad_quit);
+	
+	/* The rest of the notes menu will get set up in the prep function below */
+	
+	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
+	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	gtk_widget_show (item);
 	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	
-	MENU_ADD (_("_Show All"), NULL, menu_show_all);
-	MENU_ADD (_("_Close All"), GTK_STOCK_QUIT, xpad_pad_quit);
-	MENU_ADD_SEP ();
+	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, GDK_F1, 0, show_help);
+	MENU_ADD (_("_About"), GTK_STOCK_ABOUT, 0, 0, menu_about);
 	
-	if (pad->priv->group)
+	return uppermenu;
+}
+
+static void
+menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
+{
+	GtkWidget *menu, *item;
+	GtkClipboard *clipboard;
+	
+	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	
+	item = g_object_get_data (G_OBJECT (uppermenu), "paste");
+	if (item)
+		gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
+	
+	menu = g_object_get_data (G_OBJECT (uppermenu), "notes-menu");
+	if (menu)
+	{
+		gint n = 1;
+		gchar *key;
+		
+		/* Remove old menu */
+		item = g_object_get_data (G_OBJECT (menu), "notes-sep");
+		while (item)
+		{
+			gtk_container_remove (GTK_CONTAINER (menu), item);
+			key = g_strdup_printf ("notes-%i", n++);
+			item = g_object_get_data (G_OBJECT (menu), key);
+			g_free (key);
+		}
+	}
+	if (menu && current_pad->priv->group)
 	{
 		GSList *pads, *l;
 		gint n;
+		GtkAccelGroup *accel_group = gtk_menu_get_accel_group (GTK_MENU (uppermenu));
+		
+		MENU_ADD_SEP ();
+		g_object_set_data (G_OBJECT (menu), "notes-sep", item);
 		
 		/**
 		 * Order pads according to title.
 		 */
-		pads = xpad_pad_group_get_pads (pad->priv->group);
+		pads = xpad_pad_group_get_pads (current_pad->priv->group);
 		
 		pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 		
@@ -1355,8 +1423,11 @@ menu_get_popup_no_highlight (XpadPad *pad)
 		{
 			gchar *title;
 			gchar *tmp_title;
+			gchar *key;
+			GtkWidget *pad = GTK_WIDGET (l->data);
 			
-			tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (l->data)));
+			key = g_strdup_printf ("notes-%i", n);
+			tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (pad)));
 			str_replace_tokens (&tmp_title, '_', "__");
 			if (n < 10)
 				title = g_strdup_printf ("_%i. %s", n, tmp_title);
@@ -1364,50 +1435,48 @@ menu_get_popup_no_highlight (XpadPad *pad)
 				title = g_strdup_printf ("%i. %s", n, tmp_title);
 			g_free (tmp_title);
 			
-			MENU_ADD (title, NULL, menu_show);
+			MENU_ADD (title, NULL, 0, 0, menu_show);
+			g_object_set_data (G_OBJECT (menu), key, item);
 			
 			g_free (title);
+			g_free (key);
 		}
 		g_slist_free (pads);
 	}
-	
-	
-	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
-	gtk_menu_attach (GTK_MENU (uppermenu), item, 0, 1, i, i + 1); i++;
-	gtk_widget_show (item);
-	
-	menu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	
-	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, show_help);
-	MENU_ADD (_("_About"), GTK_STOCK_ABOUT, menu_about);
-	
-	return uppermenu;
 }
 
 static GtkWidget *
-menu_get_popup_highlight (XpadPad *pad)
+menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 {
 	GtkWidget *menu, *item;
-	GtkClipboard *clipboard;
-	gint i = 0;
 	
 	menu = gtk_menu_new ();
-	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	gtk_menu_set_accel_group (GTK_MENU (menu), accel_group);
 	
 	MENU_ADD_STOCK (GTK_STOCK_CUT, menu_cut);
 	MENU_ADD_STOCK (GTK_STOCK_COPY, menu_copy);
 	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
-	gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
-	
+	g_object_set_data (G_OBJECT (menu), "paste", item);
 	MENU_ADD_SEP ();
-	
 	MENU_ADD_STOCK (GTK_STOCK_BOLD, menu_bold);
 	MENU_ADD_STOCK (GTK_STOCK_ITALIC, menu_italic);
 	MENU_ADD_STOCK (GTK_STOCK_UNDERLINE, menu_underline);
 	MENU_ADD_STOCK (GTK_STOCK_STRIKETHROUGH, menu_strikethrough);
 	
 	return menu;
+}
+
+static void
+menu_prep_popup_highlight (XpadPad *pad, GtkWidget *menu)
+{
+	GtkWidget *item;
+	GtkClipboard *clipboard;
+	
+	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	
+	item = g_object_get_data (G_OBJECT (menu), "paste");
+	if (item)
+		gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
 }
 
 static void
@@ -1463,15 +1532,20 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
 	
 	if (gtk_text_buffer_get_selection_bounds (buffer, NULL, NULL))
-		menu = menu_get_popup_highlight (pad);
+	{
+		menu = pad->priv->highlight_menu;
+		menu_prep_popup_highlight (pad, menu);
+	}
 	else
-		menu = menu_get_popup_no_highlight (pad);
+	{
+		menu = pad->priv->menu;
+		menu_prep_popup_no_highlight (pad, menu);
+	}
 	
 	if (!menu)
 		return;
 	
 	menu_popup (GTK_WIDGET (menu), pad);
-	g_signal_connect (menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
 	
 	if (event)
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
