@@ -551,6 +551,8 @@ void preferences_open (pad_node *pad)
 		gtk_window_present (GTK_WINDOW (pref_window));
 	}
 	
-	gtk_window_set_transient_for (GTK_WINDOW (pref_window), GTK_WINDOW (pad->window));
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (pref_window), FALSE);
+	if (pad) {
+		gtk_window_set_transient_for (GTK_WINDOW (pref_window), GTK_WINDOW (pad->window));
+		gtk_window_set_destroy_with_parent (GTK_WINDOW (pref_window), FALSE);
+	}
 }

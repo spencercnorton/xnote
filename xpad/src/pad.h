@@ -171,7 +171,9 @@ struct toolbar_button_def
 	const gchar *desc;
 };
 
-
+void menuitem_cb (GtkAction *action, gpointer user_data);
+extern GtkActionEntry pad_actions[];
+extern const gint num_pad_actions;
 extern const toolbar_button buttons[];
 extern const char num_buttons;
 

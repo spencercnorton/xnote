@@ -65,7 +65,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include "fio.h"
 #include "sm.h"
-#include "tray.h"
+#include "xpad-tray.h"
 #include "settings.h"
 #include "defines.h"
 
@@ -90,7 +90,7 @@ static gint at_gtk_exit (gpointer data)
 	
 	pref_close ();
 #ifdef G_OS_UNIX
-	tray_close ();
+	xpad_tray_close ();
 #endif
 	cleanup ();
 	
@@ -989,7 +989,7 @@ static gboolean xpad_init (gpointer data)
 	xpad_settings_init ();
 	
 #ifdef G_OS_UNIX
-	tray_open ();
+	xpad_tray_open ();
 #endif
 	
 	xpad_sm_init ();

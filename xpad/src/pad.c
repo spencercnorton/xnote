@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pref.h"
 #include "fio.h"
 #include "help.h"
-#include "tray.h"
+#include "xpad-tray.h"
 #include "settings.h"
 #include "properties.h"
 #include "xpad-dashboard-frontend.h"
@@ -33,15 +33,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
-static void
-menuitem_cb (GtkAction *action, gpointer user_data);
-
 void pad_edit_cut (pad_node *pad);
 void pad_edit_copy (pad_node *pad);
 void pad_edit_paste (pad_node *pad);
 static void about_dialog (pad_node *pad);
 
-static GtkActionEntry pad_actions[] = 
+GtkActionEntry pad_actions[] = 
 {
 	{"PadMenu", NULL, N_("_Pad"), NULL, NULL, NULL},
 	{"EditMenu", NULL, N_("_Edit"), NULL, NULL, NULL},
@@ -61,6 +58,8 @@ static GtkActionEntry pad_actions[] =
 	{"AboutAction", GTK_STOCK_DIALOG_INFO, N_("_About"), NULL, N_("Display information about xpad"), G_CALLBACK (menuitem_cb)}
 };
 
+const gint num_pad_actions = G_N_ELEMENTS (pad_actions);
+
 static GtkToggleActionEntry toggle_pad_actions[] = 
 {
 	{"StickyAction", "xpad-sticky", N_("_Sticky"), NULL, N_("Toggle stickiness"), G_CALLBACK (menuitem_cb), FALSE}
@@ -77,8 +76,8 @@ const toolbar_button buttons[] =
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Global Preferences")},
 	{"Properties", "gtk-properties", 0, G_CALLBACK (properties_open), N_("Edit Pad Properties")},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Close All Pads")},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Toggle Stickiness")},
-	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}
+	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Toggle Stickiness")}/*,
+	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}*/
 };
 
 const char num_buttons = G_N_ELEMENTS (buttons);
@@ -499,7 +498,7 @@ static void quit_if_no_pads (void)
 	}
 	
 	/* Don't shut down if a pad or the tray is open */
-	if (!p && !tray_is_open ())
+	if (!p && !xpad_tray_is_open ())
 		pads_close_all ();
 }
 
@@ -678,7 +677,8 @@ void pads_show_all (void)
 void pad_show_all (pad_node *pad)
 {
 	pads_show_all ();
-	pad_show (pad);
+	if (pad)
+		pad_show (pad);
 }
 
 void pads_close_all (void)
@@ -897,7 +897,7 @@ disable_popup_handler (pad_node *pad)
 }
 
 
-static void
+void
 menuitem_cb (GtkAction *action, gpointer user_data)
 {
 	pad_node *pad = (pad_node *) user_data;

@@ -1,7 +1,7 @@
 bin_PROGRAMS = xpad
 
 xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h \
- help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c \
+ help.c help.h toolbar.c toolbar.h xpad-tray.c xpad-tray.h eggtrayicon.c \
  eggtrayicon.h defines.h gettext.h settings.c settings.h \
  properties.c properties.h sm.c sm.h xpad-dashboard-frontend.c dashboard-frontend.c
 

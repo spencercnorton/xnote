@@ -3,6 +3,15 @@
 	* src/main.c: Use a list of pixbufs instead of just a 48 pixel
 	one for the default window icon.
         * src/tray.c: Use 24 pixel image instead of 48.
+	* Makefile.am: Add xpad-tray.ui
+	* po/POTFILES.in, src/Makefile.am, src/main.c, src/pad.c: Move
+	src/tray.c to src/xpad-tray.c
+	* src/pad.c, src/pad.h: Make some UIManager functions globally
+	accessible
+	* src/pad.c, src/pref.c: Make some callback functions work when
+	pad==NULL
+	* src/tray.c, src/tray.h: Delete
+	* src/xpad-tray.c, src/xpad-tray.h: Add
 
 2004-01-30  Michael Terry  <mikix@users.sourceforge.net>
 
