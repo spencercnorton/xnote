@@ -129,6 +129,7 @@ void
 xpad_dashboard_frontend_init_for_pad (pad_node *pad)
 {
 	g_return_if_fail (pad != NULL);
+	g_return_if_fail (pad->window != NULL);
 	
 	g_signal_connect (
 		pad->window,

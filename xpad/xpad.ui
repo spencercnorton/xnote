@@ -10,8 +10,6 @@
       <menuitem name='DeleteItem' action='DeleteAction' />
     </menu>
     <menu name='EditItem' action='EditMenu'>
-      <menuitem name='CutItem' action='CutAction'/>
-      <menuitem name='CopyItem' action='CopyAction'/>
       <menuitem name='PasteItem' action='PasteAction'/>
       <separator name='sep1'/>
       <menuitem name='PreferencesItem' action='PreferencesAction'/>

@@ -19,9 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "properties.h"
-#include "settings.h"
+#include "xpad-settings.h"
 #include "pad.h"
 #include "defines.h"
+#include "xpad-text-view.h"
 
 
 static gboolean change_back_color (GtkWidget *colorbutton, GtkWidget *checkbutton)
@@ -84,41 +85,35 @@ static gboolean change_font_face (GtkWidget *fontbutton, GtkWidget *checkbutton)
 static void set_values (GObject *window)
 {
 	gpointer *p;
-	pad_style style;
+	GtkRcStyle *style;
+	gchar *fontname;
 	
-	p = g_object_get_data (window, "use_custom");
-	if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (p)))
-	{
-		style = xpad_settings_get_style ();
-	}
-	else
-	{
-		p = g_object_get_data (window, "pad");
-		pad_style_copy (&style, &((pad_node *) p)->style);
-	}
+	p = g_object_get_data (window, "pad");
+	style = gtk_widget_get_modifier_style (((pad_node *) p)->textview);
+	fontname = style->font_desc ? pango_font_description_to_string (style->font_desc) : NULL;
 	
 	p = g_object_get_data (window, "use_text");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.use_text ? TRUE : FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), (style->color_flags[GTK_STATE_NORMAL] & GTK_RC_TEXT) ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "text");
-	gtk_color_button_set_color (GTK_COLOR_BUTTON (p), &style.text);
-	gtk_widget_set_sensitive (GTK_WIDGET (p), style.use_text ? TRUE : FALSE);
+	gtk_color_button_set_color (GTK_COLOR_BUTTON (p), &style->text[GTK_STATE_NORMAL]);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), (style->color_flags[GTK_STATE_NORMAL] & GTK_RC_TEXT) ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "use_back");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.use_back ? TRUE : FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), (style->color_flags[GTK_STATE_NORMAL] & GTK_RC_BASE) ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "back");
-	gtk_color_button_set_color (GTK_COLOR_BUTTON (p), &style.back);
-	gtk_widget_set_sensitive (GTK_WIDGET (p), style.use_back ? TRUE : FALSE);
+	gtk_color_button_set_color (GTK_COLOR_BUTTON (p), &style->base[GTK_STATE_NORMAL]);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), (style->color_flags[GTK_STATE_NORMAL] & GTK_RC_BASE) ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "use_font");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.fontname ? TRUE : FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), fontname ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "font");
-	if (style.fontname) gtk_font_button_set_font_name (GTK_FONT_BUTTON (p), style.fontname);
-	gtk_widget_set_sensitive (GTK_WIDGET (p), style.fontname ? TRUE : FALSE);
+	if (fontname) gtk_font_button_set_font_name (GTK_FONT_BUTTON (p), fontname);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), fontname ? TRUE : FALSE);
 	
-	pad_style_free (&style);
+	g_free (fontname);
 }
 
 static gboolean change_use_global (GtkToggleButton *togglebutton, GtkWidget *widget)
@@ -191,8 +186,8 @@ static GtkWidget *properties_create (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (vbox_global), hbox_appearance, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_global), buttonbox, FALSE, FALSE, 0);
 	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_locked), pad->locked);
-	gtk_widget_set_sensitive (hbox_appearance, pad->locked);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_locked), !xpad_text_view_get_follow_global_style (XPAD_TEXT_VIEW (pad->textview)));
+	gtk_widget_set_sensitive (hbox_appearance, !xpad_text_view_get_follow_global_style (XPAD_TEXT_VIEW (pad->textview)));
 	
 	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button_text), FALSE);
 	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button_back), FALSE);

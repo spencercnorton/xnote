@@ -1,5 +1,5 @@
 # List of source files containing translatable strings.
-# Copyright (C) 2003 Michael Terry
+# Copyright (C) 2003-2004 Michael Terry
 
 # Package source files
 src/dashboard-frontend.c
@@ -9,10 +9,10 @@ src/pref.c
 src/pad.c
 src/help.c
 src/toolbar.c
-src/xpad-tray.c
 src/eggtrayicon.c
 src/properties.c
 src/settings.c
-src/sm.c
 src/xpad-dashboard-frontend.c
+src/xpad-session-manager.c
+src/xpad-tray.c
 xpad.desktop.in

@@ -2,7 +2,7 @@
 
 # Sets up autoconf.
 AC_INIT([xpad],[2.0],[xpad-devel@lists.sourceforge.net])
-AC_CONFIG_SRCDIR(src/fio.c)
+AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_AUX_DIR(scripts)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
@@ -17,23 +17,17 @@ AC_PROG_INTLTOOL
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GTK_2_0(2.3.0)
+AM_PATH_GTK_2_0(2.4.0)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
 
-# Checks for header files.
-AC_CHECK_HEADERS(locale.h)
-
-# Checks for library functions.
-AC_CHECK_FUNCS(setlocale)
-
 # Sets up gettext.
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.11.5)
+AM_GNU_GETTEXT_VERSION(0.12.1)
 
 # Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in])

@@ -1,3 +1,11 @@
+Version 1.14
+* Finally the text cursor is always the same color as the text color
+* Pads remember their hidden state
+* Fixed bug with inter process communicating causing only first communication to work
+* Fixed bug with pads becoming unstyled after closing and reopening
+* --new now also loads the old pads, instead of the previous broken behavior
+
+
 Version 1.13
 * Don't close xpad if no pads are open but the system tray is
 * Made translations work again

@@ -30,7 +30,6 @@
 #include <stdlib.h> /* for exit */
 
 #include "fio.h" /* for fio_get_info_from_file */
-#include "settings.h"
 #include "xpad-app.h"
 #include "xpad-pad-group.h"
 #include "xpad-session-manager.h"
@@ -70,7 +69,6 @@
 static gint xpad_argc;
 static gchar **xpad_argv;
 static gboolean make_new_pad_if_none;
-static gboolean load_old_pads;
 static gchar *config_dir;
 static gchar *program_path;
 static gchar *server_filename;
@@ -101,6 +99,7 @@ xpad_app_init (int argc, char **argv)
 	gtk_init (&argc, &argv);
 	xpad_argc = argc;
 	xpad_argv = argv;
+	output = stdout;
 	
 	g_set_application_name (_("Xpad"));
 	gdk_set_program_class (PACKAGE);
@@ -115,13 +114,11 @@ xpad_app_init (int argc, char **argv)
 	config_dir = make_config_dir ();
 	
 	make_new_pad_if_none = TRUE;
-	load_old_pads = TRUE;
 	process_args (xpad_argc, xpad_argv, TRUE);
 	
 	if (xpad_app_check_if_others ())
 		exit (0);
 	
-	xpad_settings_init ();
 	xpad_tray_open ();
 	xpad_session_manager_init ();
 	
@@ -130,12 +127,12 @@ xpad_app_init (int argc, char **argv)
 	
 	/* load all pads */
 	pad_group = NULL;
-	if (load_old_pads && xpad_app_load_pads () == 0) {
+	if (xpad_app_load_pads () == 0) {
 		if (make_new_pad_if_none) {
 			pad_node *pad = pad_new ();
 			xpad_pad_group_add (pad_group, pad);
 		}
-		else
+		else if (!xpad_tray_is_open ())
 			exit (0);
 	}
 	
@@ -373,15 +370,6 @@ xpad_app_load_pads (void)
 		g_object_unref (pad_group);
 	pad_group = xpad_pad_group_new ();
 	
-	/* set up some sort of defaults for these.  if xpad works
-	   right, these won't be used. */
-	info.x = 0;
-	info.y = 0;
-	info.width = 260;
-	info.height = 260;
-	info.sticky = 0;
-	info.locked = 0;
-	
 	dir = g_dir_open (xpad_app_get_config_dir (), 0, NULL);
 	
 	if (!dir)
@@ -507,8 +495,9 @@ string_to_args (const char *string, char ***argv)
 	return num;
 }
 
-
-/* This reads a line from the proc file.  This line will contain a filename to get further data from. */
+#include <errno.h>
+static gint xpad_app_open_proc_file (void);
+/* This reads a line from the proc file.  This line will contain arguments to process. */
 static void
 xpad_app_read_from_proc_file (void)
 {
@@ -521,6 +510,7 @@ xpad_app_read_from_proc_file (void)
 	size_t bytes;
 	
 	/* accept waiting connection */
+	client_len = sizeof (client);
 	client_fd = accept (server_fd, (struct sockaddr *) &client, &client_len);
 	if (client_fd == -1)
 		return;
@@ -545,7 +535,7 @@ xpad_app_read_from_proc_file (void)
 	g_free (args);
 	
 	/* here we redirect singleton->priv->output to the socket */
-	output = fdopen (client_fd, "a");
+	output = fdopen (client_fd, "w");
 	
 	if (!process_args (argc, argv, FALSE))
 	{
@@ -565,6 +555,7 @@ xpad_app_read_from_proc_file (void)
 	output = stdout;
 	
 	g_strfreev (argv);
+	return;
 	
 close_client_fd:
 	close (client_fd);
@@ -579,7 +570,6 @@ can_read_from_server_fd (GIOChannel *source, GIOCondition condition, gpointer da
 	return TRUE;
 }
 
-
 static gint
 xpad_app_open_proc_file (void)
 {
@@ -590,6 +580,7 @@ xpad_app_open_proc_file (void)
 	
 	/* create the socket */
 	server_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
+	bzero (&master, sizeof (master)); 
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
 	if (bind (server_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
@@ -704,8 +695,6 @@ done:
 	
 	g_free (args);
 	g_free (server_filename);
-	
-	gtk_main_quit ();
 }
 
 
@@ -790,7 +779,6 @@ struct argument
 static void missing_companion_arg (const char argname[]);
 static void xpad_app_args_print_help (void);
 static void xpad_app_args_print_version (void);
-static void xpad_app_args_set_new (void);
 static void xpad_app_args_set_nonew (void);
 static void xpad_app_args_set_session (const gchar *str);
 static void xpad_app_args_spawn_pad (void);
@@ -800,11 +788,10 @@ static const struct argument arguments[] =
 	{TRUE, "-h", "--help", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_print_help)}, N_("Prints usage information and exits")},
 	{TRUE, "-v", "--version", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_print_version)}, N_("Prints xpad version and exits")},
 	{TRUE, NULL, "--nonew", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_set_nonew)}, N_("Prevents xpad from creating a new pad on startup if no previous pads exist")},
-	{TRUE, "-n", "--new", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_set_new)}, NULL},
 	
 	/* above are local arguments, the ones below are run by the remote instance */
 	
-	/* nonew is registered here a second time because it has effects both on local instances and remote instances */
+	/* --nonew is here twice because it does things for both local and remote instances.  in remote, it stops the remote instance from thinking there were no args and spawning a new pad */
 	{FALSE, NULL, "--nonew", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_set_nonew)}, NULL},
 	{FALSE, "-n", "--new", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_spawn_pad)}, N_("Causes xpad to create a new pad on startup even if pads already exist")},
 	{FALSE, "-q", "--quit", XPAD_ARG_TYPE_NONE, {G_CALLBACK (gtk_main_quit)}, N_("Causes all running xpad instances to close")},
@@ -836,13 +823,6 @@ xpad_app_args_set_nonew (void)
 
 
 static void
-xpad_app_args_set_new (void)
-{
-	load_old_pads = FALSE;
-}
-
-
-static void
 xpad_app_args_set_session (const gchar *str)
 {
 	xpad_session_manager_set_id (str);
@@ -850,7 +830,7 @@ xpad_app_args_set_session (const gchar *str)
 
 
 static void
-xpad_app_args_print_help ()
+xpad_app_args_print_help (void)
 {
 	gchar *msg, *tmp_msg, *lmsg;
 	gint  largest_size, i;

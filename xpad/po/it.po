@@ -6,76 +6,76 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
-"POT-Creation-Date: 2003-10-20 22:04-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-23 22:09-0500\n"
 "PO-Revision-Date: 2003-07-10 11:05-0500\n"
 "Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 
-#: src/main.c:205
+#: src/main.c:204
 msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
 msgstr ""
 
-#: src/main.c:267
+#: src/main.c:266
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/main.c:268
+#: src/main.c:267
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/main.c:269
+#: src/main.c:268
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
 msgstr ""
 
-#: src/main.c:270
+#: src/main.c:269
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
 #. registered here a second time because it has effects both on local instances and remote instances
-#: src/main.c:274
+#: src/main.c:273
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/main.c:275
+#: src/main.c:274
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/main.c:276
+#: src/main.c:275
 msgid "Lists the titles of all open pads"
 msgstr ""
 
-#: src/main.c:277
+#: src/main.c:276
 msgid ""
 "Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
 "be seen by using \"--list\""
 msgstr ""
 
-#: src/main.c:278
+#: src/main.c:277
 msgid "Causes all pads to present themselves to the user"
 msgstr ""
 
-#: src/main.c:310
+#: src/main.c:309
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/main.c:346
+#: src/main.c:345
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/main.c:395
+#: src/main.c:394
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr ""
 
-#: src/main.c:451
+#: src/main.c:450
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -90,358 +90,310 @@ msgstr ""
 msgid "Could not read from file %s."
 msgstr ""
 
-#: src/fio.c:438
+#: src/fio.c:418
 #, c-format
 msgid "Could not open directory %s."
 msgstr ""
 
-#: src/fio.c:441
+#: src/fio.c:421
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
 
-#: src/pref.c:288 src/properties.c:228
-msgid "Background Color"
+#: src/pref.c:219
+msgid "Appearance"
 msgstr ""
 
-#: src/pref.c:289 src/properties.c:229
-msgid "Text Color"
-msgstr ""
-
-#: src/pref.c:290 src/properties.c:230
-msgid "Border"
-msgstr ""
-
-#: src/pref.c:291 src/properties.c:231
-msgid "Border _width:"
-msgstr ""
-
-#: src/pref.c:292 src/pref.c:297 src/properties.c:232 src/properties.c:235
-msgid "pixels"
-msgstr ""
-
-#: src/pref.c:293 src/properties.c:233
-msgid "Font Face"
-msgstr ""
-
-#: src/pref.c:294
+#: src/pref.c:220
 msgid "Options"
 msgstr ""
 
-#: src/pref.c:295
+#: src/pref.c:221
 msgid "Toolbar"
 msgstr ""
 
-#: src/pref.c:296 src/properties.c:234
-msgid "_Padding:"
-msgstr ""
-
-#: src/pref.c:303
+#: src/pref.c:223
 msgid "Allow _window manager decorations"
 msgstr ""
 
-#: src/pref.c:304
+#: src/pref.c:224
 msgid "Con_firm pad destruction"
 msgstr ""
 
-#: src/pref.c:305
+#: src/pref.c:225
 msgid "_Edit lock"
 msgstr ""
 
-#: src/pref.c:350
-msgid "Global Preferences"
+#: src/pref.c:239
+msgid "Xpad Preferences"
 msgstr ""
 
-#: src/pref.c:369 src/properties.c:303
-msgid "_Use system text color"
+#: src/pref.c:258 src/properties.c:163
+msgid "Use custom _text color:"
 msgstr ""
 
-#: src/pref.c:392 src/properties.c:324
-msgid "_Use system background color"
+#: src/pref.c:259 src/properties.c:164
+msgid "Use custom _background color:"
 msgstr ""
 
-#: src/pref.c:428 src/properties.c:357
-msgid "The amount of space you want between the border and text."
+#: src/pref.c:260 src/properties.c:165
+msgid "Use custom _font:"
 msgstr ""
 
-#: src/pref.c:429 src/properties.c:358
-msgid ""
-"Choose the number of pixels around the text region.  This space is colored "
-"the same and surrounds it on all sides."
+#: src/pref.c:276 src/properties.c:200
+msgid "Set Custom Text Color"
 msgstr ""
 
-#: src/pref.c:442 src/properties.c:374
-msgid "The amount of space you want surrounding the pad."
+#: src/pref.c:277 src/properties.c:201
+msgid "Set Custom Background Color"
 msgstr ""
 
-#: src/pref.c:443 src/properties.c:375
-msgid ""
-"Choose the number of pixels around the pad.  This space is colored "
-"independently and surrounds it on all sides."
+#: src/pref.c:278 src/properties.c:202
+msgid "Set Custom Font"
 msgstr ""
 
-#: src/pref.c:469 src/properties.c:397
-msgid "_Use system font face"
-msgstr ""
-
-#: src/pref.c:505
+#: src/pref.c:331
 msgid "Click and drag a button to move it."
 msgstr ""
 
-#: src/pref.c:511
+#: src/pref.c:337
 msgid "_Enable toolbar"
 msgstr ""
 
-#: src/pref.c:512
+#: src/pref.c:338
 msgid "_Auto-hide toolbar"
 msgstr ""
 
-#: src/pref.c:522
+#: src/pref.c:348
 msgid "<b>Toolbar Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:523
+#: src/pref.c:349
 msgid "<b>Used Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:524
+#: src/pref.c:350
 msgid "<b>Unused Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:642 src/pref.c:643
+#: src/pref.c:470 src/pref.c:471
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 
-#: src/pref.c:646 src/pref.c:647
+#: src/pref.c:474 src/pref.c:475
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 
-#: src/pref.c:659
+#: src/pref.c:484
 msgid "Allow _scrollbars"
 msgstr ""
 
-#: src/pref.c:660
+#: src/pref.c:485
 msgid "Pads start s_ticky"
 msgstr ""
 
-#: src/pref.c:663
-msgid "Close and save _all pads"
-msgstr ""
-
-#: src/pref.c:665
-msgid "Close and save _pad"
-msgstr ""
-
-#: src/pref.c:667
-msgid "_Destroy pad (no confirmation)"
-msgstr ""
-
-#: src/pref.c:672
-msgid "<b>Window Manager Close Action:</b>"
-msgstr ""
-
-#: src/pref.c:717 src/pref.c:719
+#: src/pref.c:501 src/pref.c:503
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
 msgstr ""
 
-#: src/pref.c:723 src/pref.c:724
+#: src/pref.c:507 src/pref.c:508
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 
-#: src/pref.c:727 src/pref.c:728
+#: src/pref.c:511 src/pref.c:512
 msgid "If on, new pads are sticky by default."
 msgstr ""
 
-#: src/pref.c:731 src/pref.c:733
+#: src/pref.c:515 src/pref.c:517
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
 msgstr ""
 
-#: src/pref.c:737 src/pref.c:740
+#: src/pref.c:521 src/pref.c:524
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
 "pad.  If off, pads are always editable."
 msgstr ""
 
-#: src/pref.c:745 src/pref.c:746
-msgid "All pads will close, saving contents first."
-msgstr ""
-
-#: src/pref.c:749 src/pref.c:750
-msgid "The pad you clicked the close button on will close, saving contents."
-msgstr ""
-
-#: src/pref.c:753 src/pref.c:755
-msgid ""
-"The pad you clicked the close button on will be destroyed, losing contents.  "
-"There will be no confirmation."
-msgstr ""
-
-#: src/pad.c:40
-msgid "/_Pad"
-msgstr ""
-
-#: src/pad.c:41
-msgid "/Pad/_New"
-msgstr ""
-
-#: src/pad.c:42
-msgid "/Pad/sep1"
-msgstr ""
-
 #: src/pad.c:43
-msgid "/Pad/_Sticky"
+msgid "_Pad"
 msgstr ""
 
 #: src/pad.c:44
-msgid "/Pad/Proper_ties"
+msgid "_Edit"
 msgstr ""
 
 #: src/pad.c:45
-msgid "/Pad/sep2"
+msgid "_Notes"
 msgstr ""
 
 #: src/pad.c:46
-msgid "/Pad/_Close"
+msgid "_Help"
 msgstr ""
 
 #: src/pad.c:47
-msgid "/Pad/_Delete"
+msgid "_New"
 msgstr ""
 
-#. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+#: src/pad.c:47
+msgid "Create a new pad"
+msgstr ""
+
+#: src/pad.c:48
+msgid "Prefere_nces"
+msgstr ""
+
+#: src/pad.c:48
+msgid "Edit xpad preferences"
+msgstr ""
+
 #: src/pad.c:49
-msgid "/_Edit"
+msgid "_Close All"
+msgstr ""
+
+#: src/pad.c:49
+msgid "Close all pads"
 msgstr ""
 
 #: src/pad.c:50
-msgid "/Edit/C_ut"
+msgid "_Contents"
+msgstr ""
+
+#: src/pad.c:50
+msgid "Display information about using xpad"
 msgstr ""
 
 #: src/pad.c:51
-msgid "/Edit/_Copy"
+msgid "Proper_ties"
+msgstr ""
+
+#: src/pad.c:51
+msgid "Edit pad properties"
 msgstr ""
 
 #: src/pad.c:52
-msgid "/Edit/_Paste"
+msgid "_Close"
+msgstr ""
+
+#: src/pad.c:52
+msgid "Close this pad"
 msgstr ""
 
 #: src/pad.c:53
-msgid "/Edit/sep"
+msgid "_Delete"
+msgstr ""
+
+#: src/pad.c:53
+msgid "Delete this pad"
 msgstr ""
 
 #: src/pad.c:54
-msgid "/Edit/Prefere_nces"
+msgid "C_ut"
+msgstr ""
+
+#: src/pad.c:54
+msgid "Cut the selection"
 msgstr ""
 
 #: src/pad.c:55
-msgid "/_Notes"
+msgid "_Copy"
+msgstr ""
+
+#: src/pad.c:55
+msgid "Copy the selection"
 msgstr ""
 
 #: src/pad.c:56
-msgid "/Notes/_Show All"
+msgid "_Paste"
+msgstr ""
+
+#: src/pad.c:56
+msgid "Paste the clipboard"
 msgstr ""
 
 #: src/pad.c:57
-msgid "/Notes/_Close All"
+msgid "_Show All"
+msgstr ""
+
+#: src/pad.c:57
+msgid "Show all existing pads"
 msgstr ""
 
 #: src/pad.c:58
-msgid "/Notes/sep"
+msgid "_About"
 msgstr ""
 
-#: src/pad.c:59
-msgid "/_Help"
+#: src/pad.c:58
+msgid "Display information about xpad"
 msgstr ""
 
-#: src/pad.c:60
-msgid "/Help/_Contents"
-msgstr ""
+#: src/pad.c:65
+#, fuzzy
+msgid "_Sticky"
+msgstr "Note Adesive"
 
-#: src/pad.c:61
-msgid "/Help/_About"
-msgstr ""
-
-#: src/pad.c:68
-msgid "Open New Pad"
-msgstr ""
-
-#: src/pad.c:69
-msgid "Close and Save Pad"
-msgstr ""
-
-#: src/pad.c:70
-msgid "Delete Pad"
-msgstr ""
-
-#: src/pad.c:71
-msgid "Clear Pad Contents"
+#: src/pad.c:65
+msgid "Toggle stickiness"
 msgstr ""
 
 #: src/pad.c:72
-msgid "Edit Global Preferences"
+msgid "Open New Pad"
 msgstr ""
 
 #: src/pad.c:73
-msgid "Edit Pad Properties"
+msgid "Close and Save Pad"
 msgstr ""
 
 #: src/pad.c:74
-msgid "Close All Pads"
+msgid "Delete Pad"
 msgstr ""
 
 #: src/pad.c:75
-msgid "Toggle Stickiness"
+msgid "Clear Pad Contents"
 msgstr ""
 
 #: src/pad.c:76
-msgid "Minimize Pads to System Tray"
+msgid "Edit Global Preferences"
 msgstr ""
 
-#: src/pad.c:658
+#: src/pad.c:77
+msgid "Edit Pad Properties"
+msgstr ""
+
+#: src/pad.c:78
+msgid "Close All Pads"
+msgstr ""
+
+#: src/pad.c:79
+msgid "Toggle Stickiness"
+msgstr ""
+
+#: src/pad.c:582
 msgid "Delete this pad?"
 msgstr ""
 
-#: src/pad.c:659
+#: src/pad.c:583
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:839
+#: src/pad.c:761
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:844
+#: src/pad.c:766
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#. we must also re-enable menu widgets for cut/copy/paste, since we want the
-#. user to be able to cut/copy/paste
-#: src/pad.c:969 src/pad.c:1147
-msgid "/Edit/Cut"
-msgstr ""
-
-#: src/pad.c:971 src/pad.c:1149
-msgid "/Edit/Copy"
-msgstr ""
-
-#: src/pad.c:973 src/pad.c:1153
-msgid "/Edit/Paste"
-msgstr ""
-
-#: src/pad.c:1095
-msgid "/Notes"
-msgstr ""
-
-#. set checkboxes
-#: src/pad.c:1141
-msgid "/Pad/Sticky"
+#: src/pad.c:1592 src/properties.c:158
+#, c-format
+msgid "%s Properties"
 msgstr ""
 
 #: src/help.c:46
@@ -488,30 +440,16 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/tray.c:129
-msgid "No_tes"
+#: src/eggtrayicon.c:118
+msgid "Orientation"
 msgstr ""
 
-#: src/tray.c:133
-msgid "_Show All"
+#: src/eggtrayicon.c:119
+msgid "The orientation of the tray."
 msgstr ""
 
-#: src/tray.c:137
-msgid "_Hide All"
-msgstr ""
-
-#: src/tray.c:209
-msgid "xpad: right click for more options..."
-msgstr ""
-
-#: src/tray.c:210
-msgid ""
-"Right click this icon for a menu of options pertaining to XPad. Left click "
-"it to toggle whether or not the pads are displayed."
-msgstr ""
-
-#: src/properties.c:276
-msgid "Pad Properties"
+#: src/properties.c:155
+msgid "Use custom _appearance"
 msgstr ""
 
 #: xpad.desktop.in.h:1

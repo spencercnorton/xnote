@@ -35,6 +35,7 @@ void fio_remove_pad_files (pad_node *pad);
 void fio_remove_file (const gchar *filename);
 
 gint fio_get_values_from_file (const gchar *filename, ...);
+gint fio_set_values_to_file (const gchar *filename, ...);
 
 void fio_save_pad_info (pad_node *pad);
 void fio_save_pad_content (pad_node *pad);

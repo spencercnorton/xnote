@@ -28,19 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;
-typedef struct pad_style_def pad_style;
-typedef struct toolbar_button_def toolbar_button;
 
-
-/* describes the custom styles of a pad */
-struct pad_style_def
-{
-	GdkColor back;
-	GdkColor text;
-	gint use_back;
-	gint use_text;
-	gchar *fontname;
-};
 
 /* holds all the internal data we need to manipulate pads */
 struct pad_node_def
@@ -51,9 +39,7 @@ struct pad_node_def
 	gint x, y, width, height;
 	gchar *infoname;
 	gchar *contentname;
-	gint locked;
 	gint sticky;
-	pad_style style;
 	
 	/* generated values */
 	gint num;
@@ -75,7 +61,7 @@ struct pad_node_def
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
 	
 	/* toolbar stuff */
-	xpad_toolbar *toolbar;
+	GtkWidget *toolbar;
 	
 	/* properties window */
 	GtkWidget *properties;
@@ -97,8 +83,11 @@ struct pad_info_def
 	gint height;
 	gint locked;
 	gint sticky;
+	gint hidden;
 	
-	pad_style style;
+	GdkColor *back;
+	GdkColor *text;
+	gchar *fontname;
 	
 	gchar *infoname;
 	gchar *contentname;
@@ -121,15 +110,12 @@ pad_node *pad_new_with_info (pad_info *info);
 pad_node *pad_new (void);
 void cleanup (void);
 
-void pads_set_editable (gboolean editable);
-void pads_set_toolbar (gboolean toolbar);
-void pads_set_auto_hide_toolbar (gboolean auto_hide_toolbar);
 void pads_show_all (void);
 void pads_close_all (void);
 
-void pad_set_back_color (pad_node *pad, GdkColor *c);
-void pad_set_text_color (pad_node *pad, GdkColor *c);
-void pad_set_border_color (pad_node *pad, GdkColor *c);
+void pad_set_back_color (pad_node *pad, const GdkColor *c);
+void pad_set_text_color (pad_node *pad, const GdkColor *c);
+void pad_set_border_color (pad_node *pad, const GdkColor *c);
 void pad_set_padding (pad_node *pad, gint p);
 void pad_set_border_width (pad_node *pad, gint w);
 void pad_set_fontname (pad_node *pad, const gchar *fontname);
@@ -140,8 +126,6 @@ void pad_save_as_file (pad_node *pad);
 void pad_clear (pad_node *pad);
 void pad_hide (pad_node *pad);
 void pad_toggle_lock (pad_node *pad);
-void pad_style_copy (pad_style *dest, pad_style *source);
-void pad_style_free (pad_style *dest);
 void pad_background_clear (pad_node *pad);
 void pad_toggle_sticky (pad_node *pad);
 void pad_show_by_num (gint n);
@@ -160,22 +144,8 @@ void pad_remove_toolbar (pad_node *pad);
 void pad_add_toolbar (pad_node *pad);
 void pad_toolbar_update (pad_node *pad);
 
-struct toolbar_button_def
-{
-	const gchar *name;
-	const gchar *stock;
-	guint type;
-	GCallback func;
-	const gchar *desc;
-};
-
 void menuitem_cb (GtkAction *action, gpointer user_data);
 extern GtkActionEntry pad_actions[];
 extern const gint num_pad_actions;
-extern const toolbar_button buttons[];
-extern const char num_buttons;
-
-const toolbar_button *get_toolbar_button_by_func (GCallback func);
-const toolbar_button *get_toolbar_button_by_name (const gchar *name);
 
 #endif /* _PAD_H_ */

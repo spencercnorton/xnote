@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Version=1.0
+Version=0.9.4
 
 _Name=Xpad
 _GenericName=Sticky Notes
@@ -16,4 +16,4 @@ StartupNotify=true
 StartupWMClass=xpad
 
 Type=Application
-Categories=Application;TODO;Utility;GTK;
+Categories=Application;Utility;GTK;

@@ -23,8 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "pad.h"
 #include "help.h"
-#include "toolbar.h"
-#include "settings.h"
+#include "xpad-settings.h"
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
@@ -39,9 +38,9 @@ static gboolean change_back_color (GtkWidget *colorbutton, GtkWidget *checkbutto
 	gtk_color_button_get_color (GTK_COLOR_BUTTON (colorbutton), &c);
 	
 	if (use_back)
-		xpad_settings_style_set_back_color (&c);
+		xpad_settings_set_back_color (xpad_settings (), &c);
 	else
-		xpad_settings_style_set_back_color (NULL);
+		xpad_settings_set_back_color (xpad_settings (), NULL);
 	
 	gtk_widget_set_sensitive (colorbutton, use_back);
 	
@@ -56,9 +55,9 @@ static gboolean change_text_color (GtkWidget *colorbutton, GtkWidget *checkbutto
 	gtk_color_button_get_color (GTK_COLOR_BUTTON (colorbutton), &c);
 	
 	if (use_text)
-		xpad_settings_style_set_text_color (&c);
+		xpad_settings_set_text_color (xpad_settings (), &c);
 	else
-		xpad_settings_style_set_text_color (NULL);
+		xpad_settings_set_text_color (xpad_settings (), NULL);
 	
 	gtk_widget_set_sensitive (colorbutton, use_text);
 	
@@ -74,7 +73,7 @@ static gboolean change_font_face (GtkWidget *fontbutton, GtkWidget *checkbutton)
 	else
 		fontname = NULL;
 	
-	xpad_settings_style_set_fontname (fontname);
+	xpad_settings_set_fontname (xpad_settings (), fontname);
 	
 	gtk_widget_set_sensitive (fontbutton, fontname ? TRUE : FALSE);
 	
@@ -86,14 +85,14 @@ static gboolean change_decorations (GtkWidget *checkbutton, gpointer data)
 	gboolean decor = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
 	
-	xpad_settings_set_has_decorations (decor, gtk_widget_get_toplevel (checkbutton));
+	xpad_settings_set_has_decorations (xpad_settings (), decor);
 	
 	return FALSE;
 }
 
 static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
 {
-	xpad_settings_set_has_scrollbar (gtk_toggle_button_get_active (
+	xpad_settings_set_has_scrollbar (xpad_settings (), gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
@@ -101,7 +100,7 @@ static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
 
 static gboolean change_sticky_on_start (GtkWidget *checkbutton, GtkWidget *window)
 {
-	xpad_settings_set_sticky_on_start (gtk_toggle_button_get_active (
+	xpad_settings_set_sticky (xpad_settings (), gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
@@ -109,7 +108,7 @@ static gboolean change_sticky_on_start (GtkWidget *checkbutton, GtkWidget *windo
 
 static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 {
-	xpad_settings_set_confirm_destroy (gtk_toggle_button_get_active (
+	xpad_settings_set_confirm_destroy (xpad_settings (), gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
@@ -117,12 +116,13 @@ static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *windo
 
 static gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 {
-	xpad_settings_set_edit_lock (gtk_toggle_button_get_active (
+	xpad_settings_set_edit_lock (xpad_settings (), gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton)));
 	
 	return FALSE;
 }
 
+#if 0
 static void
 change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 {
@@ -130,15 +130,16 @@ change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 	
 	g_slist_foreach ((GSList *) user_data, (GFunc) gtk_widget_set_sensitive, GINT_TO_POINTER (has));
 	
-	xpad_settings_set_has_toolbar ((gboolean) has);
+	xpad_settings_set_has_toolbar (xpad_settings (), (gboolean) has);
 }
 
 static void
 change_auto_hide_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 {
-	xpad_settings_set_auto_hide_toolbar (
+	xpad_settings_set_autohide_toolbar (xpad_settings (), 
 		gtk_toggle_button_get_active (togglebutton));
 }
+#endif
 
 void pref_close (void)
 {
@@ -149,6 +150,7 @@ void pref_close (void)
 	}
 }
 
+#if 0
 static void
 data_get (GtkWidget *widget, GdkDragContext *drag_context, 
 	GtkSelectionData *data, guint info, guint time, gpointer user_data)
@@ -177,7 +179,7 @@ unused_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	{
 		tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
 		
-		xpad_settings_remove_toolbar_button (tb->name);
+		xpad_settings_remove_toolbar_button (xpad_settings (), tb->name);
 	}
 }
 
@@ -197,11 +199,11 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
 	
 	if (parent == GTK_WIDGET (user_data))
-		xpad_settings_remove_toolbar_button (tb->name);
+		xpad_settings_remove_toolbar_button (xpad_settings (), tb->name);
 	
-	xpad_settings_add_toolbar_button (tb->name);	
+	xpad_settings_add_toolbar_button (xpad_settings (), tb->name);	
 }
-
+#endif
 /**
  * Note to the uncautious:  The following function is ugly as hell.  There are a lot of 
  * widgets define at the top that are not used until several pages down, there are random
@@ -217,7 +219,7 @@ static GtkWidget *preferences_create (void)
 	GtkWidget *button_close = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 	GtkWidget *label_appearance = gtk_label_new (_("Appearance"));
 	GtkWidget *label_misc = gtk_label_new (_("Options"));
-	GtkWidget *label_toolbar = gtk_label_new (_("Toolbar"));
+/*	GtkWidget *label_toolbar = gtk_label_new (_("Toolbar"));*/
 	GtkWidget *vbox_global = gtk_vbox_new (FALSE, 12);
 	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_mnemonic (_("Allow _window manager decorations"));
 	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_mnemonic (_("Con_firm pad destruction"));
@@ -258,12 +260,9 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *check_button_back = gtk_check_button_new_with_mnemonic (_("Use custom _background color:"));
 		GtkWidget *check_button_face = gtk_check_button_new_with_mnemonic (_("Use custom _font:"));
 		
-		GdkColor color_text = xpad_settings_style_get_text_color ();
-		GdkColor color_back = xpad_settings_style_get_back_color ();
-		
-		GtkWidget *color_button_text = gtk_color_button_new_with_color (&color_text);
-		GtkWidget *color_button_back = gtk_color_button_new_with_color (&color_back);
-		GtkWidget *font_button_face = xpad_settings_style_get_fontname () ? gtk_font_button_new_with_font (xpad_settings_style_get_fontname ()) : gtk_font_button_new ();
+		GtkWidget *color_button_text = xpad_settings_get_text_color (xpad_settings ()) ? gtk_color_button_new_with_color (xpad_settings_get_text_color (xpad_settings ())) : gtk_color_button_new ();
+		GtkWidget *color_button_back = xpad_settings_get_back_color (xpad_settings ()) ? gtk_color_button_new_with_color (xpad_settings_get_back_color (xpad_settings ())) : gtk_color_button_new ();
+		GtkWidget *font_button_face = xpad_settings_get_fontname (xpad_settings ()) ? gtk_font_button_new_with_font (xpad_settings_get_fontname (xpad_settings ())) : gtk_font_button_new ();
 		
 		GtkWidget *hbox_text = gtk_hbox_new (FALSE, 12);
 		GtkWidget *hbox_back = gtk_hbox_new (FALSE, 12);
@@ -284,9 +283,9 @@ static GtkWidget *preferences_create (void)
 		gtk_size_group_add_widget (size_group_buttons, color_button_back);
 		gtk_size_group_add_widget (size_group_buttons, font_button_face);
 		
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_text), !xpad_settings_style_get_system_text ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_back), !xpad_settings_style_get_system_back ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_face), xpad_settings_style_get_fontname () ? TRUE : FALSE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_text), xpad_settings_get_text_color (xpad_settings ()) ? TRUE : FALSE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_back), xpad_settings_get_back_color (xpad_settings ()) ? TRUE : FALSE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button_face), xpad_settings_get_fontname (xpad_settings ()) ? TRUE : FALSE);
 		
 		gtk_widget_set_sensitive (color_button_text, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_button_text)));
 		gtk_widget_set_sensitive (color_button_back, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check_button_back)));
@@ -316,6 +315,7 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (vbox_appearance), hbox_face, FALSE, FALSE, 0);
 	}
 	
+	#if 0
 	/* toolbar  setup */
 	{
 		GtkWidget *vbox_toolbar = gtk_vbox_new (FALSE, 6);
@@ -368,16 +368,16 @@ static GtkWidget *preferences_create (void)
 		toolbar_widgets = g_slist_append (NULL, toolbar_auto_hide);
 		toolbar_widgets = g_slist_append (toolbar_widgets, frame);
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 0);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), xpad_settings_get_has_toolbar ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), xpad_settings_get_has_toolbar (xpad_settings ()));
 		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), toolbar_widgets);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_auto_hide, FALSE, FALSE, 0);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), xpad_settings_get_auto_hide_toolbar ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), xpad_settings_get_autohide_toolbar (xpad_settings ()));
 		g_signal_connect (toolbar_auto_hide, "toggled", G_CALLBACK (change_auto_hide_toolbar), NULL);
-		gtk_widget_set_sensitive (toolbar_auto_hide, xpad_settings_get_has_toolbar ());
+		gtk_widget_set_sensitive (toolbar_auto_hide, xpad_settings_get_has_toolbar (xpad_settings ()));
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 12);
-		gtk_widget_set_sensitive (frame, xpad_settings_get_has_toolbar ());
+		gtk_widget_set_sensitive (frame, xpad_settings_get_has_toolbar (xpad_settings ()));
 		
 		gtk_box_pack_start (GTK_BOX (hbox_buttons), label_indent, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (hbox_buttons), vbox_frame, TRUE, TRUE, 0);
@@ -417,11 +417,11 @@ static GtkWidget *preferences_create (void)
 		/* build list of all toolbar buttons not in xt */
 		for (i = 0; i < num_buttons; i++)
 		{
-			GSList *tmp, *start;
+			const GSList *tmp, *start;
 			const toolbar_button *tb;
 			GtkToolItem *b;
 			
-			tmp = start = xpad_settings_get_toolbar_buttons ();
+			tmp = start = xpad_settings_get_toolbar_buttons (xpad_settings ());
 			for (; tmp; tmp = tmp->next)
 			{
 				tb = (const toolbar_button *) tmp->data;
@@ -432,8 +432,6 @@ static GtkWidget *preferences_create (void)
 			
 			if (tmp)	/* we found it, so we don't add it to our list of unused buttons */
 				continue;
-			
-			g_slist_free (start);
 			
 			tb = &buttons[i];
 			
@@ -477,17 +475,18 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_unused_frame), 6);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox_toolbar_frame), 6);
 	}
+	#endif
 	
 	/* misc. setup */
 	{
 		GtkWidget *checkbutton_scrollbars = gtk_check_button_new_with_mnemonic (_("Allow _scrollbars"));
 		GtkWidget *checkbutton_sticky = gtk_check_button_new_with_mnemonic (_("Pads start s_ticky"));
 		
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), xpad_settings_get_has_decorations ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), xpad_settings_get_confirm_destroy ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), xpad_settings_get_edit_lock ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), xpad_settings_get_has_scrollbar ());
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_sticky), xpad_settings_get_sticky_on_start ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), xpad_settings_get_has_decorations (xpad_settings ()));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), xpad_settings_get_confirm_destroy (xpad_settings ()));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), xpad_settings_get_edit_lock (xpad_settings ()));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), xpad_settings_get_has_scrollbar (xpad_settings ()));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_sticky), xpad_settings_get_sticky (xpad_settings ()));
 		gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_sticky, FALSE, FALSE, 0);

@@ -68,7 +68,7 @@ dashboard_connect_with_timeout (int  *fd,
 
 			if (errno != EAGAIN &&
 			    errno != EINPROGRESS) {
-				perror ("Dashboard: connect");
+				/*perror ("Dashboard: connect");*/
 
 				if (close(*fd) < 0)
 					perror ("Dashboard: closing socket (2)");

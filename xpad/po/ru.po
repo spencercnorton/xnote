@@ -6,78 +6,78 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
-"POT-Creation-Date: 2003-10-20 22:04-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-23 22:09-0500\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 
-#: src/main.c:205
+#: src/main.c:204
 #, fuzzy
 msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
 msgstr ""
 "Неверное значение уровня детализации. Должно быть от 0 до 2 включительно. \n"
 
-#: src/main.c:267
+#: src/main.c:266
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/main.c:268
+#: src/main.c:267
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/main.c:269
+#: src/main.c:268
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
 msgstr ""
 
-#: src/main.c:270
+#: src/main.c:269
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
 #. registered here a second time because it has effects both on local instances and remote instances
-#: src/main.c:274
+#: src/main.c:273
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/main.c:275
+#: src/main.c:274
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/main.c:276
+#: src/main.c:275
 msgid "Lists the titles of all open pads"
 msgstr ""
 
-#: src/main.c:277
+#: src/main.c:276
 msgid ""
 "Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
 "be seen by using \"--list\""
 msgstr ""
 
-#: src/main.c:278
+#: src/main.c:277
 msgid "Causes all pads to present themselves to the user"
 msgstr ""
 
-#: src/main.c:310
+#: src/main.c:309
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/main.c:346
+#: src/main.c:345
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Пропущен дополнительный аргумент к %s\n"
 
-#: src/main.c:395
+#: src/main.c:394
 #, fuzzy, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Неизвестный аргумент %s.\n"
 
-#: src/main.c:451
+#: src/main.c:450
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Неправильный номер: '%s'\n"
@@ -92,12 +92,12 @@ msgstr "Не могу писать в файл %s."
 msgid "Could not read from file %s."
 msgstr "Не могу читать из файла %s."
 
-#: src/fio.c:438
+#: src/fio.c:418
 #, fuzzy, c-format
 msgid "Could not open directory %s."
 msgstr "Не могу открыть xpad директорию %s."
 
-#: src/fio.c:441
+#: src/fio.c:421
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -105,157 +105,111 @@ msgstr ""
 "Эта директория необходима для сохранения настроек и содержимого стикеров.  А "
 "сейчас Xpad будет закрыт."
 
-#: src/pref.c:288 src/properties.c:228
-msgid "Background Color"
-msgstr "Цвет фона"
+#: src/pref.c:219
+msgid "Appearance"
+msgstr ""
 
-#: src/pref.c:289 src/properties.c:229
-msgid "Text Color"
-msgstr "Цвет текста"
-
-#: src/pref.c:290 src/properties.c:230
-msgid "Border"
-msgstr "Рамка"
-
-#: src/pref.c:291 src/properties.c:231
-msgid "Border _width:"
-msgstr "Толщина рамки"
-
-#: src/pref.c:292 src/pref.c:297 src/properties.c:232 src/properties.c:235
-msgid "pixels"
-msgstr "пикселей"
-
-#: src/pref.c:293 src/properties.c:233
-msgid "Font Face"
-msgstr "Шрифт"
-
-#: src/pref.c:294
+#: src/pref.c:220
 msgid "Options"
 msgstr "Настройки"
 
-#: src/pref.c:295
+#: src/pref.c:221
 msgid "Toolbar"
 msgstr "Панель инструментов"
 
-#: src/pref.c:296 src/properties.c:234
-msgid "_Padding:"
-msgstr "Отступ:"
-
-#: src/pref.c:303
+#: src/pref.c:223
 msgid "Allow _window manager decorations"
 msgstr "Разрешить атрибуты окна оконного менеджера"
 
-#: src/pref.c:304
+#: src/pref.c:224
 msgid "Con_firm pad destruction"
 msgstr "Запрашивать подтверждение при удалении стикера"
 
-#: src/pref.c:305
+#: src/pref.c:225
 msgid "_Edit lock"
 msgstr "Защита от редактирования"
 
-#: src/pref.c:350
-msgid "Global Preferences"
+#: src/pref.c:239
+#, fuzzy
+msgid "Xpad Preferences"
 msgstr "Глобальные настройки"
 
-#: src/pref.c:369 src/properties.c:303
-msgid "_Use system text color"
+#: src/pref.c:258 src/properties.c:163
+#, fuzzy
+msgid "Use custom _text color:"
 msgstr "Использовать системный цвет текста"
 
-#: src/pref.c:392 src/properties.c:324
-msgid "_Use system background color"
+#: src/pref.c:259 src/properties.c:164
+#, fuzzy
+msgid "Use custom _background color:"
 msgstr "Использовать системный цвет фона"
 
-#: src/pref.c:428 src/properties.c:357
-msgid "The amount of space you want between the border and text."
-msgstr "Отступ текста от рамки."
-
-#: src/pref.c:429 src/properties.c:358
-msgid ""
-"Choose the number of pixels around the text region.  This space is colored "
-"the same and surrounds it on all sides."
-msgstr ""
-"Установите отступ в пикселях вокруг текста. Это место закрашивается одним и "
-"тем же цветом  и окружает текст со всех сторон."
-
-#: src/pref.c:442 src/properties.c:374
-msgid "The amount of space you want surrounding the pad."
-msgstr "Толщина рамки вокруг записки. "
-
-#: src/pref.c:443 src/properties.c:375
-msgid ""
-"Choose the number of pixels around the pad.  This space is colored "
-"independently and surrounds it on all sides."
-msgstr ""
-"Установите отступ в пикселях вокруг записки. Это место закрашивается "
-"независимо от остального и окружает записку со всех сторон."
-
-#: src/pref.c:469 src/properties.c:397
-msgid "_Use system font face"
+#: src/pref.c:260 src/properties.c:165
+#, fuzzy
+msgid "Use custom _font:"
 msgstr "Использовать системный шрифт"
 
-#: src/pref.c:505
+#: src/pref.c:276 src/properties.c:200
+#, fuzzy
+msgid "Set Custom Text Color"
+msgstr "Использовать системный цвет текста"
+
+#: src/pref.c:277 src/properties.c:201
+#, fuzzy
+msgid "Set Custom Background Color"
+msgstr "Цвет фона"
+
+#: src/pref.c:278 src/properties.c:202
+msgid "Set Custom Font"
+msgstr ""
+
+#: src/pref.c:331
 msgid "Click and drag a button to move it."
 msgstr "Перетаскивайте кнопки по своему усмотрению."
 
-#: src/pref.c:511
+#: src/pref.c:337
 msgid "_Enable toolbar"
 msgstr "Активизировать панель инструментов"
 
-#: src/pref.c:512
+#: src/pref.c:338
 msgid "_Auto-hide toolbar"
 msgstr "Автоматически скрывать панель инструментов"
 
-#: src/pref.c:522
+#: src/pref.c:348
 msgid "<b>Toolbar Buttons:</b>"
 msgstr "<b>Кнопки панели:</b>"
 
-#: src/pref.c:523
+#: src/pref.c:349
 msgid "<b>Used Buttons:</b>"
 msgstr "<b>Используемые:</b>"
 
-#: src/pref.c:524
+#: src/pref.c:350
 msgid "<b>Unused Buttons:</b>"
 msgstr "<b>Неиспользуемые:</b>"
 
-#: src/pref.c:642 src/pref.c:643
+#: src/pref.c:470 src/pref.c:471
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 "Если включено, панель инструментов будет появляться в каждом стикере, когда "
 "указатель мыши окажется над ним."
 
-#: src/pref.c:646 src/pref.c:647
+#: src/pref.c:474 src/pref.c:475
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 "Если включено, панель инструментов будет убираться когда вы не используете "
 "стикер."
 
-#: src/pref.c:659
+#: src/pref.c:484
 msgid "Allow _scrollbars"
 msgstr "Разрешить полосы прокрутки"
 
-#: src/pref.c:660
+#: src/pref.c:485
 #, fuzzy
 msgid "Pads start s_ticky"
 msgstr "/Стикер/Приколоть"
 
-#: src/pref.c:663
-msgid "Close and save _all pads"
-msgstr "Закрыть и сохранить все стикеры"
-
-#: src/pref.c:665
-msgid "Close and save _pad"
-msgstr "Закрыть и сохранить стикер"
-
-#: src/pref.c:667
-msgid "_Destroy pad (no confirmation)"
-msgstr "Уничтожить стикер (без подтверждения)"
-
-#: src/pref.c:672
-msgid "<b>Window Manager Close Action:</b>"
-msgstr "<b>Действие 'закрыть' Оконного менеджера :</b>"
-
-#: src/pref.c:717 src/pref.c:719
+#: src/pref.c:501 src/pref.c:503
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
@@ -263,17 +217,17 @@ msgstr ""
 "Если включено, ваш оконный менеджер будет добавлять элементы декорации окна "
 "ко всем стикерам. К примеру,  заголовок окна, и кнопку 'закрыть'"
 
-#: src/pref.c:723 src/pref.c:724
+#: src/pref.c:507 src/pref.c:508
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 "Если включено, при уничтожении стикера будет выдаваться запрос на "
 "подтверждение этого действия."
 
-#: src/pref.c:727 src/pref.c:728
+#: src/pref.c:511 src/pref.c:512
 msgid "If on, new pads are sticky by default."
 msgstr ""
 
-#: src/pref.c:731 src/pref.c:733
+#: src/pref.c:515 src/pref.c:517
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
@@ -282,7 +236,7 @@ msgstr ""
 "в стикер целиком. Если выключено, размер стикера будет автоматически "
 "подбираться по размеру текста."
 
-#: src/pref.c:737 src/pref.c:740
+#: src/pref.c:521 src/pref.c:524
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
@@ -293,184 +247,200 @@ msgstr ""
 "редактировать стикер, используйте на двойной щелчок. Если выключено, стикер "
 "всегда будет редактируемым."
 
-#: src/pref.c:745 src/pref.c:746
-msgid "All pads will close, saving contents first."
-msgstr "Все стикеры будут закрыты, сначала сохраните содержимое."
-
-#: src/pref.c:749 src/pref.c:750
-msgid "The pad you clicked the close button on will close, saving contents."
-msgstr ""
-"Стикер при щелчке по кнопке 'закрыть', автоматически сохранит свое "
-"содержимое."
-
-#: src/pref.c:753 src/pref.c:755
-msgid ""
-"The pad you clicked the close button on will be destroyed, losing contents.  "
-"There will be no confirmation."
-msgstr ""
-"Когда вы щелкаете по кнопке 'закрыть', стикер уничтожается с потерей своего "
-"содержимого. Запроса на подтверждение не будет."
-
-#: src/pad.c:40
-msgid "/_Pad"
+#: src/pad.c:43
+#, fuzzy
+msgid "_Pad"
 msgstr "/Стикер"
 
-#: src/pad.c:41
-msgid "/Pad/_New"
-msgstr "/Стикер/Новый"
-
-#: src/pad.c:42
-msgid "/Pad/sep1"
-msgstr "/Стикер/Закрыть"
-
-#: src/pad.c:43
-msgid "/Pad/_Sticky"
-msgstr "/Стикер/Приколоть"
-
 #: src/pad.c:44
-msgid "/Pad/Proper_ties"
-msgstr "/Стикер/Свойства"
-
-#: src/pad.c:45
-msgid "/Pad/sep2"
-msgstr "/Стикер/Закрыть"
-
-#: src/pad.c:46
-msgid "/Pad/_Close"
-msgstr "/Стикер/Закрыть"
-
-#: src/pad.c:47
-msgid "/Pad/_Delete"
-msgstr "/Стикер/Удалить"
-
-#. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
-#: src/pad.c:49
-msgid "/_Edit"
+#, fuzzy
+msgid "_Edit"
 msgstr "/Правка"
 
-#: src/pad.c:50
-msgid "/Edit/C_ut"
-msgstr "/Правка/Вырезать"
-
-#: src/pad.c:51
-msgid "/Edit/_Copy"
-msgstr "/Правка/Копировать"
-
-#: src/pad.c:52
-msgid "/Edit/_Paste"
-msgstr "/Правка/Вставить"
-
-#: src/pad.c:53
-msgid "/Edit/sep"
-msgstr "/Правка/Вставить"
-
-#: src/pad.c:54
-msgid "/Edit/Prefere_nces"
-msgstr "/Правка/Свойства"
-
-#: src/pad.c:55
-msgid "/_Notes"
+#: src/pad.c:45
+#, fuzzy
+msgid "_Notes"
 msgstr "/Заметки"
 
-#: src/pad.c:56
-msgid "/Notes/_Show All"
-msgstr "/Заметки/Показать Все"
-
-#: src/pad.c:57
-msgid "/Notes/_Close All"
-msgstr "/Заметки/Закрыть все"
-
-#: src/pad.c:58
-msgid "/Notes/sep"
-msgstr "/Заметки/Вставить"
-
-#: src/pad.c:59
-msgid "/_Help"
+#: src/pad.c:46
+#, fuzzy
+msgid "_Help"
 msgstr "/Помощь"
 
-#: src/pad.c:60
-msgid "/Help/_Contents"
+#: src/pad.c:47
+#, fuzzy
+msgid "_New"
+msgstr "/Стикер/Новый"
+
+#: src/pad.c:47
+msgid "Create a new pad"
+msgstr ""
+
+#: src/pad.c:48
+#, fuzzy
+msgid "Prefere_nces"
+msgstr "/Правка/Свойства"
+
+#: src/pad.c:48
+#, fuzzy
+msgid "Edit xpad preferences"
+msgstr "Правка глобальных настроек"
+
+#: src/pad.c:49
+#, fuzzy
+msgid "_Close All"
+msgstr "Закрыть все стикеры"
+
+#: src/pad.c:49
+#, fuzzy
+msgid "Close all pads"
+msgstr "Закрыть все стикеры"
+
+#: src/pad.c:50
+#, fuzzy
+msgid "_Contents"
 msgstr "/Помощь/Содержание"
 
-#: src/pad.c:61
-msgid "/Help/_About"
+#: src/pad.c:50
+msgid "Display information about using xpad"
+msgstr ""
+
+#: src/pad.c:51
+#, fuzzy
+msgid "Proper_ties"
+msgstr "/Стикер/Свойства"
+
+#: src/pad.c:51
+#, fuzzy
+msgid "Edit pad properties"
+msgstr "Правка настроек стикера"
+
+#: src/pad.c:52
+#, fuzzy
+msgid "_Close"
+msgstr "/Стикер/Закрыть"
+
+#: src/pad.c:52
+#, fuzzy
+msgid "Close this pad"
+msgstr "Удалить этот стикер?"
+
+#: src/pad.c:53
+#, fuzzy
+msgid "_Delete"
+msgstr "/Стикер/Удалить"
+
+#: src/pad.c:53
+#, fuzzy
+msgid "Delete this pad"
+msgstr "Удалить этот стикер?"
+
+#: src/pad.c:54
+msgid "C_ut"
+msgstr ""
+
+#: src/pad.c:54
+msgid "Cut the selection"
+msgstr ""
+
+#: src/pad.c:55
+#, fuzzy
+msgid "_Copy"
+msgstr "/Правка/Копировать"
+
+#: src/pad.c:55
+msgid "Copy the selection"
+msgstr ""
+
+#: src/pad.c:56
+#, fuzzy
+msgid "_Paste"
+msgstr "/Правка/Вставить"
+
+#: src/pad.c:56
+msgid "Paste the clipboard"
+msgstr ""
+
+#: src/pad.c:57
+msgid "_Show All"
+msgstr "Показать все"
+
+#: src/pad.c:57
+msgid "Show all existing pads"
+msgstr ""
+
+#: src/pad.c:58
+#, fuzzy
+msgid "_About"
 msgstr "/Помощь/О нас"
 
-#: src/pad.c:68
+#: src/pad.c:58
+msgid "Display information about xpad"
+msgstr ""
+
+#: src/pad.c:65
+#, fuzzy
+msgid "_Sticky"
+msgstr "/Стикер/Приколоть"
+
+#: src/pad.c:65
+#, fuzzy
+msgid "Toggle stickiness"
+msgstr "Приколоть/Отколоть"
+
+#: src/pad.c:72
 msgid "Open New Pad"
 msgstr "Новый стикер"
 
-#: src/pad.c:69
+#: src/pad.c:73
 msgid "Close and Save Pad"
 msgstr "Сохранить и закрыть стикер"
 
-#: src/pad.c:70
+#: src/pad.c:74
 msgid "Delete Pad"
 msgstr "Удалить стикер"
 
-#: src/pad.c:71
+#: src/pad.c:75
 msgid "Clear Pad Contents"
 msgstr "Очистить содержимое стикера"
 
-#: src/pad.c:72
+#: src/pad.c:76
 msgid "Edit Global Preferences"
 msgstr "Правка глобальных настроек"
 
-#: src/pad.c:73
+#: src/pad.c:77
 msgid "Edit Pad Properties"
 msgstr "Правка настроек стикера"
 
-#: src/pad.c:74
+#: src/pad.c:78
 msgid "Close All Pads"
 msgstr "Закрыть все стикеры"
 
-#: src/pad.c:75
+#: src/pad.c:79
 msgid "Toggle Stickiness"
 msgstr "Приколоть/Отколоть"
 
-#: src/pad.c:76
-msgid "Minimize Pads to System Tray"
-msgstr "Убрать стикеры в системный лоток"
-
-#: src/pad.c:658
+#: src/pad.c:582
 msgid "Delete this pad?"
 msgstr "Удалить этот стикер?"
 
-#: src/pad.c:659
+#: src/pad.c:583
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Все содержимое стикера будет безвозвратно потеряно"
 
-#: src/pad.c:839
+#: src/pad.c:761
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr "Вы используете xpad %s c GTK+ %i.%i.%i."
 
-#: src/pad.c:844
+#: src/pad.c:766
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr "Посетите http://xpad.sourceforge.net чтобы узнать побольше про xpad."
 
-#. we must also re-enable menu widgets for cut/copy/paste, since we want the
-#. user to be able to cut/copy/paste
-#: src/pad.c:969 src/pad.c:1147
-msgid "/Edit/Cut"
-msgstr "/Правка/Вырезать"
-
-#: src/pad.c:971 src/pad.c:1149
-msgid "/Edit/Copy"
-msgstr "/Правка/Копировать"
-
-#: src/pad.c:973 src/pad.c:1153
-msgid "/Edit/Paste"
-msgstr "/Правка/Вставить"
-
-#: src/pad.c:1095
-msgid "/Notes"
-msgstr "/Заметки"
-
-#. set checkboxes
-#: src/pad.c:1141
-msgid "/Pad/Sticky"
-msgstr "/Стикер/Приколоть"
+#: src/pad.c:1592 src/properties.c:158
+#, fuzzy, c-format
+msgid "%s Properties"
+msgstr "Свойства стикера"
 
 #: src/help.c:46
 msgid ""
@@ -536,33 +506,17 @@ msgstr ""
 msgid "Help"
 msgstr "Помощь"
 
-#: src/tray.c:129
-msgid "No_tes"
-msgstr "Заметки"
-
-#: src/tray.c:133
-msgid "_Show All"
-msgstr "Показать все"
-
-#: src/tray.c:137
-msgid "_Hide All"
-msgstr "Скрыть все"
-
-#: src/tray.c:209
-msgid "xpad: right click for more options..."
-msgstr "xpad: щелкните правой кнопкой для дополнительных опций..."
-
-#: src/tray.c:210
-msgid ""
-"Right click this icon for a menu of options pertaining to XPad. Left click "
-"it to toggle whether or not the pads are displayed."
+#: src/eggtrayicon.c:118
+msgid "Orientation"
 msgstr ""
-"Щелчок правой кнопкой на этом значке откроет меню опций XPad. Щелчок левой "
-"кнопкой показывает или скрывает на экране все записки."
 
-#: src/properties.c:276
-msgid "Pad Properties"
-msgstr "Свойства стикера"
+#: src/eggtrayicon.c:119
+msgid "The orientation of the tray."
+msgstr ""
+
+#: src/properties.c:155
+msgid "Use custom _appearance"
+msgstr ""
 
 #: xpad.desktop.in.h:1
 msgid "Jot down notes for later"
@@ -575,6 +529,126 @@ msgstr "Cтикеры"
 #: xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr ""
+
+#~ msgid "Text Color"
+#~ msgstr "Цвет текста"
+
+#~ msgid "Border"
+#~ msgstr "Рамка"
+
+#~ msgid "Border _width:"
+#~ msgstr "Толщина рамки"
+
+#~ msgid "pixels"
+#~ msgstr "пикселей"
+
+#~ msgid "Font Face"
+#~ msgstr "Шрифт"
+
+#~ msgid "_Padding:"
+#~ msgstr "Отступ:"
+
+#~ msgid "The amount of space you want between the border and text."
+#~ msgstr "Отступ текста от рамки."
+
+#~ msgid ""
+#~ "Choose the number of pixels around the text region.  This space is "
+#~ "colored the same and surrounds it on all sides."
+#~ msgstr ""
+#~ "Установите отступ в пикселях вокруг текста. Это место закрашивается одним "
+#~ "и тем же цветом  и окружает текст со всех сторон."
+
+#~ msgid "The amount of space you want surrounding the pad."
+#~ msgstr "Толщина рамки вокруг записки. "
+
+#~ msgid ""
+#~ "Choose the number of pixels around the pad.  This space is colored "
+#~ "independently and surrounds it on all sides."
+#~ msgstr ""
+#~ "Установите отступ в пикселях вокруг записки. Это место закрашивается "
+#~ "независимо от остального и окружает записку со всех сторон."
+
+#~ msgid "Close and save _all pads"
+#~ msgstr "Закрыть и сохранить все стикеры"
+
+#~ msgid "Close and save _pad"
+#~ msgstr "Закрыть и сохранить стикер"
+
+#~ msgid "_Destroy pad (no confirmation)"
+#~ msgstr "Уничтожить стикер (без подтверждения)"
+
+#~ msgid "<b>Window Manager Close Action:</b>"
+#~ msgstr "<b>Действие 'закрыть' Оконного менеджера :</b>"
+
+#~ msgid "All pads will close, saving contents first."
+#~ msgstr "Все стикеры будут закрыты, сначала сохраните содержимое."
+
+#~ msgid "The pad you clicked the close button on will close, saving contents."
+#~ msgstr ""
+#~ "Стикер при щелчке по кнопке 'закрыть', автоматически сохранит свое "
+#~ "содержимое."
+
+#~ msgid ""
+#~ "The pad you clicked the close button on will be destroyed, losing "
+#~ "contents.  There will be no confirmation."
+#~ msgstr ""
+#~ "Когда вы щелкаете по кнопке 'закрыть', стикер уничтожается с потерей "
+#~ "своего содержимого. Запроса на подтверждение не будет."
+
+#~ msgid "/Pad/sep1"
+#~ msgstr "/Стикер/Закрыть"
+
+#~ msgid "/Pad/sep2"
+#~ msgstr "/Стикер/Закрыть"
+
+#~ msgid "/Edit/C_ut"
+#~ msgstr "/Правка/Вырезать"
+
+#~ msgid "/Edit/sep"
+#~ msgstr "/Правка/Вставить"
+
+#~ msgid "/Notes/_Show All"
+#~ msgstr "/Заметки/Показать Все"
+
+#~ msgid "/Notes/_Close All"
+#~ msgstr "/Заметки/Закрыть все"
+
+#~ msgid "/Notes/sep"
+#~ msgstr "/Заметки/Вставить"
+
+#~ msgid "Minimize Pads to System Tray"
+#~ msgstr "Убрать стикеры в системный лоток"
+
+#~ msgid "/Edit/Cut"
+#~ msgstr "/Правка/Вырезать"
+
+#~ msgid "/Edit/Copy"
+#~ msgstr "/Правка/Копировать"
+
+#~ msgid "/Edit/Paste"
+#~ msgstr "/Правка/Вставить"
+
+#~ msgid "/Notes"
+#~ msgstr "/Заметки"
+
+#~ msgid "/Pad/Sticky"
+#~ msgstr "/Стикер/Приколоть"
+
+#~ msgid "No_tes"
+#~ msgstr "Заметки"
+
+#~ msgid "_Hide All"
+#~ msgstr "Скрыть все"
+
+#~ msgid "xpad: right click for more options..."
+#~ msgstr "xpad: щелкните правой кнопкой для дополнительных опций..."
+
+#~ msgid ""
+#~ "Right click this icon for a menu of options pertaining to XPad. Left "
+#~ "click it to toggle whether or not the pads are displayed."
+#~ msgstr ""
+#~ "Щелчок правой кнопкой на этом значке откроет меню опций XPad. Щелчок "
+#~ "левой кнопкой показывает или скрывает на экране все записки."
 
 #~ msgid ""
 #~ "Usage: xpad [OPTIONS]\n"

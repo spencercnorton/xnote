@@ -24,9 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include "fio.h"
 #include "pad.h"
-#include "toolbar.h"
-#include "settings.h"
+#include "xpad-settings.h"
 #include "xpad-app.h"
+#include "xpad-text-view.h"
 
 
 /* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
@@ -201,7 +201,10 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		gint *value;
 		gchar *where;
 		gint size;
+		gchar type;
 		
+		type = item[0];
+		item = &item[2]; /* skip type and '|' */
 		fullitem = g_strdup_printf ("\n%s ", item);
 		value = va_arg (ap, void *);
 		where  = strstr (buf, fullitem);
@@ -216,11 +219,23 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 			temp = g_malloc (size + 1);
 			strncpy (temp, where, size);
 			temp[size] = '\0';
-		
-			if (g_ascii_isdigit (temp[0]))
+			
+			switch (type)
+			{
+			case 'i':
 				*((gint *) value) = atoi (temp);
-			else
+				break;
+			case 'u':
+				*((guint *) value) = (guint) strtoul (temp, NULL, 0);
+				break;
+			case 's':
+				g_free (*((gchar **) value));
 				*((gchar **) value) = g_strdup (temp);
+				break;
+			case 'b':
+				*((gboolean *) value) = atoi (temp) ? TRUE : FALSE;
+				break;
+			}
 		
 			g_free (temp);
 		}
@@ -233,33 +248,108 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	return 0;
 }
 
+/* list is a variable number of (gchar *) / (gchar ** or gint *) groups, 
+	terminated by a NULL variable */
+gint fio_set_values_to_file (const gchar *filename, ...)
+{
+	gchar *buf, *tmpbuf;
+	const gchar *item;
+	va_list ap;
+	
+	va_start (ap, filename);
+	
+	buf = g_strdup ("");
+	while ((item = va_arg (ap, gchar *)))
+	{
+		gchar *tmp_string, *final_string;
+		union {
+			gchar *s;
+			gint i;
+			guint u;
+		} value;
+		gchar type;
+		
+		type = item[0];
+		item = &item[2]; /* skip type and '|' */
+		
+		/* translate our types to printf types */
+		switch (type)
+		{
+		case 'b':
+			type = 'i';
+			value.i = va_arg (ap, gboolean);
+			break;
+		case 'i':
+			value.i = va_arg (ap, gint);
+			break;
+		case 'u':
+			value.u = va_arg (ap, guint);
+			break;
+		case 's':
+			value.s = va_arg (ap, gchar *);
+			break;
+		}
+		
+		tmp_string = g_strdup_printf ("%s%s %%%c", (buf[0] == 0) ? "" : "\n", item, type);
+		final_string = g_strdup_printf (tmp_string, value);
+		g_free (tmp_string);
+		
+		tmpbuf = buf;
+		buf = g_strconcat (buf, final_string, NULL);
+		g_free (tmpbuf);
+		g_free (final_string);
+	}
+	
+	va_end (ap);
+	
+	tmpbuf = buf;
+	buf = g_strconcat (buf, "\n", NULL);
+	g_free (tmpbuf);
+	
+	if (!fio_set_file (filename, buf))
+	{
+		g_free (buf);
+		return 1;
+	}
+	
+	g_free (buf);
+	return 0;
+}
 
 void fio_save_pad_info (pad_node *pad)
 {
 	gchar *info_file;
 	gint height;
+	GtkRcStyle *style;
+	gchar *fontname;
 	
-	if (!pad || pad->hidden || !pad->infoname)	/* don't bother saving hidden pads */
+	if (!pad || !pad->infoname)	/* don't bother saving hidden pads FIXME (bump check for hidden up) */
 		return;
 	
 	height = pad->height;
-	if (toolbar_is_visible (pad->toolbar))
-		height -= pad->toolbar->height;
+	/*if (GTK_WIDGET_IS_VISIBLE (pad->toolbar))
+		height -= pad->toolbar->height;*/
+	
+	style = gtk_widget_get_modifier_style (pad->textview);
+	fontname = style->font_desc ? pango_font_description_to_string (style->font_desc) : NULL;
 	
 	info_file = g_strdup_printf (
 		"x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
-		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\nfontname %s\n",
-		pad->x, pad->y, pad->width, height, pad->locked,
+		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\nfontname %s\n"
+		"hidden %d\n",
+		pad->x, pad->y, pad->width, height, !xpad_text_view_get_follow_global_style (XPAD_TEXT_VIEW (pad->textview)),
 		pad->contentname, pad->sticky,
-		pad->style.back.red, pad->style.back.green, pad->style.back.blue,
-		pad->style.use_back,
-		pad->style.text.red, pad->style.text.green, pad->style.text.blue,
-		pad->style.use_text,
-		pad->style.fontname ? pad->style.fontname : "NULL");
+		style->base[GTK_STATE_NORMAL].red, style->base[GTK_STATE_NORMAL].green, style->base[GTK_STATE_NORMAL].blue,
+		(style->color_flags[GTK_STATE_NORMAL] & GTK_RC_BASE) ? TRUE : FALSE,
+		style->text[GTK_STATE_NORMAL].red, style->text[GTK_STATE_NORMAL].green, style->text[GTK_STATE_NORMAL].blue,
+		(style->color_flags[GTK_STATE_NORMAL] & GTK_RC_TEXT) ? TRUE : FALSE,
+		fontname ? fontname : "NULL",
+		pad->hidden ? 1 : 0);
 	
 	fio_set_file (pad->infoname, info_file);
 	
+	g_free (fontname);
 	g_free (info_file);
 }
 
@@ -328,59 +418,71 @@ void fio_remove_pad_files (pad_node *pad)
 /* filename must be absolute */
 gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
-	/**
-	 * We need to set up int values for all these to take the value from the file.
-	 * These will be assigned back to the appropriate values after load.
-	 */
-	GdkColor back = xpad_settings_style_get_back_color (),
-		text = xpad_settings_style_get_text_color ();
-	gint 	back_R = back.red,
-		back_G = back.green,
-		back_B = back.blue,
-		
-		text_R = text.red,
-		text_G = text.green,
-		text_B = text.blue;
-
-	info->style.fontname = NULL;
+	GdkColor text, back;
+	gboolean use_text, use_back;
 	
-	fio_get_values_from_file (  filename,
-		"x", &info->x,
-		"y", &info->y,
-		"width", &info->width,
-		"height", &info->height,
-		"content", &info->contentname,
-		"locked", &info->locked,
-		"sticky", &info->sticky,
-		"back_red", &back_R,
-		"back_green", &back_G,
-		"back_blue", &back_B,
-		"use_back", &info->style.use_back,
-		"text_red", &text_R,
-		"text_green", &text_G,
-		"text_blue", &text_B,
-		"use_text", &info->style.use_text,
-		"fontname", &info->style.fontname,
-		NULL);
+	/* set up some sort of defaults for these.  if the value
+	   doesn't exist in the file, these will be used instead. */
+	info->x = 0;
+	info->y = 0;
+	info->width = xpad_settings_get_width (xpad_settings ());
+	info->height = xpad_settings_get_height (xpad_settings ());
+	info->hidden = FALSE;
+	info->sticky = xpad_settings_get_sticky (xpad_settings ());
+	info->locked = 0;
+	info->text = gdk_color_copy (xpad_settings_get_text_color (xpad_settings ()));
+	info->back = gdk_color_copy (xpad_settings_get_back_color (xpad_settings ()));
+	info->fontname = g_strdup (xpad_settings_get_fontname (xpad_settings ()));
 	info->infoname = g_strdup (filename);
+	info->contentname = NULL;
 	
-	if (!info->style.fontname && xpad_settings_style_get_fontname ())
+	use_text = xpad_settings_get_text_color (xpad_settings ()) ? TRUE : FALSE;
+	text = *xpad_settings_get_text_color (xpad_settings ());
+	
+	use_back = xpad_settings_get_back_color (xpad_settings ()) ? TRUE : FALSE;
+	back = *xpad_settings_get_back_color (xpad_settings ());
+	
+	fio_get_values_from_file (filename,
+		"i|x", &info->x,
+		"i|y", &info->y,
+		"i|width", &info->width,
+		"i|height", &info->height,
+		"s|content", &info->contentname,
+		"i|locked", &info->locked,
+		"i|sticky", &info->sticky,
+		"i|back_red", &back.red,
+		"i|back_green", &back.green,
+		"i|back_blue", &back.blue,
+		"b|use_back", &use_back,
+		"i|text_red", &text.red,
+		"i|text_green", &text.green,
+		"i|text_blue", &text.blue,
+		"b|use_text", &use_text,
+		"s|fontname", &info->fontname,
+		"i|hidden", &info->hidden,
+		NULL);
+	
+	if (use_text)
 	{
-		info->style.fontname = g_strdup (xpad_settings_style_get_fontname ());
+		gdk_color_free (info->text);
+		info->text = gdk_color_copy (&text);
 	}
-	else if (strcmp (info->style.fontname, "NULL") == 0)
+	
+	if (use_back)
 	{
-		g_free (info->style.fontname);
-		info->style.fontname = NULL;
+		gdk_color_free (info->back);
+		info->back = gdk_color_copy (&back);
 	}
 	
-	info->style.back.red = back_R;
-	info->style.back.green = back_G;
-	info->style.back.blue = back_B;
-	
-	info->style.text.red = text_R;
-	info->style.text.green = text_G;
-	info->style.text.blue = text_B;
+	if (!info->fontname && xpad_settings_get_fontname (xpad_settings ()))
+	{
+		info->fontname = g_strdup (xpad_settings_get_fontname (xpad_settings ()));
+	}
+	else if (strcmp (info->fontname, "NULL") == 0)
+	{
+		g_free (info->fontname);
+		info->fontname = NULL;
+	}
 	
 	return 0;
 }
