@@ -11,6 +11,7 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
+AC_PROG_INTLTOOL
 
 dnl Checks for libraries.
 AC_PATH_XTRA
@@ -29,7 +30,6 @@ dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
-ALL_LINGUAS="eo ro ru"
-AM_GNU_GETTEXT
-AM_GNU_GETTEXT_VERSION(0.12.1)
-AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in intl/Makefile)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.11.5)
+AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in)
