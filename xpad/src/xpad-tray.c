@@ -231,7 +231,7 @@ tray_create_idle (void)
 static void
 xpad_tray_destroyed_cb (GtkWidget *tray)
 {
-	g_idle_add (tray_create_idle, NULL);
+	g_idle_add ((GSourceFunc) tray_create_idle, NULL);
 }
 
 static void

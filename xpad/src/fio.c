@@ -79,14 +79,13 @@ fio_unique_name (const gchar *prefix)
 	fd = g_mkstemp (name);
 	if (fd == -1)
 	{
-		return NULL;
 		g_free (name);
+		return NULL;
 	}
 	
 	close (fd);
 	base = g_path_get_basename (name);
 	
-	g_free (pattern);
 	g_free (name);
 	
 	return base;

@@ -79,7 +79,8 @@ static gchar *program_path;
 static gchar *server_filename;
 static gint server_fd;
 static FILE *output;
-XpadPadGroup *pad_group;
+static gboolean xpad_translucent = FALSE;
+static XpadPadGroup *pad_group;
 
 static gint      process_args               (gint argc, gchar **argv, gboolean local_args);
 static gint      xpad_app_check_if_others   (void);
@@ -94,6 +95,8 @@ static gint      xpad_app_load_pads         (void);
 static void
 xpad_app_init (int argc, char **argv)
 {
+/*	GdkVisual *visual;*/
+	
 	/* Set up i18n */
 #ifdef ENABLE_NLS
 	gtk_set_locale ();
@@ -109,6 +112,16 @@ xpad_app_init (int argc, char **argv)
 	
 	g_set_application_name (_("Xpad"));
 	gdk_set_program_class (PACKAGE);
+	
+	/* Set up translucency. */
+/*	visual = gdk_visual_get_best_with_depth (32);
+	if (visual)
+	{
+		GdkColormap *colormap;
+		colormap = gdk_colormap_new (visual, TRUE);
+		gtk_widget_set_default_colormap (colormap);
+		xpad_translucent = TRUE;
+	}*/
 	
 	/* Set up program path. */
 	if (xpad_argc > 0)
@@ -206,6 +219,11 @@ xpad_app_get_pad_group (void)
 	return pad_group;
 }
 
+gboolean
+xpad_app_get_translucent (void)
+{
+	return xpad_translucent;
+}
 
 static gboolean
 config_dir_exists (void)

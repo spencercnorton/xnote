@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../config.h"
 #include <glib/gi18n.h>
 #include <string.h>
+#include "xpad-app.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
 
@@ -186,7 +187,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_window_set_title (GTK_WINDOW (pref), _("Xpad Preferences"));
 	
 	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (pref->priv->textbutton), FALSE);
-	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (pref->priv->backbutton), FALSE);
+	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (pref->priv->backbutton), xpad_app_get_translucent ());
 	
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->textbutton), _("Set Foreground Color"));
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->backbutton), _("Set Background Color"));
