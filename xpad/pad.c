@@ -265,7 +265,6 @@ void pad_destroy (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
 
-	fio_close_pad_files (pad);
 	fio_remove_pad_files (pad);
 	pad_remove (pad);
 
@@ -325,7 +324,6 @@ void pad_close (pad_node *pad)
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
 
 	fio_save_pad (pad);
-	fio_close_pad_files (pad);
 	pad_remove (pad);
 
 	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);

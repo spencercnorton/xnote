@@ -165,14 +165,6 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 }
 
 
-/**
- * This closes any persistant pad files.
- */
-void fio_close_pad_files (pad_node *pad)
-{
-}
-
-
 void fio_save_default_settings (void)
 {
 	gchar buf[MAX_FILE_SIZE + 1];

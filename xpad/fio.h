@@ -36,7 +36,6 @@ gint fio_load_default_settings (void);
 void fio_save_default_settings (void);
 
 void fio_open_pad_files (pad_node *pad, gboolean create);
-void fio_close_pad_files (pad_node *pad);
 void fio_remove_pad_files (pad_node *pad);
 
 #endif /* _FIO_H_ */
