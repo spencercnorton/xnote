@@ -143,9 +143,20 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-pixmapdir = $(datadir)/pixmaps
+icondir = $(datadir)/icons
+nobase_icon_DATA = \
+	hicolor/16x16/apps/xpad.png \
+	hicolor/22x22/apps/xpad.png \
+	hicolor/32x32/apps/xpad.png \
+	hicolor/48x48/apps/xpad.png \
+	hicolor/64x64/apps/xpad.png \
+	hicolor/96x96/apps/xpad.png \
+	hicolor/128x128/apps/xpad.png \
+	hicolor/scalable/apps/xpad.svg
 
-pixmap_DATA = xpad.xpm
+
+pixmapdir = $(datadir)/pixmaps
+pixmap_DATA = hicolor/48x48/apps/xpad.png
 
 EXTRA_DIST = xpad-debian.xpm sticky.xpm xpad.xpm
 subdir = images
@@ -153,7 +164,7 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/scripts/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
-DATA = $(pixmap_DATA)
+DATA = $(nobase_icon_DATA) $(pixmap_DATA)
 
 DIST_COMMON = Makefile.am Makefile.in
 all: all-am
@@ -165,6 +176,24 @@ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 uninstall-info-am:
+nobase_iconDATA_INSTALL = $(install_sh_DATA)
+install-nobase_iconDATA: $(nobase_icon_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(icondir)
+	@list='$(nobase_icon_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="$$p"; \
+	  echo " $(nobase_iconDATA_INSTALL) $$d$$p $(DESTDIR)$(icondir)/$$f"; \
+	  $(nobase_iconDATA_INSTALL) $$d$$p $(DESTDIR)$(icondir)/$$f; \
+	done
+
+uninstall-nobase_iconDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nobase_icon_DATA)'; for p in $$list; do \
+	  f="$$p"; \
+	  echo " rm -f $(DESTDIR)$(icondir)/$$f"; \
+	  rm -f $(DESTDIR)$(icondir)/$$f; \
+	done
 pixmapDATA_INSTALL = $(INSTALL_DATA)
 install-pixmapDATA: $(pixmap_DATA)
 	@$(NORMAL_INSTALL)
@@ -226,7 +255,7 @@ check: check-am
 all-am: Makefile $(DATA)
 
 installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(pixmapdir)
+	$(mkinstalldirs) $(DESTDIR)$(icondir) $(DESTDIR)$(pixmapdir)
 
 install: install-am
 install-exec: install-exec-am
@@ -268,7 +297,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pixmapDATA
+install-data-am: install-nobase_iconDATA install-pixmapDATA
 
 install-exec-am:
 
@@ -294,16 +323,18 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am uninstall-pixmapDATA
+uninstall-am: uninstall-info-am uninstall-nobase_iconDATA \
+	uninstall-pixmapDATA
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am info info-am install \
 	install-am install-data install-data-am install-exec \
 	install-exec-am install-info install-info-am install-man \
-	install-pixmapDATA install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-am uninstall-info-am uninstall-pixmapDATA
+	install-nobase_iconDATA install-pixmapDATA install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am uninstall uninstall-am uninstall-info-am \
+	uninstall-nobase_iconDATA uninstall-pixmapDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -20,7 +20,7 @@ FilePattern=xpad
 TryExec=xpad
 Exec=xpad
 Terminal=false
-Icon=xpad.xpm
+Icon=xpad
 
 StartupNotify=true
 StartupWMClass=xpad

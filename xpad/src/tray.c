@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "main.h"
 #include "tray.h"
 #include "eggtrayicon.h"
-#include "../images/xpad.xpm"
+#include "../images/xpad2.xpm"
 #include "pad.h"
 #include "help.h"
 #include "pref.h"
@@ -175,7 +175,7 @@ static void docklet_create( void )
   GdkPixbuf *scaled;
   GtkTooltips *docklet_tips;
 
-  unscaled = gdk_pixbuf_new_from_xpm_data( xpad_xpm );
+  unscaled = gdk_pixbuf_new_from_xpm_data( xpad2_xpm );
   if( !unscaled ) return;
 
   docklet_remove();

@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  Unfortunately, we lose portability... */
 #define _GNU_SOURCE	1
 
-#include "../images/xpad.xpm"
+#include "../images/xpad2.xpm"
 #include "../images/sticky.xpm"
 #include "main.h"
 #include "pad.h"
@@ -858,7 +858,7 @@ static void xpad_set_default_icon (void)
 	GdkPixbuf *pixbuf;
 	GList *icons;
 	
-	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad_xpm);
+	pixbuf = gdk_pixbuf_new_from_xpm_data (xpad2_xpm);
 	icons = g_list_append (NULL, pixbuf);
 	
 	gtk_window_set_default_icon_list (icons);

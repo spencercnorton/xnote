@@ -17,22 +17,22 @@
     <linearGradient
        id="linearGradient115">
       <stop
-         style="stop-color:#cdcd7f;stop-opacity:1;"
+         style="stop-color:#cccd00;stop-opacity:1;"
          offset="0.000000"
          id="stop116" />
       <stop
-         style="stop-color:#656732;stop-opacity:1;"
+         style="stop-color:#656700;stop-opacity:1;"
          offset="1.000000"
          id="stop117" />
     </linearGradient>
     <linearGradient
        id="linearGradient108">
       <stop
-         style="stop-color:#ffffb3;stop-opacity:1;"
+         style="stop-color:#ffff32;stop-opacity:1;"
          offset="0.000000"
          id="stop109" />
       <stop
-         style="stop-color:#d7d58a;stop-opacity:1;"
+         style="stop-color:#d7d50a;stop-opacity:1;"
          offset="1.000000"
          id="stop110" />
     </linearGradient>
@@ -71,7 +71,7 @@
      sodipodi:nodetypes="cccc"
      transform="matrix(0.969374,0.245593,-0.245593,0.969374,247.966,-213.326)" />
   <path
-     style="font-size:12;fill:url(#radialGradient114);fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;stroke:#000000;stroke-opacity:1;"
+     style="font-size:12;fill:url(#radialGradient114);fill-rule:evenodd;stroke-width:5;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt;"
      d="M 225.743 265.58 L 225.743 549.419 L 367.663 549.419 C 414.969 549.419 415.799 454.806 405.01 438.207 C 446.507 458.956 509.582 454.806 509.582 407.5 L 509.582 265.58 L 225.743 265.58 z "
      id="path105"
      sodipodi:nodetypes="ccccccc"

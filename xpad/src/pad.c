@@ -1891,6 +1891,12 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	
 	gtk_window_set_role (GTK_WINDOW (window), role);
 	
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
+	/*gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);*/
+	/*gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);*/
+	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
+#endif
+	
 	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
 	pad->eventbox_outer = eventbox1;
@@ -1920,11 +1926,6 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
-	
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
-	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
-	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
-#endif
 	
 	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
 		, "value-changed", G_CALLBACK (pad_scrolled), pad);
