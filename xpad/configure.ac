@@ -19,7 +19,7 @@ AM_PATH_GTK_2_0(2.0.0)
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(locale.h unistd.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -28,7 +28,7 @@ AC_HEADER_TIME
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
+AC_CHECK_FUNCS(mkdir select setlocale socket strcspn strstr strtol)
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.11.5)
