@@ -139,23 +139,8 @@ struct toolbar_button_def
 	const gchar *desc;
 };
 
-static const toolbar_button buttons[] =
-{
-	{"New", "gtk-new", 0, G_CALLBACK (pad_new), "Open New Pad"},
-	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), "Open Copy of File"},
-	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), "Save Pad As File"},
-	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), "Close and Save Pad"},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), "Delete Pad"},
-	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), "Clear Pad Contents"},
-	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), "Lock Style"},
-	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Edit Preferences"},
-	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), "Quit"},
-	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Show Help"},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"}
-};
-
-
-#define NUM_BUTTONS (sizeof (buttons) / sizeof (toolbar_button))
+extern const toolbar_button buttons[];
+extern const char num_buttons;
 
 const toolbar_button *get_toolbar_button_by_func (GCallback func);
 const toolbar_button *get_toolbar_button_by_name (const gchar *name);

@@ -773,7 +773,7 @@ static GtkWidget *preferences_create (void)
 		g_list_free (inxt);
 		
 		/* build list of all toolbar buttons not in xt */
-		for (i = 0; i < NUM_BUTTONS; i++)
+		for (i = 0; i < num_buttons; i++)
 		{
 			GSList *tmp;
 			const toolbar_button *tb;
