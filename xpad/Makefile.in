@@ -27,8 +27,6 @@ VPATH = @srcdir@
 .SUFFIXES:
 .SUFFIXES: .c .o
 
-CC = gcc
-
 CFLAGS = -I. @CFLAGS@ -ansi -pedantic -Wall\
  `pkg-config --cflags gtk+-2.0`\
  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED\
@@ -37,6 +35,8 @@ CFLAGS = -I. @CFLAGS@ -ansi -pedantic -Wall\
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@ `pkg-config --libs gtk+-2.0`
 INSTALL = @INSTALL@
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = @datadir@
@@ -44,27 +44,31 @@ bindir = @bindir@
 libdir = @libdir@
 infodir = @infodir@
 mandir = @mandir@
+man1dir = $(mandir)/man1
 icondir = $(datadir)/pixmaps/xpad
+desktopdir = $(shell $(top_srcdir)/scripts/finddesktopdir $(datadir)/applications)
 
 SOURCES=main.c fio.c pref.c pad.c help.c toolbar.c tray.c eggtrayicon.c
 DOCS=xpad.1
-MISC=configure mkinstalldirs install-sh #aclocal.m4
 OBJS=main.o fio.o pref.o pad.o help.o toolbar.o tray.o eggtrayicon.o
 
 all: xpad
 
 install: all
 	$(top_srcdir)/mkinstalldirs $(bindir)
-	$(top_srcdir)/mkinstalldirs $(mandir)/man1
+	$(top_srcdir)/mkinstalldirs $(man1dir)
 	$(top_srcdir)/mkinstalldirs $(icondir)
-	$(INSTALL) xpad $(bindir)
-	$(INSTALL) xpad.1 $(mandir)/man1
-	$(INSTALL) xpad.xpm $(icondir)
+	$(top_srcdir)/mkinstalldirs $(desktopdir)
+	$(INSTALL_PROGRAM) xpad $(bindir)
+	$(INSTALL_DATA) xpad.1 $(man1dir)
+	$(INSTALL_DATA) xpad.xpm $(icondir)
+	$(INSTALL_DATA) xpad.desktop $(desktopdir)
 
 uninstall:
 	/bin/rm -f $(bindir)/xpad
-	/bin/rm -f $(mandir)/man1/xpad.1*
+	/bin/rm -f $(man1dir)/xpad.1*
 	/bin/rm -f $(icondir)/xpad.xpm
+	/bin/rm -f $(desktopdir)/xpad.desktop
 
 xpad: $(OBJS)
 	$(CC) $(LDFLAGS) -o xpad $(OBJS) $(LIBS)
@@ -82,7 +86,7 @@ maintainer-clean: clean
 
 # the next several rules are inspired by the aterm project's Makefile.in
 prepdistdir:
-	(cd ..; cp -r main $(VERNAME); cd $(VERNAME); make distclean;)
+	(cd ..; cp -r main $(VERNAME); cd $(VERNAME); $(MAKE) distclean;)
 
 tar.gz: ../$(VERNAME).tar.gz
 ../$(VERNAME).tar.gz: prepdistdir
