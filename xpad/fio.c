@@ -382,7 +382,7 @@ void fio_load_pads (void)
 	if (!dir)
 	{
 		fprintf (stderr, "Can't open working directory [%s].\n", working_dir);
-		gtk_quit_main ();
+		gtk_main_quit ();
 	}
 	
 	while ((name = g_dir_read_name (dir)))
