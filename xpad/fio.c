@@ -106,11 +106,10 @@ gint fio_get_file(const gchar *name, gchar *value, gint size)
 
 	clearerr(file);
 
-	/* Try to read exactly "size" bytes.  Note that we'll actually
-	 * only keep at most "size-1" so we have room for a trailing
-	 * zero.  However, attempting to read that one extra byte will
-	 * let us be absolutely sure if the file is larger than our
-	 * buffer.
+	/* Try to read exactly "size + 1" bytes.  Note that we'll actually
+	 * only keep at most "size" However, attempting to read that 
+	 * one extra byte will let us be absolutely sure if the file is larger
+	 * than our buffer.
 	 */
 	bytesread = fread(value, 1, size + 1, file);
 
@@ -181,7 +180,7 @@ void fio_close_pad_files (pad_node *pad)
 }
 
 
-void fio_save_defaults ()
+void fio_save_defaults (void)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 
@@ -313,7 +312,7 @@ void fio_save_pad (pad_node *pad)
 }
 
 /* save contents and locations of all pads */
-void fio_save_pads ()
+void fio_save_pads (void)
 {
 	pad_node *current = first_pad;
 
@@ -381,7 +380,7 @@ gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 }
 
 
-void fio_load_pads ()
+void fio_load_pads (void)
 {
 	gint counter = 0, opened = 0;
 	glob_t globbuf;
