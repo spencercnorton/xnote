@@ -4,9 +4,14 @@
 # .desktop entry to
 #
 # it takes one argument, the fallback value
+# if no argument given, use /usr/share/applications
 
-# we default to the fallback:
-desktopdir=$1
+# we start with the fallback:
+if [ x$1 = x ]; then
+	desktopdir=/usr/share/applications
+else
+	desktopdir=$1
+fi
 
 # but try to find a better path in the env variable
 for p in `echo $DESKTOP_FILE_PATH | sed 's/:/ /'`; do
