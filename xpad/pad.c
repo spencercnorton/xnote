@@ -644,9 +644,9 @@ static void about_dialog (pad_node *pad)
 	sprintf (text, "You are using xpad %s with GTK+ %i.%i.%i.",
 		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
 	
-	dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_INFO,
+	dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
 		text,
-		"For more information about xpad, visit http://xpad.sourceforge.net.");
+		"Visit http://xpad.sourceforge.net for more information about xpad.");
 	
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
 	
