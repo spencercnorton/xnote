@@ -8,11 +8,13 @@ GenericName=Sticky Notes
 GenericName[de]=Selvklæbende Noter
 GenericName[fr]=Mémos Autocollants
 GenericName[it]=Note Adesive
+GenericName[ru]=Cтикеры
 
 Comment=Jot down notes for later
 Comment[de]=Tag hurtige noter til brug senere
 Comment[fr]=Prenez des notes pour plus tard
 Comment[it]=Prendi delle note per più tardi
+Comment[ru]=Заметки/стикеры на вашем рабочем столе
 
 FilePattern=xpad
 TryExec=xpad
