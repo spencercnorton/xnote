@@ -81,6 +81,11 @@ void pad_set_editable (pad_node *pad, gboolean editable)
 	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
 }
 
+gboolean pad_get_editable (pad_node *pad)
+{
+	return gtk_text_view_get_editable (get_text (pad->window));
+}
+
 void pads_set_editable (gboolean editable)
 {
 	pad_node *temp = first_pad;
@@ -580,13 +585,11 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			switch (event_button->button)
 			{
 				case 1:
-				// raise window if clicked on
-				gtk_window_present (pad->window);
-				
-				if (current_settings.edit_lock) {
+				if (current_settings.edit_lock && pad_get_editable (pad) == FALSE) {
 					pad_set_editable (pad, TRUE);
 					return TRUE;
 				}
+				break;
 			}
 		}
 		break;
