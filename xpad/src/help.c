@@ -46,18 +46,18 @@ static GtkWidget *create_help (gint page)
 	
 	strcpy (helptextbuf, 
 _("Each xpad session consists of one or more open pads.  "
-"These pads are basically textboxes on your desktop in which "
+"These pads are basically sticky notes on your desktop in which "
 "you can write memos.\n\n"));
-	strcat (helptextbuf, 
-_("The contents of pads are transparently "
-"saved and reloaded when xpad is next started.\n\n"));
 	strcat (helptextbuf,
-_("To move a pad, left drag on the toolbar, right drag "
+_("<b>To move a pad</b>, left drag on the toolbar, right drag "
 "on the resizer in the bottom right, or hold down CTRL "
 "while left dragging anywhere on the pad.\n\n"));
 	strcat (helptextbuf,
-_("To resize a pad, left drag on the resizer or hold down "
+_("<b>To resize a pad</b>, left drag on the resizer or hold down "
 "CTRL while right dragging anywhere on the pad.\n\n"));
+	strcat (helptextbuf,
+_("<b>To change color settings</b>, right click on a pad "
+"and choose Edit->Preferences.\n\n"));
 	strcat (helptextbuf, 
 _("Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
