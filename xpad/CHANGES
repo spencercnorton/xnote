@@ -1,3 +1,7 @@
+1.2.1
+-----
+fixed segfault on startup if no ~/.xpad directory, plus some related bugs
+
 1.2
 ---
 fixed an issue causing black on black with big-endian architectures
