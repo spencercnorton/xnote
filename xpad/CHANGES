@@ -2,6 +2,7 @@
 ---
 xpad won't take 100% cpu sometimes when idle
 fixed bug that screwed up last toolbar button's toggle setting
+fixed toolbar hiding when you right click on another pad
 
 
 1.7

@@ -270,16 +270,16 @@ static void fio_save_info_file (pad_node *pad)
 	GtkTextBuffer *buf;
 	gint height;
 	
-	if (pad->hidden)	/* don't bother saving hidden pads */
+	if (!pad || pad->hidden)	/* don't bother saving hidden pads */
 		return;
 	
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
-	if (pad->toolbar && toolbar_is_visible (pad->toolbar))
+	if (toolbar_is_visible (pad->toolbar))
 		height -= pad->toolbar->height;
 	
-    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
+	sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
@@ -299,7 +299,7 @@ static void fio_save_info_file (pad_node *pad)
 	
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 	fio_set_file (pad->contentname, content);
-    g_free (content);
+	g_free (content);
 }
 
 /* save contents and locations of a pad */

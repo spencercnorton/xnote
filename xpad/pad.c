@@ -207,7 +207,7 @@ static void pad_update_style (pad_node *pad)
 	pad_style *pstyle;
 	
 	if (pad->locked)
-		pstyle = &pad->style;	/* should we just bail instead? */
+		pstyle = &pad->style;
 	else
 		pstyle = &current_settings.style;
 	
@@ -352,7 +352,7 @@ pad_set_sticky (pad_node *pad, gboolean on)
 
 void pad_toggle_sticky (pad_node *pad)
 {
-	pad_set_sticky (pad, !pad->sticky);
+	pad_set_sticky (pad, pad->sticky ? 0 : 1);
 }
 
 void pad_edit_cut (pad_node *pad)
@@ -759,17 +759,17 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 static gboolean
 leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 {
-	if (!current_settings.auto_hide_toolbar)
-		return FALSE;
-	
-	/**
-	 * Here we remove the toolbar.
-	 */
-	if (current_settings.toolbar &&
-		event->detail != GDK_NOTIFY_INFERIOR &&
-		event->mode == GDK_CROSSING_NORMAL)
+	if (current_settings.auto_hide_toolbar)
 	{
-	    toolbar_start_timeout (pad);
+		/**
+		 * Here we remove the toolbar.
+		 */
+		if (current_settings.toolbar &&
+			event->detail != GDK_NOTIFY_INFERIOR &&
+			event->mode == GDK_CROSSING_NORMAL)
+		{
+		    toolbar_start_timeout (pad);
+		}
 	}
 	
 	return FALSE;
@@ -830,17 +830,20 @@ disable_popup_handler (pad_node *pad)
 	{
 		unblock_toolbar_events (pad);
 		
-		/**
-		 * We must check if we disabled off of pad and start the timeout if so.
-		 */
-		gdk_window_get_pointer (GTK_WIDGET (pad->window)->window,
-			&rect.x, &rect.y, NULL);
-		
-		rect.width = 1;
-		rect.height = 1;
-		
-		if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
-			toolbar_start_timeout (pad);
+		if (current_settings.auto_hide_toolbar)
+		{
+			/**
+			 * We must check if we disabled off of pad and start the timeout if so.
+			 */
+			gdk_window_get_pointer (GTK_WIDGET (pad->window)->window,
+				&rect.x, &rect.y, NULL);
+			
+			rect.width = 1;
+			rect.height = 1;
+			
+			if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
+				toolbar_start_timeout (pad);
+		}
 	}
 }
 
@@ -857,7 +860,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 	 * Thus, we have no way of finding out what pad to use.  So, what we do is 
 	 * iterate over windows, finding the one with focus.
 	 */
-	for (pad = first_pad; pad && !foundfocus; pad = pad->next)
+	for (pad = first_pad; pad; pad = pad->next)
 	{
 		if (!pad->hidden)
 		{
@@ -865,6 +868,9 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 			
 			w = gtk_window_get_focus (pad->window);
 			foundfocus = GTK_WIDGET_HAS_FOCUS (w);
+			
+			if (foundfocus)
+				break;
 		}
 	}
 	
@@ -990,22 +996,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		n++;
 		
 		sprintf (result, "%s/%i. ", submenu, n);
-		/*
-		if (p->hidden)
-			strcat (result, "<i>");
-		*/
 		strcat (result, p->title);
-		/*
-		if (p->hidden)
-			strcat (result, "</i>");
-		*/
-		/*
-		menu_item = gtk_menu_item_new ();
-		label = gtk_label_new (NULL);
-		gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-		gtk_label_set_markup (GTK_LABEL (label), result);
-		gtk_container_add (GTK_CONTAINER (menu_item), label);
-		*/
 		
 		entry.path = result;
 		entry.accelerator = NULL;
@@ -1045,7 +1036,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->locked);
 	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Sticky");
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->sticky);
-
+	
 	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
 }
 
@@ -1809,6 +1800,7 @@ static void
 pad_renew (pad_node *pad)
 {
 	if (verbosity >= 2) printf ("Refreshing pad.\n");
+	printf ("lock is %i\n", pad->locked);
 	
 	pad_alloc_gtk (pad);
 	
@@ -1818,7 +1810,8 @@ pad_renew (pad_node *pad)
 	pad_fill_with_file (pad, pad->contentname);
 	
 	pad_set_sticky (pad, pad->sticky);
-	
+	printf ("lock is %i\n", pad->locked);
+
 	pad_update_style (pad);
 	
 	pad_set_title (pad);

@@ -223,9 +223,14 @@ toolbar_update (xpad_toolbar *xt)
 {
 	GtkRequisition req;
 	GList *list, *temp;
-	GtkWidget *box = toolbar_get_container (xt);
+	GtkWidget *box;
+	
+	if (!xt)
+		return;
 	
 	if (verbosity >= 2) printf ("Updating toolbar.\n");
+	
+	box = toolbar_get_container (xt);
 	
 	list = gtk_container_get_children (GTK_CONTAINER (box));
 	
