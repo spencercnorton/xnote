@@ -596,101 +596,93 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 	if (event == NULL)
 		return FALSE;
 	
-	if (event->type == GDK_BUTTON_PRESS)
+	switch (event->type)
 	{
-		GdkEventButton *event_button = (GdkEventButton *) event;
-		
-		if (event_button->button == 1)
+		case GDK_BUTTON_PRESS: 
 		{
-			// raise window if clicked on
-			gtk_window_present (pad->window);
-			
-			if (event_button->state & GDK_CONTROL_MASK) {
-				pad_move (pad, event);
-				return TRUE;
-			}
-		}
-		else if (event_button->button == 3)
-		{
-			if (event_button->state & GDK_CONTROL_MASK)
-				pad_resize (pad, event);
-			else
-				pad_popup (pad, event_button);
-			
-			return TRUE;
-		}
-	}
-	else if (event->type == GDK_KEY_PRESS)
-	{
-		GdkEventKey *event_key = (GdkEventKey *) event;
+			GdkEventButton *event_button = (GdkEventButton *) event;
 		
-		if (event_key->keyval == GDK_a) {
-			
-			// CTRL + SHIFT + a == close all pads
-			if ((event_key->state & GDK_CONTROL_MASK) &&
-			    (event_key->state & GDK_SHIFT_MASK)) {
-				pad_close_all ();
+			switch (event_button->button)
+			{
+				case 1:
+				// raise window if clicked on
+				gtk_window_present (pad->window);
+				
+				if (event_button->state & GDK_CONTROL_MASK) {
+					pad_move (pad, event);
+					return TRUE;
+				}
+				break;
+
+		  		case 3:
+				if (event_button->state & GDK_CONTROL_MASK)
+					pad_resize (pad, event);
+				else
+					pad_popup (pad, event_button);
 				return TRUE;
 			}
 		}
-		else if (event_key->keyval == GDK_c) {
-			
-			// CTRL + SHIFT + c == close pad
-			if ((event_key->state & GDK_CONTROL_MASK) &&
-			    (event_key->state & GDK_SHIFT_MASK)) {
-				pad_close (pad);
-				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_d) {
-			
-			// CTRL + SHIFT + d == destroy pad
-			if ((event_key->state & GDK_CONTROL_MASK) &&
-			    (event_key->state & GDK_SHIFT_MASK)) {
-				pad_destroy (pad);
-				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_g) {
-			
-			// CTRL + g == global preferences
-			if (event_key->state & GDK_CONTROL_MASK) {
+		break;
+
+		case GDK_KEY_PRESS:
+		{
+			GdkEventKey *event_key = (GdkEventKey *) event;
+
+			// Only interested if at least CTRL is pressed...
+			if (!(event_key->state & GDK_CONTROL_MASK))
+		  		return FALSE;
+		
+			switch (event_key->keyval)
+			{
+				case GDK_a: // CTRL + SHIFT + a == close all pads
+				if (event_key->state & GDK_SHIFT_MASK) {
+					pad_close_all ();
+					return TRUE;
+				}
+				break;
+
+		  		case GDK_c: // CTRL + SHIFT + c == close pad
+				if (event_key->state & GDK_SHIFT_MASK) {
+					pad_close (pad);
+					return TRUE;
+				}
+				break;
+		
+		  		case GDK_d: // CTRL + SHIFT + d == destroy pad
+				if (event_key->state & GDK_SHIFT_MASK) {
+					pad_destroy (pad);
+					return TRUE;
+				}
+				break;
+
+				case GDK_g: // CTRL + g == global preferences
 				global_preferences_open (pad);
 				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_n) {
-			
-			// CTRL + n == new pad
-			if (event_key->state & GDK_CONTROL_MASK) {
+
+		  		case GDK_n: // CTRL + n == new pad
 				pad_new ();
 				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_o) {
-			
-			// CTRL + o == open file
-			if (event_key->state & GDK_CONTROL_MASK) {
+
+		  		case GDK_o: // CTRL + o == open file
 				open_file (pad);
 				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_p) {
-			
-			// CTRL + p == pad preferences
-			if (event_key->state & GDK_CONTROL_MASK) {
+
+		  		case GDK_p: // CTRL + p == pad preferences
 				pad_preferences_open (pad);
 				return TRUE;
-			}
-		}
-		else if (event_key->keyval == GDK_s) {
-			
-			// CTRL + s == save as
-			if (event_key->state & GDK_CONTROL_MASK) {
+
+		  		case GDK_s: // CTRL + s == save as
 				save_as_file (pad);
 				return TRUE;
+
+				default:
+				break;
 			}
 		}
+		break;
+
+		default:
+		break;
 	}
 	
 	return FALSE;
@@ -708,21 +700,20 @@ static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_
 	{
 		event_button = (GdkEventButton *) event;
 		
-		if (event_button->button == 1)
+		switch (event_button->button)
 		{
+			case 1:
 			// raise window if clicked on
 			gtk_window_present (pad->window);
 			
 			pad_move (pad, event);
 			return TRUE;
-		}
-		else if (event_button->button == 3)
-		{
+
+		  	case 3:
 			if (event_button->state & GDK_CONTROL_MASK)
 				pad_resize (pad, event);
 			else
 				pad_popup (pad, event_button);
-			
 			return TRUE;
 		}
 	}
