@@ -143,7 +143,7 @@ cluepacket_write_cb (GIOChannel   *channel,
 
 	if (status == G_IO_STATUS_NORMAL) {
 		/* We're all done sending */
-		fprintf (stderr, "Dashboard: Sent.\n");
+/*		fprintf (stderr, "Dashboard: Sent.\n");*/
 		goto cleanup;
 	}
 
@@ -153,7 +153,7 @@ cluepacket_write_cb (GIOChannel   *channel,
 	}
 
 	/* Otherwise... */
-	fprintf (stderr, "Dashboard: Error trying to send cluepacket.\n");
+/*	fprintf (stderr, "Dashboard: Error trying to send cluepacket.\n");*/
 
 cleanup:
 	g_io_channel_shutdown (channel, TRUE, NULL);
@@ -170,7 +170,7 @@ dashboard_send_raw_cluepacket (const char *rawcluepacket)
 	GIOChannel *channel;
 	CluepacketInfo *info;
 
-	fprintf (stderr, "Dashboard: Sending cluepacket...\n");
+/*	fprintf (stderr, "Dashboard: Sending cluepacket...\n");*/
 
 	/* Connect. */
 	if (! dashboard_connect_with_timeout (&fd, 200000))
@@ -203,8 +203,8 @@ dashboard_send_raw_cluepacket_sync (const char *rawcluepacket)
 	const char         *p;
 	int                 eagain_count;
 
-	fprintf (stderr, "Dashboard: Sending cluepacket...\n");
-	fprintf (stderr, "Cluepacket: %s\n", rawcluepacket);
+/*	fprintf (stderr, "Dashboard: Sending cluepacket...\n");
+	fprintf (stderr, "Cluepacket: %s\n", rawcluepacket);*/
 
 	/* Connect. */
 	if (! dashboard_connect_with_timeout (&fd, 200000))
@@ -220,7 +220,7 @@ dashboard_send_raw_cluepacket_sync (const char *rawcluepacket)
 
 		b = write (fd, p, total_bytes - bytes_written);
 		if (b < 0) {
-			fprintf (stderr, "Dashboard: Error writing: %s\n", strerror (errno));
+/*			fprintf (stderr, "Dashboard: Error writing: %s\n", strerror (errno));*/
 
 			if (errno != EAGAIN && errno != EWOULDBLOCK) {
 				close (fd);
@@ -241,7 +241,7 @@ dashboard_send_raw_cluepacket_sync (const char *rawcluepacket)
 
 	close (fd);
 
-	fprintf (stderr, "Dashboard: Sent.\n");
+/*	fprintf (stderr, "Dashboard: Sent.\n");*/
 }
 
 #if !GLIB_CHECK_VERSION (2,0,0)

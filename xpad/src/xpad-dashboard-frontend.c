@@ -32,18 +32,15 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
                                                gboolean do_line_at_point)
 {
 	GtkTextBuffer *buffer;
-	gboolean focused;
+	GtkTextMark *cursor_mark;
+	GtkTextIter cursor_iter;
 	gchar *context;
 	gchar *cluepacket;
 	GList *clues = NULL;
-	GtkTextMark *cursor_mark;
-	GtkTextIter cursor_iter;
 	
-	focused = gtk_window_has_toplevel_focus (pad->window);
 	context = g_strdup_printf ("pad-%i", pad->num);
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
-	
 	cursor_mark = gtk_text_buffer_get_insert (buffer);
 	gtk_text_buffer_get_iter_at_mark (buffer, &cursor_iter, cursor_mark);
 	
@@ -54,11 +51,13 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
 		gtk_text_buffer_get_bounds (buffer, &start, &end);
 		clue_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 		clues = g_list_prepend (clues, dashboard_build_clue (clue_text, "textblock", 4));
-		
 		g_free (clue_text);
 	}
 	
-	if (do_word_at_point) {
+	if (do_word_at_point && 
+	    (gtk_text_iter_starts_word (&cursor_iter) ||
+	     gtk_text_iter_ends_word (&cursor_iter) ||
+	     gtk_text_iter_inside_word (&cursor_iter))) {
 		GtkTextIter start = cursor_iter, end = cursor_iter;
 		gchar *clue_text;
 		
@@ -68,11 +67,13 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
 			gtk_text_iter_forward_word_end (&end);
 		clue_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 		clues = g_list_prepend (clues, dashboard_build_clue (clue_text, "word_at_point", 10));
-		
-	 	g_free (clue_text);
+		g_free (clue_text);
 	}
 	
-	if (do_sentence_at_point) {
+	if (do_sentence_at_point && 
+	    (gtk_text_iter_starts_sentence (&cursor_iter) ||
+	     gtk_text_iter_ends_sentence (&cursor_iter) ||
+	     gtk_text_iter_inside_sentence (&cursor_iter))) {
 		GtkTextIter start = cursor_iter, end = cursor_iter;
 		gchar *clue_text;
 		
@@ -82,8 +83,7 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
 			gtk_text_iter_forward_sentence_end (&end);
 		clue_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 		clues = g_list_prepend (clues, dashboard_build_clue (clue_text, "sentence_at_point", 8));
-		
-	 	g_free (clue_text);
+		g_free (clue_text);
 	}
 	
 	if (do_line_at_point) {
@@ -95,13 +95,12 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
 			gtk_text_iter_forward_to_line_end (&end);
 		clue_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 		clues = g_list_prepend (clues, dashboard_build_clue (clue_text, "line_at_point", 8));
-		
-	 	g_free (clue_text);
+		g_free (clue_text);
 	}
 	
 	cluepacket = dashboard_build_cluepacket_from_cluelist (
 		PACKAGE,
-		focused,
+		TRUE,
 		context,
 		additive,
 		clues);
@@ -114,20 +113,6 @@ xpad_dashboard_frontend_send_text_clue_packet (pad_node *pad,
 	g_list_free (clues);
 }
 
-static gboolean
-xpad_dashboard_frontend_does_text_break (GtkTextIter *start, GtkTextIter *end)
-{
-	GtkTextIter i = *start;
-	
-	do {
-		if (gtk_text_iter_starts_word (&i) ||
-		    gtk_text_iter_ends_word (&i))
-			return TRUE;
-	} while (!gtk_text_iter_equal (&i, end) && gtk_text_iter_forward_char (&i));
-	
-	return FALSE;
-}
-
 static void
 xpad_dashboard_frontend_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 {
@@ -135,59 +120,9 @@ xpad_dashboard_frontend_focus_in_cb (GtkWidget *widget, GdkEventFocus *event, pa
 }
 
 static void
-xpad_dashboard_frontend_insert_text_cb (GtkTextBuffer *buffer,
-                                        GtkTextIter *start,
-                                        gchar *text,
-                                        gint size,
-                                        pad_node *pad)
+xpad_dashboard_frontend_end_user_action_cb (GtkTextBuffer *buffer, pad_node *pad)
 {
-	GtkTextMark *mark;
-	
-	/* Note where we are entering text, so that the 'changed' signal
-	   handler can pick up what we're putting down. */
-	mark = gtk_text_buffer_create_mark (buffer, "xpad_inserted_text_here", start, TRUE);
-	
-	g_object_set_data (G_OBJECT (mark), "xpad_inserted_text_size", GINT_TO_POINTER (size));
-}
-
-static void
-xpad_dashboard_frontend_changed_cb (GtkTextBuffer *buffer,
-                                    pad_node *pad)
-{
-	GtkTextMark *mark;
-	GtkTextIter start, end;
-	gint text_size;
-	
-	mark = gtk_text_buffer_get_mark (buffer, "xpad_inserted_text_here");
-	
-	if (!mark)
-		return;
-	
-	text_size = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mark), "xpad_inserted_text_size"));
-	
-	gtk_text_buffer_get_iter_at_mark (buffer, &start, mark);
-	gtk_text_buffer_delete_mark (buffer, mark);
-	end = start;
-	
-	/* probably not accurate, but at worst, we include more text */
-	gtk_text_iter_forward_chars (&end, text_size);
-	
-	if (!xpad_dashboard_frontend_does_text_break (&start, &end))
-		return;
-	
-	xpad_dashboard_frontend_send_text_clue_packet (pad, TRUE, TRUE, TRUE, TRUE, TRUE);
-}
-
-static void
-xpad_dashboard_frontend_delete_range_cb (GtkTextBuffer *buffer,
-                                         GtkTextIter *start,
-                                         GtkTextIter *end,
-                                         pad_node *pad)
-{
-	if (!xpad_dashboard_frontend_does_text_break (start, end))
-		return;
-	
-	xpad_dashboard_frontend_send_text_clue_packet (pad, TRUE, TRUE, TRUE, TRUE, TRUE);
+	xpad_dashboard_frontend_send_text_clue_packet (pad, TRUE, FALSE, TRUE, TRUE, TRUE);
 }
 
 void
@@ -203,19 +138,7 @@ xpad_dashboard_frontend_init_for_pad (pad_node *pad)
 	
 	g_signal_connect (
 		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
-		"insert-text",
-		G_CALLBACK (xpad_dashboard_frontend_insert_text_cb),
-		pad);
-	
-	g_signal_connect (
-		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
-		"changed",
-		G_CALLBACK (xpad_dashboard_frontend_changed_cb),
-		pad);
-	
-	g_signal_connect (
-		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
-		"delete-range",
-		G_CALLBACK (xpad_dashboard_frontend_delete_range_cb),
+		"end-user-action",
+		G_CALLBACK (xpad_dashboard_frontend_end_user_action_cb),
 		pad);
 }

@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Sets up autoconf.
-AC_INIT([xpad],[1.14],[xpad-devel@lists.sourceforge.net])
+AC_INIT([xpad],[2.0],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
 AC_CONFIG_HEADERS([config.h:config.h.in])
