@@ -223,10 +223,17 @@ config_dir_exists (void)
 	gboolean exists = FALSE;
 	
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
-	
 	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
-	
 	g_free (dir);
+	
+	if (!exists)
+	{
+		/* For backwards-compatibility, we see if the old location for
+		   configuration files exists.  It will be moved in make_config_dir */
+		dir = g_build_filename (g_get_home_dir (), "." PACKAGE, NULL);
+		exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+		g_free (dir);
+	}
 	
 	return exists;
 }
@@ -242,7 +249,21 @@ make_config_dir (void)
 	
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	
-	g_mkdir (dir, 0700); /* give user all rights */
+	if (!g_file_test (dir, G_FILE_TEST_EXISTS))
+	{
+		gchar *olddir;
+		
+		/* For backwards-compatibility, we see if the old location for
+		   configuration files exists.  If so, we move it. */
+		olddir = g_build_filename (g_get_home_dir (), "." PACKAGE, NULL);
+		
+		if (g_file_test (olddir, G_FILE_TEST_EXISTS))
+			g_rename (olddir, dir);
+		else
+			g_mkdir (dir, 0700); /* give user all rights */
+		
+		g_free (olddir);
+	}
 	
 	return dir;
 }
