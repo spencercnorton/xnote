@@ -5,7 +5,8 @@ OBJECTS=main.o \
 	pad.o \
 	help.o \
 	toolbar.o
-CFLAGS=-ansi -pedantic -Wall -O3 `pkg-config --cflags gtk+-2.0` -fexpensive-optimizations
+CFLAGS=-ansi -pedantic -Wall -O3 `pkg-config --cflags gtk+-2.0`\
+	-fexpensive-optimizations -fomit-frame-pointer
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 
 #debian-friendly var
