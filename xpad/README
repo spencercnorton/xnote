@@ -63,11 +63,14 @@ KNOWN BUGS
 		pad controls, xpad may think the stickiness is incorrect.
 		This has no effect on xpad's behavior.  Just toggle the 
 		sticky control on the pad to correct it.
+	Stickiness may or may not work with your window manager.  It is
+		broken on at least Oroborus.
 	
 	When moving a pad, if the toolbar times out and disappears,
 		the pad is not resized to remove the space the toolbar took up.
 		This happens on at least Gnome.
-		This does *not* happen on at least Blackbox.
+		This does *not* happen on at least Blackbox and
+			Oroborus.
 	
 	If you have any patches / suggestions, please email us at
 		xpad-devel@lists.sourceforge.net and let us know so we can 
