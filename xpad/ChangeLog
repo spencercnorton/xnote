@@ -1,3 +1,8 @@
+1.12
+----
+	* src/pref.c: Made 'Auto-hide toolbar' button sensitive 
+depending on toolbar being enabled or not
+
 1.11
 ----
 added Dutch translation (by t.c.witte@phys.uu.nl)

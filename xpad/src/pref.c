@@ -549,6 +549,7 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_auto_hide, FALSE, FALSE, 9);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), xpad_settings_get_auto_hide_toolbar ());
 		g_signal_connect (toolbar_auto_hide, "toggled", G_CALLBACK (change_auto_hide_toolbar), NULL);
+		gtk_widget_set_sensitive (toolbar_auto_hide, xpad_settings_get_has_toolbar ());
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 9);
 		gtk_widget_set_sensitive (frame, xpad_settings_get_has_toolbar ());
