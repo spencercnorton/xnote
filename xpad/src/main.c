@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _GNU_SOURCE	1
 
 #include "../images/xpad.xpm"
-#include "../images/lock.xpm"
 #include "../images/sticky.xpm"
 #include "main.h"
 #include "pad.h"
@@ -821,12 +820,6 @@ static void xpad_register_icons (void)
 	GdkPixbuf *pixbuf;
 	
 	factory = gtk_icon_factory_new ();
-	
-	pixbuf = gdk_pixbuf_new_from_xpm_data (lock_xpm);
-	set = gtk_icon_set_new_from_pixbuf (pixbuf);
-	gtk_icon_factory_add (GTK_ICON_FACTORY (factory),
-		"xpad-lock", set);
-	g_object_unref (pixbuf);
 	
 	pixbuf = gdk_pixbuf_new_from_xpm_data (sticky_xpm);
 	set = gtk_icon_set_new_from_pixbuf (pixbuf);
