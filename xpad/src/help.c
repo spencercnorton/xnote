@@ -35,7 +35,6 @@ static void show_help_at_page (gint page);
 static GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook;
-	GtkWidget *styletext, *stylelabel;
 	gchar helptextbuf[700];
 	
 	/* Create the widgets */
@@ -43,8 +42,6 @@ static GtkWidget *create_help (gint page)
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
 	helplabel = gtk_label_new (_("Introduction"));
-	styletext = gtk_label_new ("");
-	stylelabel = gtk_label_new (_("Style Locking"));
 	notebook = gtk_notebook_new ();
 	
 	strcpy (helptextbuf, 
@@ -76,23 +73,9 @@ _("Please send comments or bug reports to "
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
 	
-	
-	gtk_label_set_markup (GTK_LABEL (styletext),
-_("If a pad's style is locked, any changes made in the preference "
-"window to the text, background, or border color or the font face "
-"do not affect that pad.\n\n"
-"To lock a pad's style, right click on a "
-"pad to open the popup menu and select \"Lock Style\".  "
-"By default, pads are not locked."));
-
-	gtk_misc_set_padding (GTK_MISC (styletext), 12, 12);
-	gtk_misc_set_alignment (GTK_MISC (styletext), 0, 0);
-	gtk_label_set_line_wrap (GTK_LABEL (styletext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), styletext, stylelabel);
-	
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
 	
-	gtk_window_set_title (GTK_WINDOW (dialog), _("Xpad Help"));
+	gtk_window_set_title (GTK_WINDOW (dialog), _("Help"));
 	
 	/* Add the label, and show everything we've added to the dialog. */
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);
