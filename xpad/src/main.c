@@ -73,6 +73,9 @@ FILE *output;
 gchar *master_name = NULL;
 gchar *program_name;
 
+
+static void print_help (void);
+
 static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) g_print ("xpad is shutting down.\n");
@@ -167,41 +170,6 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 	xpad_sm_stop_interact (FALSE);
 }
 
-
-static void
-print_help (void)
-{
-	gchar *msg, *lmsg;
-	
-	msg = g_strconcat (
-		_(
-		"Usage: xpad [OPTIONS]\n"
-		"\n"
-		"  -V, --version         prints xpad version; exits\n"
-		"  -h, --help            prints this usage information; exits\n"
-		"  -v N, --verbosity=N   sets level of output\n"
-		"                          0=none, 1=moderate, 2=debug\n"
-		"                          default is 0\n"
-		"  -n, --new             opens a new pad only\n"),
-		_(
-		"  --nonew               prevents xpad from making a new pad\n"
-		"  -q, --quit            quits all open xpad sessions\n"
-		"  -l, --list            lists the titles of all pads\n"
-		"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
-		"  --showall             brings all pads to the foreground\n"),
-		NULL);
-	
-	lmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
-	
-	if (lmsg)
-		fprintf (output, lmsg);
-	
-	g_free (msg);
-	g_free (lmsg);
-	
-	exit (0);
-}
-
 static void
 print_version (void)
 {
@@ -227,7 +195,7 @@ set_verbosity (gint *v)
 {
 	if (*v < 0 || *v > 2)
 	{
-		g_printerr (_("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"));
+		g_printerr (_("Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"));
 		exit (1);
 	}
 	
@@ -266,6 +234,7 @@ list_pads (void)
 	}
 }
 
+
 enum arg_type {
 	ARG_TYPE_NONE,
 	ARG_TYPE_INT,
@@ -275,42 +244,95 @@ enum arg_type {
 struct argument_def
 {
 	gboolean local;
-	const gchar *name;
+	const gchar *short_name;
+	const gchar *long_name;
 	enum arg_type second;
 	union {
 		void (*func) (void);
 		void (*func_arg) (void *);
 	} callbacks;
+	const gchar *help_comment;
 };
 typedef struct argument_def argument;
 
 static const argument arguments[] =
 {
-	{TRUE, "-h", ARG_TYPE_NONE, {print_help}},
-	{TRUE, "--help", ARG_TYPE_NONE, {print_help}},
-	{TRUE, "-V", ARG_TYPE_NONE, {print_version}},
-	{TRUE, "--version", ARG_TYPE_NONE, {print_version}},
-	{TRUE, "-v", ARG_TYPE_INT, {G_CALLBACK (set_verbosity)}},
-	{TRUE, "--verbosity", ARG_TYPE_INT, {G_CALLBACK (set_verbosity)}},
-	{TRUE, "--nonew", ARG_TYPE_NONE, {set_nonew}},
-	{TRUE, "-n", ARG_TYPE_NONE, {set_new}},
-	{TRUE, "--new", ARG_TYPE_NONE, {set_new}},
+	{TRUE, "-h", "--help", ARG_TYPE_NONE, {print_help}, N_("Prints usage information and exits")},
+	{TRUE, "-V", "--version", ARG_TYPE_NONE, {print_version}, N_("Prints xpad version and exits")},
+	{TRUE, "-v", "--verbosity", ARG_TYPE_INT, {G_CALLBACK (set_verbosity)}, N_("Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)")},
+	{TRUE, NULL, "--nonew", ARG_TYPE_NONE, {set_nonew}, N_("Prevents xpad from creating a new pad on startup if no previous pads exist")},
+	{TRUE, "-n", "--new", ARG_TYPE_NONE, {set_new}, NULL},
 	
-	{FALSE, "--nonew", ARG_TYPE_NONE, {set_nonew}},	/* registered here a second time because it has effects both on local instances and remote instances */
-	{FALSE, "-n", ARG_TYPE_NONE, {G_CALLBACK (pad_new)}},
-	{FALSE, "--new", ARG_TYPE_NONE, {G_CALLBACK (pad_new)}},
-	{FALSE, "-q", ARG_TYPE_NONE, {gtk_main_quit}},
-	{FALSE, "--quit", ARG_TYPE_NONE, {gtk_main_quit}},
-	{FALSE, "-l", ARG_TYPE_NONE, {list_pads}},
-	{FALSE, "--list", ARG_TYPE_NONE, {list_pads}},
-	{FALSE, "-s", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
-	{FALSE, "--show", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
-	{FALSE, "--showall", ARG_TYPE_NONE, {G_CALLBACK (pads_show_all)}},
-	{FALSE, "--sm-client-id", ARG_TYPE_STRING, {G_CALLBACK (set_session)}}
+	{FALSE, NULL, "--nonew", ARG_TYPE_NONE, {set_nonew}, NULL},	/* registered here a second time because it has effects both on local instances and remote instances */
+	{FALSE, "-n", "--new", ARG_TYPE_NONE, {G_CALLBACK (pad_new)}, N_("Causes xpad to create a new pad on startup even if pads already exist")},
+	{FALSE, "-q", "--quit", ARG_TYPE_NONE, {gtk_main_quit}, N_("Causes all running xpad instances to close")},
+	{FALSE, "-l", "--list", ARG_TYPE_NONE, {list_pads}, N_("Lists the titles of all open pads")},
+	{FALSE, "-s", "--show", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}, N_("Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\"")},
+	{FALSE, NULL, "--showall", ARG_TYPE_NONE, {G_CALLBACK (pads_show_all)}, N_("Causes all pads to present themselves to the user")},
+	{FALSE, NULL, "--sm-client-id", ARG_TYPE_STRING, {G_CALLBACK (set_session)}, NULL}
 };
 
 #define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
 
+
+static void
+print_help (void)
+{
+	gchar *msg, *tmp_msg, *lmsg;
+	gint  largest_size, i;
+
+	for (largest_size = -1, i = 0; i < NUM_ARGUMENTS; i++)
+	{
+		if (arguments[i].help_comment)
+		{
+			gchar *addition = g_strconcat ("  * ", 
+				arguments[i].short_name ? arguments[i].short_name : "",
+				arguments[i].second == ARG_TYPE_INT ? " #" : "",
+				(arguments[i].short_name && arguments[i].long_name) ? ", " : "",
+				arguments[i].long_name ? arguments[i].long_name : "",
+				arguments[i].second == ARG_TYPE_INT ? "=#" : "",
+				NULL);
+			if (largest_size == -1 || strlen (addition) > largest_size)
+			{
+				largest_size = strlen (addition);
+			}
+			g_free (addition);
+		}
+	}
+
+	msg = g_strdup (_("Usage: xpad [OPTIONS]\n\n"));
+
+	for (i = 0; i < NUM_ARGUMENTS; i++)
+	{
+		if (arguments[i].help_comment)
+		{
+			gchar *padding;
+			gchar *addition = g_strconcat ("  * ", 
+				arguments[i].short_name ? arguments[i].short_name : "",
+				arguments[i].second == ARG_TYPE_INT ? " #" : "",
+				(arguments[i].short_name && arguments[i].long_name) ? ", " : "",
+				arguments[i].long_name ? arguments[i].long_name : "",
+				arguments[i].second == ARG_TYPE_INT ? "=#" : "",
+				NULL);
+
+			padding = g_strnfill (largest_size - strlen (addition) + 3, ' ');
+
+			tmp_msg = msg;
+			msg = g_strconcat (msg, addition, padding, _(arguments[i].help_comment), "\n", NULL);
+			g_free (tmp_msg);
+		}
+	}
+	
+	lmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
+	
+	if (lmsg)
+		fprintf (output, lmsg);
+	
+	g_free (msg);
+	g_free (lmsg);
+	
+	exit (0);
+}
 
 static void missing_companion_arg(const char argname[])
 {
@@ -323,14 +345,18 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 {
 	gint i, j, recognized_at;
 	gint rv = 0;
-	size_t arglen[NUM_ARGUMENTS];
+	size_t short_arglen[NUM_ARGUMENTS];
+	size_t long_arglen[NUM_ARGUMENTS];
 	
 	/* Set up array of argument lengths to avoid having to compute them every 
 	 * time through our inner loop.  This probably ought to be global, but it
 	 * won't matter all that much.
 	 */
 	for (j = NUM_ARGUMENTS-1; j >= 0; j--)
-		arglen[j] = strlen(arguments[j].name);
+	{
+		short_arglen[j] = arguments[j].short_name ? strlen (arguments[j].short_name) : 0;
+		long_arglen[j] = arguments[j].long_name ? strlen (arguments[j].long_name) : 0;
+	}
 	
 	for (i = 1; i < *argc; i++)
 	{
@@ -341,7 +367,8 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 		recognized_at = -1;
 		for (j = NUM_ARGUMENTS-1; j >= 0; j--)
 		{
-			if (strncmp ((*argv)[i], arguments[j].name, arglen[j]) == 0)
+			if ((arguments[j].short_name && strncmp ((*argv)[i], arguments[j].short_name, short_arglen[j]) == 0) ||
+			    (arguments[j].long_name && strncmp ((*argv)[i], arguments[j].long_name, long_arglen[j]) == 0))
 			{
 				recognized_at = j;
 				
@@ -358,7 +385,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 */
 			if (local)
 			{
-				g_printerr (_("Didn't understand argument %s.\n"), (*argv)[i]);
+				g_printerr (_("Didn't understand argument '%s'\n"), (*argv)[i]);
 				exit (1);
 			}
 			else
@@ -373,7 +400,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 		
 		/* (from this point on, we know our argument was recognized) */
 		
-		longform = (strncmp (arguments[j].name, "--", 2) == 0);
+		longform = (strncmp ((*argv)[i], "--", 2) == 0);
 		
 		if (arguments[j].local != local)
 		{
@@ -381,37 +408,36 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 * companion argument, make sure we skip the companion argument on our
 			 * next iteration.
 			 */
-			if (/*!longform &&*/ arguments[j].second != ARG_TYPE_NONE)
+			if (arguments[j].second != ARG_TYPE_NONE)
 				i++;
 			
 			/* Don't accept this argument, but don't complain either. */
 			continue;
 		}
-		
+
 		if (arguments[j].second != ARG_TYPE_NONE)
 		{
-			/* right now we only do integer arguments... */
 			long int int_arg;
 			char *companion, *endptr;
 			
-			if ((*argv)[i][arglen[j]] == '=')
+			if ((*argv)[i][longform ? long_arglen[j] : short_arglen[j]] == '=')
 			{
-				companion = (*argv)[i] + arglen[j] + 1;
+				companion = &(*argv)[i][longform ? long_arglen[j] : short_arglen[j] + 1];
 			}
 			else
 			{
 				i++;
 				if (i >= *argc)
-				  	missing_companion_arg(arguments[j].name);
+				  	missing_companion_arg(longform ? arguments[j].long_name : arguments[j].short_name);
 				
 				companion = (*argv)[i];
 			}
 			
-			if (!*companion) missing_companion_arg(arguments[j].name);
+			if (!*companion) missing_companion_arg (longform ? arguments[j].long_name : arguments[j].short_name);
 			
 			if (arguments[j].second == ARG_TYPE_INT)
 			{
-				int_arg = strtol(companion, &endptr, 10);
+				int_arg = strtol (companion, &endptr, 10);
 				
 				if (*endptr)
 				{
