@@ -1,0 +1,258 @@
+1.11
+----
+added partial Esperanto translation (by mterry@fastmail.fm)
+added Romanian translation (by eugenh@urban-grafx.ro)
+added Russian translation (by avl@cad.ru)
+added missing "include <sys/time.h>" (by netgeek@speakeasy.net)
+added new icon and install icon family into new location per icon theme spec
+fixed disk-full-causes-xpad-contents-to-disappear bug
+made pads not show up in taskbar
+added 'pads start sticky' option
+
+
+1.10.1
+------
+fixed some compile-time issues, particularly with GTK+ 2.0
+
+
+1.10
+----
+rewrote applet popup menu to be more consistent and hopefully useful
+fixed crash when closing a pad that had provided text in a cut/paste
+normalize pad dimensions when opening in case the values got messed up
+misc. small bugs
+
+
+1.9.1
+-----
+fix a segfault when show all is selected after a new pad is made
+
+
+1.9
+---
+*features*
+now use automake/autoconf, which allows for more complete build control
+now use gettext, allowing easy translation of xpad
+now auto-apply any pad changes to hard drive, making xpad a tad more reliable
+now can easily change settings for only one pad
+a little more sane title generation -- now just uses first line
+X session management support
+
+*fixes*
+popup menu is decluttered and altered, with the HIG in mind
+fixed crash on exit if we didn't init docklet
+fixed new pads randomly starting up as white background
+cut/copy/paste are now unsensitive if no content to copy or paste
+pads now play nice with the X clipboard (middle mouse button)
+fixed a bug with the notification area applet
+fixed misc. small bugs
+
+
+1.8
+---
+*features*
+allow using system text color, background color, and font
+eggtray now appears, allowing users to hide all pads (thanks jgb3@email.byu.edu)
+now we compile using autoconf
+
+*fixes*
+xpad won't take 100% cpu sometimes when idle
+fixed bug that screwed up last toolbar button's toggle setting
+fixed toolbar hiding when you right click on another pad
+fixed style locking and sticky status changing on menu popup
+no deletion confirmation if pad is only whitespace
+
+
+1.7
+---
+Popup alerts are more pleasing.  (HIG compliant)
+Added --nonew flag to prevent creation of new pads.
+Changed --new flag to only open a new pad, not try to open old pads too.
+Changed window titles from quoted to ellipses at the end.
+Option to turn off toolbar auto-hide.
+Added --list, -l, --show, -s.
+
+
+1.6.1
+-----
+Fix segfault on startup if toolbar is disabled.
+
+
+1.6
+---
+*features*
+rearrange popup menu
+more meaningful window titles
+add popup menu submenu that allows you to choose window to show
+allow reopening of closed pads
+the return of cut/copy/paste
+native sticky support
+add a show all command -- via command line or menu
+allow turning off of scrollbars
+allow reshowing of closed pads (without restarting xpad)
+
+*fixes*
+stopped style lock from turning on accidentally
+properly handle WM closures
+better HIG-style support of keyboard accelerators
+
+
+1.5.1
+-----
+fix a possible segfault on startup
+
+
+1.5
+---
+fixed a bug that stopped saving of defaults on shutdown
+better error reporting
+added a toolbar with customizable buttons
+added some new command line options
+allow style locking
+allow pad clearing
+added all new preference help window
+
+
+1.4
+---
+code cleanup
+we now compile clean with -ansi and -pedantic!  ;)
+should take up a little less memory
+fixed several memory leaks
+should be able to compile on windows and beos.
+	-- PLEASE let me know how this works for you.
+added scrollbars if window isn't big enough to handle text
+	-- this fixes two known bugs
+new xpad processes now handled gracefully
+added further optimizations to compilation
+	-- let me know if this causes you problems
+fixed some possible buffer overflows
+fixed some warnings/errors on gcc3 compilation
+cursor icon changes when edit lock is on
+
+
+1.3
+---
+added a padding option (thanks Nagy Mate)
+redesigned dialogs
+preferences now auto-apply
+you can now choose what the wm close button does, defaults to close
+pads have individual titles now
+xpad gets along better with various wm's now
+cursor no longer blinks if you can't edit pad
+fixed double-clicking-doesn't-select-text-when-edit-lock-is-on bug
+pads can no longer be individually closed (unless wm decor is on)
+
+1.2.1
+-----
+fixed segfault on startup if no ~/.xpad directory, plus some related bugs
+
+1.2
+---
+fixed an issue causing black on black with big-endian architectures
+added "Edit Lock" mode
+general code cleanup
+
+1.1
+---
+simplified popup menu (removed GTK+ default cut/copy/paste/input method/insert)
+	If you used them, and miss them, let me know.
+added keyboard shortcuts for most menu items
+expanded help dialog to include shortcuts
+allow border left-drags, right-drags, and right clicks
+
+1.0.2
+-----
+stopped pads from losing their place on x shut down
+
+1.0.1
+-----
+fixed a possible runtime warning with autosaving
+made window icon code more robust
+added icons for all menu items
+
+1.0
+---
+added an open file dialog
+added a save as dialog
+closed pads are handled more consistently
+unified color/font change screens
+fixed font not being saved correctly
+added ability to fine tune default pad settings, including size (before this was all handled transparently, but size was not always updated)
+added optional confirmation to pad destroys
+window decorations can now be turned on (in global pref screen)
+added border color and border width options
+added gui for sync time (autosaving) control
+took out --sync-time and -s (you can do same thing with above gui)
+stopped new pads always being placed in same spot
+added help screen, which opens when you click on "help" from right-click menu and on first run
+much cleaner internal api
+made xpad more theme-friendly
+resizing/moving now works even if numpad is on
+xpad 1.0 can now open much older versions of xpad's files (tested to 0.2.1)
+added app icon (thanks nestor di)
+
+0.2.5
+-----
+added --help
+added short forms of arguments (e.g. -h, -v, -V, -s)
+added more output messages
+stopped pad raising above popup on right click
+fixed bug where old pads wouldn't open upon startup
+no size limit on pads
+
+0.2.4
+-----
+fixed small memory leak if no default-style file
+pads rise to foreground if clicked on now
+added "close all" option on popup
+prints out a message when autosaving
+added --verbosity= option.  (0 is default - no messages; 1 is 
+	moderate - important things like autosaving; 2 is debug -	
+	more info than necessary)
+removed some possible buffer overflows if text is too large (a hardcoded limit of 20k chars now)
+misc. code cleanups
+
+0.2.3.1
+-------
+fixed nasty bug where, if you didn't have a working ~/.xpad/default-styles
+ file, it would seg-fault.  my bad
+
+0.2.3
+-----
+perfected (?) syncing.  Now will recover cleanly from anything -- including 
+ power shut off or random interrupts.  This fixes the "pad contents 
+ disappearing on X-shutdown" bug
+moved menu items around a bit
+remembers preferred size (only if you change fonts/colors. on TODO)
+not always centered now
+
+0.2.2
+-----
+debian-friendly Makefile fixes
+cleaned up code
+
+0.2.1
+-----
+changed saving to be more fault-tolerant
+added about screen with version info
+
+0.2
+---
+ported to gtk+-2.0
+now can change font color
+if xpad is already running, will open new pad, not open old pads again
+in-xpad moving and resizing now works
+xpad now recovers better from being interrupted
+remembers your preferred style
+many small bugfixes
+code reorganization
+
+0.1.9.2
+-------
+cleaner lack of decorations
+fixed "double-click on menu" bug
+fixed segfault when only a font size change was requested
+added close and destroy items to menu.  Now you can close a window without
+     losing content
+

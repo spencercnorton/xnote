@@ -21,8 +21,6 @@ USAGE NOTES
      Hold down CTRL and left-click drag to move a pad.  Hold down CTRL and 
 		right-drag to resize a pad.
 
-     Add xpad to your ~/.xinitrc to have xpad start with every X boot.
-
      xpad stores its files in ~/.xpad.
 
      To change the default size of pads, edit ~/.xpad/default-style
