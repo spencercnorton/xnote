@@ -1,5 +1,10 @@
 2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
 
+	* pad.c: Fix mismanagement of memory causing a crash on pad close
+	* pad.c: Fix border not being right color when default style is used
+
+2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
+
 	* Makefile.am: Distribute xpad.ui
 	* configure.ac: Move back to gettext 0.11.5 until intltool works
 	with 0.12.1

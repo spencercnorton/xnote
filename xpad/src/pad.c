@@ -371,7 +371,7 @@ static void pad_update_style (pad_node *pad)
 	outline = pad->eventbox_outer;
 	
 	gtk_widget_modify_base (text, GTK_STATE_NORMAL, pstyle.use_back ? &pstyle.back : NULL);
-	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, &text->style->base[GTK_STATE_NORMAL]);
+	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, pstyle.use_back ? &text->style->base[GTK_STATE_NORMAL] : &gtk_widget_get_default_style ()->base[GTK_STATE_NORMAL]);
 	gtk_widget_modify_text (text, GTK_STATE_NORMAL,	pstyle.use_text ? &pstyle.text : NULL);
 	gtk_widget_modify_font (text, pstyle.fontname ? pango_font_description_from_string (pstyle.fontname) : NULL);
 	
@@ -594,17 +594,18 @@ static void pad_remove (pad_node *pad)
 	}
 }
 
-static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
+static gboolean pad_window_destroyed (GtkWidget *window, GdkEvent *event, pad_node *pad);
 static void pad_renew (pad_node *pad);
 
 static void
 pad_free_gtk (pad_node *pad)
 {
-	g_signal_handlers_destroy (pad->window);
 	pad_remove_toolbar (pad);
 	properties_close (pad);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
-	g_free (pad->ui_manager);
+	g_object_unref (pad->ui_manager);
+	if (pad->popup_notes_actions)
+		g_object_unref (pad->popup_notes_actions);
 	
 	pad->window = NULL;
 }
@@ -758,7 +759,7 @@ void pads_close_all (void)
 	gtk_main_quit ();
 }
 
-static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
+static gboolean pad_window_destroyed (GtkWidget *window, GdkEvent *event, pad_node *pad)
 {
 	switch (xpad_settings_get_wm_close ())
 	{
@@ -1737,7 +1738,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
 	/*g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
-	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
+	g_signal_connect (window, "delete-event", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
