@@ -55,6 +55,9 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 	gint count;
 	gchar tag_char_utf8[7] = {0};
 	
+	if (!text)
+		return;
+	
 	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
 	gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
 	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);

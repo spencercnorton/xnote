@@ -4,12 +4,12 @@
 # Package source files
 src/eggtrayicon.c
 src/fio.c
-src/pad.c
-src/pref.c
-src/properties.c
 src/xpad-app.c
 src/xpad-grip-tool-item.c
+src/xpad-pad.c
 src/xpad-pad-group.c
+src/xpad-pad-properties.c
+src/xpad-preferences.c
 src/xpad-session-manager.c
 src/xpad-settings.c
 src/xpad-text-buffer.c

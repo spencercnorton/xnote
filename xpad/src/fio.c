@@ -24,8 +24,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "fio.h"
 #include "xpad-app.h"
+
+/* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
+   returns 0 if filename was full path, 1 if we added to it.
+   
+   returned name must be g_free'd
+*/
+static gchar *
+fio_fill_filename (const gchar *filename)
+{
+	if (g_path_is_absolute (filename))
+		return g_strdup (filename);
+	
+	return g_build_filename (xpad_app_get_config_dir (), filename, NULL);
+}
 
 /* This function returns 'string' with all instances
    of 'obj' replaced with instances of 'replacement'
@@ -52,21 +67,32 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 	return *string;
 }
 
-
-/* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
-   returns 0 if filename was full path, 1 if we added to it.
-   
-   returned name must be g_free'd
-*/
-static gchar *fio_fill_filename (const gchar *filename)
+gchar *
+fio_unique_name (const gchar *prefix)
 {
-	if (g_path_is_absolute (filename))
-		return g_strdup (filename);
+	int fd;
+	gchar *name, *base, *pattern;
 	
-	return g_build_filename (xpad_app_get_config_dir (), filename, NULL);
+	pattern = g_strconcat (prefix, "XXXXXX", NULL);
+	name = fio_fill_filename (pattern);
+	g_free (pattern);
+	fd = g_mkstemp (name);
+	if (fd == -1)
+	{
+		return NULL;
+		g_free (name);
+	}
+	
+	close (fd);
+	base = g_path_get_basename (name);
+	
+	g_free (pattern);
+	g_free (name);
+	
+	return base;
 }
 
-/* This callously overwrites name.bak -- but this is fine since this function is for
+/* This callously overwrites name~ -- but this is fine since this function is for
    our private .xpad directory anyway */
 gboolean fio_set_file (const gchar *name, const gchar *value)
 {

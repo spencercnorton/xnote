@@ -32,6 +32,8 @@ gint fio_set_values_to_file (const gchar *filename, ...);
 
 gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement);
 
+gchar *fio_unique_name (const gchar *prefix);
+
 #endif /* _FIO_H_ */
 
 

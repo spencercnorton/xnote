@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-29 20:13-0400\n"
+"POT-Creation-Date: 2004-09-11 21:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,314 +24,21 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: src/fio.c:86
+#: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr ""
 
-#: src/pad.c:54
-msgid "_Pad"
-msgstr ""
-
-#: src/pad.c:55
-msgid "_Edit"
-msgstr ""
-
-#: src/pad.c:56
-msgid "_View"
-msgstr ""
-
-#: src/pad.c:57
-msgid "_Notes"
-msgstr ""
-
-#: src/pad.c:58
-msgid "_Help"
-msgstr ""
-
-#: src/pad.c:59
-msgid "_New"
-msgstr ""
-
-#: src/pad.c:59
-msgid "Create a new pad"
-msgstr ""
-
-#: src/pad.c:60
-msgid "Prefere_nces"
-msgstr ""
-
-#: src/pad.c:60
-msgid "Edit xpad preferences"
-msgstr ""
-
-#: src/pad.c:61
-msgid "_Close All"
-msgstr ""
-
-#: src/pad.c:61
-msgid "Close all pads"
-msgstr ""
-
-#: src/pad.c:62
-msgid "_Contents"
-msgstr ""
-
-#: src/pad.c:62
-msgid "Display information about using xpad"
-msgstr ""
-
-#: src/pad.c:63
-msgid "Proper_ties"
-msgstr ""
-
-#: src/pad.c:63
-msgid "Edit pad properties"
-msgstr ""
-
-#: src/pad.c:64
-msgid "_Close"
-msgstr ""
-
-#: src/pad.c:64
-msgid "Close this pad"
-msgstr ""
-
-#: src/pad.c:65
-msgid "_Delete"
-msgstr ""
-
-#: src/pad.c:65
-msgid "Delete this pad"
-msgstr ""
-
-#: src/pad.c:66
-msgid "C_ut"
-msgstr ""
-
-#: src/pad.c:66
-msgid "Cut the selection"
-msgstr ""
-
-#: src/pad.c:67
-msgid "_Copy"
-msgstr ""
-
-#: src/pad.c:67
-msgid "Copy the selection"
-msgstr ""
-
-#: src/pad.c:68
-msgid "_Paste"
-msgstr ""
-
-#: src/pad.c:68
-msgid "Paste the clipboard"
-msgstr ""
-
-#: src/pad.c:69
-msgid "_Show All"
-msgstr ""
-
-#: src/pad.c:69
-msgid "Show all existing pads"
-msgstr ""
-
-#: src/pad.c:70
-msgid "_About"
-msgstr ""
-
-#: src/pad.c:70
-msgid "Display information about xpad"
-msgstr ""
-
-#: src/pad.c:71
-msgid "_Bold"
-msgstr ""
-
-#: src/pad.c:71
-msgid "Bold the text"
-msgstr ""
-
-#: src/pad.c:72
-msgid "_Italic"
-msgstr ""
-
-#: src/pad.c:72
-msgid "Italicize the text"
-msgstr ""
-
-#: src/pad.c:73
-msgid "_Underline"
-msgstr ""
-
-#: src/pad.c:73
-msgid "Underline the text"
-msgstr ""
-
-#: src/pad.c:74
-msgid "Stri_ke"
-msgstr ""
-
-#: src/pad.c:74
-msgid "Strike the text"
-msgstr ""
-
-#: src/pad.c:75
-msgid "Bi_gger"
-msgstr ""
-
-#: src/pad.c:75
-msgid "Make the text bigger"
-msgstr ""
-
-#: src/pad.c:76
-msgid "S_maller"
-msgstr ""
-
-#: src/pad.c:76
-msgid "Make the text smaller"
-msgstr ""
-
-#: src/pad.c:83
-msgid "_Sticky"
-msgstr ""
-
-#: src/pad.c:83
-msgid "Toggle stickiness"
-msgstr ""
-
-#: src/pad.c:84
-msgid "_Toolbar"
-msgstr ""
-
-#: src/pad.c:84
-msgid "Show toolbar"
-msgstr ""
-
-#: src/pad.c:85
-msgid "_Scrollbar"
-msgstr ""
-
-#: src/pad.c:85
-msgid "Allow scrollbar"
-msgstr ""
-
-#: src/pad.c:86
-msgid "_Autohide Toolbar"
-msgstr ""
-
-#: src/pad.c:86
-msgid "Whether toolbar hides when unused"
-msgstr ""
-
-#: src/pad.c:87
-msgid "_Window Decorations"
-msgstr ""
-
-#: src/pad.c:87
-msgid "Whether pads have window manager decorations"
-msgstr ""
-
-#: src/pad.c:344
-msgid "Delete this pad?"
-msgstr ""
-
-#: src/pad.c:345
-msgid "All text of this pad will be irrevocably lost."
-msgstr ""
-
-#: src/pad.c:485
-#, c-format
-msgid "You are using Xpad %s with GTK+ %i.%i.%i."
-msgstr ""
-
-#: src/pad.c:490
-msgid "Visit http://xpad.sourceforge.net/ for more information about Xpad."
-msgstr ""
-
-#: src/pad.c:1185 src/properties.c:154
-#, c-format
-msgid "%s Properties"
-msgstr ""
-
-#: src/pref.c:127
-msgid "Appearance"
-msgstr ""
-
-#: src/pref.c:128
-msgid "Options"
-msgstr ""
-
-#: src/pref.c:130
-msgid "Con_firm pad destruction"
-msgstr ""
-
-#: src/pref.c:131
-msgid "_Edit lock"
-msgstr ""
-
-#: src/pref.c:145
-msgid "Xpad Preferences"
-msgstr ""
-
-#: src/pref.c:164 src/properties.c:159
-msgid "Use custom _text color:"
-msgstr ""
-
-#: src/pref.c:165 src/properties.c:160
-msgid "Use custom _background color:"
-msgstr ""
-
-#: src/pref.c:166 src/properties.c:161
-msgid "Use custom _font:"
-msgstr ""
-
-#: src/pref.c:179 src/properties.c:196
-msgid "Set Custom Text Color"
-msgstr ""
-
-#: src/pref.c:180 src/properties.c:197
-msgid "Set Custom Background Color"
-msgstr ""
-
-#: src/pref.c:181 src/properties.c:198
-msgid "Set Custom Font"
-msgstr ""
-
-#: src/pref.c:225
-msgid "Pads start s_ticky"
-msgstr ""
-
-#: src/pref.c:237 src/pref.c:238
-msgid "If on, choosing to destroy a pad will prompt for conformation."
-msgstr ""
-
-#: src/pref.c:241 src/pref.c:242
-msgid "If on, new pads are sticky by default."
-msgstr ""
-
-#: src/pref.c:245 src/pref.c:248
-msgid ""
-"If on, when a pad loses focus, it will become uneditable.  This allows you "
-"to move it by left dragging.  To make it editable again, double-click the "
-"pad.  If off, pads are always editable."
-msgstr ""
-
-#: src/properties.c:151
-msgid "Use custom _appearance"
-msgstr ""
-
-#: src/xpad-app.c:108 xpad.desktop.in.h:3
+#: src/xpad-app.c:110 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr ""
 
-#: src/xpad-app.c:421
+#: src/xpad-app.c:427
 #, c-format
 msgid "Could not open directory %s."
 msgstr ""
 
-#: src/xpad-app.c:424
+#: src/xpad-app.c:430
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -385,79 +92,225 @@ msgstr ""
 msgid "Invalid number: '%s'\n"
 msgstr ""
 
-#: src/xpad-toolbar.c:82
+#: src/xpad-pad.c:518
+msgid "Delete this pad?"
+msgstr ""
+
+#: src/xpad-pad.c:519
+msgid "All text of this pad will be irrevocably lost."
+msgstr ""
+
+#: src/xpad-pad.c:550
+#, c-format
+msgid "'%s' Properties"
+msgstr ""
+
+#: src/xpad-pad.c:1070
+#, c-format
+msgid "You are using xpad %s with GTK+ %i.%i.%i."
+msgstr ""
+
+#: src/xpad-pad.c:1075
+msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+msgstr ""
+
+#: src/xpad-pad.c:1291
+msgid "_Pad"
+msgstr ""
+
+#: src/xpad-pad.c:1300
+msgid "_Sticky"
+msgstr ""
+
+#: src/xpad-pad.c:1307
+msgid "_Edit"
+msgstr ""
+
+#: src/xpad-pad.c:1320
+msgid "_View"
+msgstr ""
+
+#: src/xpad-pad.c:1327
+msgid "_Toolbar"
+msgstr ""
+
+#: src/xpad-pad.c:1328
+msgid "_Autohide Toolbar"
+msgstr ""
+
+#: src/xpad-pad.c:1330
+msgid "_Scrollbar"
+msgstr ""
+
+#: src/xpad-pad.c:1331
+msgid "_Window Decorations"
+msgstr ""
+
+#: src/xpad-pad.c:1334
+msgid "_Notes"
+msgstr ""
+
+#: src/xpad-pad.c:1341 src/xpad-tray.c:146
+msgid "_Show All"
+msgstr ""
+
+#: src/xpad-pad.c:1342 src/xpad-tray.c:151
+msgid "_Close All"
+msgstr ""
+
+#: src/xpad-pad.c:1381
+msgid "_Help"
+msgstr ""
+
+#: src/xpad-pad.c:1388
+msgid "_Contents"
+msgstr ""
+
+#: src/xpad-pad.c:1389
+msgid "_About"
+msgstr ""
+
+#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:121
+msgid "Appearance"
+msgstr ""
+
+#: src/xpad-pad-properties.c:160
+msgid "Use font from xpad preferences"
+msgstr ""
+
+#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:149
+msgid "Use this font:"
+msgstr ""
+
+#: src/xpad-pad-properties.c:162
+msgid "Use colors from xpad preferences"
+msgstr ""
+
+#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:151
+msgid "Use these colors:"
+msgstr ""
+
+#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:159
+msgid "Background:"
+msgstr ""
+
+#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:167
+msgid "Foreground:"
+msgstr ""
+
+#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:191
+msgid "Set Foreground Color"
+msgstr ""
+
+#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:192
+msgid "Set Background Color"
+msgstr ""
+
+#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:193
+msgid "Set Font"
+msgstr ""
+
+#: src/xpad-preferences.c:148
+msgid "Use font from theme"
+msgstr ""
+
+#: src/xpad-preferences.c:150
+msgid "Use colors from theme"
+msgstr ""
+
+#: src/xpad-preferences.c:178
+msgid "_Edit lock"
+msgstr ""
+
+#: src/xpad-preferences.c:179
+msgid "_Pads start sticky"
+msgstr ""
+
+#: src/xpad-preferences.c:180
+msgid "_Confirm pad deletion"
+msgstr ""
+
+#: src/xpad-preferences.c:186
+msgid "Xpad Preferences"
+msgstr ""
+
+#: src/xpad-preferences.c:251
+msgid "Options"
+msgstr ""
+
+#: src/xpad-toolbar.c:84
 msgid "Clear Pad Contents"
 msgstr ""
 
-#: src/xpad-toolbar.c:82
+#: src/xpad-toolbar.c:84
 msgid "Add C_lear to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:83
+#: src/xpad-toolbar.c:85
 msgid "Close and Save Pad"
 msgstr ""
 
-#: src/xpad-toolbar.c:83
+#: src/xpad-toolbar.c:85
 msgid "Add _Close to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:86
 msgid "Delete Pad"
 msgstr ""
 
-#: src/xpad-toolbar.c:84
+#: src/xpad-toolbar.c:86
 msgid "Add _Delete to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:87
 msgid "Open New Pad"
 msgstr ""
 
-#: src/xpad-toolbar.c:85
+#: src/xpad-toolbar.c:87
 msgid "Add _New to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:86
-msgid "Edit Global Preferences"
+#: src/xpad-toolbar.c:88
+msgid "Edit Preferences"
 msgstr ""
 
-#: src/xpad-toolbar.c:86
+#: src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr ""
 
-#: src/xpad-toolbar.c:87
+#: src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:90
 msgid "Close All Pads"
 msgstr ""
 
-#: src/xpad-toolbar.c:88
+#: src/xpad-toolbar.c:90
 msgid "Add _Quit to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:91
 msgid "Toggle Stickiness"
 msgstr ""
 
-#: src/xpad-toolbar.c:89
+#: src/xpad-toolbar.c:91
 msgid "Add _Sticky to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:90
+#: src/xpad-toolbar.c:92
 msgid "Add a Se_parator to Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:544
+#: src/xpad-toolbar.c:575
 msgid "_Remove From Toolbar"
 msgstr ""
 
-#: src/xpad-toolbar.c:554
+#: src/xpad-toolbar.c:585
 msgid "_Move"
 msgstr ""
 

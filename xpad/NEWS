@@ -1,3 +1,13 @@
+Version 2.0-b2
+* Redesigned preferences and pad properties dialogs
+* If the tray disappears (e.g. killall gnome-panel), xpad's icon reappears
+* More formally ask window manager to make us skip taskbar and pager
+* New, lighter default color for pads
+* Lots of internal code cleanup
+* Fixed a crasher with not being able to find window icons
+* Fixed some crashers with turning off toolbar
+* Fixed bug with text cursor color being one color change behind
+
 Version 2.0-b1
 * The text cursor is now always the same color as the text color
 * Formatting can now be applied to selected text

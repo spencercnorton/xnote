@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 static void xpad_tray_popup (GdkEventButton *event);
 static void xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpointer user_data);
+static void xpad_tray_destroyed_cb (GtkWidget *tray);
 static void xpad_tray_toggle (void);
 
 static GtkWidget      *docklet = NULL;
@@ -62,6 +63,7 @@ xpad_tray_open (void)
 	image = gtk_image_new ();
 	
 	g_signal_connect (box, "button-press-event", G_CALLBACK (xpad_tray_button_press_event_cb), NULL);
+	g_signal_connect (box, "destroy", G_CALLBACK (xpad_tray_destroyed_cb), NULL);
 	
 	gtk_container_add (GTK_CONTAINER (box), image);
 	gtk_container_add (GTK_CONTAINER (docklet), box);
@@ -217,6 +219,19 @@ xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpoin
 		xpad_tray_popup (event);
 		break;
 	}
+}
+
+static gboolean
+tray_create_idle (void)
+{
+	xpad_tray_open ();
+	return FALSE;
+}
+
+static void
+xpad_tray_destroyed_cb (GtkWidget *tray)
+{
+	g_idle_add (tray_create_idle, NULL);
 }
 
 static void

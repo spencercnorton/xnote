@@ -279,7 +279,7 @@ xpad_text_view_get_follow_font_style (XpadTextView *view)
 void
 xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow)
 {
-	if (follow != view->priv->follow_font_style)
+	if (follow != view->priv->follow_color_style)
 	{
 		if (follow)
 		{

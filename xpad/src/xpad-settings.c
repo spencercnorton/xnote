@@ -218,12 +218,15 @@ xpad_settings_init (XpadSettings *settings)
 	
 	settings->priv = XPAD_SETTINGS_GET_PRIVATE (settings);
 	
+	/* A pleasant light yellow color, similar to 
+	   commercial sticky notes. */
 	back.pixel = 0;
-	back.red = 0xe000;
-	back.green = 0xe000;
-	back.blue = 0x5600;
+	back.red = 65535;
+	back.green = 61166;
+	back.blue = 39321;
 	settings->priv->back = gdk_color_copy (&back);
 	
+	/* Black */
 	text.pixel = 0;
 	text.red = 0;
 	text.green = 0;

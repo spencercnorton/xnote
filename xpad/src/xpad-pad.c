@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../config.h"
 #include <glib/gi18n.h>
 #include <string.h>
-#include <unistd.h>
 #include "fio.h"
 #include "help.h"
 #include "xpad-app.h"
@@ -82,7 +81,7 @@ static void save_content (XpadPad *pad);
 static void xpad_pad_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_pad_finalize (GObject *object);
-static void xpad_pad_realize (XpadPad *pad);
+static void xpad_pad_show (XpadPad *pad);
 static gboolean xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event);
 static gboolean xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event);
 static gboolean xpad_pad_window_state_event (XpadPad *pad, GdkEventWindowState *event);
@@ -207,6 +206,7 @@ xpad_pad_init (XpadPad *pad)
 		"decorated", xpad_settings_get_has_decorations (xpad_settings ()),
 		"default-height", xpad_settings_get_height (xpad_settings ()),
 		"default-width", xpad_settings_get_width (xpad_settings ()),
+		"gravity", GDK_GRAVITY_STATIC,
 		"skip-pager-hint", TRUE,
 		"skip-taskbar-hint", TRUE,
 		"type", GTK_WINDOW_TOPLEVEL,
@@ -227,7 +227,7 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect (pad, "configure-event", G_CALLBACK (xpad_pad_configure_event), NULL);
 	g_signal_connect (pad, "delete-event", G_CALLBACK (xpad_pad_delete_event), NULL);
 	g_signal_connect (pad, "popup-menu", G_CALLBACK (xpad_pad_popup_menu), NULL);
-	g_signal_connect (pad, "show", G_CALLBACK (xpad_pad_realize), NULL);
+	g_signal_connect (pad, "show", G_CALLBACK (xpad_pad_show), NULL);
 	g_signal_connect (pad, "window-state-event", G_CALLBACK (xpad_pad_window_state_event), NULL);
 	g_signal_connect_swapped (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)), "changed", G_CALLBACK (xpad_pad_text_changed), pad);
 	
@@ -251,6 +251,13 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect (pad->priv->toolbar, "popup", G_CALLBACK (xpad_pad_toolbar_popup), pad);
 	g_signal_connect (pad->priv->toolbar, "popdown", G_CALLBACK (xpad_pad_toolbar_popdown), pad);
 	
+	if (xpad_settings_get_sticky (xpad_settings ()))
+		gtk_window_stick (GTK_WINDOW (pad));
+	else
+		gtk_window_unstick (GTK_WINDOW (pad));
+	
+	xpad_pad_sync_title (pad);
+	
 	gtk_widget_show_all (vbox);
 	
 	gtk_widget_hide (pad->priv->toolbar);
@@ -258,10 +265,18 @@ xpad_pad_init (XpadPad *pad)
 }
 
 static void
-xpad_pad_realize (XpadPad *pad)
+xpad_pad_show (XpadPad *pad)
 {
-	g_print ("Showing\n");
-	g_object_set (G_OBJECT (pad),
+	/* Some wm's might not acknowledge our request for a specific
+	   location before we are shown.  What we do here is a little gimpy
+	   and not very respectful of wms' sovereignty, but it has the effect
+	   of making pads' locations very dependable.  We just move the pad
+	   again here after being shown.  This may create a visual effect if 
+	   the wm did ignore us, but is better than being in the wrong
+	   place, I guess. */
+	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
+	
+/*	g_object_set (G_OBJECT (pad),
 		"gravity", GDK_GRAVITY_STATIC,
 		"skip-pager-hint", TRUE,
 		"skip-taskbar-hint", TRUE,
@@ -272,7 +287,7 @@ xpad_pad_realize (XpadPad *pad)
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
 	
-	xpad_pad_sync_title (pad);
+	xpad_pad_sync_title (pad);*/
 }
 
 static void
@@ -332,10 +347,6 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 		/* We move it so wm's don't lose the window's spot */
 		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 		gtk_widget_show (GTK_WIDGET (pad));
-		/* Move it again because some wm's might now acknowledge first request
-		   and even if so, it likely didn't take window decoration sizes into
-		   account. */
-		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	}
 }
 
@@ -638,7 +649,7 @@ xpad_pad_open_properties (XpadPad *pad)
 	
 	pad->priv->properties = xpad_pad_properties_new ();
 	
-	gtk_window_set_transient_for (GTK_WINDOW (pad), GTK_WINDOW (pad->priv->properties));
+	gtk_window_set_transient_for (GTK_WINDOW (pad->priv->properties), GTK_WINDOW (pad));
 	gtk_window_set_resizable (GTK_WINDOW (pad->priv->properties), FALSE);
 	
 	g_signal_connect_swapped (pad->priv->properties, "destroy", G_CALLBACK (pad_properties_destroyed), pad);
@@ -905,7 +916,7 @@ load_content (XpadPad *pad)
 	content = fio_get_file (pad->priv->contentname);
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
-	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content);
+	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 	
 	g_free (content);
 }
@@ -919,12 +930,9 @@ save_content (XpadPad *pad)
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
 	{
-		int fd;
-		
-		pad->priv->contentname = g_strdup ("content-XXXXXX");
-		fd = g_mkstemp (pad->priv->contentname);
-		if (fd != -1)
-			close (fd);
+		pad->priv->contentname = fio_unique_name ("content-");
+		if (!pad->priv->contentname)
+			return;
 	}
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
@@ -1012,22 +1020,16 @@ save_info (XpadPad *pad)
 	/* Must create pad info file if it doesn't exist yet */
 	if (!pad->priv->infoname)
 	{
-		int fd;
-		
-		pad->priv->infoname = g_strdup ("info-XXXXXX");
-		fd = g_mkstemp (pad->priv->infoname);
-		if (fd != -1)
-			close (fd);
+		pad->priv->infoname = fio_unique_name ("info-");
+		if (!pad->priv->infoname)
+			return;
 	}
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
 	{
-		int fd;
-		
-		pad->priv->contentname = g_strdup ("content-XXXXXX");
-		fd = g_mkstemp (pad->priv->contentname);
-		if (fd != -1)
-			close (fd);
+		pad->priv->contentname = fio_unique_name ("content-");
+		if (!pad->priv->contentname)
+			return;
 	}
 	
 	height = pad->priv->height;
