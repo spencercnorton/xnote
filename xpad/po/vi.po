@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad-2.2-b1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-14 17:37-0500\n"
+"POT-Creation-Date: 2005-01-30 14:20-0500\n"
 "PO-Revision-Date: 2005-01-18 17:41+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
@@ -22,7 +22,8 @@ msgstr "Đã không ghi được vào tập tin %s."
 
 #: src/xpad-app.c:125
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad là một chương trình thuộc đồ họa. Hãy chạy nó từ màn hình nền của bạn."
+msgstr ""
+"Xpad là một chương trình thuộc đồ họa. Hãy chạy nó từ màn hình nền của bạn."
 
 #: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
@@ -34,8 +35,12 @@ msgid "Could not open directory %s."
 msgstr "Đã không mở được thư mục %s"
 
 #: src/xpad-app.c:413
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Thư mục này được cần để cất giữ thông tin tham chiếu và tập giấy đều. Xpad sẽ thoát bây giờ."
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Thư mục này được cần để cất giữ thông tin tham chiếu và tập giấy đều. Xpad "
+"sẽ thoát bây giờ."
 
 #: src/xpad-app.c:717
 msgid "Show version number and quit"
@@ -47,7 +52,8 @@ msgstr "Giấu các tập giấy tồn tại khi khởi động"
 
 #: src/xpad-app.c:719
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Khi khởi động, không tạo một tập giấy mới nếu chưa có tập giấy trước nào."
+msgstr ""
+"Khi khởi động, không tạo một tập giấy mới nếu chưa có tập giấy trước nào."
 
 #: src/xpad-app.c:725
 msgid "Create a new pad on startup even if pads already exist"
