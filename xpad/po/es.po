@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-15 20:07-0400\n"
+"POT-Creation-Date: 2004-10-29 22:00-0400\n"
 "PO-Revision-Date: 2004-09-13 15:44+0200\n"
 "Last-Translator: Ramón Rey Vicente <ramon.rey@hispalinux.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -98,82 +98,82 @@ msgstr "No se comprendió el argumento '%s'\n"
 msgid "Invalid number: '%s'\n"
 msgstr "Número inválido: '%s'\n"
 
-#: src/xpad-pad.c:518
+#: src/xpad-pad.c:512
 msgid "Delete this pad?"
 msgstr "¿Borrar esta nota?"
 
-#: src/xpad-pad.c:519
+#: src/xpad-pad.c:513
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Todo el texto de esta nota se perderá irrevocablemente."
 
-#: src/xpad-pad.c:550
+#: src/xpad-pad.c:544
 #, c-format
 msgid "'%s' Properties"
 msgstr "%s Propiedades"
 
-#: src/xpad-pad.c:1070
+#: src/xpad-pad.c:1064
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr "Está usando xpad %s con GTK+ %i.%i.%i."
 
-#: src/xpad-pad.c:1075
+#: src/xpad-pad.c:1069
 msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
 msgstr ""
 "Visite http://xpad.sourceforge.net/ para más información acerca de xpad."
 
-#: src/xpad-pad.c:1291
+#: src/xpad-pad.c:1285
 msgid "_Pad"
 msgstr "_Nota"
 
-#: src/xpad-pad.c:1300
+#: src/xpad-pad.c:1294
 msgid "_Sticky"
 msgstr "_Pegajosa"
 
-#: src/xpad-pad.c:1307
+#: src/xpad-pad.c:1301
 msgid "_Edit"
 msgstr "_Editar"
 
-#: src/xpad-pad.c:1320
+#: src/xpad-pad.c:1314
 msgid "_View"
 msgstr "_Ver"
 
-#: src/xpad-pad.c:1327
+#: src/xpad-pad.c:1321
 msgid "_Toolbar"
 msgstr "Barra de _herramientas"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1322
 msgid "_Autohide Toolbar"
 msgstr "_Autoesconder barra de herramientas"
 
-#: src/xpad-pad.c:1330
+#: src/xpad-pad.c:1324
 msgid "_Scrollbar"
 msgstr "Barras de _desplazamiento"
 
-#: src/xpad-pad.c:1331
+#: src/xpad-pad.c:1325
 msgid "_Window Decorations"
 msgstr "_Decoraciones de la ventana"
 
-#: src/xpad-pad.c:1334
+#: src/xpad-pad.c:1328
 msgid "_Notes"
 msgstr "_Notas"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:152
+#: src/xpad-pad.c:1335 src/xpad-tray.c:147
 msgid "_Show All"
 msgstr "_Mostrar todo"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:159
+#: src/xpad-pad.c:1336 src/xpad-tray.c:154
 msgid "_Close All"
 msgstr "Cerrar todas"
 
-#: src/xpad-pad.c:1381
+#: src/xpad-pad.c:1375
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1382
 msgid "_Contents"
 msgstr "_Contenidos"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1383
 msgid "_About"
 msgstr "_Acerca de"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-15 20:07-0400\n"
+"POT-Creation-Date: 2004-10-29 22:00-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,81 +92,81 @@ msgstr ""
 msgid "Invalid number: '%s'\n"
 msgstr ""
 
-#: src/xpad-pad.c:518
+#: src/xpad-pad.c:512
 msgid "Delete this pad?"
 msgstr ""
 
-#: src/xpad-pad.c:519
+#: src/xpad-pad.c:513
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/xpad-pad.c:550
+#: src/xpad-pad.c:544
 #, c-format
 msgid "'%s' Properties"
 msgstr ""
 
-#: src/xpad-pad.c:1070
+#: src/xpad-pad.c:1064
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/xpad-pad.c:1075
+#: src/xpad-pad.c:1069
 msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
 msgstr ""
 
-#: src/xpad-pad.c:1291
+#: src/xpad-pad.c:1285
 msgid "_Pad"
 msgstr ""
 
-#: src/xpad-pad.c:1300
+#: src/xpad-pad.c:1294
 msgid "_Sticky"
 msgstr ""
 
-#: src/xpad-pad.c:1307
+#: src/xpad-pad.c:1301
 msgid "_Edit"
 msgstr ""
 
-#: src/xpad-pad.c:1320
+#: src/xpad-pad.c:1314
 msgid "_View"
 msgstr ""
 
-#: src/xpad-pad.c:1327
+#: src/xpad-pad.c:1321
 msgid "_Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1322
 msgid "_Autohide Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1330
+#: src/xpad-pad.c:1324
 msgid "_Scrollbar"
 msgstr ""
 
-#: src/xpad-pad.c:1331
+#: src/xpad-pad.c:1325
 msgid "_Window Decorations"
 msgstr ""
 
-#: src/xpad-pad.c:1334
+#: src/xpad-pad.c:1328
 msgid "_Notes"
 msgstr ""
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:152
+#: src/xpad-pad.c:1335 src/xpad-tray.c:147
 msgid "_Show All"
 msgstr ""
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:159
+#: src/xpad-pad.c:1336 src/xpad-tray.c:154
 msgid "_Close All"
 msgstr ""
 
-#: src/xpad-pad.c:1381
+#: src/xpad-pad.c:1375
 msgid "_Help"
 msgstr ""
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1382
 msgid "_Contents"
 msgstr ""
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1383
 msgid "_About"
 msgstr ""
 

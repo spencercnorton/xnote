@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-15 20:07-0400\n"
+"POT-Creation-Date: 2004-10-29 22:00-0400\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
@@ -93,94 +93,94 @@ msgstr "Неизвестный аргумент %s.\n"
 msgid "Invalid number: '%s'\n"
 msgstr "Неправильный номер: '%s'\n"
 
-#: src/xpad-pad.c:518
+#: src/xpad-pad.c:512
 msgid "Delete this pad?"
 msgstr "Удалить этот стикер?"
 
-#: src/xpad-pad.c:519
+#: src/xpad-pad.c:513
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Все содержимое стикера будет безвозвратно потеряно"
 
-#: src/xpad-pad.c:550
+#: src/xpad-pad.c:544
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Свойства стикера"
 
-#: src/xpad-pad.c:1070
+#: src/xpad-pad.c:1064
 #, fuzzy, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr "Вы используете xpad %s c GTK+ %i.%i.%i."
 
-#: src/xpad-pad.c:1075
+#: src/xpad-pad.c:1069
 #, fuzzy
 msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
 msgstr "Посетите http://xpad.sourceforge.net чтобы узнать побольше про xpad."
 
-#: src/xpad-pad.c:1291
+#: src/xpad-pad.c:1285
 #, fuzzy
 msgid "_Pad"
 msgstr "/Стикер"
 
-#: src/xpad-pad.c:1300
+#: src/xpad-pad.c:1294
 #, fuzzy
 msgid "_Sticky"
 msgstr "/Стикер/Приколоть"
 
-#: src/xpad-pad.c:1307
+#: src/xpad-pad.c:1301
 #, fuzzy
 msgid "_Edit"
 msgstr "/Правка"
 
-#: src/xpad-pad.c:1320
+#: src/xpad-pad.c:1314
 #, fuzzy
 msgid "_View"
 msgstr "/Стикер/Новый"
 
-#: src/xpad-pad.c:1327
+#: src/xpad-pad.c:1321
 #, fuzzy
 msgid "_Toolbar"
 msgstr "Панель инструментов"
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1322
 #, fuzzy
 msgid "_Autohide Toolbar"
 msgstr "Автоматически скрывать панель инструментов"
 
-#: src/xpad-pad.c:1330
+#: src/xpad-pad.c:1324
 #, fuzzy
 msgid "_Scrollbar"
 msgstr "Разрешить полосы прокрутки"
 
-#: src/xpad-pad.c:1331
+#: src/xpad-pad.c:1325
 #, fuzzy
 msgid "_Window Decorations"
 msgstr "Разрешить атрибуты окна оконного менеджера"
 
-#: src/xpad-pad.c:1334
+#: src/xpad-pad.c:1328
 #, fuzzy
 msgid "_Notes"
 msgstr "/Заметки"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:152
+#: src/xpad-pad.c:1335 src/xpad-tray.c:147
 msgid "_Show All"
 msgstr "Показать все"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:159
+#: src/xpad-pad.c:1336 src/xpad-tray.c:154
 #, fuzzy
 msgid "_Close All"
 msgstr "Закрыть все стикеры"
 
-#: src/xpad-pad.c:1381
+#: src/xpad-pad.c:1375
 #, fuzzy
 msgid "_Help"
 msgstr "/Помощь"
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1382
 #, fuzzy
 msgid "_Contents"
 msgstr "/Помощь/Содержание"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1383
 #, fuzzy
 msgid "_About"
 msgstr "/Помощь/О нас"

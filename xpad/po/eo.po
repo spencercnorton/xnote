@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-15 20:07-0400\n"
+"POT-Creation-Date: 2004-10-29 22:00-0400\n"
 "PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
@@ -92,90 +92,90 @@ msgstr ""
 msgid "Invalid number: '%s'\n"
 msgstr "Malvalida numero: '%s'\n"
 
-#: src/xpad-pad.c:518
+#: src/xpad-pad.c:512
 msgid "Delete this pad?"
 msgstr "Cxu forvisxu tiun cxi blokon?"
 
-#: src/xpad-pad.c:519
+#: src/xpad-pad.c:513
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/xpad-pad.c:550
+#: src/xpad-pad.c:544
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Blokaj Ecoj"
 
-#: src/xpad-pad.c:1070
+#: src/xpad-pad.c:1064
 #, fuzzy, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr "Vi uzas ekspadon %s kun GTK+ %i.%i.%i."
 
-#: src/xpad-pad.c:1075
+#: src/xpad-pad.c:1069
 #, fuzzy
 msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
 msgstr "Vizitu http://xpad.sourceforge.net por pli informo pri ekspado."
 
-#: src/xpad-pad.c:1291
+#: src/xpad-pad.c:1285
 #, fuzzy
 msgid "_Pad"
 msgstr "/Bloko"
 
-#: src/xpad-pad.c:1300
+#: src/xpad-pad.c:1294
 #, fuzzy
 msgid "_Sticky"
 msgstr "/Bloko/Glueca"
 
-#: src/xpad-pad.c:1307
+#: src/xpad-pad.c:1301
 #, fuzzy
 msgid "_Edit"
 msgstr "/R_edakto"
 
-#: src/xpad-pad.c:1320
+#: src/xpad-pad.c:1314
 #, fuzzy
 msgid "_View"
 msgstr "/Bloko/_Nova"
 
-#: src/xpad-pad.c:1327
+#: src/xpad-pad.c:1321
 msgid "_Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1328
+#: src/xpad-pad.c:1322
 msgid "_Autohide Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1330
+#: src/xpad-pad.c:1324
 msgid "_Scrollbar"
 msgstr ""
 
-#: src/xpad-pad.c:1331
+#: src/xpad-pad.c:1325
 msgid "_Window Decorations"
 msgstr ""
 
-#: src/xpad-pad.c:1334
+#: src/xpad-pad.c:1328
 #, fuzzy
 msgid "_Notes"
 msgstr "/_Notoj"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:152
+#: src/xpad-pad.c:1335 src/xpad-tray.c:147
 msgid "_Show All"
 msgstr "Manifestu Cxion"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:159
+#: src/xpad-pad.c:1336 src/xpad-tray.c:154
 #, fuzzy
 msgid "_Close All"
 msgstr "Fermu Cxiujn Blokojn"
 
-#: src/xpad-pad.c:1381
+#: src/xpad-pad.c:1375
 #, fuzzy
 msgid "_Help"
 msgstr "/_Helpo"
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1382
 #, fuzzy
 msgid "_Contents"
 msgstr "/Helpo/Enhavo"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1383
 #, fuzzy
 msgid "_About"
 msgstr "/Helpo/Pri"
