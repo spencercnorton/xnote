@@ -1846,7 +1846,6 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	gtk_container_add (GTK_CONTAINER (window), box);
 	
 	textbuf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textbox));
-	gtk_text_buffer_add_selection_clipboard (textbuf, gtk_clipboard_get (GDK_SELECTION_PRIMARY));
 	
 	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
