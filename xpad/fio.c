@@ -65,7 +65,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		GtkWidget *dialog;
 		gchar usertext [524];
 		
-		errtext = strerror (errno);
+		errtext = g_strerror (errno);
 		
 		sprintf (usertext, "Could not write to file %s:  %s.", temp, errtext);
 		
