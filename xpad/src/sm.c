@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>	/* only for printf */
 #include <sys/select.h>	/* for select */
 #include <stdlib.h>	/* for free */
-#include <string.h>	/* for strdup */
+#include <string.h>	/* for strlen */
 #include <unistd.h>	/* for getuid */
 #include <pwd.h>	/* for getpwuid */
 #include <sys/types.h>	/* for getuid and getpwuid */
@@ -37,7 +37,7 @@ static int xpad_interact_style;
 static gboolean xpad_shutdown;
 static gboolean xpad_saving;
 static int xpad_ice_fd;
-static char *client_id = NULL;
+static gchar *client_id = NULL;
 static gboolean set_props = TRUE;
 static gboolean blocking = FALSE;
 
@@ -265,9 +265,10 @@ void xpad_sm_init (void)
 	
 	if (client_id)
 	{
-		free (client_id);
+		g_free (client_id);
 	}
-	client_id = client_id_ret;
+	client_id = g_strdup (client_id_ret);
+	free (client_id_ret);
 	
 	xpad_ice_fd = -1;
 	IceAddConnectionWatch (xpad_sm_ice_connection_watch, NULL);
@@ -284,7 +285,7 @@ void xpad_sm_set_id (char *id)
 		xpad_sm_shutdown ();
 	}
 	
-	client_id = strdup (id);
+	client_id = g_strdup (id);
 	
 	if (alread_set_up)
 	{
