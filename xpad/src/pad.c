@@ -54,7 +54,10 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
 	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
-	{N_("/_Windows"),			NULL,			0,		0,	"<Branch>"},
+	{N_("/_Notes"),				NULL,			0,		0,	"<Branch>"},
+	{N_("/Notes/_Show All"),		NULL,			menuitem_cb,	10,	"<Item>"},
+	{N_("/Notes/_Close All"),		NULL,			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{"/Notes/sep",				NULL,			0,		0,	"<Separator>"},
 	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
 	{N_("/Help/_About"),			NULL,			menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
@@ -1021,7 +1024,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *tmp;
 	gint n = 0, i = SHOW_ACTION_OFFSET;
 	GtkItemFactoryEntry entry;
-	const gchar *submenu = _("/Windows");
+	const gchar *submenu = _("/Notes");
 	
 	/**
 	 * Remove old items.
@@ -1037,31 +1040,10 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 				gtk_item_factory_path_from_widget (tmp));
 		tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
 	}
-	
-	gtk_item_factory_delete_item (pad->menu, "/Windows/sep");
-	gtk_item_factory_delete_item (pad->menu, _("/Windows/Show All"));
-	gtk_item_factory_delete_item (pad->menu, _("/Windows/Close All"));
-	
-	/**
-	 * Populate list of windows.
-	 */
-	for (p = first_pad; p; p = p->next)
-	{
-		gchar result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
-		
-		n++;
-		
-		sprintf (result, "%s/%i. ", submenu, n);
-		strcat (result, p->title);
-		
-		entry.path = result;
-		entry.accelerator = NULL;
-		entry.callback = menuitem_cb;
-		entry.callback_action = SHOW_ACTION_OFFSET + n - 1;
-		entry.item_type = "<Item>";
-		
-		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
-	}
+	/*
+	gtk_item_factory_delete_item (pad->menu, "/Notes/sep");
+	gtk_item_factory_delete_item (pad->menu, _("/Notes/Show All"));
+	gtk_item_factory_delete_item (pad->menu, _("/Notes/Close All"));
 	
 	entry.path = "/Windows/sep";
 	entry.accelerator = NULL;
@@ -1084,6 +1066,27 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	entry.item_type = "<StockItem>";
 	entry.extra_data = GTK_STOCK_QUIT;
 	gtk_item_factory_create_item (pad->menu, &entry, NULL, 1);
+	*/
+	/**
+	 * Populate list of windows.
+	 */
+	for (p = first_pad; p; p = p->next)
+	{
+		gchar result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
+		
+		n++;
+		
+		sprintf (result, "%s/%i. ", submenu, n);
+		strcat (result, p->title);
+		
+		entry.path = result;
+		entry.accelerator = NULL;
+		entry.callback = menuitem_cb;
+		entry.callback_action = SHOW_ACTION_OFFSET + n - 1;
+		entry.item_type = "<Item>";
+		
+		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
+	}
 	
 	block_toolbar_events (pad);
 	
