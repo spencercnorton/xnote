@@ -541,6 +541,22 @@ static void xpad_make_working_dir (void)
 #endif
 }
 
+static void
+xpad_make_needed_files (void)
+{
+	gchar *defaults;
+	
+	defaults = g_build_filename (working_dir, DEFAULTS_FILENAME);
+	
+	if (!g_file_test (defaults, G_FILE_TEST_EXISTS))
+	{
+		fio_set_file (defaults, "");	/* make it start empty -- defaults will be filled in*/
+		show_help ();	/* if no defaults file, assume it is their first time and show some help */
+	}
+	
+	g_free (defaults);
+}
+
 static void xpad_register_icons (void)
 {
 	GtkIconSet *set;
@@ -618,15 +634,13 @@ static int xpad_init (gpointer data)
 	
 	xpad_make_working_dir ();
 	
-	if (fio_load_default_settings ())
-	{
-		/* this happens if there isn't a default-style (i.e. first run) */
-		show_help ();
-	}
+	xpad_make_needed_files ();
+	
+	fio_load_default_settings ();
 	
 	/* we want to make sure we save any new format changes */
 	fio_save_default_settings ();
-
+	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
 	
