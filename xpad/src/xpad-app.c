@@ -222,21 +222,9 @@ config_dir_exists (void)
 	gchar *dir = NULL;
 	gboolean exists = FALSE;
 	
-#if defined (G_OS_UNIX)
-	
-	/* create a hidden directory under the user's config dir (usually $HOME) */
-	dir = g_build_filename (g_get_user_config_dir (), ".xpad", NULL);
+	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	
 	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
-	
-#else
-	
-	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
-	
-	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
-	
-#endif
 	
 	g_free (dir);
 	
@@ -252,19 +240,8 @@ make_config_dir (void)
 {
 	gchar *dir = NULL;
 	
-#if defined (G_OS_UNIX)
+	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	
-	/* create a hidden directory under the user's home */
-	dir = g_build_filename (g_get_user_config_dir (), ".xpad", NULL);
-	
-#else
-	
-	/* If someone has a better place to put our stuff, I'm all ears. */
-	dir = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
-	
-#endif
-	
-	/* make sure directory exists */
 	g_mkdir (dir, 0700); /* give user all rights */
 	
 	return dir;
