@@ -195,9 +195,9 @@ GList *toolbar_get_buttons (xpad_toolbar *xt)
 
 	if (!xt) return NULL;
 
-	tmp = list = toolbar_get_children (xt);
+	list = toolbar_get_children (xt);
 	
-	while (tmp)
+	for (tmp = list; tmp; tmp = tmp->next)
 	{
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
 		/*
@@ -205,8 +205,6 @@ GList *toolbar_get_buttons (xpad_toolbar *xt)
 		*/
 		if (toolbar_is_button (widget))
 			rv = g_list_append (rv, (void *) widget);
-		
-		tmp = tmp->next;
 	}
 	
 	g_list_free (list);
@@ -229,14 +227,10 @@ toolbar_update (xpad_toolbar *xt)
 	
 	if (verbosity >= 2) printf ("Updating toolbar.\n");
 	
-	list = temp = gtk_container_get_children (GTK_CONTAINER (box));
+	list = gtk_container_get_children (GTK_CONTAINER (box));
 	
-	while (temp)
-	{
+	for (temp = list; temp; temp = temp->next)
 		gtk_container_remove (GTK_CONTAINER (box), temp->data);
-		
-		temp = temp->next;
-	}
 	
 	g_list_free (list);
 	

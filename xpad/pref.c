@@ -795,9 +795,9 @@ static GtkWidget *preferences_create (void)
 		gtk_container_add (GTK_CONTAINER (unused_frame), vbox_unused_frame);
 		gtk_container_add (GTK_CONTAINER (vbox_unused_frame), buttonbox);
 		
-		inxt = tmp = toolbar_get_children (xt);
+		inxt = toolbar_get_children (xt);
 		
-		while (tmp)
+		for (tmp = inxt; tmp; tmp = tmp->next)
 		{
 			GtkWidget *widget = GTK_WIDGET (tmp->data);
 			
@@ -806,8 +806,6 @@ static GtkWidget *preferences_create (void)
 			
 			g_signal_connect (widget, "drag-data-get", 
 				G_CALLBACK (data_get), NULL);
-			
-			tmp = tmp->next;
 		}
 		
 		g_list_free (inxt);
@@ -819,16 +817,12 @@ static GtkWidget *preferences_create (void)
 			const toolbar_button *tb;
 			GtkWidget *b;
 			
-			tmp = current_settings.toolbar_buttons;
-			
-			while (tmp)
+			for (tmp = current_settings.toolbar_buttons; tmp; tmp = tmp->next)
 			{
 				tb = (const toolbar_button *) tmp->data;
 				
 				if (!g_ascii_strcasecmp (tb->name, buttons[i].name))
 					break;
-				
-				tmp = tmp->next;
 			}
 			
 			if (tmp)	/* we found it, so we don't add it to our list of unused buttons */
