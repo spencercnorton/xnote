@@ -1,3 +1,6 @@
+NOTE: Make sure you have development files for gtk1.3 or better before 
+compiling.  This includes associated packages like Pango.
+
 Type "make" to compile xpad.
 
 Type "make install" as root to install the binary to /usr/local/bin.  Or, just
