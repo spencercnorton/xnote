@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-13 22:46-0500\n"
+"POT-Creation-Date: 2005-01-13 22:58-0500\n"
 "PO-Revision-Date: 2004-03-02 15:23+0200\n"
 "Last-Translator: Petri Jooste <rkwjpj@puk.ac.za>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Close all pads"
 msgstr "Maak alle boekies toe"
 
-#: src/xpad-app.c:749
+#: src/xpad-app.c:750
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad"

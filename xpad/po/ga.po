@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-13 22:46-0500\n"
+"POT-Creation-Date: 2005-01-13 22:58-0500\n"
 "PO-Revision-Date: 2004-12-21 00:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -64,7 +64,7 @@ msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 msgid "Close all pads"
 msgstr "Dún Gach Uile Ceap Nótaí"
 
-#: src/xpad-app.c:749
+#: src/xpad-app.c:750
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-13 22:46-0500\n"
+"POT-Creation-Date: 2005-01-13 22:58-0500\n"
 "PO-Revision-Date: 2004-09-30 15:16+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -67,7 +67,7 @@ msgstr "Zorgen dat xpad een nieuw kladblok opent, zelfs als er al een bestaat"
 msgid "Close all pads"
 msgstr "Alle kladblokken sluiten"
 
-#: src/xpad-app.c:749
+#: src/xpad-app.c:750
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s\n"

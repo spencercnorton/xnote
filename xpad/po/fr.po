@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-13 22:46-0500\n"
+"POT-Creation-Date: 2005-01-13 22:58-0500\n"
 "PO-Revision-Date: 2004-01-06 16:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Close all pads"
 msgstr "Fermer tous les pads"
 
-#: src/xpad-app.c:749
+#: src/xpad-app.c:750
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad"

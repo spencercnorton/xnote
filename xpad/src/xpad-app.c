@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2004 Michael Terry
+ * Copyright (c) 2004-2005 Michael Terry
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -733,17 +733,25 @@ process_local_args (gint *argc, gchar **argv[])
 {
 	GError *error = NULL;
 	GOptionContext *context;
+	gint argc_copy;
+	gchar **argv_copy;
 	
 	option_version = FALSE;
 	option_nonew = FALSE;
 	option_hide_old = FALSE;
+	
+	/* We make copies of argc and argv because we actually don't want the 
+	   behavior of g_option_context_parse() that removes entries from the
+	   array. */
+	argc_copy = *argc;
+	argv_copy = g_strdupv (*argv);
 	
 	context = g_option_context_new (NULL);
 	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
 	/* We do remote here as well, because we want --help to pick them up.  It
 	   can't hurt since they only set the global values that we reset later. */
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
-	if (g_option_context_parse (context, argc, argv, &error))
+	if (g_option_context_parse (context, &argc_copy, &argv_copy, &error))
 	{
 		if (option_version)
 		{
@@ -759,6 +767,7 @@ process_local_args (gint *argc, gchar **argv[])
 	}
 	
 	g_option_context_free (context);
+	g_strfreev(argv_copy);
 	
 	return(option_version || option_nonew || option_hide_old);
 }
