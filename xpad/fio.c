@@ -515,8 +515,6 @@ int fio_load_pads (void)
 	G_CONST_RETURN gchar *name;
 	GPatternSpec *spec;
 	
-	printf ("opening old pads\n");
-	
 	spec = g_pattern_spec_new ("info-*");
 	
 	/* set up some sort of defaults for these.  if xpad works
