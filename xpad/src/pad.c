@@ -53,7 +53,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Lock Style"),		NULL,			menuitem_cb,	15,	"<CheckItem>"},
 	{N_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
-	{N_("/Edit/_Preferences..."),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
+	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{N_("/_Windows"),			NULL,			0,		0,	"<Branch>"},
 	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
