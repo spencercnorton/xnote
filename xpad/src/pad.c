@@ -124,28 +124,18 @@ GtkTextView *get_text (GtkWindow *window)
 
 /* since reshowing all pads presents them, caller
     param will be presented afterward */
-void pads_set_decorations (gboolean decor, GtkWidget *caller)
+void pad_set_decorations (pad_node *pad, gboolean decor)
 {
-	pad_node *temp;
+	gtk_window_set_decorated (pad->window, decor);
 	
-	for (temp = first_pad; temp; temp = temp->next)
+	if (!pad->hidden)
 	{
-		if (gtk_window_get_decorated (temp->window) != decor)
-		{
-			gtk_window_set_decorated (temp->window, decor);
-			
-			if (!temp->hidden)
-			{
-				gtk_widget_hide (GTK_WIDGET (temp->window));
-				
-				/* we move it so wm's know where to place it */
-				gtk_window_move (temp->window, temp->x, temp->y);
-				gtk_widget_show (GTK_WIDGET (temp->window));
-			}
-		}
+		gtk_widget_hide (GTK_WIDGET (pad->window));
+		
+		/* we move it so wm's know where to place it */
+		gtk_window_move (pad->window, pad->x, pad->y);
+		gtk_widget_show (GTK_WIDGET (pad->window));
 	}
-	
-	gtk_window_present (GTK_WINDOW (caller));
 }
 
 void pads_set_toolbar (gboolean toolbar)
@@ -251,6 +241,19 @@ void pad_set_back_color (pad_node *pad, GdkColor *c)
 	
 	gtk_widget_modify_base (text, GTK_STATE_NORMAL, c);
 	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, c);
+	
+	if (pad->locked)
+	{
+		if (c)
+		{
+			pad->style.back = *c;
+			pad->style.use_back = 1;
+		}
+		else
+			pad->style.use_back = 0;
+		
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_set_text_color (pad_node *pad, GdkColor *c)
@@ -258,11 +261,32 @@ void pad_set_text_color (pad_node *pad, GdkColor *c)
 	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
 	
 	gtk_widget_modify_text (text, GTK_STATE_NORMAL, c);
+	
+	if (pad->locked)
+	{
+		if (c)
+		{
+			pad->style.text = *c;
+			pad->style.use_text = 1;
+		}
+		else
+			pad->style.use_text = 0;
+		
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_set_border_color (pad_node *pad, GdkColor *c)
 {
 	gtk_widget_modify_bg (pad->eventbox_outer, GTK_STATE_NORMAL, c);
+	
+	if (pad->locked)
+	{
+		if (c)
+			pad->style.border = *c;
+		
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_set_padding (pad_node *pad, gint p)
@@ -270,11 +294,23 @@ void pad_set_padding (pad_node *pad, gint p)
 	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
 	
 	gtk_container_set_border_width (GTK_CONTAINER (text), p);
+	
+	if (pad->locked)
+	{
+		pad->style.padding = p;
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_set_border_width (pad_node *pad, gint w)
 {
 	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), w);
+	
+	if (pad->locked)
+	{
+		pad->style.border_width = w;
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_set_fontname (pad_node *pad, const gchar *fontname)
@@ -286,6 +322,13 @@ void pad_set_fontname (pad_node *pad, const gchar *fontname)
 		NULL;
 	
 	gtk_widget_modify_font (text, fontdesc);
+	
+	if (pad->locked)
+	{
+		pad->style.fontname = g_strdup (fontname);
+		
+		fio_save_pad_info (pad);
+	}
 }
 
 
@@ -326,6 +369,10 @@ static void pad_update_style (pad_node *pad)
 	
 	if (!pad->locked)
 		pad_style_free (&pstyle);
+	else
+	{
+		fio_save_pad_info (pad);
+	}
 }
 
 void pad_style_copy (pad_style *dest, pad_style *source)
@@ -448,7 +495,7 @@ pad_set_sticky (pad_node *pad, gboolean on)
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), on);
 	
-/*	fio_save_pad_info (pad);*/
+	fio_save_pad_info (pad);
 }
 
 void pad_toggle_sticky (pad_node *pad)
@@ -1310,6 +1357,8 @@ pad_lock_style (pad_node *pad)
 	
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), TRUE);
+	
+	fio_save_pad_info (pad);
 }
 
 void
@@ -1320,6 +1369,8 @@ pad_unlock_style (pad_node *pad)
 	
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), FALSE);
+	
+	fio_save_pad_info (pad);
 }
 
 void
@@ -1595,7 +1646,7 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	pad->width = event->width;
 	pad->height = event->height;
 	
-/*	fio_save_pad_info (pad);*/
+	fio_save_pad_info (pad);
 	
 	return FALSE;
 }
@@ -1733,8 +1784,8 @@ void pad_set_title (pad_node *pad)
 
 gboolean text_changed (GtkTextBuffer *buf, pad_node *pad)
 {
-	fio_save_pad_content (pad);
 	pad_set_title (pad);
+	fio_save_pad_content (pad);
 	
 	return TRUE;
 }
@@ -1856,7 +1907,7 @@ static pad_node *start_pad (void)
 	pad->hidden = FALSE;
 	pad->infoname = NULL;
 	pad->contentname = NULL;
-
+	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
 	{
@@ -1928,8 +1979,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad_fill_with_file (pad, info->contentname);
 	
 	pad->locked = info->locked;
-	pad->infoname = info->infoname;
-	pad->contentname = info->contentname;
 	pad->width = info->width;
 	pad->height = info->height;
 	pad->x = info->x;
@@ -1943,13 +1992,15 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad_style_copy (&pad->style, &info->style);
 	pad_update_style (pad);
 	
-	fio_open_pad_files (pad, FALSE);
-	
 	pad_set_title (pad);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
+	
+	pad->infoname = info->infoname;
+	pad->contentname = info->contentname;
+	fio_open_pad_files (pad, FALSE);
 	
 	return pad;
 }

@@ -122,7 +122,6 @@ pad_node *pad_new (void);
 GtkTextView *get_text (GtkWindow *window);
 void cleanup (void);
 
-void pads_set_decorations (gboolean decor, GtkWidget *caller);
 void pads_set_editable (gboolean editable);
 void pads_set_toolbar (gboolean toolbar);
 void pads_set_auto_hide_toolbar (gboolean auto_hide_toolbar);
@@ -141,7 +140,6 @@ void pad_close (pad_node *pad);
 void pad_destroy (pad_node *pad);
 void pad_open_file (pad_node *pad);
 void pad_save_as_file (pad_node *pad);
-gboolean pad_confirm_destroy (pad_node *pad);
 void pad_clear (pad_node *pad);
 void pad_hide (pad_node *pad);
 void pad_toggle_lock (pad_node *pad);
@@ -154,6 +152,8 @@ void pad_show (pad_node *pad);
 void pad_lock_style (pad_node *pad);
 void pad_unlock_style (pad_node *pad);
 void pad_set_scrollbars (pad_node *pad, gboolean on);
+void pad_set_decorations (pad_node *pad, gboolean decor);
+gboolean pad_confirm_destroy (pad_node *pad);
 
 
 void pad_remove_toolbar (pad_node *pad);

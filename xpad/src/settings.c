@@ -6,7 +6,6 @@
 struct settings {
 	gint width;
 	gint height;
-	gint sync_time;
 	gint decorations;
 	gint confirm_destroy;
 	gint edit_lock;
@@ -63,7 +62,11 @@ void xpad_settings_set_has_decorations (gboolean decorations, GtkWidget *caller)
 {
 	current_settings.decorations = decorations;
 	
-	pads_set_decorations (decorations, caller);
+	PAD_ITERATE_START
+	pad_set_decorations (PAD, decorations);
+	PAD_ITERATE_END
+	
+	gtk_window_present (GTK_WINDOW (caller));
 	
 	xpad_settings_save_to_file ();
 }
@@ -322,7 +325,6 @@ static void xpad_settings_load_defaults (void)
 {
 	current_settings.width = 260;
 	current_settings.height = 260;
-	current_settings.sync_time = 60;
 	current_settings.decorations = 0;
 	current_settings.confirm_destroy = 1;
 	current_settings.edit_lock = 0;
@@ -378,7 +380,6 @@ static void xpad_settings_load_from_file (void)
 	
 	if (fio_get_values_from_file (DEFAULTS_FILENAME, 
 		"decorations", &current_settings.decorations,
-		"sync_time", &current_settings.sync_time,
 		"height", &current_settings.height,
 		"width", &current_settings.width,
 		"confirm_destroy", &current_settings.confirm_destroy,
@@ -459,14 +460,14 @@ static void xpad_settings_save_to_file (void)
 	GSList *tmp;
 	
 	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
-		"sync_time %i\ndecorations %i\nauto_hide_toolbar %i\n"
+		"decorations %i\nauto_hide_toolbar %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
 		"border_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\n"
 		"scrollbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
-		current_settings.sync_time, current_settings.decorations,
+		current_settings.decorations,
 		current_settings.auto_hide_toolbar, current_settings.width, current_settings.height,
 		current_settings.style.back.red, current_settings.style.back.green, current_settings.style.back.blue,
 		current_settings.style.use_back,

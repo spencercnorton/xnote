@@ -64,7 +64,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 gchar *working_dir;
 gint verbosity = 0; /* output level */
-guint autosave_timeout_id = -1;
 
 gboolean make_new_pad = TRUE;
 gboolean open_old_pads = TRUE;
@@ -393,28 +392,6 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 	return rv;
 }
 
-/* an occasional checkup to sync contents. */
-static int sync_pads (gpointer data)
-{
-	if (verbosity >= 1) printf ("Auto-saving pads.\n");
-
-	fio_save_pads ();
-
-	return 1;
-}
-
-
-static void reset_sync (void)
-{
-/*	if (autosave_timeout_id > 0)
-		gtk_timeout_remove (autosave_timeout_id);
-
-	if (current_settings.sync_time)
-		autosave_timeout_id = gtk_timeout_add (current_settings.sync_time * 1000, sync_pads, NULL);
-	else
-		autosave_timeout_id = -1;
-*/
-}
 
 /*
 converts main program arguments into one long string.
@@ -914,9 +891,6 @@ static int xpad_init (gpointer data)
 		return 0;
 	
 	xpad_settings_init ();
-	
-	/* save contents every "sync_time" seconds */
-	reset_sync ();
 	
 #ifdef G_OS_UNIX
 	tray_open ();
