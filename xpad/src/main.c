@@ -951,6 +951,7 @@ int main (int argc, char *argv[])
 #endif
 	
 	bindtextdomain (PACKAGE, LOCALEDIR);
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
 	
 	output = stdout;
