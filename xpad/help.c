@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "help.h"
+#include <string.h>
 
 GtkWidget *help_window = NULL;
 
@@ -35,6 +36,30 @@ static GtkWidget *create_help (gint page)
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
 	GtkWidget *edittext, *editlabel;
 	GtkWidget *align1, *align2, *align3;
+	
+	/**
+	 * Ok.  This goofy construction is because of the gcc warning:
+	 * "string length `658' is greater than the length `509' ISO C89 compilers
+	 * are required to support" -- so, we split it up into two smaller chunks for those
+	 * crazy old compilers.
+	 */
+	gchar longtext [700];
+	
+	strcpy (longtext, 
+"If Edit Lock is enabled, a pad is always in one of two "
+"modes:  Edit Mode or Move Mode.\n\n"
+"<b>Edit Mode</b>: You can edit the text of the pad, select "
+"text, cut and paste, etc.  To move the pad, hold down CTRL "
+"while left-dragging.\n\n"
+"<b>Move Mode</b>: In this mode, clicking and dragging on the ");
+	strcat (longtext,
+"pad will move the pad, rather than selecting text.  You cannot "
+"edit the contents of the pad.\n\n"
+"Any pad without focus is in Move Mode.  To enter Edit "
+"Mode for any pad, double click on it with the left mouse "
+"button.  Now this pad will be editable until it loses focus.\n\n"
+"If Edit Lock is disabled, all pads are in Edit Mode.\n\n"
+"To enable Edit Lock, go to Preferences->Options.");
 	
 	/* Create the widgets */
 	
@@ -85,20 +110,7 @@ static GtkWidget *create_help (gint page)
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), align2, keylabel);
 	
 	
-	gtk_label_set_markup (GTK_LABEL (edittext),
-"If Edit Lock is enabled, a pad is always in one of two "
-"modes:  Edit Mode or Move Mode.\n\n"
-"<b>Edit Mode</b>: You can edit the text of the pad, select "
-"text, cut and paste, etc.  To move the pad, hold down CTRL "
-"while left-dragging.\n\n"
-"<b>Move Mode</b>: In this mode, clicking and dragging on the "
-"pad will move the pad, rather than selecting text.  You cannot "
-"edit the contents of the pad.\n\n"
-"Any pad without focus is in Move Mode.  To enter Edit "
-"Mode for any pad, double click on it with the left mouse "
-"button.  Now this pad will be editable until it loses focus.\n\n"
-"If Edit Lock is disabled, all pads are in Edit Mode.\n\n"
-"To enable Edit Lock, go to Preferences->Options.");
+	gtk_label_set_markup (GTK_LABEL (edittext), longtext); /* see above */
 
 	gtk_label_set_line_wrap (GTK_LABEL (edittext), TRUE);
 	gtk_container_add (GTK_CONTAINER (align3), edittext);
