@@ -193,7 +193,8 @@ gboolean xpad_settings_get_has_scrollbar (void)
 
 void xpad_settings_add_toolbar_button (const gchar *button)
 {
-	g_slist_append (current_settings.toolbar_buttons,
+	current_settings.toolbar_buttons = 
+		g_slist_append (current_settings.toolbar_buttons,
 		(toolbar_button *) get_toolbar_button_by_name (button));
 	
 	PAD_ITERATE_START
@@ -205,7 +206,8 @@ void xpad_settings_add_toolbar_button (const gchar *button)
 
 void xpad_settings_remove_toolbar_button (const gchar *button)
 {
-	g_slist_remove (current_settings.toolbar_buttons,
+	current_settings.toolbar_buttons = 
+		g_slist_remove (current_settings.toolbar_buttons,
 		get_toolbar_button_by_name (button));
 	
 	PAD_ITERATE_START

@@ -1,5 +1,6 @@
 Version 1.12
 * Fixed segfault when clicking on auto-hide toolbar preference
+* Fixed segfault when changing the first toolbar button
 
 
 Version 1.11
