@@ -1058,25 +1058,39 @@ save_info (XpadPad *pad)
 static void
 menu_about (XpadPad *pad)
 {
-	GtkWidget *dialog;
-	gchar *text;
+	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
+	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", NULL};
+	const gchar *comments = _("Virtual sticky notes");
+	const gchar *copyright = "© 2001-2004 Michael Terry";
+	const gchar *license =
+"This program is free software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 2\n"
+"of the License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program; if not, write to the Free Software\n"
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.";
+	/* Translators: please translate this as your own name and/or email */
+	const gchar *translator_credits = _("translator-credits");
+	const gchar *website = "http://xpad.sourceforge.net/";
 	
-	text = g_strdup_printf (_("You are using xpad %s with GTK+ %i.%i.%i."),
-		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
-	
-	dialog = xpad_app_alert_new (GTK_WINDOW (pad), GTK_STOCK_DIALOG_INFO,
-		text,
-		_("Visit http://xpad.sourceforge.net/ for more information about xpad."));
-	g_free (text);
-	
-	if (!dialog)
-		return;
-	
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
-	
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	
-	gtk_widget_destroy (dialog);
+	gtk_show_about_dialog (GTK_WINDOW (pad),
+		"artists", artists,
+		"authors", authors,
+		"comments", comments,
+		"copyright", copyright,
+		"license", license,
+		"logo-icon-name", PACKAGE,
+		"translator-credits", translator_credits,
+		"version", VERSION,
+		"website", website,
+		NULL);
 }
 
 static void
@@ -1380,7 +1394,7 @@ menu_get_popup_no_highlight (XpadPad *pad)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	
 	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, show_help);
-	MENU_ADD (_("_About"), GTK_STOCK_DIALOG_INFO, menu_about);
+	MENU_ADD (_("_About"), GTK_STOCK_ABOUT, menu_about);
 	
 	return uppermenu;
 }
