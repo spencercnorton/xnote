@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "sm.h"
 
-#ifdef G_OS_UNIX
+#ifndef X_DISPLAY_MISSING
 
 #include "main.h"
 #include <X11/SM/SMlib.h>
@@ -410,5 +410,5 @@ void xpad_sm_set_id (char *id)
 {
 }
 
-#endif /* G_OS_UNIX */
+#endif /* X_DISPLAY_MISSING */
 
