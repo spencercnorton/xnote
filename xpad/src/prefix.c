@@ -38,9 +38,7 @@
 #ifndef _PREFIX_C_
 #define _PREFIX_C_
 
-#ifdef HAVE_CONFIG_H
-	#include "config.h"
-#endif
+#include "../config.h"
 
 #ifndef BR_PTHREADS
 	/* Change 1 to 0 if you don't want pthread support */
