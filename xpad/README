@@ -1,5 +1,5 @@
 xpad README
------_-----
+-----------
 
 xpad is a virtual sticky pad system using GTK+ 2.
 
@@ -85,5 +85,5 @@ LICENSE NOTES
 	  (http://wm-icons.sourceforge.net).
 
 --------------------------------------------------------------------------
-Copyright (c) 2001-2002 Michael Terry
+Copyright (c) 2001-2003 Michael Terry
 http://xpad.sourceforge.net
