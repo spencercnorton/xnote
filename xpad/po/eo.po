@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-07-10 23:03-0400\n"
-"PO-Revision-Date: 2003-07-01 20:19-0500\n"
+"POT-Creation-Date: 2003-07-21 22:16-0400\n"
+"PO-Revision-Date: 2003-07-21 18:34-0500\n"
 "Last-Translator:  Michael Terry <mterry@fastmail.fm>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -101,190 +101,191 @@ msgid ""
 "close now."
 msgstr ""
 
-#: src/pref.c:289 src/properties.c:228
+#: src/pref.c:293 src/properties.c:228
 msgid "Background Color"
 msgstr "Fona Koloro"
 
-#: src/pref.c:290 src/properties.c:229
+#: src/pref.c:294 src/properties.c:229
 msgid "Text Color"
 msgstr "Teksta Koloro"
 
-#: src/pref.c:291 src/properties.c:230
+#: src/pref.c:295 src/properties.c:230
 msgid "Border"
 msgstr "Rando"
 
-#: src/pref.c:292 src/properties.c:231
+#: src/pref.c:296 src/properties.c:231
 msgid "Border _width:"
 msgstr ""
 
-#: src/pref.c:293 src/pref.c:298 src/properties.c:232 src/properties.c:235
+#: src/pref.c:297 src/pref.c:302 src/properties.c:232 src/properties.c:235
 msgid "pixels"
 msgstr "bilderoj"
 
-#: src/pref.c:294 src/properties.c:233
+#: src/pref.c:298 src/properties.c:233
 msgid "Font Face"
 msgstr ""
 
-#: src/pref.c:295
+#: src/pref.c:299
 msgid "Options"
 msgstr ""
 
-#: src/pref.c:296
+#: src/pref.c:300
 msgid "Toolbar"
 msgstr ""
 
-#: src/pref.c:297 src/properties.c:234
+#: src/pref.c:301 src/properties.c:234
 msgid "_Padding:"
 msgstr ""
 
-#: src/pref.c:304
+#: src/pref.c:308
 msgid "Allow _window manager decorations"
 msgstr ""
 
-#: src/pref.c:305
+#: src/pref.c:309
 msgid "Con_firm pad destruction"
 msgstr ""
 
-#: src/pref.c:306
+#: src/pref.c:310
 msgid "_Edit lock"
 msgstr ""
 
-#: src/pref.c:351
+#: src/pref.c:355
 msgid "Global Preferences"
 msgstr ""
 
-#: src/pref.c:370 src/properties.c:303
+#: src/pref.c:374 src/properties.c:303
 msgid "_Use system text color"
 msgstr ""
 
-#: src/pref.c:393 src/properties.c:324
+#: src/pref.c:397 src/properties.c:324
 msgid "_Use system background color"
 msgstr ""
 
-#: src/pref.c:429 src/properties.c:357
+#: src/pref.c:433 src/properties.c:357
 msgid "The amount of space you want between the border and text."
 msgstr ""
 
-#: src/pref.c:430 src/properties.c:358
+#: src/pref.c:434 src/properties.c:358
 msgid ""
 "Choose the number of pixels around the text region.  This space is colored "
 "the same and surrounds it on all sides."
 msgstr ""
 
-#: src/pref.c:443 src/properties.c:374
+#: src/pref.c:447 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
 msgstr ""
 
-#: src/pref.c:444 src/properties.c:375
+#: src/pref.c:448 src/properties.c:375
 msgid ""
 "Choose the number of pixels around the pad.  This space is colored "
 "independently and surrounds it on all sides."
 msgstr ""
 
-#: src/pref.c:470 src/properties.c:397
+#: src/pref.c:474 src/properties.c:397
 msgid "_Use system font face"
 msgstr ""
 
-#: src/pref.c:506
+#: src/pref.c:511
 msgid "Click and drag a button to move it."
 msgstr ""
 
-#: src/pref.c:512
+#: src/pref.c:517
 msgid "_Enable toolbar"
 msgstr ""
 
-#: src/pref.c:513
+#: src/pref.c:518
 msgid "_Auto-hide toolbar"
 msgstr ""
 
-#: src/pref.c:523
+#: src/pref.c:528
 msgid "<b>Toolbar Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:524
+#: src/pref.c:529
 msgid "<b>Used Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:525
+#: src/pref.c:530
 msgid "<b>Unused Buttons:</b>"
 msgstr ""
 
-#: src/pref.c:642 src/pref.c:643
+#: src/pref.c:647 src/pref.c:648
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
 
-#: src/pref.c:646 src/pref.c:647
+#: src/pref.c:651 src/pref.c:652
 msgid "If on, the toolbar will disappear when you are not using the pad."
 msgstr ""
 
-#: src/pref.c:659
+#: src/pref.c:664
 msgid "Allow _scrollbars"
 msgstr ""
 
-#: src/pref.c:660
+#: src/pref.c:665
 #, fuzzy
 msgid "Pads start s_ticky"
 msgstr "Blokoj startas gluecajn"
 
-#: src/pref.c:663
+#: src/pref.c:668
 msgid "Close and save _all pads"
 msgstr "Fermu kaj konservu cxiujn blokojn"
 
-#: src/pref.c:665
+#: src/pref.c:670
 msgid "Close and save _pad"
 msgstr "Fermu kaj konservu blokon"
 
-#: src/pref.c:667
+#: src/pref.c:672
 msgid "_Destroy pad (no confirmation)"
 msgstr "Forvisxu blokon (ne konfirmo)"
 
-#: src/pref.c:672
+#: src/pref.c:677
 msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Fenestra Direktanta Ferma Faro:</b>"
 
-#: src/pref.c:717 src/pref.c:719
+#: src/pref.c:722 src/pref.c:724
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
 msgstr ""
 
-#: src/pref.c:723 src/pref.c:724
+#: src/pref.c:728 src/pref.c:729
 msgid "If on, choosing to destroy a pad will prompt for conformation."
 msgstr ""
 
-#: src/pref.c:727 src/pref.c:728
+#: src/pref.c:732 src/pref.c:733
 msgid "If on, new pads are sticky by default."
 msgstr ""
 
-#: src/pref.c:731 src/pref.c:733
+#: src/pref.c:736 src/pref.c:738
 msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
 msgstr ""
 
-#: src/pref.c:737 src/pref.c:740
+#: src/pref.c:742 src/pref.c:745
 msgid ""
 "If on, when a pad loses focus, it will become uneditable.  This allows you "
 "to move it by left dragging.  To make it editable again, double-click the "
 "pad.  If off, pads are always editable."
 msgstr ""
 
-#: src/pref.c:745 src/pref.c:746
+#: src/pref.c:750 src/pref.c:751
 msgid "All pads will close, saving contents first."
 msgstr ""
 
-#: src/pref.c:749 src/pref.c:750
+#: src/pref.c:754 src/pref.c:755
 msgid "The pad you clicked the close button on will close, saving contents."
-msgstr "La bloko sur kiu vi klakis la ferman butonon fermos, konservas enhavon."
+msgstr ""
+"La bloko sur kiu vi klakis la ferman butonon fermos, konservas enhavon."
 
-#: src/pref.c:753 src/pref.c:755
+#: src/pref.c:758 src/pref.c:760
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."
 msgstr ""
-"La bloko sur kiu vi klakis la ferman butonon estos detruota, perdas enhavon.  "
-"Estos ne konfirmon."
+"La bloko sur kiu vi klakis la ferman butonon estos detruota, perdas "
+"enhavon.  Estos ne konfirmon."
 
 #: src/pad.c:40
 msgid "/_Pad"
@@ -315,7 +316,6 @@ msgid "/Pad/_Close"
 msgstr "/Bloko/Fermu"
 
 #: src/pad.c:47
-#, fuzzy
 msgid "/Pad/_Delete"
 msgstr "/Bloko/Forvisxi"
 
@@ -349,12 +349,10 @@ msgid "/_Notes"
 msgstr "/_Notoj"
 
 #: src/pad.c:56
-#, fuzzy
 msgid "/Notes/_Show All"
 msgstr "/Notoj/Manifestu Cxion"
 
 #: src/pad.c:57
-#, fuzzy
 msgid "/Notes/_Close All"
 msgstr "/Notoj/Fermu Cxion"
 
@@ -403,9 +401,8 @@ msgid "Close All Pads"
 msgstr "Fermu Cxiujn Blokojn"
 
 #: src/pad.c:75
-#, fuzzy
 msgid "Toggle Stickiness"
-msgstr "Baskulu "
+msgstr ""
 
 #: src/pad.c:76
 msgid "Minimize Pads to System Tray"
@@ -422,11 +419,11 @@ msgstr ""
 #: src/pad.c:838
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Vi uzas xpad %s kun GTK+ %i.%i.%i."
+msgstr "Vi uzas ekspadon %s kun GTK+ %i.%i.%i."
 
 #: src/pad.c:843
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
-msgstr "Vizitu http://xpad.sourceforge.net por pli informo pri xpad."
+msgstr "Vizitu http://xpad.sourceforge.net por pli informo pri ekspado."
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
@@ -505,25 +502,22 @@ msgid "No_tes"
 msgstr "No_toj"
 
 #: src/tray.c:127
-#, fuzzy
 msgid "_Show All"
 msgstr "Manifestu Cxion"
 
 #: src/tray.c:131
-#, fuzzy
 msgid "_Hide All"
 msgstr "Kasxu Cxion"
 
 #: src/tray.c:203
 msgid "xpad: right click for more options..."
-msgstr "xpad: dekstraklaku por pli alternativoj..."
+msgstr "ekspado: dekstraklaku por pli alternativoj..."
 
 #: src/tray.c:204
-#, fuzzy
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
-msgstr "Dekstraklaku "
+msgstr ""
 
 #: src/properties.c:276
 msgid "Pad Properties"
@@ -539,24 +533,4 @@ msgstr "Gluecanotoj"
 
 #: xpad.desktop.in.h:3
 msgid "xpad"
-msgstr ""
-
-#, fuzzy
-#~ msgid ""
-#~ "  --nonew               prevents xpad from making a new pad\n"
-#~ "  -q, --quit            quits all open xpad sessions\n"
-#~ "  -l, --list            lists the titles of all pads\n"
-#~ "  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
-#~ "  --showall             brings all pads to the foreground\n"
-#~ msgstr ""
-#~ "  --nonew               prevents xpad from making a new pad\n"
-#~ "  -q, --quit            quits all open xpad sessions\n"
-#~ "  -l, --list            lists the titles of all pads\n"
-#~ "  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
-#~ "  --showall             brings all pads to the foreground\n"
-
-#~ msgid "Open which file?"
-#~ msgstr "Cxu malfermu kiun dosieron?"
-
-#~ msgid "Save as which file?"
-#~ msgstr "Cxu konservu keil kiun dosieron?"
+msgstr "Ekspado"
