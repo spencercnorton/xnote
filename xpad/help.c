@@ -33,7 +33,7 @@ static void show_help_at_page (gint page);
 
 static GtkWidget *create_help (gint page)
 {
-	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
+	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook;
 	GtkWidget *styletext, *stylelabel;
 	gchar helptextbuf[600];
 	
@@ -46,8 +46,6 @@ static GtkWidget *create_help (gint page)
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
 	helplabel = gtk_label_new ("Introduction");
-	keytext = gtk_label_new ("");
-	keylabel = gtk_label_new ("Keyboard Shortcuts");
 	styletext = gtk_label_new ("");
 	stylelabel = gtk_label_new ("Style Locking");
 	notebook = gtk_notebook_new ();
@@ -78,22 +76,6 @@ static GtkWidget *create_help (gint page)
 	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
-	
-	
-	gtk_label_set_markup (GTK_LABEL (keytext),
-"<b>CTRL+n</b>: Creates a new pad.\n\n"
-"<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n"
-"<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n"
-"<b>CTRL+p</b>: Opens the preferences window.\n\n"
-"<b>CTRL+q</b>: Quits xpad.\n\n"
-"<b>CTRL+SHIFT+d</b>: Deletes the currently selected pad.\n\n"
-"<b>CTRL+Left drag</b>: Moves the pad.\n\n"
-"<b>CTRL+Right drag</b>: Resizes the pad.\n\n");
-	
-	gtk_misc_set_padding (GTK_MISC (keytext), 12, 12);
-	gtk_misc_set_alignment (GTK_MISC (keytext), 0, 0);
-	gtk_label_set_line_wrap (GTK_LABEL (keytext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), keytext, keylabel);
 	
 	
 	gtk_label_set_markup (GTK_LABEL (styletext),
