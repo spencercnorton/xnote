@@ -1,12 +1,14 @@
 1.3
 ---
-added a padding option
+added a padding option (thanks Nagy Mate)
 redesigned dialogs
 preferences now auto-apply
-closing a pad with window decorations on will now save position correctly
+you can now choose what the wm close button does, defaults to close
+pads have individual titles now
+xpad gets along better with various wm's now
 cursor no longer blinks if you can't edit pad
 fixed double-clicking-doesn't-select-text-when-edit-lock-is-on bug
-you can now choose what the wm close button does
+pads can no longer be individually closed (unless wm decor is on)
 
 1.2.1
 -----

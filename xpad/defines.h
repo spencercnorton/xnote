@@ -5,12 +5,13 @@
  * This file is just used to hold all the common hard defines we need.
  */
 
-#define DEFAULTS_FILENAME "default-style"
+#define DEFAULTS_FILENAME	"default-style"
 
 #define MAX_FILENAME_SIZE	1024
 
 // files we use are not large
 #define MAX_FILE_SIZE		1024
 
+#define VERSION				"1.3"
 
 #endif
