@@ -1,4 +1,4 @@
-SUBDIRS = intl m4  doc src images po
+SUBDIRS = intl m4 doc src images po
 
 desktopdir = $(shell $(top_srcdir)/scripts/finddesktopdir $(datadir)/applications)
 

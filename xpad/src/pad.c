@@ -634,6 +634,9 @@ gboolean pad_confirm_destroy (pad_node *pad)
 			_("Delete this pad?"),
 			_("All text of this pad will be irrevocably lost."));
 		
+		if (!dialog)
+			return FALSE;
+		
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, 1, GTK_STOCK_DELETE, 2, NULL);
 		
 		do_destroy = gtk_dialog_run (GTK_DIALOG (dialog)) == 2;
@@ -814,6 +817,9 @@ static void about_dialog (pad_node *pad)
 	dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
 		text,
 		_("Visit http://xpad.sourceforge.net for more information about xpad."));
+	
+	if (!dialog)
+		return;
 	
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
 	

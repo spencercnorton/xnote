@@ -18,20 +18,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef XPAD_SM_H
+#define XPAD_SM_H
 
 #include <gtk/gtk.h>
-#include "defines.h"
-#include "pad.h"
 
-GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary);
-void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *secondary);
+gboolean xpad_sm_start_interact (gboolean error);
+void xpad_sm_stop_interact (gboolean stop_shutdown);
+void xpad_sm_init (void);
+void xpad_sm_shutdown (void);
+void xpad_sm_set_id (char *id);
 
-extern gchar *working_dir;
-extern gint verbosity;
-extern guint autosave_timeout_id;
-extern gchar *program_name;
 
-#endif /* _MAIN_H_ */
+#endif /* XPAD_SM_H */

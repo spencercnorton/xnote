@@ -66,6 +66,8 @@ DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HAVE_LIB = @HAVE_LIB@
 INSTOBJEXT = @INSTOBJEXT@
 INTLBISON = @INTLBISON@
@@ -81,6 +83,7 @@ LTLIBINTL = @LTLIBINTL@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 PACKAGE = @PACKAGE@
+PKG_CONFIG = @PKG_CONFIG@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
@@ -89,13 +92,13 @@ VERSION = @VERSION@
 
 bin_PROGRAMS = xpad
 
-xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h  help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c  eggtrayicon.h defines.h gettext.h settings.c settings.h  properties.c properties.h
+xpad_SOURCES = main.c main.h fio.c fio.h pref.c pref.h pad.c pad.h  help.c help.h toolbar.c toolbar.h tray.c tray.h eggtrayicon.c  eggtrayicon.h defines.h gettext.h settings.c settings.h  properties.c properties.h sm.c sm.h
 
 
-AM_CFLAGS = -ansi -pedantic -Wall `pkg-config --cflags gtk+-2.0`  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED  -DGDK_PIXMAP_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
+AM_CFLAGS = @GTK_CFLAGS@ @X_CFLAGS@ -ansi -pedantic -Wall  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED  -DGDK_PIXMAP_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
 
 
-xpad_LDFLAGS = `pkg-config --libs gtk+-2.0`
+xpad_LDFLAGS = @LDFLAGS@ @GTK_LIBS@ @X_PRE_LIBS@ @X_LIBS@ @X_EXTRA_LIBS@
 
 localedir = $(datadir)/locale
 
@@ -109,8 +112,12 @@ PROGRAMS =  $(bin_PROGRAMS)
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
+X_CFLAGS = @X_CFLAGS@
+X_LIBS = @X_LIBS@
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+X_PRE_LIBS = @X_PRE_LIBS@
 xpad_OBJECTS =  main.o fio.o pref.o pad.o help.o toolbar.o tray.o \
-eggtrayicon.o settings.o properties.o
+eggtrayicon.o settings.o properties.o sm.o
 xpad_LDADD = $(LDADD)
 xpad_DEPENDENCIES = 
 CFLAGS = @CFLAGS@
@@ -125,7 +132,7 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = tar
 GZIP_ENV = --best
 DEP_FILES =  .deps/eggtrayicon.P .deps/fio.P .deps/help.P .deps/main.P \
-.deps/pad.P .deps/pref.P .deps/properties.P .deps/settings.P \
+.deps/pad.P .deps/pref.P .deps/properties.P .deps/settings.P .deps/sm.P \
 .deps/toolbar.P .deps/tray.P
 SOURCES = $(xpad_SOURCES)
 OBJECTS = $(xpad_OBJECTS)

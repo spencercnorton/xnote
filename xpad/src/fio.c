@@ -142,9 +142,11 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 	{
 		pad->contentname = fio_find_free_filename ("content-");
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
+		fio_set_file (pad->contentname, "");
 		
 		pad->infoname = fio_find_free_filename ("info-");
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
+		fio_set_file (pad->infoname, "");
 	}
 }
 

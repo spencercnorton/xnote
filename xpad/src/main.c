@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "help.h"
 #include "fio.h"
+#include "sm.h"
 #include "tray.h"
 #include "settings.h"
 #include "defines.h"
@@ -71,10 +72,14 @@ gboolean open_old_pads = TRUE;
 gint master_fd = -1;
 FILE *output;
 gchar *master_name = NULL;
+gchar *program_name;
 
 static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
+	
+	xpad_sm_shutdown ();	
+	
 	pref_close ();
 #ifdef G_OS_UNIX
 	tray_close ();
@@ -143,6 +148,9 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 {
 	GtkWidget *dialog;
 	
+	if (!xpad_sm_start_interact (TRUE))
+		return;
+	
 	fprintf (stderr, "%s\n", primary);
 	
 	dialog = xpad_alert_new (parent, GTK_STOCK_DIALOG_ERROR,
@@ -154,6 +162,8 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	
 	gtk_widget_destroy (dialog);
+	
+	xpad_sm_stop_interact (FALSE);
 }
 
 
@@ -224,6 +234,12 @@ pad_show_p_to_i (gint *n)
 }
 
 static void
+set_session (char *str)
+{
+	xpad_sm_set_id (str);
+}
+
+static void
 list_pads (void)
 {
 	const pad_node *temp;
@@ -231,11 +247,17 @@ list_pads (void)
 		fprintf (output, "%s\n", temp->title);
 }
 
+enum arg_type {
+	ARG_TYPE_NONE,
+	ARG_TYPE_INT,
+	ARG_TYPE_STRING
+};
+
 struct argument_def
 {
 	gboolean local;
 	const gchar *name;
-	gboolean second;
+	enum arg_type second;
 	union {
 		void (*func) (void);
 		void (*func_arg) (void *);
@@ -245,26 +267,27 @@ typedef struct argument_def argument;
 
 static const argument arguments[] =
 {
-	{TRUE, "-h", FALSE, {print_help}},
-	{TRUE, "--help", FALSE, {print_help}},
-	{TRUE, "-V", FALSE, {print_version}},
-	{TRUE, "--version", FALSE, {print_version}},
-	{TRUE, "-v", TRUE, {G_CALLBACK (set_verbosity)}},
-	{TRUE, "--verbosity", TRUE, {G_CALLBACK (set_verbosity)}},
-	{TRUE, "--nonew", FALSE, {set_nonew}},
-	{TRUE, "-n", FALSE, {set_new}},
-	{TRUE, "--new", FALSE, {set_new}},
+	{TRUE, "-h", ARG_TYPE_NONE, {print_help}},
+	{TRUE, "--help", ARG_TYPE_NONE, {print_help}},
+	{TRUE, "-V", ARG_TYPE_NONE, {print_version}},
+	{TRUE, "--version", ARG_TYPE_NONE, {print_version}},
+	{TRUE, "-v", ARG_TYPE_INT, {G_CALLBACK (set_verbosity)}},
+	{TRUE, "--verbosity", ARG_TYPE_INT, {G_CALLBACK (set_verbosity)}},
+	{TRUE, "--nonew", ARG_TYPE_NONE, {set_nonew}},
+	{TRUE, "-n", ARG_TYPE_NONE, {set_new}},
+	{TRUE, "--new", ARG_TYPE_NONE, {set_new}},
 	
-	{FALSE, "--nonew", FALSE, {set_nonew}},	/* registered here a second time because it has effects both on local instances and remote instances */
-	{FALSE, "-n", FALSE, {G_CALLBACK (pad_new)}},
-	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
-	{FALSE, "-q", FALSE, {gtk_main_quit}},
-	{FALSE, "--quit", FALSE, {gtk_main_quit}},
-	{FALSE, "-l", FALSE, {list_pads}},
-	{FALSE, "--list", FALSE, {list_pads}},
-	{FALSE, "-s", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
-	{FALSE, "--show", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
-	{FALSE, "--showall", FALSE, {G_CALLBACK (pads_show_all)}}
+	{FALSE, "--nonew", ARG_TYPE_NONE, {set_nonew}},	/* registered here a second time because it has effects both on local instances and remote instances */
+	{FALSE, "-n", ARG_TYPE_NONE, {G_CALLBACK (pad_new)}},
+	{FALSE, "--new", ARG_TYPE_NONE, {G_CALLBACK (pad_new)}},
+	{FALSE, "-q", ARG_TYPE_NONE, {gtk_main_quit}},
+	{FALSE, "--quit", ARG_TYPE_NONE, {gtk_main_quit}},
+	{FALSE, "-l", ARG_TYPE_NONE, {list_pads}},
+	{FALSE, "--list", ARG_TYPE_NONE, {list_pads}},
+	{FALSE, "-s", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
+	{FALSE, "--show", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
+	{FALSE, "--showall", ARG_TYPE_NONE, {G_CALLBACK (pads_show_all)}},
+	{FALSE, "--session", ARG_TYPE_STRING, {G_CALLBACK (set_session)}}
 };
 
 #define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
@@ -339,23 +362,21 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			 * companion argument, make sure we skip the companion argument on our
 			 * next iteration.
 			 */
-			if (!longform && arguments[j].second) i++;
+			if (/*!longform &&*/ arguments[j].second != ARG_TYPE_NONE)
+				i++;
 			
 			/* Don't accept this argument, but don't complain either. */
 			continue;
 		}
 		
-		if (arguments[j].second)
+		if (arguments[j].second != ARG_TYPE_NONE)
 		{
 			/* right now we only do integer arguments... */
-			long int arg;
+			long int int_arg;
 			char *companion, *endptr;
 			
-			if (longform)
+			if ((*argv)[i][arglen[j]] == '=')
 			{
-				if ((*argv)[i][arglen[j]] != '=') 
-				  	missing_companion_arg(arguments[j].name);
-				
 				companion = (*argv)[i] + arglen[j] + 1;
 			}
 			else
@@ -369,18 +390,25 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			
 			if (!*companion) missing_companion_arg(arguments[j].name);
 			
-			arg = strtol(companion, &endptr, 10);
-			
-			if (*endptr)
+			if (arguments[j].second == ARG_TYPE_INT)
 			{
-				fprintf(stderr, _("Invalid number: '%s'\n"), companion);
+				int_arg = strtol(companion, &endptr, 10);
 				
-				if (local)
-					exit(1);
+				if (*endptr)
+				{
+					fprintf(stderr, _("Invalid number: '%s'\n"), companion);
+					
+					if (local)
+						exit(1);
+				}
+				else
+				{
+					arguments[j].callbacks.func_arg (&int_arg);
+				}
 			}
-			else
+			else /* string */
 			{
-				arguments[j].callbacks.func_arg (&arg);
+				arguments[j].callbacks.func_arg (companion);
 			}
 		}
 		else
@@ -870,7 +898,7 @@ xpad_initial_save (gpointer data)
 }
 
 /* data is an array of void pointers, indicating the argc and argv */
-static int xpad_init (gpointer data)
+static gboolean xpad_init (gpointer data)
 {
 	gint first_time;
 	gpointer *newdata;
@@ -912,18 +940,22 @@ static int xpad_init (gpointer data)
 	
 	handle_args (newdata[0], newdata[1], FALSE);
 	
+	xpad_sm_init ();
+	
 	/* when we get free time, save all the settings */
 	g_idle_add (xpad_initial_save, NULL);
 	
 	if (first_time)
 		show_help ();
 	
-	return 0;
+	return FALSE;
 }
 
 int main (int argc, char *argv[])
 {
 	gpointer args[2];
+	
+	program_name = argv[0];
 	
 #if HAVE_SETLOCALE
 	setlocale (LC_ALL, "");
