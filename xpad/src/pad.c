@@ -76,7 +76,7 @@ const toolbar_button buttons[] =
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
 	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), N_("Lock Style")},
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Preferences")},
-	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Quit")},
+	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Close All Pads")},
 	{"Help", "gtk-help", 0, G_CALLBACK (show_help), N_("Show Help")},
 	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Sticky")},
 	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}
@@ -1141,6 +1141,9 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *tmp;
 	gint n = 0, i = SHOW_ACTION_OFFSET;
 	GtkItemFactoryEntry entry;
+	GtkClipboard *clipboard;
+	GtkTextBuffer *buf;
+	gboolean is_selection;
 	const gchar *submenu = _("/Notes");
 	
 	/**
@@ -1157,33 +1160,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 				gtk_item_factory_path_from_widget (tmp));
 		tmp = gtk_item_factory_get_item_by_action (pad->menu, i++);
 	}
-	/*
-	gtk_item_factory_delete_item (pad->menu, "/Notes/sep");
-	gtk_item_factory_delete_item (pad->menu, _("/Notes/Show All"));
-	gtk_item_factory_delete_item (pad->menu, _("/Notes/Close All"));
 	
-	entry.path = "/Windows/sep";
-	entry.accelerator = NULL;
-	entry.callback = NULL;
-	entry.callback_action = 0;
-	entry.item_type = "<Separator>";
-	gtk_item_factory_create_item (pad->menu, &entry, NULL, 1);
-	
-	entry.path = _("/Windows/_Show All");
-	entry.accelerator = NULL;
-	entry.callback = menuitem_cb;
-	entry.callback_action = 10;
-	entry.item_type = "<Item>";
-	gtk_item_factory_create_item (pad->menu, &entry, NULL, 1);
-		
-	entry.path = _("/Windows/_Close All");
-	entry.accelerator = "<control>Q";
-	entry.callback = menuitem_cb;
-	entry.callback_action = 6;
-	entry.item_type = "<StockItem>";
-	entry.extra_data = GTK_STOCK_QUIT;
-	gtk_item_factory_create_item (pad->menu, &entry, NULL, 1);
-	*/
 	/**
 	 * Populate list of windows.
 	 */
@@ -1212,6 +1189,18 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->locked;
 	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Sticky"));
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
+	
+	/* setup copy/cut/paste sensitivity */
+	buf = gtk_text_view_get_buffer (get_text (GTK_WINDOW (pad->window)));
+	is_selection = gtk_text_buffer_get_selection_bounds (buf, NULL, NULL);
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Cut"));
+	gtk_widget_set_sensitive (tmp, is_selection);
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Copy"));
+	gtk_widget_set_sensitive (tmp, is_selection);
+	
+	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Paste"));
+	gtk_widget_set_sensitive (tmp, gtk_clipboard_wait_is_text_available (clipboard));
 	
 	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
 }
