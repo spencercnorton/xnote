@@ -2,6 +2,7 @@
 #define DEFINES_H
 
 #include "../config.h"
+
 #include "gettext.h"
 
 /**

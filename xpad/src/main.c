@@ -961,10 +961,8 @@ int main (int argc, char *argv[])
 	setlocale (LC_ALL, "");
 #endif
 	
-#if ENABLE_NLS
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
-#endif
 	
 	output = stdout;
 	
