@@ -207,7 +207,7 @@ static void pad_update_style (pad_node *pad)
 	pad_style *pstyle;
 	
 	if (pad->locked)
-		pstyle = &pad->style;
+		pstyle = &pad->style;	/* should we just bail instead? */
 	else
 		pstyle = &current_settings.style;
 	
@@ -215,8 +215,8 @@ static void pad_update_style (pad_node *pad)
 	style1 = gtk_widget_get_modifier_style (pad->eventbox_outer);
 	
 	style->base[GTK_STATE_NORMAL] = pstyle->back;
-	style->text[GTK_STATE_NORMAL] = pstyle->text;
 	style->bg[GTK_STATE_NORMAL] = pstyle->back;
+	style->text[GTK_STATE_NORMAL] = pstyle->text;
 	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
 	style->font_desc = pango_font_description_from_string (pstyle->fontname);
 	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
@@ -310,16 +310,22 @@ pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 	GCallback func = NULL;
 	GtkWidget *widget = NULL;
 	
+	if (target_func == NULL)
+		return;
+	
 	list = toolbar_get_buttons (pad->toolbar);
 	
-	for (tmp = list; tmp && (func != target_func); tmp = tmp->next)
+	for (tmp = list; tmp; tmp = tmp->next)
 	{
 		widget = GTK_WIDGET (tmp->data);
 		
 		func = ((const toolbar_button *) g_object_get_data 
 			(G_OBJECT (widget), "tb"))->func;
+		
+		if (func == target_func)
+			break;
 	}
-
+	
 	if (tmp)
 	{
 		/* Found target_func; func points at it now. */
@@ -1738,7 +1744,6 @@ pad_node *pad_new (void)
 	
 	fio_open_pad_files (pad, TRUE);
 	
-	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
 	
@@ -1756,7 +1761,6 @@ pad_node *pad_new (void)
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 	
 	return pad;
 }
@@ -1797,7 +1801,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 	
 	return pad;
 }
@@ -1823,5 +1826,4 @@ pad_renew (pad_node *pad)
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 }

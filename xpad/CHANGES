@@ -1,3 +1,9 @@
+1.8
+---
+xpad won't take 100% cpu sometimes when idle
+fixed bug that screwed up last toolbar button's toggle setting
+
+
 1.7
 ---
 Popup alerts are more pleasing.  (HIG compliant)
