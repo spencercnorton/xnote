@@ -217,23 +217,25 @@ static GtkWidget *properties_create (pad_node *pad)
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_padding), 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_width), 0);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_border_entries), 0);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox_global), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (window), 6);
 	
-	gtk_window_set_title (GTK_WINDOW(window), _("Pad Properties"));
-	gtk_container_add (GTK_CONTAINER(window), vbox_global);
+	gtk_window_set_title (GTK_WINDOW (window), _("Pad Properties"));
+	gtk_container_add (GTK_CONTAINER (window), vbox_global);
 	
 	/* buttonbox setup */
 	g_signal_connect_swapped (GTK_OBJECT (button_close), "clicked", 
 		G_CALLBACK (gtk_widget_destroy), (gpointer) window);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
-	gtk_box_set_spacing (GTK_BOX(buttonbox), 0);
-	gtk_box_pack_end_defaults (GTK_BOX(buttonbox), button_close);
-	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 6);
+	gtk_box_set_spacing (GTK_BOX (buttonbox), 0);
+	gtk_box_pack_end_defaults (GTK_BOX (buttonbox), button_close);
 	
 	/* vbox_global setup */
-	gtk_box_pack_start (GTK_BOX(vbox_global), checkbutton_locked, TRUE, TRUE, 9);
-	gtk_box_pack_start (GTK_BOX(vbox_global), separator_locked, TRUE, TRUE, 9);
-	gtk_box_pack_start (GTK_BOX(vbox_global), notebook, TRUE, TRUE, 0);
-	gtk_box_pack_start (GTK_BOX(vbox_global), buttonbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox_global), checkbutton_locked, TRUE, TRUE, 6);
+	gtk_box_pack_start (GTK_BOX (vbox_global), separator_locked, TRUE, TRUE, 6);
+	gtk_box_pack_start (GTK_BOX (vbox_global), notebook, TRUE, TRUE, 6);
+	gtk_box_pack_start (GTK_BOX (vbox_global), buttonbox, TRUE, TRUE, 0);
 	
 	if (!pad->locked)
 	{

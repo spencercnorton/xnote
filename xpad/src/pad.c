@@ -39,9 +39,6 @@ static GtkItemFactoryEntry menu_items[] =
 {
 	{N_("/_Pad"), 				NULL,			0,		0, 	"<Branch>"},
 	{N_("/Pad/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-/*	{N_("/File/_Open..."),			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
-	{"/File/sep", 				NULL,			0,		0,	"<Separator>"},
-	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},*/
 	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
 	{"/Pad/_Properties", 			NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
 	{"/Pad/sep2", 				NULL,			0,		0,	"<Separator>"},
@@ -71,15 +68,14 @@ static GtkItemFactoryEntry menu_items[] =
 const toolbar_button buttons[] =
 {
 	{"New", "gtk-new", 0, G_CALLBACK (pad_new), N_("Open New Pad")},
-/*	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), N_("Open Copy of File")},
-	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), N_("Save Pad As File")},*/
 	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
+	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Destroy Pad")},
 	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
-	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Preferences")},
+	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Global Preferences")},
+	{"Properties", "gtk-properties", 0, G_CALLBACK (properties_open), N_("Edit Pad Properties")},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Close All Pads")},
 	{"Help", "gtk-help", 0, G_CALLBACK (show_help), N_("Show Help")},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Sticky")},
+	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Toggle Stickiness")},
 	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}
 };
 
@@ -636,7 +632,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 		GtkWidget *dialog;
 		
 		dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_WARNING,
-			_("Delete contents of this pad?"),
+			_("Delete this pad?"),
 			_("All text of this pad will be irrevocably lost."));
 		
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, 1, GTK_STOCK_DELETE, 2, NULL);
