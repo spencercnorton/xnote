@@ -26,4 +26,4 @@ Exec=xpad
 Terminal=false
 Icon=xpad/xpad.xpm
 Type=Application
-Categories=Application;TODO;
+Categories=Application;TODO;Utility;
