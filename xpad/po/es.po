@@ -1,24 +1,24 @@
-# Mesajele în limba românã pentru pachetul xpad.
-# Copyright (C) 2003 Free Software Foundation, Inc.
-# Acest fiºier este distribuit sub aceeaºi licenþã ca pachetul xpad.
-# Eugen Hoanca <eugenh@urban-grafx.ro>, 2003.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad-1.11-b1\n"
+"Project-Id-Version: xpad 1.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-07-10 23:03-0400\n"
-"PO-Revision-Date: 2003-05-29 19:24+0300\n"
-"Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
-"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2003-07-10 11:05-0500\n"
+"Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/main.c:198
-#, fuzzy
 msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
-msgstr "Valoare ilegalã de detaliere. Trebuie sã fie între 0 ºi 2 inclusiv.\n"
+msgstr ""
 
 #: src/main.c:260
 msgid "Prints usage information and exits"
@@ -69,200 +69,189 @@ msgstr ""
 #: src/main.c:339
 #, c-format
 msgid "Missing companion argument to %s\n"
-msgstr "Lipseºte parametrul pereche pentru %s\n"
+msgstr ""
 
 #: src/main.c:388
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand argument '%s'\n"
-msgstr "Nu am înþeles parametrul %s.\n"
+msgstr ""
 
 #: src/main.c:444
 #, c-format
 msgid "Invalid number: '%s'\n"
-msgstr "Numãr invalid: '%s'\n"
+msgstr ""
 
 #: src/fio.c:84
 #, c-format
 msgid "Could not write to file %s."
-msgstr "Nu am putut scrie în fiºierul %s."
+msgstr ""
 
 #: src/fio.c:110
 #, c-format
 msgid "Could not read from file %s."
-msgstr "Nu am putut citi din fiºierul %s."
+msgstr ""
 
 #: src/fio.c:438
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open directory %s."
-msgstr "Nu am putut deschide directorul xpad %s."
+msgstr ""
 
 #: src/fio.c:441
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
-"Acest director este necesar pentru stocare preferinþe ºi informaþii. Xpad "
-"seva închide acum."
 
 #: src/pref.c:289 src/properties.c:228
 msgid "Background Color"
-msgstr "Culoare fundal"
+msgstr ""
 
 #: src/pref.c:290 src/properties.c:229
 msgid "Text Color"
-msgstr "Culoare Text"
+msgstr ""
 
 #: src/pref.c:291 src/properties.c:230
 msgid "Border"
-msgstr "Margine"
+msgstr ""
 
 #: src/pref.c:292 src/properties.c:231
 msgid "Border _width:"
-msgstr "Lãþime(_width) margine:"
+msgstr ""
 
 #: src/pref.c:293 src/pref.c:298 src/properties.c:232 src/properties.c:235
 msgid "pixels"
-msgstr "pixeli"
+msgstr ""
 
 #: src/pref.c:294 src/properties.c:233
 msgid "Font Face"
-msgstr "Faþã font"
+msgstr ""
 
 #: src/pref.c:295
 msgid "Options"
-msgstr "Opþiuni"
+msgstr ""
 
 #: src/pref.c:296
 msgid "Toolbar"
-msgstr "Barã de unelte"
+msgstr ""
 
 #: src/pref.c:297 src/properties.c:234
 msgid "_Padding:"
-msgstr "Umplere(_Padding)"
+msgstr ""
 
 #: src/pref.c:304
 msgid "Allow _window manager decorations"
-msgstr "Permite decoraþiuni fereastrã (_window)"
+msgstr ""
 
 #: src/pref.c:305
 msgid "Con_firm pad destruction"
-msgstr "Con_firmare distrugere pad"
+msgstr ""
 
 #: src/pref.c:306
 msgid "_Edit lock"
-msgstr "Blocare _Edit"
+msgstr ""
 
 #: src/pref.c:351
 msgid "Global Preferences"
-msgstr "Preferinþe globale"
+msgstr ""
 
 #: src/pref.c:370 src/properties.c:303
 msgid "_Use system text color"
-msgstr "_Utilizeazã culorile sistemului"
+msgstr ""
 
 #: src/pref.c:393 src/properties.c:324
 msgid "_Use system background color"
-msgstr "_Utilizeazã culoarea de fundal a sistemului"
+msgstr ""
 
 #: src/pref.c:429 src/properties.c:357
 msgid "The amount of space you want between the border and text."
-msgstr "Cuantumul de spaþiu pe care îl doriþi între margine ºi text."
+msgstr ""
 
 #: src/pref.c:430 src/properties.c:358
 msgid ""
 "Choose the number of pixels around the text region.  This space is colored "
 "the same and surrounds it on all sides."
 msgstr ""
-"Alegeþi numãrul de pixeli din jurul regiunii de text. Acest spaþiu e colorat "
-"la fel ºi o înconjoarã din toate pãrþile."
 
 #: src/pref.c:443 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
-msgstr "Cuantumul de spaþiu care sa înconjoare padul."
+msgstr ""
 
 #: src/pref.c:444 src/properties.c:375
 msgid ""
 "Choose the number of pixels around the pad.  This space is colored "
 "independently and surrounds it on all sides."
 msgstr ""
-"Alegeþi numãrul de pixeli din jurul padului. Acest spaþiu este colorat "
-"independent ºi înconjoarã din toate pãrþile."
 
 #: src/pref.c:470 src/properties.c:397
 msgid "_Use system font face"
-msgstr "_Utilizeazã faþa fontului sistemului"
+msgstr ""
 
 #: src/pref.c:506
 msgid "Click and drag a button to move it."
-msgstr "Click pe buton si miºcaþi mausul (click and drag) pentru mutare."
+msgstr ""
 
 #: src/pref.c:512
 msgid "_Enable toolbar"
-msgstr "Activare (_Enable) barã unelte"
+msgstr ""
 
 #: src/pref.c:513
 msgid "_Auto-hide toolbar"
-msgstr "_Auto-ascundere barã unelte"
+msgstr ""
 
 #: src/pref.c:523
 msgid "<b>Toolbar Buttons:</b>"
-msgstr "<b>Butoane Barã Unelte:</b>"
+msgstr ""
 
 #: src/pref.c:524
 msgid "<b>Used Buttons:</b>"
-msgstr "<b>Butoane folosite:</b>"
+msgstr ""
 
 #: src/pref.c:525
 msgid "<b>Unused Buttons:</b>"
-msgstr "<b>Butoane nefolosite:</b>"
+msgstr ""
 
 #: src/pref.c:642 src/pref.c:643
 msgid ""
 "If on, a toolbar will appear below each pad when the mouse hovers over it."
 msgstr ""
-"Dacã e activat, o barã de unelte va apãrea sub fiecare pad când mausul "
-"ajunge peste el."
 
 #: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
-msgstr "Dacã e activat, bara de unelte va dispãrea când pad-ul nu e folosit."
+msgstr ""
 
 #: src/pref.c:659
 msgid "Allow _scrollbars"
-msgstr "Permite bare _scroll"
+msgstr ""
 
 #: src/pref.c:660
-#, fuzzy
 msgid "Pads start s_ticky"
-msgstr "/Pad/Lipicios(_Sticky)"
+msgstr ""
 
 #: src/pref.c:663
 msgid "Close and save _all pads"
-msgstr "Închide ºi salveazã toate (_all) pad-urile"
+msgstr ""
 
 #: src/pref.c:665
 msgid "Close and save _pad"
-msgstr "Închide ºi salveazã _pad"
+msgstr ""
 
 #: src/pref.c:667
 msgid "_Destroy pad (no confirmation)"
-msgstr "_Distrugere pad (fãrã confirmare)"
+msgstr ""
 
 #: src/pref.c:672
 msgid "<b>Window Manager Close Action:</b>"
-msgstr "<b>Acþiune de închidere manager de ferestre:</b> "
+msgstr ""
 
 #: src/pref.c:717 src/pref.c:719
 msgid ""
 "If on, your window manager will add its own decorations to each pad.  For "
 "example, a titlebar and close button."
 msgstr ""
-"Dacã e activat, managerul de ferestre va adãuga decoraþiunile proprii la "
-"fiecare pad. De exemplu, o barã de titlu ºi un buton de închidere."
 
 #: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
-msgstr "Dacã e activat, distrugerea unui pad va solicita confirmare."
+msgstr ""
 
 #: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
@@ -273,8 +262,6 @@ msgid ""
 "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
 "resizes to fit the text."
 msgstr ""
-"Dacã e activat, barele de scroll vor apãrea când textul depãºeºte padul. "
-"Dacã e dezactivat, padul îºi va modifica mãrimea în funcþie de text."
 
 #: src/pref.c:737 src/pref.c:740
 msgid ""
@@ -282,189 +269,181 @@ msgid ""
 "to move it by left dragging.  To make it editable again, double-click the "
 "pad.  If off, pads are always editable."
 msgstr ""
-"Dacã e activat, când nu mai este focus pe un pad, acesta devine needitabil. "
-"Aceasta vã permite sa îl mutaþi cu click-stânga ºi tragere. Pentru a-l face "
-"din nou editabil, dublu-click pe pad. Dacã este dezactivat, padul este "
-"editabil tot timpul."
 
 #: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
-msgstr "Toate pad-urile vor fi închise, salvez mai întâi conþinutul."
+msgstr ""
 
 #: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
 msgstr ""
-"Padul cu butonul de închidere pe care aþi dat click se va închide, se "
-"salveazã conþinutul."
 
 #: src/pref.c:753 src/pref.c:755
 msgid ""
 "The pad you clicked the close button on will be destroyed, losing contents.  "
 "There will be no confirmation."
 msgstr ""
-"Padul cu butonul de închidere pe care aþi dat click va fi distrus, "
-"conþinutul se va pierde. Nu va fi nici o confirmare."
 
 #: src/pad.c:40
 msgid "/_Pad"
-msgstr "/_Pad"
+msgstr ""
 
 #: src/pad.c:41
 msgid "/Pad/_New"
-msgstr "/Pad/_Nou"
+msgstr ""
 
 #: src/pad.c:42
 msgid "/Pad/sep1"
-msgstr "/Pad/sep1"
+msgstr ""
 
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
-msgstr "/Pad/Lipicios(_Sticky)"
+msgstr ""
 
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
-msgstr "/Pad/Proprie_tãþi"
+msgstr ""
 
 #: src/pad.c:45
 msgid "/Pad/sep2"
-msgstr "/Pad/sep2"
+msgstr ""
 
 #: src/pad.c:46
 msgid "/Pad/_Close"
-msgstr "/Pad/Închidere(_Close)"
+msgstr ""
 
 #: src/pad.c:47
 msgid "/Pad/_Delete"
-msgstr "/Pad/ªtergere(_Delete)"
+msgstr ""
 
 #. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 #: src/pad.c:49
 msgid "/_Edit"
-msgstr "/_Editare"
+msgstr ""
 
 #: src/pad.c:50
 msgid "/Edit/C_ut"
-msgstr "/Editare/Tãiere(C_ut)"
+msgstr ""
 
 #: src/pad.c:51
 msgid "/Edit/_Copy"
-msgstr "/Edit/_Copiere"
+msgstr ""
 
 #: src/pad.c:52
 msgid "/Edit/_Paste"
-msgstr "/Edit/Alipire(_Paste)"
+msgstr ""
 
 #: src/pad.c:53
 msgid "/Edit/sep"
-msgstr "/Editare/sep"
+msgstr ""
 
 #: src/pad.c:54
 msgid "/Edit/Prefere_nces"
-msgstr "/Edit/Preferi_nþe"
+msgstr ""
 
 #: src/pad.c:55
 msgid "/_Notes"
-msgstr "/_Note"
+msgstr ""
 
 #: src/pad.c:56
 msgid "/Notes/_Show All"
-msgstr "/Note/_Afiºare Toate(_Show All)"
+msgstr ""
 
 #: src/pad.c:57
 msgid "/Notes/_Close All"
-msgstr "/Note/Închidere toate(_Close All)"
+msgstr ""
 
 #: src/pad.c:58
 msgid "/Notes/sep"
-msgstr "/Note/sep"
+msgstr ""
 
 #: src/pad.c:59
 msgid "/_Help"
-msgstr "/Ajutor(_Help)"
+msgstr ""
 
 #: src/pad.c:60
 msgid "/Help/_Contents"
-msgstr "/Ajutor/_Conþinut"
+msgstr ""
 
 #: src/pad.c:61
 msgid "/Help/_About"
-msgstr "/Help/Despre(_About)"
+msgstr ""
 
 #: src/pad.c:68
 msgid "Open New Pad"
-msgstr "Deschide pad nou"
+msgstr ""
 
 #: src/pad.c:69
 msgid "Close and Save Pad"
-msgstr "Închide ºi Salveazã pad"
+msgstr ""
 
 #: src/pad.c:70
 msgid "Delete Pad"
-msgstr "ªterge pad"
+msgstr ""
 
 #: src/pad.c:71
 msgid "Clear Pad Contents"
-msgstr "ªterge Conþinut pad"
+msgstr ""
 
 #: src/pad.c:72
 msgid "Edit Global Preferences"
-msgstr "Editeaxã preferinþe globale"
+msgstr ""
 
 #: src/pad.c:73
 msgid "Edit Pad Properties"
-msgstr "Editeazã proprietãþi pad"
+msgstr ""
 
 #: src/pad.c:74
 msgid "Close All Pads"
-msgstr "Închide toate pad-urile"
+msgstr ""
 
 #: src/pad.c:75
 msgid "Toggle Stickiness"
-msgstr "Schimbã(toggle) comportament(stickiness)"
+msgstr ""
 
 #: src/pad.c:76
 msgid "Minimize Pads to System Tray"
-msgstr "Minimizeazã pad-uri în tray-ul sistem"
+msgstr ""
 
 #: src/pad.c:657
 msgid "Delete this pad?"
-msgstr "ªtergeþi acest pad?"
+msgstr ""
 
 #: src/pad.c:658
 msgid "All text of this pad will be irrevocably lost."
-msgstr "Toate textele din acest pad vor fi pierdute irevocabil."
+msgstr ""
 
 #: src/pad.c:838
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr "Folosiþi xpad %s cu GTK+ %i/%i.%i."
+msgstr ""
 
 #: src/pad.c:843
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
-msgstr "Vizitaþi http://xpad.sourceforge.net pentru mai multe informaþii."
+msgstr ""
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
 #: src/pad.c:968 src/pad.c:1146
 msgid "/Edit/Cut"
-msgstr "/Editare/Tãiere(cut)"
+msgstr ""
 
 #: src/pad.c:970 src/pad.c:1148
 msgid "/Edit/Copy"
-msgstr "/Editare/Copiere"
+msgstr ""
 
 #: src/pad.c:972 src/pad.c:1152
 msgid "/Edit/Paste"
-msgstr "/Editare/Alipire(Paste)"
+msgstr ""
 
 #: src/pad.c:1094
 msgid "/Notes"
-msgstr "/Note"
+msgstr ""
 
 #. set checkboxes
 #: src/pad.c:1140
 msgid "/Pad/Sticky"
-msgstr "/Pad/Lipicios(Sticky)"
+msgstr ""
 
 #: src/help.c:46
 msgid ""
@@ -472,10 +451,6 @@ msgid ""
 "basically sticky notes on your desktop in which you can write memos.\n"
 "\n"
 msgstr ""
-"Fiecare sesiune xpad constã în unul sau mai multe pad-uri. Aceste pad-uri "
-"sunt primar note lipite pe desktopul vostru în care puteþi sã scrieþi memo-"
-"uri.\n"
-"\n"
 
 #: src/help.c:50
 msgid ""
@@ -484,10 +459,6 @@ msgid ""
 "pad.\n"
 "\n"
 msgstr ""
-"<b>Pentru a muta un pad</b>, trageþi cu click stânga bara de unelte, trageþi "
-"cu click dreapta modificatorul(resizer) în dreapta jos, sau þineþi apãsat "
-"CTRL când se trage cu click dreapta oriunde pe pad.\n"
-"\n"
 
 #: src/help.c:54
 msgid ""
@@ -495,10 +466,6 @@ msgid ""
 "right dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
-"<b>Pentru a mãri/micºora un pad</b>, trageþi cu click dreapta de modificator "
-"(resizer) sau þineþi apãsat CTRL când mutaþi cu click dreapta oriunde pe "
-"pad.\n"
-"\n"
 
 #: src/help.c:57
 msgid ""
@@ -506,9 +473,6 @@ msgid ""
 ">Preferences.\n"
 "\n"
 msgstr ""
-"<b>Pentru a schimba setãrile culorilor</b>, click dreapta pe un pad ºi "
-"alegeþi Editare->Preferinþe.\n"
-"\n"
 
 #: src/help.c:60
 msgid ""
@@ -516,102 +480,49 @@ msgid ""
 "right click on a pad.  Try it out and enjoy.\n"
 "\n"
 msgstr ""
-"Cele mai multe dintre acþiuni sunt disponibile din meniul popul care apare "
-"când faceþi click-dreapta pe un pad. Încercaþi-le.\n"
 
 #: src/help.c:64
 msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Trimiteþi comentarii sau rapoarte de bug la xpad-devel@lists.sourceforge.net"
 
 #: src/help.c:73
 msgid "Help"
-msgstr "Ajutor"
+msgstr ""
 
 #: src/tray.c:123
 msgid "No_tes"
-msgstr "No_te"
+msgstr ""
 
 #: src/tray.c:127
 msgid "_Show All"
-msgstr "Afiºare Toate(_Show All)"
+msgstr ""
 
 #: src/tray.c:131
 msgid "_Hide All"
-msgstr "Ascundere toate (_Hide All)"
+msgstr ""
 
 #: src/tray.c:203
 msgid "xpad: right click for more options..."
-msgstr "xpad: click dreapta pentru mai multe opþiuni..."
+msgstr ""
 
 #: src/tray.c:204
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
 msgstr ""
-"Click dreapta pe acest icon pentru un meniu de opþiuni corespunzãtoare Xpad. "
-"Click drepta pentru a modifica(toggle) dacã pad-urile sa fie afiºate sau nu."
 
 #: src/properties.c:276
 msgid "Pad Properties"
-msgstr "Proprietãþi Pad"
+msgstr ""
 
 #: xpad.desktop.in.h:1
 msgid "Jot down notes for later"
-msgstr ""
+msgstr "Anotar mÃ¡s tarde"
 
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr ""
+msgstr "Nota Pegajosa"
 
 #: xpad.desktop.in.h:3
 msgid "xpad"
 msgstr ""
-
-#~ msgid ""
-#~ "Usage: xpad [OPTIONS]\n"
-#~ "\n"
-#~ "  -V, --version         prints xpad version; exits\n"
-#~ "  -h, --help            prints this usage information; exits\n"
-#~ "  -v N, --verbosity=N   sets level of output\n"
-#~ "                          0=none, 1=moderate, 2=debug\n"
-#~ "                          default is 0\n"
-#~ "  -n, --new             opens a new pad only\n"
-#~ msgstr ""
-#~ "Folosire: xpad [OPÞIUNI]\n"
-#~ "\n"
-#~ "  -V, --version         afiºeazã opþiunile xpad ºi terminã\n"
-#~ "  -h, --help            afiºeazã aceste informaþii de folosire ºi "
-#~ "terminã.\n"
-#~ "  -v N, --verbosity=N   seteazã nivel de output\n"
-#~ "                          0=nici unul, 1=moderat, 2=debug\n"
-#~ "                          implicit e 0\n"
-#~ "  -n, --new             deschide doar un pad nou.\n"
-
-#~ msgid ""
-#~ "  --nonew               prevents xpad from making a new pad\n"
-#~ "  -q, --quit            quits all open xpad sessions\n"
-#~ "  -l, --list            lists the titles of all pads\n"
-#~ "  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
-#~ "  --showall             brings all pads to the foreground\n"
-#~ msgstr ""
-#~ "  --nonew               împiedicã xpad sã creeze un pad nou\n"
-#~ "  -q, --quit            închide toate sesiunile xpad deschise\n"
-#~ "  -l, --list            enumerã titlurile tuturor pad-urilor\n"
-#~ "  -s N, --show=N        aducere al N-lea pad (1-based) in prim-plan\n"
-#~ "  --showall             aducere toate pad0urile în prim plan\n"
-
-#~ msgid "Open which file?"
-#~ msgstr "Ce fiºier sã deschid?"
-
-#~ msgid "Save as which file?"
-#~ msgstr "Salvez ca ºi ce fiºier?"
-
-#~ msgid "Windows"
-#~ msgstr "Ferestre"
-
-#~ msgid "Hide Pads"
-#~ msgstr "Ascunde pad-uri"
-
-#~ msgid "Show Pads"
-#~ msgstr "Afiºeazã pad-uri"
