@@ -1,6 +1,6 @@
 no entry in panel
-make man page
-better documentation
-fix accelerators
-add arbitrary file loading
+make more fault-tolerant
+	i.e. check for lost files on startup
+make man page ?
+add arbitrary file loading ?
 

@@ -1,4 +1,4 @@
-xpad version 0.2 README
+xpad version 0.2.1 README
 -----------------------
 
 xpad is a virtual sticky pad system for X using GTK+.
@@ -16,6 +16,10 @@ INSTALLATION NOTES
 USAGE NOTES
 ----------------------------------------------------------------------------
      Right click to obtain configuration options and open new pads.
+		You can also run xpad again to open a new pad.
+
+	Closing a pad saves the contents for later.  Destroying one destroys
+		the contents.
 
      Hold down CTRL and left drag to move a pad.  Hold down CTRL and right
           drag to resize a pad.
@@ -33,7 +37,7 @@ COMMAND ARGUMENTS
 
 	--sync-time=%d:	Where %d is the number of seconds between each 
 					"sync," or saving of the pad's contents.  Entering
-					0 indicates not saving.
+					0 indicates no syncing.  Default is 60.
 
 
 ----------------------------------------------------------------------------
@@ -44,7 +48,7 @@ LICENSE NOTES
 
      If you make any bug fixes / improvements, please email me at
           msterry@student.umass.edu and let me know so I can implement the 
-          patch.
+          patch.  Or, I encourage you to check out the CVS at sourceforge.
 
 ----------------------------------------------------------------------------
 Copyright (c) 2001 Michael Terry

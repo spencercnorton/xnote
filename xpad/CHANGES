@@ -1,3 +1,8 @@
+0.2.1
+-----
+changed saving to be more fault-tolerant
+added about screen with version info
+
 0.2
 ---
 ported to gtk+-2.0
