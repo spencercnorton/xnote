@@ -1,4 +1,8 @@
-SUBDIRS = doc src images po intl
+SUBDIRS = doc src images po
 
+@INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
-dist_desktop_DATA = xpad.desktop
+desktop_in_files = xpad.desktop.in
+dist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
+
+EXTRA_DIST = scripts/intltool-extract.in scripts/intltool-merge.in scripts/intltool-update.in
