@@ -1912,6 +1912,8 @@ pad_node *pad_new (void)
 	
 	if (verbosity >= 2) printf ("Making new pad.\n");
 	
+	fio_open_pad_files (pad, TRUE);
+	
 	pad = start_pad ();
 	pad->width = xpad_settings_style_get_padding () + 
 		xpad_settings_style_get_border_width () +
@@ -1920,8 +1922,6 @@ pad_node *pad_new (void)
 		xpad_settings_style_get_border_width () +
 		xpad_settings_get_default_height ();
 	gtk_window_set_default_size (pad->window, pad->width, pad->height);
-	
-	fio_open_pad_files (pad, TRUE);
 	
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), (gboolean) pad->sticky);
@@ -1951,12 +1951,21 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	if (verbosity >= 2) printf ("Making new pad with info.\n");
 	
+	pad->infoname = info->infoname;
+	pad->contentname = info->contentname;
+	
 	pad = start_pad ();
 	
 	gtk_window_set_default_size (pad->window, info->width, info->height);
 	gtk_window_move (pad->window, info->x, info->y);
 	
+	fio_open_pad_files (pad, FALSE);
+	
+	gtk_window_set_role (pad->window, pad->infoname);
+	
 	pad_fill_with_file (pad, info->contentname);
+	
+	pad_set_title (pad);
 	
 	pad->locked = info->locked;
 	pad->width = info->width;
@@ -1972,16 +1981,9 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad_style_copy (&pad->style, &info->style);
 	pad_update_style (pad);
 	
-	pad_set_title (pad);
-	gtk_window_set_role (pad->window, pad->infoname);
-	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-	
-	pad->infoname = info->infoname;
-	pad->contentname = info->contentname;
-	fio_open_pad_files (pad, FALSE);
 	
 	return pad;
 }
@@ -1998,12 +2000,12 @@ pad_renew (pad_node *pad)
 	
 	pad_fill_with_file (pad, pad->contentname);
 	
+	pad_set_title (pad);
+	gtk_window_set_role (pad->window, pad->infoname);
+	
 	pad_set_sticky (pad, pad->sticky);
 	
 	pad_update_style (pad);
-	
-	pad_set_title (pad);
-	gtk_window_set_role (pad->window, pad->infoname);
 	
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
