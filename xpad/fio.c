@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "pad.h"
 #include "main.h"
+#include <errno.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -39,7 +40,7 @@ static gchar *fio_fill_filename (const gchar *filename)
 	return g_build_filename (working_dir, filename, NULL);
 }
 
-gint fio_set_file (const gchar *name, const gchar *value)
+gboolean fio_set_file (const gchar *name, const gchar *value, const char **errtext)
 {
 	FILE *file;
 	gchar *temp;
@@ -48,36 +49,51 @@ gint fio_set_file (const gchar *name, const gchar *value)
 	
 	if ( (file = fopen (temp, "w")) == NULL)
 	{
-		fprintf (stderr, "Could not open file [%s] for writing.\n", temp);
+		*errtext = strerror(errno);
+		fprintf (stderr, 
+		         "Could not open file [%s] for writing: %s.\n", 
+			 temp,
+			 *errtext);
 		g_free (temp);
-		return 1;
+		return FALSE;
 	}
 	
 	if (fputs (value, file) == EOF)
 	{
-		fprintf (stderr, "Failed to write file [%s].\n", name);
+		*errtext = strerror(errno);
+		fprintf (stderr, 
+		         "Failed to write file [%s]: %s.\n", 
+			 name,
+			 *errtext);
 	}
 	
 	fclose (file);
 	g_free (temp);
 	
-	return 0;
+	return TRUE;
 }
 
 
 /**
  * Returned gchar * must be g_free'd.
  */
-gchar *fio_get_file (const gchar *name)
+gchar *fio_get_file (const gchar *name, const char **errortext)
 {
 	gchar *fullname;
 	gchar *contents;
+	GError *ErrCode;
 	
 	fullname = fio_fill_filename (name);
 	
-	if (!g_file_get_contents (fullname, &contents, NULL, NULL))
+	if (!g_file_get_contents (fullname, &contents, NULL, &ErrCode))
 	{
-		fprintf (stderr, "Failed to read file [%s].\n", name);
+		*errortext = (ErrCode ? ErrCode->message : NULL);
+		if (!*errortext) *errortext = "Unknown error!";
+		if (verbosity >= 1)
+			fprintf (stderr, 
+			    	"Failed to read file [%s]: %s.\n", 
+				name,
+				*errortext);
 		g_free (fullname);
 		return NULL;
 	}
@@ -150,6 +166,7 @@ void fio_close_pad_files (pad_node *pad)
 void fio_save_default_settings (void)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
+	const char *errtext;
 	
 	sprintf (buf, "wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
 		"sync_time %i\ndecorations %i\n"
@@ -165,7 +182,7 @@ void fio_save_default_settings (void)
 		current_settings.style.border_width, current_settings.style.padding,
 		current_settings.style.fontname);
 
-	fio_set_file (DEFAULTS_FILENAME, buf);
+	fio_set_file (DEFAULTS_FILENAME, buf, &errtext);
 }
 
 
@@ -178,8 +195,9 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 {
 	gchar *buf;
 	va_list ap;
+	const char *errortext;
 	
-	buf = fio_get_file (filename);
+	buf = fio_get_file (filename, &errortext);
 	
 	if (!buf)
 		return 1;
@@ -229,6 +247,7 @@ static void fio_save_info_file (pad_node *pad)
 	gchar *content;
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
+	const char *errtext;
 
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 
@@ -238,14 +257,14 @@ static void fio_save_info_file (pad_node *pad)
 		pad->x, pad->y, pad->width, pad->height, 
 		pad->contentname);
 	
-	fio_set_file (pad->infoname, info_file);
+	fio_set_file (pad->infoname, info_file, &errtext);
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
 	
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
-	fio_set_file (pad->contentname, content);
+	fio_set_file (pad->contentname, content, &errtext);
     g_free (content);
 	
 }

@@ -298,16 +298,28 @@ void cleanup (void)
 	pad_close_all();
 }
 
-static void pad_fill_with_file (pad_node *pad, const gchar *filename)
+
+static void display_dialog_with_text (pad_node *pad, const gchar *text);
+
+
+static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
 	GtkTextBuffer *buffer;
+	const char *errortext;
 	GtkTextView *textbox = get_text (pad->window);
 	
-	contentbuf = fio_get_file (filename);
+	contentbuf = fio_get_file (filename, &errortext);
+	if (!contentbuf)
+	{
+		display_dialog_with_text(pad, errortext);
+		return FALSE;
+	}
+
 	buffer = gtk_text_view_get_buffer (textbox);
 	gtk_text_buffer_set_text (buffer, contentbuf, -1);
 	g_free (contentbuf);
+	return TRUE;
 }
 
 static void pad_move (pad_node *node, GdkEvent *event)
@@ -356,27 +368,29 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 {
 	const gchar *filename;
 	GtkFileSelection *selector;
-	FILE *tempfile;
+	gboolean NewPad;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
-	/* test if we can read it. */
-	tempfile = fopen(filename, "r");
-	if (tempfile == NULL)
+	NewPad = pad_is_empty(pad);
+	if (NewPad)
 	{
-		display_dialog_with_text (pad, "Cannot open file.");
-		return;
+		pad = pad_new();
+		if (!pad)
+		{
+			fprintf(stderr, "Could not open new pad\n");
+			return;
+		}
 	}
-	fclose(tempfile);
 
-	if (pad_is_empty (pad))
-		pad_fill_with_file (pad, filename);
-	else
+	if (!pad_fill_with_file(pad, filename))
 	{
-		pad_node *newpad = pad_new ();
-		pad_fill_with_file (newpad, filename);
+	  	if (NewPad)
+		{
+			/* TODO: Close pad to avoid overwriting original file */
+		}
 	}
 }
 
@@ -416,27 +430,19 @@ static void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	gchar *content;
 	const gchar *filename;
 	GtkFileSelection *selector;
-	FILE *tempfile;
+	const char *errtext;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
-
-	/* test if we can write to it. */
-	tempfile = fopen(filename, "w");
-	if (tempfile == NULL)
-	{
-		display_dialog_with_text (pad, "Cannot write to file.");
-		return;
-	}
-	fclose(tempfile);
 
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
         content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	fio_set_file (filename, content);
+	if (!fio_set_file (filename, content, &errtext))
+		display_dialog_with_text(pad, errtext);
 
 	g_free (content);
 }
