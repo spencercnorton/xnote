@@ -1,0 +1,70 @@
+# Main Makefile for Mark Galassi's stupid "marklib" library
+# portions Copyright (C) 1996 Mark Galassi.
+# portions Copyright (C) 2003 Michael Terry.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+SHELL = /bin/sh
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+CFLAGS = -I. @CFLAGS@ -ansi -pedantic -Wall\
+ `pkg-config --cflags gtk+-2.0`\
+ -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED\
+ -DGDK_PIXMAP_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
+
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@ `pkg-config --libs gtk+-2.0`
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datadir = @datadir@
+bindir = @bindir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+
+SOURCES=main.c fio.c pref.c pad.c help.c toolbar.c tray.c eggtrayicon.c
+OBJS=main.o fio.o pref.o pad.o help.o toolbar.o tray.o eggtrayicon.o
+
+all: xpad
+
+install: all
+	$(top_srcdir)/autoconf/mkinstalldirs $(bindir)
+	$(INSTALL_PROGRAM) xpad $(bindir)
+
+uninstall:
+	/bin/rm -f $(bindir)/xpad
+
+xpad: $(OBJS)
+	$(CC) $(LDFLAGS) -o xpad $(OBJS) $(LIBS)
+
+clean:
+	/bin/rm -f core xpad $(OBJS)
+
+distclean: clean
+	/bin/rm -f *~ .\#* Makefile config.h stamp-h
+
+mostlyclean: clean
+
+maintainer-clean: clean
+

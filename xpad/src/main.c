@@ -22,9 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  Unfortunately, we lose portability... */
 #define _GNU_SOURCE	1
 
-#include "xpad.xpm"
-#include "lock.xpm"
-#include "sticky.xpm"
+#include "../images/xpad.xpm"
+#include "../images/lock.xpm"
+#include "../images/sticky.xpm"
 #include "main.h"
 #include "pad.h"
 #include "help.h"

@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "main.h"
 #include "tray.h"
 #include "eggtrayicon.h"
-#include "xpad.xpm"
+#include "../images/xpad.xpm"
 #include "pad.h"
 #include "help.h"
 #include "pref.h"

@@ -1,0 +1,53 @@
+# Copyright (C) 2003 Michael Terry.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+SHELL = /bin/sh
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL) -m 644
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datadir = @datadir@
+bindir = @bindir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+man1dir = $(mandir)/man1
+
+DOCS = xpad.1
+
+all: $(DOCS)
+
+install: all
+	$(top_srcdir)/autoconf/mkinstalldirs $(man1dir)
+	$(INSTALL_DATA) xpad.1 $(man1dir)
+
+uninstall:
+	/bin/rm -f $(man1dir)/xpad.1*
+
+clean:
+
+distclean: clean
+	/bin/rm -f *~ .\#* Makefile stamp-h
+
+mostlyclean: clean
+
+maintainer-clean: clean
+
