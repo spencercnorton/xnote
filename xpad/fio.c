@@ -73,8 +73,6 @@ int set_file (const char *name, const char *value)
 
         fclose (file);
 
-	printf ("setting file %s\n", temp);
-
 	return 0;
 }
 
@@ -128,7 +126,7 @@ void open_pad_files (pad_node *pad, gboolean create)
 		mkstemp (pad->contentname);
 	}
 
-	if ( (pad->file = fopen (pad->infoname, "a")) == NULL)
+	if ( (pad->file = fopen (pad->infoname, "w")) == NULL)
         {
                 fprintf (stderr, "Cannot open %s.\n", pad->infoname);
                 return;
@@ -228,7 +226,8 @@ void save_info_file (pad_node *pad)
         g_free (content);
 
 	rewind (pad->file);
-	fputs (info_file, pad->file);
+	x = fputs (info_file, pad->file);
+	fflush(pad->file);
 }
 
 /* save contents and locations of a pad */
