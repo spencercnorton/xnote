@@ -1,4 +1,4 @@
-pixmapdir = $(datadir)/pixmaps/xpad
+pixmapdir = $(datadir)/pixmaps/
 
 pixmap_DATA = xpad.xpm
 
