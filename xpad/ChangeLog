@@ -3,6 +3,7 @@
 	* src/pad.c, src/tray.c, src/tray.h: Allow xpad to tell when the
 	  system tray is open and don't close xpad when pads are all closed
 	  but the system tray isn't
+	* configure.ac: Bump version number to 1.13
 
 2003-10-08  Michael Terry  <mikix@users.sourceforge.net>
 	* po/es.po, po/ga.po, po/nl.po: Update translations
