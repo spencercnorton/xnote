@@ -21,24 +21,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _PAD_H_
 #define _PAD_H_
 
-#include "main.h"
 #include <stdio.h>
 #include <gtk/gtk.h>
-
+#include "defines.h"
 
 typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;
 typedef struct pad_style_def pad_style;
 
+// holds all the internal data we need to manipulate pads
 struct pad_node_def
 {
-        pad_node *next;
+	pad_node *next;
 	FILE *file;
 	gchar infoname[MAX_FILENAME_SIZE + 1];
 	gchar contentname[MAX_FILENAME_SIZE + 1];
-        GtkWindow *window;
+	GtkWindow *window;
 };
 
+// describes the custom styles of a pad
 struct pad_style_def
 {
 	GdkColor back;
@@ -48,10 +49,11 @@ struct pad_style_def
 	gchar fontname[MAX_FILENAME_SIZE + 1];
 };
 
+// used to keep all the persistant data we need for one pad
 struct pad_info_def
 {
-        gint x;
-        gint y;
+	gint x;
+	gint y;
 	gint width;
 	gint height;
 	pad_style style;
@@ -61,8 +63,6 @@ struct pad_info_def
 
 extern pad_node *first_pad;
 extern pad_node *last_pad;
-extern pad_style default_style;
-extern const pad_style DEFAULT_STYLE;
 
 void help_dialog (void);
 pad_node *pad_new_with_info (pad_info *info);

@@ -23,10 +23,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _MAIN_H_
 
 #include <gtk/gtk.h>
+#include "defines.h"
+#include "pad.h"
 
-enum {
-	MAX_FILENAME_SIZE=1024,
-	MAX_FILE_SIZE = 1024
+struct settings {
+	int width;
+	int height;
+	int sync_time;
+	int decorations;
+	int confirm_destroy;
+	pad_style style;
 };
 
 void xpad_exit (void);
@@ -36,37 +42,7 @@ void reset_sync (void);
 extern gchar working_dir[MAX_FILENAME_SIZE];
 extern const gchar *VERSION;
 extern gint verbosity;
-extern gboolean decorations;
-extern gint sync_time;
-extern gboolean confirm_destroy;
-extern gint dwidth;
-extern gint dheight;
 extern guint autosave_timeout_id;
-
+extern struct settings current_settings;
 
 #endif /* _MAIN_H_ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -18,27 +18,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "main.h"
 #include "pref.h"
 #include "fio.h"
 #include "pad.h"
 #include <string.h>
 
-pad_style *backup_style;
-gint backup_width, backup_height;
-gboolean backup_decorations;
-gint backup_sync;
-gboolean backup_confirm_destroy;
+struct settings backup_settings;
+
 
 void global_preferences_cancel (GtkWidget *button)
 {
-	decorations = backup_decorations;
-	sync_time = backup_sync;
-	dwidth = backup_width;
-	dheight = backup_height;
-	default_style = *backup_style;
-	fio_save_defaults ();
+	current_settings = backup_settings;
+	fio_save_as_defaults (&current_settings);
 
-	pad_set_decorations (decorations);
+	pad_set_decorations (current_settings.decorations);
 
 	gtk_widget_destroy (gtk_widget_get_toplevel(button));
 }
@@ -46,25 +40,21 @@ void global_preferences_cancel (GtkWidget *button)
 void global_preferences_apply (GtkWidget *button)
 {
 	GtkNotebook *notebook = GTK_NOTEBOOK(gtk_container_get_children (GTK_CONTAINER (gtk_bin_get_child (GTK_BIN (gtk_widget_get_toplevel(button)))))->data);
-	pad_style temp;
-	gint width, height;
-	gboolean decor, confirm;
 
 	if (verbosity >= 2) printf ("Applying global preferences.\n");
-
 
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (
 	 gtk_bin_get_child (GTK_BIN (
 	  gtk_notebook_get_nth_page (notebook, 0)
 	 ))
-	), &temp.back);
+	), &current_settings.style.back);
 
 
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (
 	 gtk_bin_get_child (GTK_BIN (
 	  gtk_notebook_get_nth_page (notebook, 1)
 	 ))
-	), &temp.text);
+	), &current_settings.style.text);
 
 
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (
@@ -73,10 +63,10 @@ void global_preferences_apply (GtkWidget *button)
 	   gtk_notebook_get_nth_page (notebook, 2)
 	  ))
 	 ))->next->data
-	), &temp.border);
+	), &current_settings.style.border);
 
 
-	temp.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
+	current_settings.style.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
 					 gtk_container_get_children (GTK_CONTAINER (
 					  gtk_container_get_children (GTK_CONTAINER (
 					   gtk_bin_get_child (GTK_BIN (
@@ -86,7 +76,7 @@ void global_preferences_apply (GtkWidget *button)
 					 ))->next->data
 					));
 
-	strcpy (temp.fontname, gtk_font_selection_get_font_name (GTK_FONT_SELECTION (
+	strcpy (current_settings.style.fontname, gtk_font_selection_get_font_name (GTK_FONT_SELECTION (
 					    gtk_bin_get_child (GTK_BIN (
 					     gtk_notebook_get_nth_page (notebook, 3)
 					    ))
@@ -94,7 +84,7 @@ void global_preferences_apply (GtkWidget *button)
 	);
 
 
-	width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
+	current_settings.width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
 		 gtk_container_get_children (GTK_CONTAINER (
 		  gtk_container_get_children (GTK_CONTAINER (
 		   gtk_bin_get_child (GTK_BIN (
@@ -105,7 +95,7 @@ void global_preferences_apply (GtkWidget *button)
 		));
 
 
-	height = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
+	current_settings.height = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
 		  gtk_container_get_children (GTK_CONTAINER (
 		   gtk_container_get_children (GTK_CONTAINER (
 		    gtk_bin_get_child (GTK_BIN (
@@ -116,7 +106,7 @@ void global_preferences_apply (GtkWidget *button)
 		 ));
 
 
-	confirm = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (
+	current_settings.confirm_destroy = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (
 		 gtk_container_get_children (GTK_CONTAINER (
 		  gtk_bin_get_child (GTK_BIN (
 		   gtk_notebook_get_nth_page (notebook, 5)
@@ -125,7 +115,7 @@ void global_preferences_apply (GtkWidget *button)
 		));
 
 
-	decor = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (
+	current_settings.decorations = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (
 		 gtk_container_get_children (GTK_CONTAINER (
 		  gtk_bin_get_child (GTK_BIN (
 		   gtk_notebook_get_nth_page (notebook, 5)
@@ -143,10 +133,9 @@ void global_preferences_apply (GtkWidget *button)
 	      ))->next->next->data
 	     ))->data
 	    )) == FALSE)
-
-		sync_time = 0;
+		current_settings.sync_time = 0;
 	else
-		sync_time = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
+		current_settings.sync_time = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (
 				     gtk_container_get_children (GTK_CONTAINER (
 				      gtk_container_get_children (GTK_CONTAINER (
 				       gtk_bin_get_child (GTK_BIN (
@@ -158,15 +147,10 @@ void global_preferences_apply (GtkWidget *button)
 
 	reset_sync ();
 	
-	pad_set_decorations (decor);
-
-	decorations = decor;
-	dwidth = width;
-	dheight = height;
-	confirm_destroy = confirm;
-	default_style = temp;
-	fio_save_defaults ();
-
+	pad_set_decorations (current_settings.decorations);
+	
+	fio_save_as_defaults (&current_settings);
+	
 	gtk_window_present (GTK_WINDOW(gtk_widget_get_toplevel (button)));
 }
 
@@ -227,15 +211,12 @@ void global_preferences_open (pad_node *pad)
 	GtkWidget *align_3 = gtk_alignment_new (0.5, 0.5, 0, 0);
 	GtkWidget *align_4 = gtk_alignment_new (0.5, 0.5, 0, 0);
 	GtkWidget *align_5 = gtk_alignment_new (0.5, 0.5, 0, 0);
-
-	backup_style = (pad_style *) g_malloc (sizeof (pad_style));
-	*backup_style = default_style;
-	backup_width = dwidth;
-	backup_height = dheight;
-	backup_decorations = decorations;
-	backup_confirm_destroy = confirm_destroy;
-	backup_sync = sync_time;
-
+	
+	/**
+	 * Here we save the current settings so that we can restore them when we munge them up.
+	 */
+	backup_settings = current_settings;
+	
 	gtk_window_set_transient_for (GTK_WINDOW(window), pad->window);
 	gtk_window_set_modal (GTK_WINDOW(window), TRUE);
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
@@ -249,8 +230,6 @@ void global_preferences_open (pad_node *pad)
 		G_CALLBACK (global_preferences_cancel), (gpointer) pad);
 	g_signal_connect (GTK_OBJECT (button_apply), "clicked", 
 		G_CALLBACK (global_preferences_apply), (gpointer) pad);
-	g_signal_connect_swapped (GTK_OBJECT (window), "destroy", 
-                             G_CALLBACK (g_free), backup_style);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
 	gtk_box_set_spacing (GTK_BOX(buttonbox), 10);
 	gtk_box_pack_end_defaults (GTK_BOX(buttonbox), button_apply);
@@ -265,18 +244,18 @@ void global_preferences_open (pad_node *pad)
 	// back setup
 	gtk_container_add (GTK_CONTAINER (align_0), color_back);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_0, label_back);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &backup_style->back);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &backup_settings.style.back);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 
 	// text setup
 	gtk_container_add (GTK_CONTAINER (align_1), color_text);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_1, label_text);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &backup_style->text);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &backup_settings.style.text);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
 
 	// border setup
 	gtk_container_add (GTK_CONTAINER (align_2), vbox_border);
-	adjust_border_width = gtk_adjustment_new (backup_style->border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
+	adjust_border_width = gtk_adjustment_new (backup_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
 	spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_border_width), label_border_width);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_border_width), spinner_border_width);
@@ -284,19 +263,19 @@ void global_preferences_open (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 20);
 	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 1);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_2, label_border);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &backup_style->border);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &backup_settings.style.border);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 	gtk_entry_set_activates_default (GTK_ENTRY (spinner_border_width), TRUE);
 
 	// font setup
 	gtk_container_add (GTK_CONTAINER (align_3), font_selection);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_3, label_font);
-	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), backup_style->fontname);
+	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), backup_settings.style.fontname);
 
 	// size setup
-	adjust_size_width = gtk_adjustment_new (backup_width, 1.0, INT_MAX, 1.0, 5.0, 5.0);
+	adjust_size_width = gtk_adjustment_new (backup_settings.width, 1.0, INT_MAX, 1.0, 5.0, 5.0);
 	spinner_size_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_size_width), 1.0, 0);
-	adjust_size_height = gtk_adjustment_new (backup_height, 1.0, INT_MAX, 1.0, 5.0, 5.0);
+	adjust_size_height = gtk_adjustment_new (backup_settings.height, 1.0, INT_MAX, 1.0, 5.0, 5.0);
 	spinner_size_height = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_size_height), 1.0, 0);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_size_width), 4);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_size_height), 4);
@@ -317,13 +296,13 @@ void global_preferences_open (pad_node *pad)
 
 	// misc. setup
 	gtk_container_add (GTK_CONTAINER (align_5), vbox_misc);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), backup_decorations);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_autosave), backup_sync);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), backup_confirm_destroy);
-	adjust_misc_autosave = gtk_adjustment_new (sync_time ? sync_time : 1, 1.0, INT_MAX, 1.0, 5.0, 5.0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), backup_settings.decorations);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_autosave), backup_settings.sync_time);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), backup_settings.confirm_destroy);
+	adjust_misc_autosave = gtk_adjustment_new (backup_settings.sync_time ? backup_settings.sync_time : 1, 1.0, INT_MAX, 1.0, 5.0, 5.0);
 	spinner_misc_autosave = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_misc_autosave), 1.0, 0);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_misc_autosave), 4);
-	gtk_widget_set_sensitive (spinner_misc_autosave, backup_sync);
+	gtk_widget_set_sensitive (spinner_misc_autosave, backup_settings.sync_time);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_autosave), checkbutton_autosave);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_autosave), spinner_misc_autosave);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_autosave), label_misc_autosave);
@@ -347,7 +326,7 @@ void global_preferences_open (pad_node *pad)
 
 
 
-// must g_free returned style
+// must gfree() returned style
 pad_style *pad_preferences_get_style (GtkWindow *window)
 {
 	GtkNotebook *notebook = GTK_NOTEBOOK(gtk_container_get_children (GTK_CONTAINER (gtk_bin_get_child (GTK_BIN (window))))->data);
@@ -392,14 +371,14 @@ pad_style *pad_preferences_get_style (GtkWindow *window)
 					     ))
 					    ))
 	);
-
+	
 	return temp;
 }
 
 
 void pad_preferences_cancel (GtkWidget *button, pad_node *pad)
 {
-	pad_set_style (pad, backup_style);
+	pad_set_style (pad, &backup_settings.style);
 	gtk_widget_destroy (gtk_widget_get_toplevel(button));
 }
 
@@ -430,8 +409,8 @@ void pad_preferences_save_as_default (GtkWidget *button, pad_node *pad)
 
 	temp = pad_preferences_get_style (GTK_WINDOW (gtk_widget_get_toplevel (button)));
 
-	default_style = *temp;
-	fio_save_defaults ();
+	current_settings.style = *temp;
+	fio_save_as_defaults (&current_settings);
 
 	g_free (temp);
 }
@@ -463,8 +442,13 @@ void pad_preferences_open (pad_node *pad)
 	GtkWidget *align_1 = gtk_alignment_new (0.5, 0.5, 0, 0);
 	GtkWidget *align_2 = gtk_alignment_new (0.5, 0.5, 0, 0);
 	GtkWidget *align_3 = gtk_alignment_new (0.5, 0.5, 0, 0);
+	pad_style *style;
 
-	backup_style = pad_get_style (pad);
+	backup_settings = current_settings;
+	
+	style = pad_get_style (pad);
+	backup_settings.style = *style;
+	g_free (style);
 
 	gtk_window_set_transient_for (GTK_WINDOW(window), pad->window);
 	gtk_window_set_modal (GTK_WINDOW(window), TRUE);
@@ -485,8 +469,7 @@ void pad_preferences_open (pad_node *pad)
 		G_CALLBACK (pad_preferences_apply), (gpointer) pad);
 	g_signal_connect (GTK_OBJECT (button_save_default), "clicked", 
 		G_CALLBACK (pad_preferences_save_as_default), (gpointer) pad);
-	g_signal_connect_swapped (GTK_OBJECT (window), "destroy", 
-                             G_CALLBACK (g_free), backup_style);
+	
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
 	gtk_box_set_spacing (GTK_BOX(buttonbox), 10);
 	gtk_box_pack_start_defaults (GTK_BOX(buttonbox), button_save_default);
@@ -502,18 +485,18 @@ void pad_preferences_open (pad_node *pad)
 	// back setup
 	gtk_container_add (GTK_CONTAINER (align_0), color_back);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_0, label_back);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &backup_style->back);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &backup_settings.style.back);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 
 	// text setup
 	gtk_container_add (GTK_CONTAINER (align_1), color_text);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_1, label_text);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &backup_style->text);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &backup_settings.style.text);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
 
 	// border setup
 	gtk_container_add (GTK_CONTAINER (align_2), vbox_border);
-	adjust_border_width = gtk_adjustment_new (backup_style->border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
+	adjust_border_width = gtk_adjustment_new (backup_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
 	spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_border_width), label_border_width);
 	gtk_box_pack_start_defaults (GTK_BOX (vbox_border_width), spinner_border_width);
@@ -521,14 +504,14 @@ void pad_preferences_open (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 20);
 	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 1);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_2, label_border);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &backup_style->border);
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &backup_settings.style.border);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 	gtk_entry_set_activates_default (GTK_ENTRY (spinner_border_width), TRUE);
 
 	// font setup
 	gtk_container_add (GTK_CONTAINER (align_3), font_selection);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_3, label_font);
-	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), backup_style->fontname);
+	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), backup_settings.style.fontname);
 
 	gtk_window_set_position (GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 

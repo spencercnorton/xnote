@@ -180,18 +180,18 @@ void fio_close_pad_files (pad_node *pad)
 }
 
 
-void fio_save_defaults (void)
+void fio_save_as_defaults (struct settings *set)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 
 	sprintf (buf, "confirm_destroy %i\nsync_time %i\ndecorations %i\nwidth %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
-		confirm_destroy, sync_time, decorations,
-		dwidth, dheight,
-            	default_style.back.red, default_style.back.green, default_style.back.blue,
-		default_style.text.red, default_style.text.green, default_style.text.blue,
-		default_style.border.red, default_style.border.green, default_style.border.blue,
-		default_style.border_width,
-		default_style.fontname);
+		set->confirm_destroy, set->sync_time, set->decorations,
+		set->width, set->height,
+		set->style.back.red, set->style.back.green, set->style.back.blue,
+		set->style.text.red, set->style.text.green, set->style.text.blue,
+		set->style.border.red, set->style.border.green, set->style.border.blue,
+		set->style.border_width,
+		set->style.fontname);
 
 	fio_set_file (DEFAULTS_FILENAME, buf);
 }
@@ -417,7 +417,7 @@ void fio_load_pads (void)
 
 	/* set up some sort of defaults for these.  if xpad works
 	   right, these won't be used. */
-	info.style = default_style;
+	info.style = current_settings.style;
 	info.x = 0;
 	info.y = 0;
 	info.width = 260;

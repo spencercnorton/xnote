@@ -29,9 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
-const pad_style DEFAULT_STYLE = {{0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, {0, 0, 0, 0}, 0, "serif Bold 16"};
-pad_style default_style;
-
 /* helper func to get textbox from window */
 GtkTextView *get_text (GtkWindow *window)
 {
@@ -355,7 +352,7 @@ void help_dialog (void)
 
 void pad_confirm_destroy (pad_node *pad)
 {
-	if (confirm_destroy)
+	if (current_settings.confirm_destroy)
 	{
 		GtkWidget *dialog, *label, *checkbox;
 		gboolean said_yes = FALSE;
@@ -381,8 +378,8 @@ void pad_confirm_destroy (pad_node *pad)
 
 		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
 
-		confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
-		fio_save_defaults ();
+		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
+		fio_save_as_defaults (&current_settings);
 
 		gtk_widget_destroy (dialog);
 
@@ -761,7 +758,7 @@ pad_node *start_pad (void)
 	}
 	
 	/* set wm decorations */
-	gtk_window_set_decorated (GTK_WINDOW(window), decorations);
+	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
 	/* make sure that we only save after pad is realized */
 	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);
@@ -777,9 +774,9 @@ pad_node *pad_new (void)
 
 	pad = start_pad ();
 
-	gtk_window_set_default_size (pad->window, dwidth, dheight);
+	gtk_window_set_default_size (pad->window, current_settings.width, current_settings.height);
 
-	pad_set_style (pad, &default_style);
+	pad_set_style (pad, &current_settings.style);
 
 	fio_open_pad_files (pad, TRUE);
 

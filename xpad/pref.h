@@ -21,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _PREF_H_
 #define _PREF_H_
 
-#include <gtk/gtk.h>
-#include "main.h"
 #include "pad.h"
 
 void pad_preferences_open (pad_node *pad);

@@ -33,11 +33,28 @@ const gchar *VERSION = "xpad v1.1";
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
-gint sync_time = 60; /* sync time in seconds */
-gboolean decorations = 0; /* whether pads have wm decorations or not */
-gboolean confirm_destroy = 1;
-gint dwidth = 260;
-gint dheight = 260;
+/**
+ * This variable holds all the changeable settings for this session.
+ * It should be a copy of the defaults file.
+ *
+ * Here, we populate it with hardcoded defaults in case we can not
+ * find values in the defaults file.
+ */
+struct settings current_settings =
+{
+	260, // default width
+	260, // default height
+	60, // sync time in seconds
+	0, // decorations are off
+	1, // destroy confirmations on
+	{ // default style
+		{0, 0xe000, 0xe000, 0x5600}, // yellow background
+		{0, 0, 0, 0}, // black text
+		{0, 0, 0, 0}, // black border
+		0, // border width
+		"serif Bold 16" // font
+	}
+};
 
 void xpad_exit (void)
 {
@@ -132,8 +149,8 @@ void reset_sync (void)
 	if (autosave_timeout_id > 0)
 		gtk_timeout_remove (autosave_timeout_id);
 
-	if (sync_time)
-		autosave_timeout_id = gtk_timeout_add (sync_time * 1000, sync_pads, NULL);
+	if (current_settings.sync_time)
+		autosave_timeout_id = gtk_timeout_add (current_settings.sync_time * 1000, sync_pads, NULL);
 	else
 		autosave_timeout_id = -1;
 
@@ -167,7 +184,6 @@ void xpad_set_default_icon (void)
 void xpad_init (void)
 {
 	struct sigaction sa;
-	gint decor_int = decorations;
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -184,22 +200,18 @@ void xpad_init (void)
 	strcpy (working_dir, getenv("HOME"));
 	strcat (working_dir, "/.xpad/");
 	
-	default_style = DEFAULT_STYLE;
-	
 	fio_get_values_from_file (DEFAULTS_FILENAME, 
-						  "decorations", &decor_int,
-						  "sync_time", &sync_time,
-						  "height", &dheight,
-						  "width", &dwidth,
-						  "confirm_destroy", &confirm_destroy,
+						  "decorations", &current_settings.decorations,
+						  "sync_time", &current_settings.sync_time,
+						  "height", &current_settings.height,
+						  "width", &current_settings.width,
+						  "confirm_destroy", &current_settings.confirm_destroy,
 						  NULL);
 
-	decorations = decor_int;
-
-	if (fio_get_style_from_file (DEFAULTS_FILENAME, &default_style))
+	if (fio_get_style_from_file (DEFAULTS_FILENAME, &current_settings.style))
 	{
 		// this happens if there isn't a ~/.xpad directory (i.e. first run)
-		fio_save_defaults ();
+		fio_save_as_defaults (&current_settings);
 		help_dialog ();
 	}
 	
@@ -208,7 +220,7 @@ void xpad_init (void)
 	
 	if (verbosity >= 2)
 		printf ("PID is %i.\nSync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
-			getpid (), sync_time, verbosity, decorations);
+			getpid (), current_settings.sync_time, verbosity, current_settings.decorations);
 	
 	xpad_set_default_icon ();
 	

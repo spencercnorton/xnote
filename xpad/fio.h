@@ -22,7 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define _FIO_H_
 
 #include <gtk/gtk.h>
+#include "main.h"
 #include "pad.h"
+#include "pref.h"
 
 void fio_save_pad (pad_node *pad);
 void fio_save_pads (void);
@@ -34,7 +36,7 @@ gint fio_fill_filename (gchar *filename);
 
 gint fio_get_values_from_file (const gchar *filename, ...);
 gint fio_get_style_from_file (const gchar *filename, pad_style *starter);
-void fio_save_defaults (void);
+void fio_save_as_defaults (struct settings *);
 
 void fio_open_pad_files (pad_node *pad, gboolean create);
 void fio_close_pad_files (pad_node *pad);
