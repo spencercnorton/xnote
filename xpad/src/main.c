@@ -167,13 +167,6 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 }
 
 
-static void xpad_catch_quit_signal (int signum)
-{
-	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
-	gtk_main_quit ();
-}
-
-
 static void
 print_help (void)
 {
@@ -861,6 +854,12 @@ static void xpad_set_default_icon (void)
 
 
 #ifdef G_OS_UNIX
+
+static RETSIGTYPE xpad_catch_quit_signal (int signum)
+{
+	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
+	gtk_main_quit ();
+}
 
 /* Try to intercept a signal, but don't do so if it was previously set to be ignored -- we
  * should respect non-job-control shells and such. 
