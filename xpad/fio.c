@@ -332,9 +332,9 @@ gint fio_load_default_settings (void)
 		 
 	     bord_R = current_settings.style.border.red,
 		 bord_G = current_settings.style.border.green,
-		 bord_B = current_settings.style.border.blue,
-		 
-		 numbuttons = -1;
+		 bord_B = current_settings.style.border.blue;
+	
+	gchar *buttons = NULL;
 	
 	if (fio_get_values_from_file (DEFAULTS_FILENAME, 
 						"decorations", &current_settings.decorations,
@@ -356,7 +356,7 @@ gint fio_load_default_settings (void)
 						"border_width", &current_settings.style.border_width,
 						"padding", &current_settings.style.padding,
 						"fontname", &current_settings.style.fontname,
-						"num_buttons", &numbuttons,
+						"buttons", &buttons,
 						NULL ))
 		return 1;
 	
@@ -372,12 +372,31 @@ gint fio_load_default_settings (void)
 	current_settings.style.border.green = bord_G;
 	current_settings.style.border.blue = bord_B;
 	
-	if (numbuttons == -1) /* no buttons specified, so we make our own */
+	if (!buttons) /* no buttons specified, so we make our own */
 	{
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, "New");
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, "Delete");
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, "sep");
-		current_settings.toolbar = g_slist_append (current_settings.toolbar, "Clear");
+		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("New"));
+		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("Delete"));
+		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("sep"));
+		current_settings.toolbar = g_slist_append (current_settings.toolbar, g_strdup ("Clear"));
+	}
+	else
+	{
+		gint i;
+		gchar **button_names;
+		gchar *temp;
+		gchar *dup;
+		
+		button_names = g_strsplit (buttons, ",", 50);
+		
+		i = 0;
+		while ((temp = button_names[i++]))
+		{
+			dup = g_strstrip (g_strdup (temp));
+			
+			current_settings.toolbar = g_slist_append (current_settings.toolbar, dup);
+		}
+		
+		g_strfreev  (button_names);
 	}
 	
 	return 0;
