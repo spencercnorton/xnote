@@ -101,11 +101,16 @@ gboolean change_padding (GtkWidget *spinner, GtkWidget *window)
 	return FALSE;
 }
 
-gboolean change_border_width (GtkWidget *spinner, GtkWidget *window)
+gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 {
 	pad_node *temp = first_pad;
 	
 	current_settings.style.border_width = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (spinner));
+	
+	if (current_settings.style.border_width == 0)
+		gtk_widget_set_sensitive (colorsel, FALSE);
+	else
+		gtk_widget_set_sensitive (colorsel, TRUE);
 	
 	while (temp)
 	{
@@ -293,6 +298,9 @@ GtkWidget *preferences_create (pad_node *pad)
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 	g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
 
+	if (current_settings.style.border_width == 0)
+		gtk_widget_set_sensitive (color_border, FALSE);
+
 	gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 9);
 	
 	adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);
@@ -303,7 +311,7 @@ GtkWidget *preferences_create (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_padding), spinner_padding, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) window);
+	g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) color_border);
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
 "The amount of space you want between the border and text.",
 "Choose the number of pixels around the text region.  This space is colored "
@@ -317,7 +325,7 @@ GtkWidget *preferences_create (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_border_width), spinner_border_width, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) window);
+	g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
 "The amount of space you want surrounding the pad.", 
 "Choose the number of pixels around the pad.  This space is colored"
