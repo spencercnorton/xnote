@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "pad.h"
 #include "help.h"
+#include "toolbar.h"
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
@@ -355,10 +356,41 @@ static GtkWidget *preferences_create (void)
 	/* toolbar  setup */
 	{
 		GtkWidget *frame = gtk_frame_new ("Buttons");
+		xpad_toolbar *xt = toolbar_new ();
+		gint i;
+		GList *inxt, *tmp, *inxt_funcs = NULL;
+		GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
 		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 0);
+		
+		gtk_container_add (GTK_CONTAINER (frame), vbox);
+		
+		gtk_box_pack_start (GTK_BOX (vbox), xt->bar, FALSE, FALSE, 3);
+		toolbar_update (xt);
+		
+		inxt = tmp = toolbar_get_buttons (xt);
+		
+		while (tmp)
+		{
+			inxt_funcs = g_list_append (inxt_funcs,
+				g_object_get_data (G_OBJECT (tmp->data), "func"));
+			tmp = tmp->next;
+		}
+		
+		g_list_free (inxt);
+		
+		/* build list of all toolbar buttons not in xt */
+		for (i = 0; i < NUM_BUTTONS; i++)
+		{
+			if (!g_list_find (inxt_funcs, (void *) buttons[i].func))
+			{
+				gtk_box_pack_start (GTK_BOX (vbox), 
+					toolbar_button_new (&buttons[i]), FALSE, FALSE, 3);
+			}
+		}
+		
 		
 		
 	}

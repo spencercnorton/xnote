@@ -20,4 +20,6 @@ GList *toolbar_get_buttons (xpad_toolbar *xt);
 
 void toolbar_update (xpad_toolbar *xt);
 
+GtkWidget * toolbar_button_new (const toolbar_button *tb);
+
 #endif /* TOOLBAR_H */

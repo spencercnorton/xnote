@@ -51,6 +51,7 @@ gchar *working_dir;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
+
 /**
  * This variable holds all the changeable settings for this session.
  * It should be a copy of the defaults file.
@@ -118,65 +119,165 @@ static void xpad_catch_quit_signal (int signum)
 }
 
 
-/* 
-   TODO: make args more OO, with registering of each possible param
-         and systematic treatment of short/long names and callbacks
-*/
-static void handle_args (int *argc, char ***argv)
+static void
+print_help (void)
 {
-	gint i;
+	printf ("Usage: xpad [OPTIONS]\n");
+	printf ("\n");
+	printf ("  -V, --version         prints xpad version; exits\n");
+	printf ("  -h, --help            prints this usage information; exits\n");
+	printf ("  -v N, --verbosity=N   sets level of output\n");
+	printf ("                          0=none, 1=moderate, 2=debug\n");
+	printf ("                          default is 0\n");
+	printf ("  -n, --new             opens a new pad\n");
+	printf ("  -q, --quit            quits all open xpad sessions\n");
+	exit (0);
+}
 
+static void
+print_version (void)
+{
+	printf ("xpad v%s\n", VERSION);
+	exit (0);
+}
+
+static void
+set_verbosity (gint *v)
+{
+	if (*v < 0 || *v > 2)
+	{
+		printf ("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
+		exit (1);
+	}
+	
+	verbosity = *v;
+}
+
+struct argument_def
+{
+	gboolean local;
+	const gchar *name;
+	gboolean second;
+	union {
+		void (*func) (void);
+		void (*func_arg) (void *);
+	} callbacks;
+};
+typedef struct argument_def argument;
+
+void (*one_arg_func) (void *);
+#define ONE_ARG(f) ((one_arg_func) (f))
+
+static const argument arguments[] =
+{
+	{TRUE, "-h", FALSE, {print_help}},
+	{TRUE, "--help", FALSE, {print_help}},
+	{TRUE, "-V", FALSE, {print_version}},
+	{TRUE, "--version", FALSE, {print_version}},
+	{TRUE, "-v", TRUE, {G_CALLBACK (set_verbosity)}},
+	{TRUE, "--verbosity", TRUE, {G_CALLBACK (set_verbosity)}},
+	
+	{FALSE, "-n", FALSE, {G_CALLBACK (pad_new)}},
+	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
+	{FALSE, "-q", FALSE, {gtk_main_quit}},
+	{FALSE, "--quit", FALSE, {gtk_main_quit}}
+};
+
+#define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
+
+static gint handle_args (int *argc, char ***argv, gboolean local)
+{
+	gint i, j;
+	gint rv = 0;
+	
 	for (i = 1; i < *argc; i++)
 	{
-		int shortform = 0;
-
-		if (!strcmp ((*argv)[i], "--version") || (shortform = !strcmp ((*argv)[i], "-V")))
+		for (j = 0; j < NUM_ARGUMENTS; j++)
 		{
-			printf ("xpad v%s\n", VERSION);
-			gtk_main_quit ();
-		}
-		else if (!strcmp ((*argv)[i], "--help") || (shortform = !strcmp ((*argv)[i], "-h")))
-		{
-			printf ("Usage: xpad [OPTIONS]\n");
-			printf ("\n");
-			printf ("  -V, --version         print xpad version; exit\n");
-			printf ("  -h, --help            print this usage information; exit\n");
-			printf ("  -v N, --verbosity=N   set level of output\n");
-			printf ("                          0=none, 1=moderate, 2=debug\n");
-			printf ("                          default is 0\n");
-			gtk_main_quit ();
-		}
-		else if (!strncmp ((*argv)[i], "--verbosity=", 12) || (shortform = !strcmp ((*argv)[i], "-v")))
-		{
-			gint temp;
-			gchar *value;
-
-			if (shortform)
+			gint len = strlen (arguments[j].name);
+			
+			if (arguments[j].local != local)
 			{
-				if (++i == *argc)
+				if (!strncmp ((*argv)[i], arguments[j].name, len))
 				{
-					printf ("Missing companion argument to -v.\n");
-					gtk_main_quit ();
+					if (strncmp (arguments[j].name, "--", 2) &&
+						arguments[j].second)
+						i++;
+					
+					break;
 				}
-
-				value = (*argv)[i];
+				
+				continue;
 			}
-			else
-				value = (gchar *) strchr ((*argv)[i], '=') + 1;
-
-			temp = atoi (value);
-
-			if (temp < 0 || temp > 2)
+			
+			if (!strncmp ((*argv)[i], arguments[j].name, len))
 			{
-				printf ("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
-				gtk_main_quit ();
+				if (!strncmp (arguments[j].name, "--", 2))
+				{
+					if (arguments[j].second)
+					{
+						if (((*argv)[i] + len)[0] == '=')
+						{
+							gint arg;
+							
+							/* right now we only do integer arguments... */
+							arg = atoi ((*argv)[i] + len + 1);
+							
+							arguments[j].callbacks.func_arg ((void *) &arg);
+							rv ++;
+							
+							break;
+						}
+					}
+					else
+					{
+						arguments[j].callbacks.func ();
+						rv ++;
+						
+						break;
+					}
+				}
+				else
+				{
+					if (arguments[j].second)
+					{
+						gint arg;
+						
+						i += 1;
+						
+						if (i == (*argc))
+						{
+							printf ("Missing companion argument to %s\n",
+								arguments[j].name);
+							exit (1);
+						}
+						
+						arg = atoi ((*argv)[i++]);
+						
+						arguments[j].callbacks.func_arg ((void *) &arg);
+						rv ++;
+						
+						break;
+					}
+					else
+					{
+						arguments[j].callbacks.func ();
+						rv ++;
+						
+						break;
+					}
+				}
 			}
-			else
-				verbosity = temp;
 		}
-		else
+		
+		if (j == NUM_ARGUMENTS && local) /* only check on a local pass */
+		{
 			printf ("Didn't understand argument %s.\n", (*argv)[i]);
+			exit (1);
+		}
 	}
+	
+	return rv;
 }
 
 /* an occasional checkup to sync contents. */
@@ -202,12 +303,72 @@ static void reset_sync (void)
 
 }
 
-static void clipboard_clear (GtkClipboard *clipboard, gpointer data)
+/*
+converts main program arguments into one long string.
+puts allocated string in dest, and returns size
+*/
+static gint
+args_to_string (int *argc, char ***argv, char **dest)
 {
-	/* no data needs to be freed */
+	gint i;
+	gint size = 0;
+	gint extra;
+	gchar num [11];
+	gchar *p;
+	
+	for (i = 0; i < *argc; i++)
+		size += strlen ((*argv)[i]) + 1;
+	
+	sprintf (num, "%i", *argc);
+	
+	extra = strlen (num) + 1;
+	
+	*dest = g_malloc (size + extra);
+	
+	strcpy (*dest, num);
+	p = *dest + extra;
+	
+	for (i = 0; i < *argc; i++)
+	{
+		strcpy (p, (*argv)[i]);
+		p += strlen ((*argv)[i]) + 1;
+	}
+	
+	if (*argc == 1)
+	{
+	}
+	
+	return size + extra;
 }
 
-static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
+/*
+returns number of strings in newly allocated argv
+*/
+static gint
+string_to_args (const char *string, char ***argv)
+{
+	gint num, i;
+	char **list;
+	
+	num = atoi (string);
+	string += strlen (string) + 1;
+	
+	list = g_malloc (sizeof (char *) * num);
+	
+	for (i = 0; i < num; i++)
+	{
+		list[i] = g_malloc (strlen (string) + 1);
+		strcpy (list[i], string);
+		string += strlen (string) + 1;
+	}
+	
+	*argv = list;
+	
+	return num;
+}
+
+static void
+clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
 	*selection_data, guint info, gpointer data)
 {
 	switch (info)
@@ -215,9 +376,8 @@ static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 	case 1:
 		/* Fill the selection with nonsense data -- it is not used.  We are just using 
 		   the clipboard as a message passer.  On a 1, which is a 'are you alive?' ping,
-		   create a new pad.  The other client will see this data and leave; we take
-		   over his pad. */
-		pad_new ();
+		   respond.  The other client will see this data and leave; we take
+		   over his arguments. */
 		gtk_selection_data_set (selection_data, 
 			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
 			8,
@@ -228,29 +388,107 @@ static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 	}
 }
 
-static void xpad_check_if_others (void)
+static void
+clipboard_clear (GtkClipboard *clipboard, gpointer data)
 {
-	GtkClipboard *clipboard = gtk_clipboard_get (gdk_atom_intern ("_XPAD_EXISTS", FALSE));
+	/* no data needs to be freed, but we need to ask the other xpad that took our data
+	    what the arguments were.*/
+	
 	GtkSelectionData *temp;
+	
+	/* set up target list with simple string target w/ value of 1 */
+	GtkTargetEntry targets[] = {{"STRING", 0, 1}};
 	
 	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
 		gdk_atom_intern ("STRING", FALSE))))
 	{
-		/* If there was anything in the clipboard, that means there is another
-		     xpad session going on, and so we exit (the other session knows we
-		     tried to start, and will make a new pad. */
+		gint argc;
+		gchar **argv;
+		gint i;
+		
+		argc = string_to_args ((char *) temp->data, &argv);
+		
+		if (!handle_args (&argc, &argv, FALSE))
+		{
+			/* if there were no non-local arguments, insert --new as argument */
+/*			handle_args (&1, &(&"new"), FALSE);*/
+		}
+		
+		for (i = 0; i < argc; i++)
+			g_free (argv[i]);
+		
+		g_free (argv);
+		
 		gtk_selection_data_free (temp);
-		gtk_main_quit ();
+		
+		/* claim clipboard again */
+		gtk_clipboard_set_with_data (clipboard, targets, 1, 
+			clipboard_get, clipboard_clear, NULL);
+	}
+}
+
+static void
+newxpad_clipboard_clear (GtkClipboard *clipboard, gpointer data)
+{
+	/* other xpad got our message, let's get the hell out of here */
+	gtk_main_quit ();
+}
+
+static void
+newxpad_clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
+	*selection_data, guint info, gpointer data)
+{
+	gpointer *newdata;
+	gint size;
+	gchar *args;
+	
+	newdata = (gpointer *) data;
+	
+	switch (info)
+	{
+	case 1:
+		size = args_to_string (newdata[0], newdata[1], &args);
+		
+		/* Fill the selection with our arguments. */
+		gtk_selection_data_set (selection_data, 
+			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
+			8,
+			(const guchar *) args,
+			size);
+		g_free (args);
+	default:
+		break;
+	}
+}
+
+static gint xpad_check_if_others (gpointer data)
+{
+	GtkClipboard *clipboard = gtk_clipboard_get (gdk_atom_intern ("_XPAD_EXISTS", FALSE));
+	GtkSelectionData *temp;
+	
+	/* set up target list with simple string target w/ value of 1 */
+	GtkTargetEntry targets[] = {{"STRING", 0, 1}};
+		
+	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
+		gdk_atom_intern ("STRING", FALSE))))
+	{
+		/* If there was anything in the clipboard, that means there is another
+		     xpad session going on, and so we exit after posting our arguments. */
+		gtk_selection_data_free (temp);
+		
+		gtk_clipboard_set_with_data (clipboard, targets, 1,
+			newxpad_clipboard_get, newxpad_clipboard_clear, data);
+		
+		return 1;
 	}
 	else
 	{
 		/* no one else is alive.  claim the clipboard. */
 		
-		/* set up target list with simple string target w/ value of 1 */
-		GtkTargetEntry targets[] = {{"STRING", 0, 1}};
-		
 		gtk_clipboard_set_with_data (clipboard, targets, 1, 
 			clipboard_get, clipboard_clear, NULL);
+		
+		return 0;
 	}
 }
 
@@ -320,12 +558,12 @@ static int xpad_init (gpointer data)
 {
 	gpointer *newdata;
 	
+	newdata = (gpointer *) data;
+	
 	gtk_quit_add (0, at_gtk_exit, NULL);
 	
-	newdata = (gpointer *) data;
-	handle_args (newdata[0], newdata[1]);
-	
-	xpad_check_if_others ();
+	if (xpad_check_if_others (data))
+		return 0;
 	
 #ifdef G_OS_UNIX
 	
@@ -368,6 +606,8 @@ static int xpad_init (gpointer data)
 	/* load all pads */
 	fio_load_pads();
 	
+	handle_args (newdata[0], newdata[1], FALSE);
+	
 	return 0;
 }
 
@@ -375,8 +615,9 @@ int main (int argc, char *argv[])
 {
 	gpointer args[2];
 	
-	gtk_set_locale ();
 	gtk_init(&argc, &argv);
+	
+	handle_args (&argc, &argv, TRUE);
 	
 	args[0] = &argc;
 	args[1] = &argv;

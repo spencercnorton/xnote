@@ -97,8 +97,6 @@ static void
 toolbar_add_separator (xpad_toolbar *xt)
 {
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_get_box (xt->bar)));
-/*	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
-		gtk_vseparator_new (), NULL, NULL);*/
 }
 
 static void
@@ -141,12 +139,6 @@ toolbar_add_item (gpointer gname, gpointer gxt)
 		
 		toolbar_add_button (xt, tb);
 	}
-}
-
-static void
-toolbar_show_item (GtkWidget *widget, gpointer p2)
-{
-	gtk_widget_show_all (widget);
 }
 
 GList *toolbar_get_buttons (xpad_toolbar *xt)
