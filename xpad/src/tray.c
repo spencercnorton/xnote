@@ -52,6 +52,12 @@ static GtkWidget      *menu = NULL;
 static int             toggle_state = SHOWN;
 
 
+gboolean tray_is_open (void)
+{
+  return docklet && docklet->manager_window != None;
+}
+
+
 void tray_open (void)
 {
   docklet_create();

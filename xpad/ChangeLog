@@ -1,5 +1,8 @@
 2003-10-10  Michael Terry  <mikix@users.sourceforge.net>
 	* src/main.c: Fix broken compile by adding back program_name
+	* src/pad.c, src/tray.c, src/tray.h: Allow xpad to tell when the
+	  system tray is open and don't close xpad when pads are all closed
+	  but the system tray isn't
 
 2003-10-08  Michael Terry  <mikix@users.sourceforge.net>
 	* po/es.po, po/ga.po, po/nl.po: Update translations

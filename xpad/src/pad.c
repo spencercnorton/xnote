@@ -574,7 +574,8 @@ static void quit_if_no_pads (void)
 		/* Find first non-hidden pad */
 	}
 	
-	if (!p)
+	/* Don't shut down if a pad or the tray is open */
+	if (!p && !tray_is_open ())
 		pads_close_all ();
 }
 

@@ -1,4 +1,5 @@
 Version 1.13
+* Don't close xpad if no pads are open but the system tray is
 * Made translations work again
 * New Spanish translation (Ramon Rey Vicente)
 * Updated Dutch translation (Elros Cyriatan)
