@@ -29,7 +29,11 @@ COMMAND ARGUMENTS
 	Standard GTK+ arguments are understood.  In addition, the following
 		arguments are available.
 
-	--version:	Prints version information.
+	--version:		Prints version information.
+
+	--sync-time=%d:	Where %d is the number of seconds between each 
+					"sync," or saving of the pad's contents.  Entering
+					0 indicates not saving.
 
 
 ----------------------------------------------------------------------------
