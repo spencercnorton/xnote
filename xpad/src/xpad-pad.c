@@ -100,7 +100,6 @@ static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences (XpadPad *pad);
 static void xpad_pad_quit (XpadPad *pad);
-static void xpad_pad_toggle_sticky (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
@@ -241,7 +240,6 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-properties", G_CALLBACK (xpad_pad_open_properties), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-preferences", G_CALLBACK (xpad_pad_open_preferences), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-quit", G_CALLBACK (xpad_pad_quit), pad);
-	g_signal_connect_swapped (pad->priv->toolbar, "activate-sticky", G_CALLBACK (xpad_pad_toggle_sticky), pad);
 	
 	g_signal_connect (pad->priv->toolbar, "popup", G_CALLBACK (xpad_pad_toolbar_popup), pad);
 	g_signal_connect (pad->priv->toolbar, "popdown", G_CALLBACK (xpad_pad_toolbar_popdown), pad);
@@ -552,7 +550,7 @@ pad_properties_destroyed (XpadPad *pad)
 	if (!pad->priv->properties)
 		return;
 	
-	g_signal_handlers_disconnect_by_func (pad, (void *) pad_properties_sync_title, NULL);
+	g_signal_handlers_disconnect_by_func (pad, (gpointer) pad_properties_sync_title, NULL);
 	pad->priv->properties = NULL;
 }
 
@@ -684,19 +682,6 @@ xpad_pad_quit (XpadPad *pad)
 }
 
 static void
-xpad_pad_toggle_sticky (XpadPad *pad)
-{
-	if (pad->priv->sticky)
-	{
-		gtk_window_unstick (GTK_WINDOW (pad));
-	}
-	else
-	{
-		gtk_window_stick (GTK_WINDOW (pad));
-	}
-}
-
-static void
 xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 {
 	/* set title */
@@ -730,8 +715,6 @@ static gboolean
 xpad_pad_window_state_event (XpadPad *pad, GdkEventWindowState *event)
 {
 	pad->priv->sticky = (event->new_window_state & GDK_WINDOW_STATE_STICKY) ? TRUE : FALSE;
-	
-	xpad_toolbar_set_sticky_active (XPAD_TOOLBAR (pad->priv->toolbar), pad->priv->sticky);
 	
 	if (event->changed_mask & GDK_WINDOW_STATE_STICKY)
 		save_info (pad);
@@ -1060,23 +1043,24 @@ menu_about (XpadPad *pad)
 {
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
 	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", NULL};
-	const gchar *comments = _("Virtual sticky notes");
+	const gchar *comments = _("Sticky notes");
 	const gchar *copyright = "© 2001-2004 Michael Terry";
-	const gchar *license =
+	/* we use g_strdup_printf because C89 has size limits on static strings */
+	gchar *license = g_strdup_printf ("%s\n%s\n%s",
 "This program is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU General Public License\n"
 "as published by the Free Software Foundation; either version 2\n"
 "of the License, or (at your option) any later version.\n"
-"\n"
+,
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 "GNU General Public License for more details.\n"
-"\n"
+,
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.";
-	/* Translators: please translate this as your own name and/or email */
+"Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.");
+	/* Translators: please translate this as your own name and optionally email */
 	const gchar *translator_credits = _("translator-credits");
 	const gchar *website = "http://xpad.sourceforge.net/";
 	
@@ -1091,6 +1075,8 @@ menu_about (XpadPad *pad)
 		"version", VERSION,
 		"website", website,
 		NULL);
+	
+	g_free (license);
 }
 
 static void
@@ -1305,7 +1291,7 @@ menu_get_popup_no_highlight (XpadPad *pad)
 	
 	MENU_ADD_STOCK (GTK_STOCK_NEW, xpad_pad_spawn);
 	MENU_ADD_SEP ();
-	MENU_ADD_CHECK (_("_Sticky"), pad->priv->sticky, menu_sticky);
+	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
 	MENU_ADD_STOCK (GTK_STOCK_PROPERTIES, xpad_pad_open_properties);
 	MENU_ADD_SEP ();
 	MENU_ADD_STOCK (GTK_STOCK_CLOSE, xpad_pad_close);

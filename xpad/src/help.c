@@ -37,37 +37,35 @@ static void show_help_at_page (gint page);
 static GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *button;
-	GString *helptextbuf;
+	gchar *helptextbuf;
 	
 	/* Create the widgets */
 	
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
 	
-	helptextbuf = g_string_new ( 
+	/* we use g_strdup_printf because C89 has size limits on static strings */
+	helptextbuf = g_strdup_printf ("%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
 _("Each xpad session consists of one or more open pads.  "
 "These pads are basically sticky notes on your desktop in which "
-"you can write memos.\n\n"));
-	helptextbuf = g_string_append (helptextbuf,
+"you can write memos."),
 _("<b>To move a pad</b>, left drag on the toolbar, right drag "
 "on the resizer in the bottom right, or hold down CTRL "
-"while left dragging anywhere on the pad.\n\n"));
-	helptextbuf = g_string_append (helptextbuf,
+"while left dragging anywhere on the pad."),
 _("<b>To resize a pad</b>, left drag on the resizer or hold down "
-"CTRL while right dragging anywhere on the pad.\n\n"));
-	helptextbuf = g_string_append (helptextbuf,
+"CTRL while right dragging anywhere on the pad."),
 _("<b>To change color settings</b>, right click on a pad "
-"and choose Edit->Preferences.\n\n"));
-	helptextbuf = g_string_append (helptextbuf, 
+"and choose Edit->Preferences."),
 _("Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
-"enjoy.\n\n"));
-	helptextbuf = g_string_append (helptextbuf,
+"enjoy."),
 _("Please send comments or bug reports to "
 "xpad-devel@lists.sourceforge.net"));
-
-	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf->str);
-
+	
+	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
+	
+	g_free (helptextbuf);
+	
 	gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
 	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);

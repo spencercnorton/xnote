@@ -59,13 +59,6 @@ typedef struct
 
 enum
 {
-  PROP_0,
-  PROP_STICKY_ACTIVE,
-  LAST_PROP
-};
-
-enum
-{
 	ACTIVATE_NEW,
 	ACTIVATE_CLOSE,
 	ACTIVATE_DELETE,
@@ -73,7 +66,6 @@ enum
 	ACTIVATE_PREFERENCES,
 	ACTIVATE_PROPERTIES,
 	ACTIVATE_QUIT,
-	ACTIVATE_STICKY,
 	POPUP,
 	POPDOWN,
 	LAST_SIGNAL
@@ -88,7 +80,6 @@ static const XpadToolbarButton buttons[] =
 	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
 	{"Properties", "gtk-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
 	{"Quit", "gtk-quit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add _Quit to Toolbar")},
-	{"Sticky", "xpad-sticky", ACTIVATE_STICKY, XPAD_BUTTON_TYPE_TOGGLE, N_("Toggle Stickiness"), N_("Add _Sticky to Toolbar")},
 	{"sep", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add a Se_parator to Toolbar")} /* Separator */
 	/*{"Minimize to Tray", "gtk-goto-bottom", 1, N_("Minimize Pads to System Tray")}*/
 };
@@ -100,8 +91,6 @@ static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const Xpa
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
 static void xpad_toolbar_finalize (GObject *object);
-static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
-static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_toolbar_add_button (const gchar *button_name);
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
@@ -130,18 +119,6 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 	
 	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
 	gobject_class->finalize = xpad_toolbar_finalize;
-	gobject_class->set_property = xpad_toolbar_set_property;
-	gobject_class->get_property = xpad_toolbar_get_property;
-	
-	/* Properties */
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_STICKY_ACTIVE,
-	                                 g_param_spec_boolean ("sticky-active",
-	                                                       "Sticky Active",
-	                                                       "Whether the sticky button is active",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
 	
 	/* Signals */
 	
@@ -174,14 +151,6 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_OBJECT_CLASS_TYPE (gobject_class),
 		              G_SIGNAL_RUN_LAST,
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_clear),
-		              NULL, NULL,
-		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
-	signals[ACTIVATE_STICKY] = 
-		g_signal_new ("activate-sticky",
-		              G_OBJECT_CLASS_TYPE (gobject_class),
-		              G_SIGNAL_RUN_LAST,
-		              G_STRUCT_OFFSET (XpadToolbarClass, activate_sticky),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	
@@ -646,89 +615,4 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 	
 	return TRUE;
-}
-
-void
-xpad_toolbar_set_sticky_active (XpadToolbar *toolbar, gboolean active)
-{
-	GList *list, *temp;
-	const XpadToolbarButton *tb;
-	
-	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
-	
-	for (temp = list; temp; temp = temp->next)
-	{
-		tb = (const XpadToolbarButton *) g_object_get_data (G_OBJECT (temp->data), "xpad-tb");
-		if (tb && tb->signal == ACTIVATE_STICKY)
-		{
-			g_signal_handlers_block_by_func (GTK_TOOL_ITEM (temp->data), (void *) (xpad_toolbar_button_activated), NULL);
-			gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (temp->data), active);
-			g_signal_handlers_unblock_by_func (GTK_TOOL_ITEM (temp->data), (void *) (xpad_toolbar_button_activated), NULL);
-			break;
-		}
-	}
-	
-	g_list_free (list);
-}
-
-gboolean
-xpad_toolbar_get_sticky_active (XpadToolbar *toolbar)
-{
-	GList *list, *temp;
-	const XpadToolbarButton *tb;
-	gboolean rv = FALSE;
-	
-	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
-	
-	for (temp = list; temp; temp = temp->next)
-	{
-		tb = (const XpadToolbarButton *) g_object_get_data (G_OBJECT (temp->data), "xpad-tb");
-		if (tb->signal == ACTIVATE_STICKY)
-		{
-			rv = gtk_toggle_tool_button_get_active (GTK_TOGGLE_TOOL_BUTTON (temp->data));
-			break;
-		}
-	}
-	
-	g_list_free (list);
-	
-	return rv;
-}
-
-static void
-xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
-{
-	XpadToolbar *toolbar;
-	
-	toolbar = XPAD_TOOLBAR (object);
-	
-	switch (prop_id)
-	{
-	case PROP_STICKY_ACTIVE:
-		xpad_toolbar_set_sticky_active (toolbar, g_value_get_boolean (value));
-		break;
-	
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-		break;
-	}
-}
-
-static void
-xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
-{
-	XpadToolbar *toolbar;
-	
-	toolbar = XPAD_TOOLBAR (object);
-	
-	switch (prop_id)
-	{
-	case PROP_STICKY_ACTIVE:
-		g_value_set_boolean (value, xpad_toolbar_get_sticky_active (toolbar));
-		break;
-	
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-		break;
-	}
 }

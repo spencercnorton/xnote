@@ -55,7 +55,6 @@ struct XpadToolbarClass
 	void (*activate_preferences) (XpadToolbar *toolbar);
 	void (*activate_properties) (XpadToolbar *toolbar);
 	void (*activate_quit) (XpadToolbar *toolbar);
-	void (*activate_sticky) (XpadToolbar *toolbar);
 	void (*popup) (XpadToolbar *toolbar, GtkMenu *menu);
 	void (*popdown) (XpadToolbar *toolbar, GtkMenu *menu);
 };
@@ -63,9 +62,6 @@ struct XpadToolbarClass
 GType xpad_toolbar_get_type (void);
 
 GtkWidget *xpad_toolbar_new (void);
-
-gboolean xpad_toolbar_get_sticky_active (XpadToolbar *toolbar);
-void xpad_toolbar_set_sticky_active (XpadToolbar *toolbar, gboolean active);
 
 G_END_DECLS
 
