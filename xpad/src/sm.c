@@ -67,7 +67,7 @@ static gboolean xpad_sm_cycle (gpointer data)
 	FD_ZERO (&fds);
 	FD_SET (xpad_ice_fd, &fds);
 	if (select (xpad_ice_fd + 1, &fds, NULL, NULL, 
-		((gboolean) data) ? NULL : &timeout) > 0)
+		(GPOINTER_TO_INT (data)) ? NULL : &timeout) > 0)
 	{
 		IceConn ice_conn;
 		
@@ -99,13 +99,13 @@ static void xpad_sm_block ()
 {
 	while (blocking)
 	{
-		xpad_sm_cycle (TRUE);
+		xpad_sm_cycle (GINT_TO_POINTER (1));
 	}
 }
 
 static gboolean xpad_sm_add_cycle_to_main_loop (gpointer data)
 {
-	gtk_timeout_add (20, xpad_sm_cycle, FALSE);
+	gtk_timeout_add (20, xpad_sm_cycle, GINT_TO_POINTER (0));
 	
 	return FALSE;
 }
