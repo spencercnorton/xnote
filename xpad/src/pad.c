@@ -35,15 +35,15 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget);
 
 static GtkItemFactoryEntry menu_items[] = 
 {
-	{N_("/_File"), 				NULL,			0,		0, 	"<Branch>"},
-	{N_("/File/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-	{N_("/File/_Open..."),			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
+	{N_("/_Pad"), 				NULL,			0,		0, 	"<Branch>"},
+	{N_("/Pad/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
+/*	{N_("/File/_Open..."),			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
 	{"/File/sep", 				NULL,			0,		0,	"<Separator>"},
-	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
-	{"/File/sep2", 				NULL,			0,		0,	"<Separator>"},
-	{N_("/File/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{N_("/File/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
-	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},*/
+	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
+	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
+	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
+/*	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},*/
 	{N_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
 	{N_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
@@ -1023,8 +1023,8 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	}
 	
 	gtk_item_factory_delete_item (pad->menu, "/Windows/sep");
-	gtk_item_factory_delete_item (pad->menu, _("/Windows/_Show All"));
-	gtk_item_factory_delete_item (pad->menu, _("/Windows/_Close All"));
+	gtk_item_factory_delete_item (pad->menu, _("/Windows/Show All"));
+	gtk_item_factory_delete_item (pad->menu, _("/Windows/Close All"));
 	
 	/**
 	 * Populate list of windows.
