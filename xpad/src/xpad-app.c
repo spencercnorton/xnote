@@ -715,7 +715,7 @@ done:
 static GOptionEntry local_options[] =
 {
 	{"version", 'v', 0, G_OPTION_ARG_NONE, &option_version, N_("Show version number and quit"), NULL},
-	{"hide-old", 'h', 0, G_OPTION_ARG_NONE, &option_hide_old, N_("Hide existing pads on startup"), NULL},
+	{"hide-old", 'H', 0, G_OPTION_ARG_NONE, &option_hide_old, N_("Hide existing pads on startup"), NULL},
 	{"no-new", 'N', 0, G_OPTION_ARG_NONE, &option_nonew, N_("Don't create a new pad on startup if no previous pads exist"), NULL},
 	{NULL}
 };

@@ -1,43 +1,34 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.TH XPAD 1 "November 23, 2002"
+.TH XPAD 1 "January 13, 2005"
 .SH NAME
-xpad \- A "post-it" note system for GTK+ 2.0
+xpad \- A sticky notes application for GTK+ 2.0
 .PP
 .SH SYNOPSIS
 .B xpad
 .RI [OPTIONS]
 .PP
 .SH DESCRIPTION
-A sticky note system for GTK+ 2.0.
+A sticky notes application for GTK+ 2.0.
 .PP
 .SH OPTIONS
 .TP
-.B \-V, \-\-version
+.B \-v, \-\-version
 Display version information.
 .TP
-.B \-h, \-\-help
+.B \-\-help
 Display usage information.
 .TP
-.B \-v N, \-\-verbosity=N
-Change amount of output.  0 is none; 1 is moderate; 2 is debug.  Default is 0.
+.B \-H, \-\-hide-old
+Hides preexisting pads on startup.  All pads will be hidden, so unless the tray icon is present or you also specify \-\-new, xpad will exit immediately.
 .TP
 .B \-n, \-\-new
 Open a new pad.
 .TP
-.B \-\-nonew
-Prevents xpad from making new pads.
+.B \-N, \-\-no-new
+Prevents xpad from making a new pad on startup.  A new pad would be created if xpad is already running and is run again or if there are no old pads to load.
 .TP
 .B \-q, \-\-quit
-Quits all xpad sessions.
-.TP
-.B \-l, \-\-list
-Lists the titles of all pads.
-.TP
-.B \-s N, \-\-show=N
-Brings the Nth pad (1-based) to the foreground.
-.TP
-.B \-\-showall
-Brings all pads to the foreground.
+Closes all open pads and terminates the xpad processes.
 .PP
 .SH AUTHOR
-Written by Michael Terry <mikix@users.sourceforge.net>.
+Written by Michael Terry <mike@mterry.name>.
