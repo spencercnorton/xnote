@@ -10,7 +10,7 @@
 /* files we use are not large */
 #define MAX_FILE_SIZE		1024
 
-#define VERSION				"1.3"
+#define VERSION				"1.4"
 
 #endif
 
