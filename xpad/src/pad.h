@@ -159,6 +159,9 @@ void pad_set_decorations (pad_node *pad, gboolean decor);
 gboolean pad_confirm_destroy (pad_node *pad);
 
 
+gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement);
+
+
 void pad_remove_toolbar (pad_node *pad);
 void pad_add_toolbar (pad_node *pad);
 void pad_toolbar_update (pad_node *pad);
@@ -171,6 +174,7 @@ struct toolbar_button_def
 	GCallback func;
 	const gchar *desc;
 };
+
 
 extern const toolbar_button buttons[];
 extern const char num_buttons;

@@ -116,6 +116,33 @@ GtkTextView *get_text (GtkWindow *window)
 		));
 }
 
+
+/* This function returns 'string' with all instances
+   of 'obj' replaced with instances of 'replacement'
+   It modifies string and re-allocs it.
+   */
+gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
+{
+	gchar *p;
+	gint rsize = strlen (replacement);
+	gint osize = 1;
+	gint diff = rsize - osize;
+	
+	p = *string;
+	while ((p = strchr (p, obj)))
+	{
+		*string = g_realloc (*string, strlen (*string) + diff + 1);
+		g_memmove (p + rsize, p + osize, strlen (p + osize) + 1);
+		
+		memcpy (p, replacement, rsize);
+		
+		p = p + rsize;
+	}
+	
+	return *string;
+}
+
+
 /* since reshowing all pads presents them, caller
     param will be presented afterward */
 void pad_set_decorations (pad_node *pad, gboolean decor)
@@ -1199,10 +1226,14 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	for (p = first_pad; p; p = p->next)
 	{
 		gchar *title;
+		gchar *tmp_title;
 		
 		n++;
 		
-		title = g_strdup_printf ("%s/_%i. %s", submenu, n, p->title);
+		tmp_title = g_strdup (p->title);
+		str_replace_tokens (&tmp_title, '_', "__");
+		title = g_strdup_printf ("%s/_%i. %s", submenu, n, tmp_title);
+		g_free (tmp_title);
 		
 		entry.path = title;
 		entry.accelerator = NULL;

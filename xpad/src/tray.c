@@ -94,9 +94,13 @@ static void docklet_menu( GdkEventButton *event )
   while( pad )
   {
     gchar *result;
+    gchar *title;
 
     n++;
-    result = g_strdup_printf ("_%d. %s", n, pad->title);
+    title = g_strdup (pad->title);
+    str_replace_tokens (&title, '_', "__");
+    result = g_strdup_printf ("_%d. %s", n, title);
+    g_free (title);
 
     entry = gtk_menu_item_new_with_mnemonic (result);
     g_signal_connect_swapped (G_OBJECT(entry), "activate", 
