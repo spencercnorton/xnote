@@ -43,7 +43,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},*/
 	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
+	{N_("/Pad/_Destroy"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
 /*	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},*/
 	{N_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
