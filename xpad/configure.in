@@ -1,5 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(fio.c)
+AC_CONFIG_HEADER(config.h:config.h.in)
+
+dnl xpad version
+dnl line taken from aterm project
+VERSION=`sed -n -e 's/^.*VERSION.*"\(.*\)"$/\1/p' ${srcdir}/defines.h`
+AC_SUBST(VERSION)dnl
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -7,7 +13,7 @@ AC_PROG_INSTALL
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
-AC_CHECK_LIB(ibs, main)
+dnl I don't know what this is...  AC_CHECK_LIB(ibs, main)
 
 dnl Checks for header files.
 AC_HEADER_STDC
