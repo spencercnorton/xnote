@@ -80,18 +80,15 @@ gchar *fio_get_file (const gchar *name)
 {
 	gchar *fullname;
 	gchar *rv;
-	GError *error = NULL;
 	
 	fullname = fio_fill_filename (name);
 	
-	if (!g_file_get_contents (fullname, &rv, NULL, &error))
+	if (!g_file_get_contents (fullname, &rv, NULL, NULL))
 	{
 		gchar usertext[524];
 		
 		sprintf (usertext, _("Could not read from file %s."), fullname);
 		xpad_show_error (NULL, usertext, NULL);
-		
-		g_error_free (error);
 	}
 	
 	g_free (fullname);
