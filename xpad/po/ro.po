@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-13 21:29-0400\n"
+"POT-Creation-Date: 2004-09-13 22:16-0400\n"
 "PO-Revision-Date: 2003-10-26 10:09+0200\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -28,16 +28,16 @@ msgstr ""
 msgid "Could not write to file %s."
 msgstr "Nu am putut scrie în fiºierul %s."
 
-#: src/xpad-app.c:113 xpad.desktop.in.h:3
+#: src/xpad-app.c:114 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:445
+#: src/xpad-app.c:453
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Nu am putut deschide directorul %s."
 
-#: src/xpad-app.c:448
+#: src/xpad-app.c:456
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,35 +45,35 @@ msgstr ""
 "Acest director este necesar pentru stocare preferinþe ºi informaþii. Xpad "
 "seva închide acum."
 
-#: src/xpad-app.c:848
+#: src/xpad-app.c:856
 msgid "Prints usage information and exits"
 msgstr "Afiºeazã informaþii de folosire ºi iese"
 
-#: src/xpad-app.c:849
+#: src/xpad-app.c:857
 msgid "Prints xpad version and exits"
 msgstr "Afiºeazã versiunea xpad ºi iese"
 
-#: src/xpad-app.c:850
+#: src/xpad-app.c:858
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 "Împiedicã xpad sã creeze un nou pad la start dacã nu existã paduri anterioare"
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:864
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 "Face ca xpad sã creeze un nou pad la start chiar dacã existã pad-uri deja"
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:865
 msgid "Causes all running xpad instances to close"
 msgstr "Face ca toate instanþele xpad în execuþie sã se închidã"
 
-#: src/xpad-app.c:873
+#: src/xpad-app.c:881
 #, fuzzy, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad"
 
-#: src/xpad-app.c:917
+#: src/xpad-app.c:925
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -82,17 +82,17 @@ msgstr ""
 "Folosire: xpad [OPÞIUNI]\n"
 "\n"
 
-#: src/xpad-app.c:955
+#: src/xpad-app.c:963
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Lipseºte parametrul pereche pentru %s\n"
 
-#: src/xpad-app.c:999
+#: src/xpad-app.c:1007
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Nu am înþeles parametrul '%s'\n"
 
-#: src/xpad-app.c:1048
+#: src/xpad-app.c:1056
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Numãr invalid: '%s'\n"
@@ -165,11 +165,11 @@ msgstr "Permite decoraþiuni fereastrã (_window)"
 msgid "_Notes"
 msgstr "/_Note"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:148
+#: src/xpad-pad.c:1341 src/xpad-tray.c:152
 msgid "_Show All"
 msgstr "Afiºare Toate(_Show All)"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:153
+#: src/xpad-pad.c:1342 src/xpad-tray.c:159
 #, fuzzy
 msgid "_Close All"
 msgstr "Închide toate pad-urile"

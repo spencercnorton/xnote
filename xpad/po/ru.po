@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-13 21:29-0400\n"
+"POT-Creation-Date: 2004-09-13 22:16-0400\n"
 "PO-Revision-Date: 2003-03-28 15:24+3\n"
 "Last-Translator: AVL <avl@altlinux.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
@@ -28,16 +28,16 @@ msgstr ""
 msgid "Could not write to file %s."
 msgstr "Не могу писать в файл %s."
 
-#: src/xpad-app.c:113 xpad.desktop.in.h:3
+#: src/xpad-app.c:114 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr ""
 
-#: src/xpad-app.c:445
+#: src/xpad-app.c:453
 #, fuzzy, c-format
 msgid "Could not open directory %s."
 msgstr "Не могу открыть xpad директорию %s."
 
-#: src/xpad-app.c:448
+#: src/xpad-app.c:456
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,50 +45,50 @@ msgstr ""
 "Эта директория необходима для сохранения настроек и содержимого стикеров.  А "
 "сейчас Xpad будет закрыт."
 
-#: src/xpad-app.c:848
+#: src/xpad-app.c:856
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/xpad-app.c:849
+#: src/xpad-app.c:857
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/xpad-app.c:850
+#: src/xpad-app.c:858
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:864
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:865
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/xpad-app.c:873
+#: src/xpad-app.c:881
 #, c-format
 msgid "Xpad %s\n"
 msgstr ""
 
-#: src/xpad-app.c:917
+#: src/xpad-app.c:925
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/xpad-app.c:955
+#: src/xpad-app.c:963
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Пропущен дополнительный аргумент к %s\n"
 
-#: src/xpad-app.c:999
+#: src/xpad-app.c:1007
 #, fuzzy, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Неизвестный аргумент %s.\n"
 
-#: src/xpad-app.c:1048
+#: src/xpad-app.c:1056
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Неправильный номер: '%s'\n"
@@ -161,11 +161,11 @@ msgstr "Разрешить атрибуты окна оконного менед
 msgid "_Notes"
 msgstr "/Заметки"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:148
+#: src/xpad-pad.c:1341 src/xpad-tray.c:152
 msgid "_Show All"
 msgstr "Показать все"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:153
+#: src/xpad-pad.c:1342 src/xpad-tray.c:159
 #, fuzzy
 msgid "_Close All"
 msgstr "Закрыть все стикеры"

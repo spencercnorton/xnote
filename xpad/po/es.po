@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-13 21:29-0400\n"
+"POT-Creation-Date: 2004-09-13 22:16-0400\n"
 "PO-Revision-Date: 2004-09-13 15:44+0200\n"
 "Last-Translator: Ramón Rey Vicente <ramon.rey@hispalinux.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -28,16 +28,16 @@ msgstr "Orientación de la bandeja"
 msgid "Could not write to file %s."
 msgstr "No se puede escribir al fichero %s."
 
-#: src/xpad-app.c:113 xpad.desktop.in.h:3
+#: src/xpad-app.c:114 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:445
+#: src/xpad-app.c:453
 #, c-format
 msgid "Could not open directory %s."
 msgstr "No se puede abrir el directorio %s."
 
-#: src/xpad-app.c:448
+#: src/xpad-app.c:456
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -46,35 +46,35 @@ msgstr ""
 "sobre\n"
 "las notas. Xpad se cerrará ahora."
 
-#: src/xpad-app.c:848
+#: src/xpad-app.c:856
 msgid "Prints usage information and exits"
 msgstr "Muestra información de uso y termina"
 
-#: src/xpad-app.c:849
+#: src/xpad-app.c:857
 msgid "Prints xpad version and exits"
 msgstr "Muestra la versión de xpad y termina"
 
-#: src/xpad-app.c:850
+#: src/xpad-app.c:858
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 "Impide que xpad cree una nota nueva al inicio si no existen notas previas"
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:864
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 "Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:865
 msgid "Causes all running xpad instances to close"
 msgstr "Hace que todas las instancias de xpad se cierren"
 
-#: src/xpad-app.c:873
+#: src/xpad-app.c:881
 #, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad %s\n"
 
-#: src/xpad-app.c:917
+#: src/xpad-app.c:925
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -83,17 +83,17 @@ msgstr ""
 "Uso: %s [OPCIONES]\n"
 "\n"
 
-#: src/xpad-app.c:955
+#: src/xpad-app.c:963
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Falta el argumento que acompaña a %s\n"
 
-#: src/xpad-app.c:999
+#: src/xpad-app.c:1007
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "No se comprendió el argumento '%s'\n"
 
-#: src/xpad-app.c:1048
+#: src/xpad-app.c:1056
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Número inválido: '%s'\n"
@@ -157,11 +157,11 @@ msgstr "_Decoraciones de la ventana"
 msgid "_Notes"
 msgstr "_Notas"
 
-#: src/xpad-pad.c:1341 src/xpad-tray.c:148
+#: src/xpad-pad.c:1341 src/xpad-tray.c:152
 msgid "_Show All"
 msgstr "_Mostrar todo"
 
-#: src/xpad-pad.c:1342 src/xpad-tray.c:153
+#: src/xpad-pad.c:1342 src/xpad-tray.c:159
 msgid "_Close All"
 msgstr "Cerrar todas"
 
