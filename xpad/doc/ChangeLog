@@ -1,8 +1,12 @@
 1.11
 ----
+added partial Esperanto translation (by mikix@users.sourceforge.net)
+added Romanian translation (by eugenh@urban-grafx.ro)
+added Russian translation (by avl@cad.ru)
 added missing "include <sys/time.h>" (by netgeek@speakeasy.net)
 added new icon and install icon family into new location per icon theme spec
-added russian translation (by avl@cad.ru) and fix up code to be able to use it
+fixed disk-full-and-xpad-contents-disappear bug
+made xpad not show up in taskbar
 
 
 1.10.1

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(xpad, 1.11-b1)
+AC_INIT(xpad, 1.11)
 AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
 
@@ -29,6 +29,6 @@ dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
-ALL_LINGUAS="ro ru"
+ALL_LINGUAS="eo ro ru"
 AM_GNU_GETTEXT
 AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile intl/Makefile po/Makefile.in m4/Makefile)

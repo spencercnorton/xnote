@@ -145,6 +145,14 @@ static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
 	return FALSE;
 }
 
+static gboolean change_sticky_on_start (GtkWidget *checkbutton, GtkWidget *window)
+{
+	xpad_settings_set_sticky_on_start (gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkbutton)));
+	
+	return FALSE;
+}
+
 static gboolean change_confirm_destroy (GtkWidget *checkbutton, GtkWidget *window)
 {
 	xpad_settings_set_confirm_destroy (gtk_toggle_button_get_active (
@@ -649,6 +657,7 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		GtkWidget *label_frame_wm_indent = gtk_label_new ("    ");
 		GtkWidget *label_frame_wm_hbox = gtk_hbox_new (FALSE, 0);
 		GtkWidget *checkbutton_scrollbars = gtk_check_button_new_with_mnemonic (_("Allow _scrollbars"));
+		GtkWidget *checkbutton_sticky = gtk_check_button_new_with_mnemonic (_("Pads start s_ticky"));
 		
 		radio_close_all = gtk_radio_button_new_with_mnemonic (NULL,
 			_("Close and save _all pads"));
@@ -694,8 +703,10 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), xpad_settings_get_confirm_destroy ());
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), xpad_settings_get_edit_lock ());
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_scrollbars), xpad_settings_get_has_scrollbar ());
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_sticky), xpad_settings_get_sticky_on_start ());
 		gtk_box_pack_start (GTK_BOX (hbox_misc), vbox_misc, FALSE, FALSE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 9);
+		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_sticky, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_scrollbars, FALSE, FALSE, 9);
 		gtk_box_pack_start (GTK_BOX (vbox_misc), checkbutton_decorations, FALSE, FALSE, 9);
@@ -711,6 +722,10 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_confirm_destroy, 
 	_("If on, choosing to destroy a pad will prompt for conformation."),
 	_("If on, choosing to destroy a pad will prompt for conformation."));
+	
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_sticky, 
+	_("If on, new pads are sticky by default."),
+	_("If on, new pads are sticky by default."));
 	
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_scrollbars, 
 	_("If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes "
@@ -744,6 +759,7 @@ _("If on, the toolbar will disappear when you are not using the pad."));
 		g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) frame_wm_close);
 		g_signal_connect (GTK_OBJECT (checkbutton_edit_lock), "toggled", G_CALLBACK (change_edit_lock), (gpointer) window);
 		g_signal_connect (GTK_OBJECT (checkbutton_scrollbars), "toggled", G_CALLBACK (change_scrollbars), (gpointer) window);
+		g_signal_connect (GTK_OBJECT (checkbutton_sticky), "toggled", G_CALLBACK (change_sticky_on_start), (gpointer) window);
 		g_signal_connect (GTK_OBJECT (radio_close_all), "toggled", G_CALLBACK (change_wm_close), (gpointer) 0);
 		g_signal_connect (GTK_OBJECT (radio_close_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 1);
 		g_signal_connect (GTK_OBJECT (radio_delete_this), "toggled", G_CALLBACK (change_wm_close), (gpointer) 2);

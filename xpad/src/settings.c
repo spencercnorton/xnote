@@ -10,6 +10,7 @@ struct settings {
 	gint confirm_destroy;
 	gint edit_lock;
 	gint wm_close;
+	gint sticky_on_start;
 	pad_style style;
 	gint toolbar;
 	gint auto_hide_toolbar;
@@ -126,6 +127,18 @@ void xpad_settings_set_has_toolbar (gboolean toolbar)
 gboolean xpad_settings_get_has_toolbar (void)
 {
 	return current_settings.toolbar;
+}
+
+void xpad_settings_set_sticky_on_start (gboolean sticky)
+{
+	current_settings.sticky_on_start = sticky;
+	
+	xpad_settings_save_to_file ();
+}
+
+gboolean xpad_settings_get_sticky_on_start (void)
+{
+	return current_settings.sticky_on_start;
 }
 
 void xpad_settings_set_auto_hide_toolbar (gboolean hide)
@@ -327,6 +340,7 @@ static void xpad_settings_load_defaults (void)
 	current_settings.height = 200;
 	current_settings.decorations = 0;
 	current_settings.confirm_destroy = 1;
+	current_settings.sticky_on_start = 0;
 	current_settings.edit_lock = 0;
 	current_settings.wm_close = XPAD_WM_CLOSE_PAD;
 	current_settings.style.back.pixel = 0;
@@ -389,6 +403,7 @@ static void xpad_settings_load_from_file (void)
 		"confirm_destroy", &current_settings.confirm_destroy,
 		"edit_lock", &current_settings.edit_lock,
 		"wm_close", &current_settings.wm_close,
+		"sticky_on_start", &current_settings.sticky_on_start,
 		"back_red", &back_R,
 		"back_green", &back_G,
 		"back_blue", &back_B,
@@ -470,14 +485,14 @@ static void xpad_settings_save_to_file (void)
 	GSList *tmp;
 	
 	buf = g_strdup_printf ("wm_close %i\nedit_lock %i\nconfirm_destroy %i\n"
-		"decorations %i\nauto_hide_toolbar %i\n"
+		"decorations %i\nsticky_on_start %i\nauto_hide_toolbar %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\nuse_back %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nuse_text %d\n"
 		"border_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\ntoolbar %d\n"
 		"scrollbar %d\nbuttons ",
 		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
-		current_settings.decorations,
+		current_settings.decorations, current_settings.sticky_on_start,
 		current_settings.auto_hide_toolbar, current_settings.width, current_settings.height,
 		current_settings.style.back.red, current_settings.style.back.green, current_settings.style.back.blue,
 		current_settings.style.use_back,

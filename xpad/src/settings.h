@@ -40,6 +40,9 @@ gboolean xpad_settings_get_has_decorations (void);
 void xpad_settings_set_confirm_destroy (gboolean confirm);
 gboolean xpad_settings_get_confirm_destroy (void);
 
+void xpad_settings_set_sticky_on_start (gboolean sticky);
+gboolean xpad_settings_get_sticky_on_start (void);
+
 void xpad_settings_set_edit_lock (gboolean lock);
 gboolean xpad_settings_get_edit_lock (void);
 

@@ -54,7 +54,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	backup = g_strconcat (fullpath, "~", NULL);
 	
 	/* we first move the file away so that if the write doesn't succeed, we don't lose data */
-	if (rename (fullpath, backup))
+	if (g_file_test (fullpath, G_FILE_TEST_EXISTS) && rename (fullpath, backup))
 	{
 		printf ("errno is %i - from %s to %s\n", errno, fullpath, backup);
 		error = TRUE;
@@ -319,8 +319,17 @@ void fio_remove_file (const gchar *filename)
 
 void fio_remove_pad_files (pad_node *pad)
 {
+	gchar *infobackup, *contentbackup;
+	
+	infobackup = g_strconcat (pad->infoname, "~", NULL);
+	contentbackup = g_strconcat (pad->contentname, "~", NULL);
 	fio_remove_file (pad->infoname);
 	fio_remove_file (pad->contentname);
+	fio_remove_file (infobackup);
+	fio_remove_file (contentbackup);
+	
+	g_free (infobackup);
+	g_free (contentbackup);
 }
 
 
