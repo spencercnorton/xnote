@@ -24,13 +24,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include "fio.h"
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <gdk/gdkkeysyms.h>
 
-gchar working_dir[MAX_FILENAME_SIZE];
-size_t working_dir_len = 0;
+#ifdef G_OS_UNIX
+#include <signal.h>
+#endif
+
+gchar *working_dir;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
@@ -64,6 +66,7 @@ gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	cleanup ();
+	g_free (working_dir);
 	return 0;
 }
 
@@ -236,7 +239,6 @@ static void xpad_check_if_others (void)
 static int xpad_init (gpointer data)
 {
 	gpointer *newdata;
-	struct sigaction sa;
 	
 	gtk_quit_add (0, at_gtk_exit, NULL);
 	
@@ -244,6 +246,10 @@ static int xpad_init (gpointer data)
 	handle_args (newdata[0], newdata[1]);
 	
 	xpad_check_if_others ();
+	
+#ifdef G_OS_UNIX
+{
+	struct sigaction sa;
 	
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -254,21 +260,11 @@ static int xpad_init (gpointer data)
 	sigaction (SIGINT, &sa, NULL);  /* 2 interrupt */
 	sigaction (SIGQUIT, &sa, NULL); /* 3 quit */
 	sigaction (SIGABRT, &sa, NULL); /* 6 abort */
-	sigaction (SIGKILL, &sa, NULL); /* 9 kill */
 	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
+}
+#endif
 	
-	working_dir[sizeof(working_dir)-1] = '\0';
-	strncpy (working_dir, g_get_home_dir (), sizeof(working_dir));
-
-	/* Oops--working dir is too long!  Use . instead (which sucks...) */
-	if (working_dir[sizeof(working_dir)-1])
-	{
-		fprintf(stderr, "Working directory too long, using '.'\n");
-		strcpy(working_dir, ".");
-	}
-
-	strcat (working_dir, "/.xpad/");
-	working_dir_len = strlen(working_dir);
+	working_dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
 	
 	/* try to make sure directory exists */
 	mkdir (working_dir, 00777);

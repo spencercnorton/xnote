@@ -34,9 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 static gchar *fio_fill_filename (const gchar *filename)
 {
 	if (g_path_is_absolute (filename))
-	{
 		return g_strdup (filename);
-	}
 	
 	return g_build_filename (working_dir, filename, NULL);
 }

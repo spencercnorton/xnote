@@ -39,8 +39,7 @@ struct settings {
 
 void xpad_exit (void);
 
-extern gchar working_dir[MAX_FILENAME_SIZE];
-extern size_t working_dir_len;
+extern gchar *working_dir;
 extern gint verbosity;
 extern guint autosave_timeout_id;
 extern struct settings current_settings;

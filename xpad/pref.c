@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "pad.h"
 #include "help.h"
-#include <string.h>
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
