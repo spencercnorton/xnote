@@ -187,7 +187,7 @@ static gboolean pad_is_empty (pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	rv = strcmp (content, "") == 0;
+	rv = strcmp (g_strstrip (content), "") == 0;
 	
 	g_free (content);
 	
