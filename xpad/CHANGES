@@ -2,7 +2,10 @@
 ---
 fixed a bug that stopped saving of defaults on shutdown
 better error reporting
-toolbar
+added a toolbar with customizable buttons
+added some new command line options
+allow style locking
+allow pad clearing
 
 
 1.4

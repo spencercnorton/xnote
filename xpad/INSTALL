@@ -12,3 +12,11 @@ not carry over, and you're free to delete old note files.
 This will not be done for you, and since previous versions 
 of xpad had some issues with leaving dangling files, you   
 might want to do so.
+
+
+IF YOU ARE USING WINDOWS OR BEOS
+You will need a working installation of GTK+ 2 as well as the GNU
+compilation tools like make and gcc.  If you get this working and
+would like to share your binaries, please email us at
+xpad-devel@lists.sourceforge.net and let us know.  We are very
+interested in testing our cross-platform support.
