@@ -766,6 +766,8 @@ pad_node *start_pad (void)
 	sprintf (title, "Pad %i", num++);
 	gtk_window_set_title (GTK_WINDOW(window), title);
 	
+	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
+	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
