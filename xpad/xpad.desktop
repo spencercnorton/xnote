@@ -1,8 +1,24 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
-Name=xpad
-Comment=Sticky notes for your desktop
+Name=Sticky Notes
+Name[de]=Klebrige Anmerkungen
+Name[es]=Notas Pegajosas
+Name[fr]=Notes Collantes
+Name[it]=Note Appiccicose
+Name[jp]=粘着性があるノート
+Name[ko]=끈끈한 주
+Name[pt]=Notas Pegajosas
+Name[ru]=Липкие Счета
+Name[zh]=稠粘笔记
+Comment=Jot down notes for later
+Comment[de]=Schreiben Sie Anmerkungen für später nieder
+Comment[es]=Apunte las notas para más adelante
+Comment[fr]=Prenez notes les notes pour plus tard
+Comment[it]=Annoti le note per più successivamente
+Comment[jp]=後でのためのノートの下でメモしなさい
+Comment[ru]=Кратко запишите счета для позже
+Comment[zh]=草草记下笔记为以后
 FilePattern=xpad
 TryExec=xpad
 Exec=xpad
