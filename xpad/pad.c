@@ -1215,10 +1215,10 @@ focus_out_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 	return FALSE;
 }
 
+#if DRAWING_ON
 static void
 pad_background_refresh (pad_node *pad)
 {
-#if DRAWING_ON
 	GdkWindow *win;
 	GdkRectangle rect = {0, 0, 0, 0};
 	
@@ -1228,8 +1228,8 @@ pad_background_refresh (pad_node *pad)
 	win = gtk_text_view_get_window (get_text (pad->window), GTK_TEXT_WINDOW_TEXT);
 	
 	gdk_window_invalidate_rect (win, &rect, FALSE);
-#endif
 }
+#endif
 
 static void
 pad_background_draw (pad_node *pad, gint x, gint y)
@@ -1286,10 +1286,10 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 #endif
 }
 
+#if DRAWING_ON
 static void
 pad_background_update (pad_node *pad)
 {
-#if DRAWING_ON
 	GtkAdjustment *ha, *va;
 	GtkWidget *textbox;
 	GdkWindow *textwin;
@@ -1314,8 +1314,8 @@ pad_background_update (pad_node *pad)
 	
 	if (pad->visible_back) gdk_pixmap_unref (pad->visible_back);
 	pad->visible_back = pix;
-#endif
 }
+#endif
 
 static void
 pad_scrolled (GtkAdjustment *adjustment, pad_node *pad)
