@@ -39,6 +39,12 @@ COMMAND ARGUMENTS
 					"sync," or saving of the pad's contents.  Entering
 					0 indicates no syncing.  Default is 60.
 
+----------------------------------------------------------------------------
+BUGS
+----------------------------------------------------------------------------
+     Font switching isn't perfect.  The weight and size can be changed, but
+	not the font name.
+
 
 ----------------------------------------------------------------------------
 LICENSE NOTES
