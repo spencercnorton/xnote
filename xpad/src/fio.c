@@ -258,11 +258,13 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 	{
 		gchar *final_string;
 		gchar *value_string;
+		gchar type;
 		
+		type = item[0];
 		item = &item[2]; /* skip type and '|' */
 		
 		/* translate our types to printf types */
-		switch (item[0])
+		switch (type)
 		{
 		case 'b':
 			value_string = g_strdup_printf ("%i", va_arg (ap, gboolean));
@@ -278,7 +280,7 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 			value_string = g_strdup_printf ("%s", va_arg (ap, gchar *));
 			break;
 		default:
-			g_warning ("Bad type to fio_set_values_to_file: %c\n", item[0]);
+			g_warning ("Bad type to fio_set_values_to_file: %c\n", type);
 			value_string = g_strdup ("");
 			break;
 		}
