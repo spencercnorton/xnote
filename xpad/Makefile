@@ -3,8 +3,8 @@ OBJECTS=main.o \
 	fio.o \
 	pref.o \
 	pad.o 
-CFLAGS=-Wall -I~/usr/local/include `pkg-config --cflags gtk+-2.0`
-LDFLAGS=`pkg-config --libs gtk+-2.0` -L~/usr/local/lib
+CFLAGS=-Wall `pkg-config --cflags gtk+-2.0`
+LDFLAGS=`pkg-config --libs gtk+-2.0`
 
 #debian-friendly var
 DESTDIR=

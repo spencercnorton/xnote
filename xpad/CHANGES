@@ -1,3 +1,7 @@
+1.0.2
+-----
+stopped pads from losing their place on x shut down
+
 1.0.1
 -----
 fixed a possible runtime warning with autosaving

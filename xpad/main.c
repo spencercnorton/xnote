@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <unistd.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
-const gchar *VERSION = "xpad v1.0.1";
+const gchar *VERSION = "xpad v1.0.2";
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
