@@ -26,12 +26,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <string.h>
 
-/* required by mkdir */
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#if 0 /* G_OS_UNIX */
-#include <signal.h>
+#if defined (G_OS_UNIX)
+ 
+ #include <signal.h>
+ 
+ /* required by mkdir */
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ 
+#elif defined (G_OS_WIN32)
+ 
+ /* required by CreateDirectory */
+ #include <Winbase.h>
+ 
+#elif defined (G_OS_BEOS)
+ 
+ /* required by CreateDirectory */
+ #include <be/storage/Directory.h>
+ 
 #endif
 
 gchar *working_dir;
@@ -72,7 +84,7 @@ gint at_gtk_exit (gpointer data)
 	return 0;
 }
 
-static void sigcatch (int signum)
+static void xpad_catch_quit_signal (int signum)
 {
 	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
 	gtk_main_quit ();
@@ -229,12 +241,46 @@ static void xpad_check_if_others (void)
 	}
 	else
 	{
+		/* no one else is alive.  claim the clipboard. */
+		
 		/* set up target list with simple string target w/ value of 1 */
 		GtkTargetEntry targets[] = {{"STRING", 0, 1}};
 		
 		gtk_clipboard_set_with_data (clipboard, targets, 1, 
 			clipboard_get, clipboard_clear, NULL);
 	}
+}
+
+/**
+ * Sets the value of |working_dir| and creates the directory if needed.
+ */
+static void xpad_make_working_dir (void)
+{
+#if defined (G_OS_UNIX)
+	
+	/* create a hidden directory under the user's home */
+	working_dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
+	
+	/* make sure directory exists */
+	mkdir (working_dir, 00770); /* give group and user all rights */
+	
+#elif defined (G_OS_WIN32)
+	
+	/* If someone has a better place to put our stuff, I'm all ears. */
+	working_dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
+	
+	/* make sure directory exists */
+	CreateDirectory (working_dir, NULL); /* default security rights */
+	
+#elif defined (G_OS_BEOS)
+	
+	/* If someone has a better place to put our stuff, I'm all ears. */
+	working_dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
+	
+	/* make sure directory exists */
+	CreateDirectory (working_dir, NULL);
+	
+#endif
 }
 
 /* data is an array of void pointers, indicating the argc and argv */
@@ -249,28 +295,24 @@ static int xpad_init (gpointer data)
 	
 	xpad_check_if_others ();
 	
-#if 0 
-	/*G_OS_UNIX */
-{
-	struct sigaction sa;
+#ifdef G_OS_UNIX
 	
-	/* Initialize sa */
-	sa.sa_handler = sigcatch;
-	sigemptyset (&sa.sa_mask);
-	sa.sa_flags = 0;
-
-	sigaction (SIGHUP, &sa, NULL);  /* 1 hangup */
-	sigaction (SIGINT, &sa, NULL);  /* 2 interrupt */
-	sigaction (SIGQUIT, &sa, NULL); /* 3 quit */
-	sigaction (SIGABRT, &sa, NULL); /* 6 abort */
-	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
-}
+	/* try to intercept various quit-style signals.  don't do so if they were previously
+	    ignored, however -- we should respect non-job-control shells and such */
+	if (signal (SIGHUP, xpad_catch_quit_signal) == SIG_IGN)
+		signal (SIGHUP, SIG_IGN);
+	if (signal (SIGINT, xpad_catch_quit_signal) == SIG_IGN)
+		signal (SIGINT, SIG_IGN);
+	if (signal (SIGQUIT, xpad_catch_quit_signal) == SIG_IGN)
+		signal (SIGQUIT, SIG_IGN);
+	if (signal (SIGABRT, xpad_catch_quit_signal) == SIG_IGN)
+		signal (SIGABRT, SIG_IGN);
+	if (signal (SIGTERM, xpad_catch_quit_signal) == SIG_IGN)
+		signal (SIGTERM, SIG_IGN);
+	
 #endif
 	
-	working_dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
-	
-	/* try to make sure directory exists */
-	mkdir (working_dir, 00777);
+	xpad_make_working_dir ();
 	
 	if (fio_load_default_settings ())
 	{

@@ -4,7 +4,7 @@ OBJECTS=main.o \
 	pref.o \
 	pad.o \
 	help.o
-CFLAGS=-pedantic -ansi -Wall -O3 `pkg-config --cflags gtk+-2.0` -fexpensive-optimizations
+CFLAGS=-ansi -pedantic -Wall -O3 `pkg-config --cflags gtk+-2.0` -fexpensive-optimizations
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 
 #debian-friendly var
