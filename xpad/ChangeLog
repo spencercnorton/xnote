@@ -1,3 +1,9 @@
+2004-02-23  Michael Terry  <mikix@users.sourceforge.net>
+
+	* src/main.c: Use a list of pixbufs instead of just a 48 pixel
+	one for the default window icon.
+        * src/tray.c: Use 24 pixel image instead of 48.
+
 2004-01-30  Michael Terry  <mikix@users.sourceforge.net>
 
 	* src/dashboard-frontend.c, dashboard-frontend.h: New files used 
