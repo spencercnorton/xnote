@@ -42,6 +42,7 @@ struct pad_node_def
 	GtkWidget *eventbox_outer;
 	GtkWidget *scrollbar;
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
+	GtkWidget *grip;
 	
 	/* toolbar related variables */
 	GtkWidget *toolbar;

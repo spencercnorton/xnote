@@ -732,12 +732,8 @@ get_grip_rect (GtkWidget *widget,
 }
 
 static gboolean
-grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, GtkWidget *toolbar)
+grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, pad_node *pad)
 {
-	GdkRectangle rect;
-	
-	get_grip_rect (toolbar, &rect);
-	
 	gtk_paint_resize_grip (
 		widget->style,
 		widget->window,
@@ -747,40 +743,10 @@ grip_expose_handler (GtkWidget *widget, GdkEventExpose *event, GtkWidget *toolba
 		"xpad-grip",
 		GDK_WINDOW_EDGE_SOUTH_EAST,
 		0, 0,
-		rect.width - toolbar->style->xthickness,
-		rect.height - toolbar->style->ythickness);
+		pad->toolbar_height - pad->toolbar->style->xthickness,
+		pad->toolbar_height - pad->toolbar->style->ythickness);
 	
 	return TRUE;
-}
-
-static GtkWidget *
-pad_toolbar_new (pad_node *pad)
-{
-	GtkWidget *toolbar = gtk_hbox_new (FALSE, 0);
-	GtkWidget *frame = gtk_frame_new (NULL);
-	GtkWidget *grip = gtk_drawing_area_new ();
-	GtkWidget *close_button = gtk_button_new ();
-	GtkWidget *close_image = gtk_image_new_from_stock ("gtk-close", 
-		GTK_ICON_SIZE_SMALL_TOOLBAR);
-	
-	gtk_container_add (GTK_CONTAINER (frame), toolbar);
-	gtk_container_set_border_width (GTK_CONTAINER (frame), 0);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
-	
-/*	gtk_widget_set_size_request (grip, 18, 18);*/
-	gtk_widget_add_events (grip, GDK_BUTTON_PRESS_MASK);
-	g_signal_connect (G_OBJECT (grip), "expose_event", 
-		G_CALLBACK (grip_expose_handler), toolbar);
-	g_signal_connect (G_OBJECT (grip), "button-press-event", 
-		G_CALLBACK (grip_press_handler), pad);
-	gtk_box_pack_end (GTK_BOX (toolbar), grip, FALSE, FALSE, 0);
-	
-	gtk_container_add (GTK_CONTAINER (close_button), close_image);
-	g_signal_connect_swapped (G_OBJECT (close_button),
-		"clicked", G_CALLBACK (pad_close), pad);
-	gtk_box_pack_start (GTK_BOX (toolbar), close_button, FALSE, FALSE, 2);
-	
-	return frame;
 }
 
 static void
@@ -887,21 +853,6 @@ reenable_toolbar_events (pad_node *pad)
 	g_signal_handlers_unblock_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
 }
 
-static void
-toolbar_when_realized (GtkWidget *widget, pad_node *pad)
-{
-	GtkRequisition req;
-	
-	gtk_widget_show_all (gtk_bin_get_child (GTK_BIN (pad->toolbar)));
-	
-	gtk_widget_size_request (pad->toolbar, &req);
-	
-	pad->toolbar_height = req.height;
-	
- 	g_signal_connect_after (pad->window, "leave-notify-event", G_CALLBACK (leave_handler), pad);
-	g_signal_connect_after (pad->window, "enter-notify-event", G_CALLBACK (enter_handler), pad);
-}
-
 static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
 {
 	pad->x = event->x;
@@ -910,6 +861,45 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	pad->height = event->height;
 	
 	return FALSE;
+}
+
+static void
+pad_add_toolbar (pad_node *pad)
+{
+	GtkRequisition req;
+	GtkWidget *toolbar = gtk_hbox_new (FALSE, 0);
+	GtkWidget *frame = gtk_frame_new (NULL);
+	GtkWidget *grip = gtk_drawing_area_new ();
+	GtkWidget *close_button = gtk_button_new ();
+	GtkWidget *close_image = gtk_image_new_from_stock ("gtk-close", 
+		GTK_ICON_SIZE_SMALL_TOOLBAR);
+	
+	gtk_container_add (GTK_CONTAINER (frame), toolbar);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+	
+	gtk_widget_add_events (grip, GDK_BUTTON_PRESS_MASK);
+	g_signal_connect (G_OBJECT (grip), "expose-event", 
+		G_CALLBACK (grip_expose_handler), pad);
+	g_signal_connect (G_OBJECT (grip), "button-press-event", 
+		G_CALLBACK (grip_press_handler), pad);
+	gtk_box_pack_end (GTK_BOX (toolbar), grip, FALSE, FALSE, 0);
+	
+	gtk_container_add (GTK_CONTAINER (close_button), close_image);
+	g_signal_connect_swapped (G_OBJECT (close_button),
+		"clicked", G_CALLBACK (pad_close), pad);
+	gtk_box_pack_start (GTK_BOX (toolbar), close_button, FALSE, FALSE, 2);
+	
+	
+	gtk_box_pack_end (GTK_BOX (pad->box), frame, FALSE, FALSE, 0);
+	gtk_widget_show_all (gtk_bin_get_child (GTK_BIN (frame)));
+	gtk_widget_realize (frame);
+	
+	gtk_widget_size_request (frame, &req);
+	gtk_widget_set_size_request (grip, req.height, req.height);
+	
+	pad->toolbar = frame;
+	pad->toolbar_height = req.height;
+	pad->toolbar_timeout = 0;
 }
 
 static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
@@ -923,10 +913,6 @@ static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	
 	/* save pad */
 	fio_save_pad (pad);
-	
-	g_signal_connect (pad->toolbar, "realize",
-		G_CALLBACK (toolbar_when_realized), pad);
-	gtk_widget_realize (pad->toolbar);
 }
 
 /*
@@ -942,7 +928,6 @@ static pad_node *start_pad (void)
 	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkWidget *box = gtk_vbox_new (FALSE, 0);
 	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
-	GtkWidget *toolbar = pad_toolbar_new (pad);
 
 	gchar title[20];
 	static gint num = 1;
@@ -962,7 +947,6 @@ static pad_node *start_pad (void)
 	gtk_container_add (GTK_CONTAINER (eventbox), scroll);
 	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
 	gtk_box_pack_start (GTK_BOX (box), eventbox1, TRUE, TRUE, 0);
-	gtk_box_pack_end (GTK_BOX (box), toolbar, FALSE, FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (window), box);
 
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
@@ -971,7 +955,10 @@ static pad_node *start_pad (void)
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 	g_signal_connect_after (window, "focus-in-event", G_CALLBACK (focus_in_handler), pad);
+ 	g_signal_connect_after (window, "leave-notify-event", G_CALLBACK (leave_handler), pad);
+	g_signal_connect_after (window, "enter-notify-event", G_CALLBACK (enter_handler), pad);	
 	
+
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
 	pad->next = NULL;
@@ -980,9 +967,6 @@ static pad_node *start_pad (void)
 	pad->eventbox_outer = eventbox1;
 	pad->scrollbar = scroll;
 	pad->box = box;
-	pad->toolbar = toolbar;
-	pad->toolbar_timeout = 0;
-	pad->toolbar_height = 0; /* doesn't matter.  I just don't like uninitialized variables */
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -1010,6 +994,8 @@ static pad_node *start_pad (void)
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
 	
+	pad_add_toolbar (pad);
+	
 	return pad;
 }
 
@@ -1028,8 +1014,6 @@ pad_node *pad_new (void)
 			+ current_settings.height);
 
 	fio_open_pad_files (pad, TRUE);
-
-	gtk_window_set_role (pad->window, pad->infoname);
 
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	
@@ -1058,8 +1042,6 @@ pad_node *pad_new_with_info (pad_info *info)
 	pad->contentname = info->contentname;
 
 	fio_open_pad_files (pad, FALSE);
-
-	gtk_window_set_role (pad->window, pad->infoname);
 
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
