@@ -35,6 +35,8 @@ size_t working_dir_len = 0;
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
+gchar xid_str [5]; // holds a string representation of our xid
+
 /**
  * This variable holds all the changeable settings for this session.
  * It should be a copy of the defaults file.
@@ -183,6 +185,55 @@ static void xpad_set_default_icon (void)
 	g_object_unref (pixmap);
 }
 
+static void clipboard_clear (GtkClipboard *clipboard, gpointer data)
+{
+	/* no data needs to be freed */
+}
+
+static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
+	*selection_data, guint info, gpointer data)
+{
+	switch (info)
+	{
+	case 1:
+		/* Fill the selection with nonsense data -- it is not used.  We are just using 
+		   the clipboard as a message passer.  On a 1, which is a 'are you alive?' ping,
+		   create a new pad.  The other client will see this data and leave; we take
+		   over his pad. */
+		gtk_selection_data_set (selection_data, 
+			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
+			8,
+			"",
+			0);
+		pad_new ();
+	default:
+		break;
+	}
+}
+
+static void xpad_check_if_others (void)
+{
+	GtkClipboard *clipboard = gtk_clipboard_get (gdk_atom_intern ("_XPAD_EXISTS", FALSE));
+	GtkSelectionData *temp;
+	
+	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
+		gdk_atom_intern ("STRING", FALSE))))
+	{
+		/* If there was anything in the clipboard, that means there is another
+		     xpad session going on, and so we exit (the other session knows we
+		     tried to start, and will make a new pad. */
+		gtk_selection_data_free (temp);
+		gtk_main_quit ();
+	}
+	else
+	{
+		/* set up target list with simple string target w/ value of 1 */
+		GtkTargetEntry targets[] = {{"STRING", 0, 1}};
+		
+		gtk_clipboard_set_with_data (clipboard, targets, 1, 
+			clipboard_get, clipboard_clear, NULL);
+	}
+}
 
 /* data is an array of void pointers, indicating the argc and argv */
 static int xpad_init (gpointer data)
@@ -194,7 +245,9 @@ static int xpad_init (gpointer data)
 	
 	newdata = (gpointer *) data;
 	handle_args (newdata[0], newdata[1]);
-
+	
+	xpad_check_if_others ();
+	
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
 	sigemptyset (&sa.sa_mask);
