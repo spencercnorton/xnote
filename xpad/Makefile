@@ -13,13 +13,16 @@ DESTDIR=
 #where to put binary
 BIN=$(DESTDIR)/usr/bin
 
+MANDIR=$(DESTDIR)/usr/share/man/man1
+
 xpad-target: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o xpad
 
 # must be root for this
 install:	xpad-target
-		install -d $(BIN)
+		install -d $(BIN) $(MANDIR)
 		install ./xpad $(BIN)
+		install ./xpad.1.gz $(MANDIR)
 
 remove:
 	rm /usr/bin/xpad
