@@ -8,8 +8,7 @@ void show_help (void)
 void show_help_at_page (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
-	GtkWidget *edittext, *editlabel, *scrollwin;
-	GtkObject *hadjust, *vadjust;
+	GtkWidget *edittext, *editlabel;
 	
 	/* Create the widgets */
 	
@@ -25,7 +24,7 @@ void show_help_at_page (gint page)
 	
 	gtk_label_set_markup (GTK_LABEL (helptext), 
 "xpad is a GTK+ 2.0 application that opens small textboxes "
-"on your desktop on which you write notes or messages.\n"
+"on your desktop in which you write notes or messages.\n\n"
 "xpad was designed with ease of use in mind, but if you "
 "have troubles, here's how to do most things you would "
 "want to:\n\n\n"
@@ -47,10 +46,6 @@ void show_help_at_page (gint page)
 "file.\n");
 
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
-//	hadjust = gtk_adjustment_new (0, 0, 0, 0, 0, 0);
-//	vadjust = gtk_adjustment_new (0, 10, 0, 1, 5, 5);
-//	scrollwin = gtk_scrolled_window_new (GTK_ADJUSTMENT (hadjust), GTK_ADJUSTMENT (vadjust));
-//	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrollwin), helptext);
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
 	
 	

@@ -34,6 +34,7 @@ struct pad_node_def
 {
 	pad_node *next;
 	FILE *file;
+	gint x, y, width, height;
 	gchar infoname[MAX_FILENAME_SIZE + 1];
 	gchar contentname[MAX_FILENAME_SIZE + 1];
 	

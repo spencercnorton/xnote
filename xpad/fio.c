@@ -289,7 +289,6 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 void fio_save_info_file (pad_node *pad)
 {
 	gchar info_file[MAX_FILE_SIZE + 1];
-	gint x, y, height, width;
 	gchar *content;
 	gchar temp[MAX_FILENAME_SIZE + 1];
 	pad_style *pstyle;
@@ -300,10 +299,8 @@ void fio_save_info_file (pad_node *pad)
 
 	pstyle = pad_get_style (pad);
 
-    gtk_window_get_position (pad->window, &x, &y);
-    gtk_window_get_size (pad->window, &width, &height);
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
-          	x, y, width, height, 
+          	pad->x, pad->y, pad->width, pad->height, 
 		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
 		pstyle->text.red, pstyle->text.green, pstyle->text.blue,
 		pstyle->border.red, pstyle->border.green, pstyle->border.blue,
@@ -313,7 +310,7 @@ void fio_save_info_file (pad_node *pad)
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
-        content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
 	sprintf (temp, "content %s\n", pad->contentname);
 	strcat (info_file, temp);
@@ -322,7 +319,7 @@ void fio_save_info_file (pad_node *pad)
     g_free (content);
 
 	rewind (pad->file);
-	x = fputs (info_file, pad->file);
+	fputs (info_file, pad->file);
 	fflush(pad->file);
 
 	g_free (pstyle);

@@ -196,7 +196,7 @@ void pad_window_destroyed (GtkWidget *window, pad_node *pad)
 	fio_save_pad (pad);
 	fio_close_pad_files (pad);
 	pad_remove (pad);
-
+	
 	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
 	g_free (pad);
 
@@ -713,6 +713,16 @@ static gboolean focus_out_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 	return TRUE;
 }
 
+static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
+{
+	pad->x = event->x;
+	pad->y = event->y;
+	pad->width = event->width;
+	pad->height = event->height;
+	
+	return FALSE;
+}
+
 /*
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
@@ -724,6 +734,8 @@ pad_node *start_pad (void)
 	GtkWidget *eventbox = gtk_event_box_new ();
 	GtkWidget *eventbox1 = gtk_event_box_new ();
 	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
+	gchar title[20];
+	static gint num = 1;
 
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
@@ -737,6 +749,7 @@ pad_node *start_pad (void)
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
 	g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
+	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
 	g_signal_connect_after (textbox, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 
 	pad->next = NULL;
@@ -755,6 +768,9 @@ pad_node *start_pad (void)
 		last_pad->next = pad;
 		last_pad = pad;
 	}
+	
+	sprintf (title, "Pad %i", num++);
+	gtk_window_set_title (GTK_WINDOW(window), title);
 	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
