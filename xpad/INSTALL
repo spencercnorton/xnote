@@ -1,4 +1,4 @@
-NOTE: Make sure you have development files for gtk1.3 or better before 
+NOTE: Make sure you have development files for gtk+ 2.0 before 
 compiling.  This includes associated packages like Pango.
 
 Type "make" to compile xpad.

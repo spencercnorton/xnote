@@ -1,7 +1,7 @@
 xpad version 1.0.2 README
------------------------
+-------------------------
 
-xpad is a virtual sticky pad system for X using GTK+ 2.0.
+xpad is a virtual sticky pad system using GTK+ 2.0.
 
 
 ----------------------------------------------------------------------------
@@ -26,6 +26,8 @@ USAGE NOTES
 
      Add xpad to your ~/.xinitrc to have xpad start with every X boot.
 
+     xpad stores its files in ~/.xpad.
+
 
 ----------------------------------------------------------------------------
 COMMAND ARGUMENTS
@@ -37,10 +39,10 @@ COMMAND ARGUMENTS
 
 	--version:		Prints version information and exits.
 
-	--verbosity=%i: Where %i is the amount of output you desire.  0 is none;
-					1 is moderate; 2 is debug.  Default is 0.
-
-
+	--verbosity=%i: 	Where %i is the amount of output you desire.
+				0 is none; 1 is moderate; 2 is debug.  
+				Default is 0
+					
 ----------------------------------------------------------------------------
 BUGS
 ----------------------------------------------------------------------------
