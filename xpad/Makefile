@@ -31,10 +31,3 @@ uninstall:
 
 clean:
 	-rm -rf xpad core *.o tags
-
-
-
-
-
-
-
