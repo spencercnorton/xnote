@@ -401,17 +401,21 @@ void open_file_callback (GtkWidget *button, pad_node *pad)
 {
 	const gchar *filename;
 	GtkFileSelection *selector;
+	int tempfile;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can read it. */
-	if (open (filename, O_RDONLY) == -1)
+	tempfile = open(filename, O_RDONLY);
+	if (tempfile == -1)
 	{
 		display_dialog_with_text (pad, "Cannot open file.");
 		return;
 	}
+
+	close(tempfile);
 
 	if (pad_is_empty (pad))
 		pad_fill_with_file (pad, filename);
