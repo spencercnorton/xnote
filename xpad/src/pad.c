@@ -40,38 +40,6 @@ void pad_edit_copy (pad_node *pad);
 void pad_edit_paste (pad_node *pad);
 static void about_dialog (pad_node *pad);
 
-static const gchar xpad_popup_ui[] =
-"<ui>"
-"  <popup name='PopupItem'>"
-"    <menu name='PadItem' action='PadMenu'>"
-"      <menuitem name='NewItem' action='NewAction' />"
-"      <separator name='sep1'/>"
-"      <menuitem name='StickyItem' action='StickyAction' />"
-"      <menuitem name='PropertiesItem' action='PropertiesAction' />"
-"      <separator name='sep2'/>"
-"      <menuitem name='CloseItem' action='CloseAction' />"
-"      <menuitem name='DeleteItem' action='DeleteAction' />"
-"    </menu>"
-"    <menu name='EditItem' action='EditMenu'>"
-"      <menuitem name='CutItem' action='CutAction'/>"
-"      <menuitem name='CopyItem' action='CopyAction'/>"
-"      <menuitem name='PasteItem' action='PasteAction'/>"
-"      <separator name='sep1'/>"
-"      <menuitem name='PreferencesItem' action='PreferencesAction'/>"
-"    </menu>"
-"    <menu name='NotesItem' action='NotesMenu'>"
-"      <menuitem name='ShowAllItem' action='ShowAllAction'/>"
-"      <menuitem name='CloseAllItem' action='CloseAllAction'/>"
-"      <separator name='sep1'/>"
-"      <placeholder name='NotesListItem'/>"
-"    </menu>"
-"    <menu name='HelpItem' action='HelpMenu'>"
-"      <menuitem name='ContentsItem' action='ContentsAction'/>"
-"      <menuitem name='AboutItem' action='AboutAction'/>"
-"    </menu>"
-"  </popup>"
-"</ui>";
-
 static GtkActionEntry pad_actions[] = 
 {
 	{"PadMenu", NULL, N_("_Pad"), NULL, NULL, NULL},
@@ -478,7 +446,7 @@ void pad_toolbar_update (pad_node *pad)
 		
 		if (func == G_CALLBACK (pad_toggle_sticky))
 		{
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+			gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (widget),
 				pad->sticky);
 		}
 		
@@ -516,7 +484,7 @@ pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 	{
 		/* Found target_func; func points at it now. */
 		g_signal_handlers_block_by_func (widget, (gpointer) func, pad);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
+		gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (widget),
 				value);
 		g_signal_handlers_unblock_by_func (widget, (gpointer) func, pad);
 	}
@@ -1744,6 +1712,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkTextBuffer *textbuf;
 	GtkActionGroup *actions;
+	gchar *ui_filename;
 	
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
@@ -1797,12 +1766,14 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
 	
 	/* set up ui manager */
+	ui_filename = g_build_filename (PKGDATADIR, "xpad.ui", NULL);
 	pad->ui_manager = gtk_ui_manager_new ();
 	gtk_ui_manager_insert_action_group (pad->ui_manager, actions, 0);
-	gtk_ui_manager_add_ui_from_string (pad->ui_manager, xpad_popup_ui, -1, NULL);
+	gtk_ui_manager_add_ui_from_file (pad->ui_manager, ui_filename, NULL);
 	gtk_window_add_accel_group (pad->window, gtk_ui_manager_get_accel_group (pad->ui_manager));
 	g_object_unref (actions);
 	gtk_ui_manager_ensure_update (pad->ui_manager);
+	g_free (ui_filename);
 	
 	g_signal_connect_swapped (G_OBJECT (gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	

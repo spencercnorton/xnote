@@ -107,7 +107,7 @@ static void xpad_sm_block ()
 
 static gboolean xpad_sm_add_cycle_to_main_loop (gpointer data)
 {
-	gtk_timeout_add (20, xpad_sm_cycle, GINT_TO_POINTER (0));
+	g_timeout_add (20, xpad_sm_cycle, GINT_TO_POINTER (0));
 	
 	return FALSE;
 }

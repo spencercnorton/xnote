@@ -1,5 +1,13 @@
 2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
 
+	* Makefile.am: Distribute xpad.ui
+	* configure.ac: Move back to gettext 0.11.5 until intltool works
+	with 0.12.1
+	* src/Makefile.am, src/defines.h, src/pad.c, src/pref.c, src/sm.c,
+	src/toolbar.c, src/toolbar.h: Remove deprecated code.
+
+2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
+
 	* main.c: Allow disabling nls to work
 
 2004-01-25  Michael Terry  <mikix@users.sourceforge.net>

@@ -42,6 +42,7 @@ struct xpad_toolbar_def
 	guint timeout;
 	gint height;
 	gboolean visible;
+	GtkTooltips *tooltips;
 };
 
 

@@ -402,8 +402,12 @@ static GtkWidget *preferences_create (void)
 		{
 			GtkWidget *widget = GTK_WIDGET (tmp->data);
 			
+			gtk_tool_item_set_use_drag_window (GTK_TOOL_ITEM (widget), TRUE);
 			gtk_drag_source_set (widget,
 				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
+			
+			if (toolbar_is_button (widget))
+				gtk_drag_source_set_icon_stock (widget, gtk_tool_button_get_stock_id (GTK_TOOL_BUTTON (widget)));
 			
 			g_signal_connect (widget, "drag-data-get", 
 				G_CALLBACK (data_get), NULL);
@@ -416,7 +420,7 @@ static GtkWidget *preferences_create (void)
 		{
 			GSList *tmp, *start;
 			const toolbar_button *tb;
-			GtkWidget *b;
+			GtkToolItem *b;
 			
 			tmp = start = xpad_settings_get_toolbar_buttons ();
 			for (; tmp; tmp = tmp->next)
@@ -434,20 +438,18 @@ static GtkWidget *preferences_create (void)
 			
 			tb = &buttons[i];
 			
-			b = toolbar_button_new (tb);
+			b = toolbar_button_new (tb, tt);
 			
-			gtk_box_pack_start (GTK_BOX (buttonbox), b, FALSE,
+			gtk_box_pack_start (GTK_BOX (buttonbox), GTK_WIDGET (b), FALSE,
 				FALSE, 0);
 			
-			gtk_drag_source_set (b,
+			gtk_tool_item_set_use_drag_window (b, TRUE);
+			gtk_drag_source_set (GTK_WIDGET (b),
 				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
 			
-			g_signal_connect (b, "drag-data-get", 
+			gtk_drag_source_set_icon_stock (GTK_WIDGET (b), tb->stock);
+			g_signal_connect (GTK_WIDGET (b), "drag-data-get", 
 				G_CALLBACK (data_get), NULL);
-			
-			g_object_set_data (G_OBJECT (b), "tb", (void *) tb);
-			
-			gtk_tooltips_set_tip (tt, b, _(buttons[i].desc), _(buttons[i].desc));
 		}
 		
 		{
