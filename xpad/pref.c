@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
+GSList *toolbar_widgets;
 GtkWidget *pref_help_window = NULL;
 
 static void
@@ -425,14 +426,42 @@ change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
 	
 	current_settings.toolbar = gtk_toggle_button_get_active (togglebutton);
 	
-	gtk_widget_set_sensitive (GTK_WIDGET (user_data), current_settings.toolbar);
+	g_slist_foreach ((GSList *) user_data, (GFunc) gtk_widget_set_sensitive, GINT_TO_POINTER (current_settings.toolbar));
 	
 	for (temp = first_pad; temp; temp = temp->next)
 	{
 		if (current_settings.toolbar)
+		{
 			pad_add_toolbar (temp);
+			
+			if (!current_settings.auto_hide_toolbar)
+				toolbar_show (temp);
+		}
 		else
 			pad_remove_toolbar (temp);
+	}
+}
+
+static void
+change_auto_hide_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
+{
+	pad_node *temp;
+	
+	current_settings.auto_hide_toolbar = gtk_toggle_button_get_active (togglebutton);
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		if (current_settings.auto_hide_toolbar)
+		{
+			toolbar_start_timeout (temp);	/* safe, since the cursor is unlikely to be on the pad? */
+		}
+		else
+		{
+			if (temp->toolbar->timeout)
+				toolbar_end_timeout (temp);
+			
+			toolbar_show (temp);
+		}
 	}
 }
 
@@ -702,6 +731,7 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *vbox_unused_frame = gtk_vbox_new (FALSE, 0);
 		GtkWidget *vbox_toolbar_frame = gtk_vbox_new (FALSE, 0);
 		GtkWidget *toolbar_on = gtk_check_button_new_with_label ("Enable toolbar");
+		GtkWidget *toolbar_auto_hide = gtk_check_button_new_with_label ("Auto-hide toolbar");
 		GtkWidget *align = gtk_alignment_new (0, 0, 0, 0);
 		GtkWidget *hbox_buttons = gtk_hbox_new (FALSE, 0);
 		GtkWidget *label_indent = gtk_label_new ("    ");
@@ -732,9 +762,15 @@ static GtkWidget *preferences_create (void)
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_toolbar, label_toolbar);
 		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, TRUE, TRUE, 0);
 		
+		toolbar_widgets = g_slist_append (NULL, toolbar_auto_hide);
+		toolbar_widgets = g_slist_append (toolbar_widgets, frame);
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_on, FALSE, FALSE, 9);
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_on), current_settings.toolbar);
-		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), frame);
+		g_signal_connect (toolbar_on, "toggled", G_CALLBACK (change_toolbar), toolbar_widgets);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_toolbar), toolbar_auto_hide, FALSE, FALSE, 9);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (toolbar_auto_hide), current_settings.auto_hide_toolbar);
+		g_signal_connect (toolbar_auto_hide, "toggled", G_CALLBACK (change_auto_hide_toolbar), NULL);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 9);
 		gtk_widget_set_sensitive (frame, current_settings.toolbar);

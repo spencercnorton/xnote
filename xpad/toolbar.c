@@ -83,7 +83,8 @@ toolbar_hide_timeout (gpointer data)
 void
 toolbar_start_timeout (pad_node *pad)
 {
-	pad->toolbar->timeout = gtk_timeout_add (1000, toolbar_hide_timeout, pad);
+	if (!pad->toolbar->timeout)
+		pad->toolbar->timeout = gtk_timeout_add (1000, toolbar_hide_timeout, pad);
 }
 
 void

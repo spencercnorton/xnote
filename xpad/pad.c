@@ -772,8 +772,7 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	 */
 	if (current_settings.toolbar &&
 		event->detail != GDK_NOTIFY_INFERIOR &&
-		event->mode == GDK_CROSSING_NORMAL &&
-		!pad->toolbar->timeout)
+		event->mode == GDK_CROSSING_NORMAL)
 	{
 	    toolbar_start_timeout (pad);
 	}
@@ -845,8 +844,7 @@ disable_popup_handler (pad_node *pad)
 		rect.width = 1;
 		rect.height = 1;
 		
-		if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL) &&
-			!pad->toolbar->timeout)
+		if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
 			toolbar_start_timeout (pad);
 	}
 }
