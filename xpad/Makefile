@@ -21,12 +21,12 @@ xpad-target: $(OBJECTS)
 install:	xpad-target
 		install -d $(BIN) $(MANDIR) $(ICONDIR)
 		install ./xpad $(BIN)
-		install ./xpad.1.gz $(MANDIR)
+		install ./xpad.1 $(MANDIR)
 		install ./xpad.xpm $(ICONDIR)
 
 uninstall:
 	rm $(BIN)/xpad
-	rm $(MANDIR)/xpad.1.gz
+	rm $(MANDIR)/xpad.1
 	rm $(ICONDIR)/xpad.xpm
 
 clean:
