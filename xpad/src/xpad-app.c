@@ -31,6 +31,7 @@
 
 #include "../config.h"
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 
 #include "fio.h" /* for fio_get_info_from_file */
 #include "help.h"
@@ -40,8 +41,6 @@
 #include "xpad-pad-group.h"
 #include "xpad-session-manager.h"
 #include "xpad-tray.h"
-
-#include "../images/sticky.xpm"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
    These were provided by Alan Mizrahi <alan@cesma.usb.ve>.
@@ -61,6 +60,7 @@
 
 static gint xpad_argc;
 static gchar **xpad_argv;
+static gboolean option_hide_old;
 static gboolean option_nonew;
 static gboolean option_new;
 static gboolean option_version;
@@ -75,18 +75,21 @@ static gboolean xpad_translucent = FALSE;
 static XpadPadGroup *pad_group;
 
 static gboolean  process_local_args         (gint *argc, gchar **argv[]);
-static gboolean  process_remote_args        (gint *argc, gchar **argv[]);
-static gint      xpad_app_check_if_others   (void);
+static gboolean  process_remote_args        (gint *argc, gchar **argv[], gboolean have_gtk);
 
 static gboolean  config_dir_exists          (void);
 static gchar    *make_config_dir            (void);
 static void      register_stock_icons       (void);
 static gint      xpad_app_load_pads         (void);
+static void      xpad_app_quit_if_no_pads   (XpadPadGroup *group);
+static gboolean  xpad_app_pass_args         (void);
+static gboolean  xpad_app_open_proc_file    (void);
 
 
 static void
 xpad_app_init (int argc, char **argv)
 {
+	gboolean have_gtk;
 /*	GdkVisual *visual;*/
 	
 	/* Set up i18n */
@@ -97,10 +100,34 @@ xpad_app_init (int argc, char **argv)
 	textdomain (GETTEXT_PACKAGE);
 #endif
 	
-	gtk_init (&argc, &argv);
+	have_gtk = gtk_init_check (&argc, &argv);
 	xpad_argc = argc;
 	xpad_argv = argv;
 	output = stdout;
+	
+	/* Set up config directory. */
+	if (!config_dir_exists ())
+	{
+		show_help ();
+	}
+	config_dir = make_config_dir ();
+	
+	/* create master socket name */
+	server_filename = g_build_filename (xpad_app_get_config_dir (), "server", NULL);
+	
+	if (!have_gtk)
+	{
+		/* We don't have GTK+, but we can still do
+		   --version or --help and such.  Plus, we
+		   can pass commands to a remote instance. */
+		process_local_args (&xpad_argc, &xpad_argv);
+		if (!xpad_app_pass_args ())
+		{
+			process_remote_args (&xpad_argc, &xpad_argv, FALSE);
+			fprintf (output, "%s\n", _("Xpad is a graphical program.  Please run it from your desktop."));
+		}
+		exit (0);
+	}
 	
 	g_set_application_name (_("Xpad"));
 	gdk_set_program_class (PACKAGE);
@@ -121,36 +148,35 @@ xpad_app_init (int argc, char **argv)
 	else
 		program_path = NULL;
 	
-	/* Set up config directory. */
-	if (!config_dir_exists ())
-	{
-		show_help ();
-	}
-	config_dir = make_config_dir ();
-	
 	process_local_args (&xpad_argc, &xpad_argv);
 	
-	if (xpad_app_check_if_others ())
+	if (xpad_app_pass_args ())
 		exit (0);
+	
+	/* Race condition here, between calls */
+	xpad_app_open_proc_file ();
 	
 	register_stock_icons ();
 	gtk_window_set_default_icon_name (PACKAGE);
+	
+	process_remote_args (&xpad_argc, &xpad_argv, TRUE);
 	
 	xpad_tray_open ();
 	xpad_session_manager_init ();
 	
 	/* load all pads */
 	pad_group = NULL;
-	if (xpad_app_load_pads () == 0) {
+	if (xpad_app_load_pads () == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
 		}
-		else if (!xpad_tray_is_open ())
-			exit (0);
 	}
 	
-	process_remote_args (&xpad_argc, &xpad_argv);
+	xpad_app_quit_if_no_pads (pad_group);
+	
+	g_free (server_filename);
+	server_filename = NULL;
 }
 
 
@@ -319,41 +345,18 @@ xpad_app_alert_new (GtkWindow *parent, const gchar *stock,
 static void
 register_stock_icons (void)
 {
-	GtkIconSource *source;
-	GtkIconSet *set;
-	GtkIconFactory *factory;
 	GtkIconTheme *theme;
-	GdkPixbuf *pixbuf;
 	gchar *icon_dir;
 	
 	theme = gtk_icon_theme_get_default ();
 	icon_dir = g_build_filename (DATADIR, "icons", NULL);
 	gtk_icon_theme_prepend_search_path (theme, icon_dir);
 	g_free (icon_dir);
-	
-	factory = gtk_icon_factory_new ();
-	
-	pixbuf = gdk_pixbuf_new_from_xpm_data (sticky_xpm);
-	set = gtk_icon_set_new_from_pixbuf (pixbuf);
-	gtk_icon_factory_add (factory, "xpad-sticky", set);
-	gtk_icon_set_unref (set);
-	g_object_unref (pixbuf);
-	
-	source = gtk_icon_source_new ();
-	gtk_icon_source_set_icon_name (source, PACKAGE);
-	set = gtk_icon_set_new ();
-	gtk_icon_set_add_source (set, source);
-	gtk_icon_factory_add (factory, PACKAGE, set);
-	gtk_icon_set_unref (set);
-	gtk_icon_source_free (source);
-	
-	gtk_icon_factory_add_default (factory);
-	g_object_unref (factory);
 }
 
 
 static void
-xpad_app_pad_hidden (XpadPadGroup *group, XpadPad *pad)
+xpad_app_quit_if_no_pads (XpadPadGroup *group)
 {
 	if (!xpad_tray_is_open ())
 	{
@@ -365,7 +368,12 @@ xpad_app_pad_hidden (XpadPadGroup *group, XpadPad *pad)
 				break;
 		}
 		if (!i)
-			gtk_main_quit ();
+		{
+			if (gtk_main_level () > 0)
+				gtk_main_quit ();
+			else
+				exit (0);
+		}
 		g_slist_free (list);
 	}
 }
@@ -373,7 +381,7 @@ xpad_app_pad_hidden (XpadPadGroup *group, XpadPad *pad)
 static void
 xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)
 {
-	g_signal_connect_swapped (pad, "hide", G_CALLBACK (xpad_app_pad_hidden), group);
+	g_signal_connect_swapped (pad, "hide", G_CALLBACK (xpad_app_quit_if_no_pads), group);
 }
 
 
@@ -414,7 +422,8 @@ xpad_app_load_pads (void)
 		    name[strlen (name) - 1] != '~')
 		{
 			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name);
-			gtk_widget_show (pad);
+			if (!option_hide_old)
+				gtk_widget_show (pad);
 			
 			opened ++;
 		}
@@ -512,7 +521,6 @@ string_to_args (const char *string, char ***argv)
 }
 
 #include <errno.h>
-static gint xpad_app_open_proc_file (void);
 /* This reads a line from the proc file.  This line will contain arguments to process. */
 static void
 xpad_app_read_from_proc_file (void)
@@ -553,7 +561,7 @@ xpad_app_read_from_proc_file (void)
 	/* here we redirect singleton->priv->output to the socket */
 	output = fdopen (client_fd, "w");
 	
-	if (!process_remote_args (&argc, &argv))
+	if (!process_remote_args (&argc, &argv, TRUE))
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
@@ -561,7 +569,7 @@ xpad_app_read_from_proc_file (void)
 		v[0] = PACKAGE;
 		v[1] = "--new";
 		
-		process_remote_args (&c, &v);
+		process_remote_args (&c, &v, TRUE);
 		
 		g_free (v);
 	}
@@ -586,7 +594,7 @@ can_read_from_server_fd (GIOChannel *source, GIOCondition condition, gpointer da
 	return TRUE;
 }
 
-static gint
+static gboolean
 xpad_app_open_proc_file (void)
 {
 	GIOChannel *channel;
@@ -599,62 +607,24 @@ xpad_app_open_proc_file (void)
 	bzero (&master, sizeof (master)); 
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
+	
 	if (bind (server_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
-	{
-		return 1;
-	}
+		return FALSE;
 	
 	/* listen for connections */
-	listen (server_fd, 5);
+	if (listen (server_fd, 5))
+		return FALSE;
 	
 	/* set up input loop, waiting for read */
 	channel = g_io_channel_unix_new (server_fd);
 	g_io_add_watch (channel, G_IO_IN, can_read_from_server_fd, NULL);
 	g_io_channel_unref (channel);
 	
-	return 0;
+	return TRUE;
 }
 
 
-static void
-clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
-	*selection_data, guint info, gpointer data)
-{
-	static gboolean first_time = TRUE;
-	
-	if (first_time)
-	{
-		first_time = FALSE;
-		
-		xpad_app_open_proc_file ();
-	}
-	
-	switch (info)
-	{
-	case 1:
-		/* Fill the selection with the filename of our proc_file.  On a 1, which is a 
-		   'are you alive?' ping, respond.  The other client will see this data and leave; we take
-		   over his arguments. */
-		gtk_selection_data_set (selection_data, 
-			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
-			8,
-			(const guchar *) "",
-			0);
-	default:
-		break;
-	}
-}
-
-
-static void
-clipboard_clear (GtkClipboard *clipboard, gpointer data)
-{
-	/* No data needs to be freed.  This shouldn't be called anyway -- we retain
-	  control over clipboard throughout our life. */
-}
-
-
-static void
+static gboolean
 xpad_app_pass_args (void)
 {
 	int client_fd;
@@ -664,6 +634,7 @@ xpad_app_pass_args (void)
 	gchar *args = NULL;
 	gint size;
 	gint bytesRead;
+	gboolean connected = FALSE;
 	
 	/* create master socket */
 	client_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
@@ -673,6 +644,7 @@ xpad_app_pass_args (void)
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 		goto done;
+	connected = TRUE;
 	
 	size = args_to_string (xpad_argc, xpad_argv, &args) + 1;
 	
@@ -710,42 +682,9 @@ done:
 	close (client_fd);
 	
 	g_free (args);
-	g_free (server_filename);
-}
-
-
-static gint
-xpad_app_check_if_others (void)
-{
-	GtkClipboard *clipboard = gtk_clipboard_get (gdk_atom_intern ("_XPAD_EXISTS", FALSE));
-	GtkSelectionData *temp;
 	
-	/* create master socket name */
-	server_filename = g_build_filename (xpad_app_get_config_dir (), "server", NULL);
-	
-	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
-		gdk_atom_intern ("STRING", FALSE))))
-	{
-		xpad_app_pass_args ();
-		
-		gtk_selection_data_free (temp);
-		
-		return 1;
-	}
-	else
-	{
-		/* set up target list with simple string target w/ value of 1 */
-		GtkTargetEntry targets[] = {{"STRING", 0, 1}};
-		
-		/* no one else is alive.  claim the clipboard. */
-		
-		gtk_clipboard_set_with_data (clipboard, targets, 1, 
-			clipboard_get, clipboard_clear, NULL);
-		
-		return 0;
-	}
+	return connected;
 }
-
 
 
 
@@ -774,8 +713,9 @@ xpad_app_check_if_others (void)
 
 static GOptionEntry local_options[] =
 {
-	{"version", 'v', 0, G_OPTION_ARG_NONE, &option_version, N_("Print version number and quit"), NULL},
-	{"nonew", 'N', 0, G_OPTION_ARG_NONE, &option_nonew, N_("Don't create a new pad on startup if no previous pads exist"), NULL},
+	{"version", 'v', 0, G_OPTION_ARG_NONE, &option_version, N_("Show version number and quit"), NULL},
+	{"hide-old", 'h', 0, G_OPTION_ARG_NONE, &option_hide_old, N_("Hide existing pads on startup"), NULL},
+	{"no-new", 'N', 0, G_OPTION_ARG_NONE, &option_nonew, N_("Don't create a new pad on startup if no previous pads exist"), NULL},
 	{NULL}
 };
 
@@ -795,6 +735,7 @@ process_local_args (gint *argc, gchar **argv[])
 	
 	option_version = FALSE;
 	option_nonew = FALSE;
+	option_hide_old = FALSE;
 	
 	context = g_option_context_new (NULL);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
@@ -804,7 +745,8 @@ process_local_args (gint *argc, gchar **argv[])
 	{
 		if (option_version)
 		{
-			fprintf (output, _("Xpad %s\n"), PACKAGE_VERSION);
+			fprintf (output, _("Xpad %s"), PACKAGE_VERSION);
+			fprintf (output, "\n");
 			exit (0);
 		}
 	}
@@ -816,16 +758,15 @@ process_local_args (gint *argc, gchar **argv[])
 	
 	g_option_context_free (context);
 	
-	return(option_version || option_nonew);
+	return(option_version || option_nonew || option_hide_old);
 }
 
 static gboolean
-process_remote_args (gint *argc, gchar **argv[])
+process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 {
 	GError *error = NULL;
 	GOptionContext *context;
 	
-	option_nonew = FALSE;
 	option_new = FALSE;
 	option_quit = FALSE;
 	option_smid = NULL;
@@ -839,10 +780,10 @@ process_remote_args (gint *argc, gchar **argv[])
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
 	if (g_option_context_parse (context, argc, argv, &error))
 	{
-		if (option_smid)
+		if (have_gtk && option_smid)
 			xpad_session_manager_set_id (option_smid);
 		
-		if (option_new)
+		if (have_gtk && option_new)
 		{
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
@@ -850,7 +791,7 @@ process_remote_args (gint *argc, gchar **argv[])
 		
 		if (option_quit)
 		{
-			if (gtk_main_level () > 0)
+			if (have_gtk && gtk_main_level () > 0)
 				gtk_main_quit ();
 			else
 				exit (0);
@@ -865,5 +806,5 @@ process_remote_args (gint *argc, gchar **argv[])
 	
 	g_option_context_free (context);
 	
-	return(option_nonew || option_new || option_quit || option_smid);
+	return(option_new || option_quit || option_smid);
 }
