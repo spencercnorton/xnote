@@ -349,7 +349,8 @@ pad_node *create_pad ()
 	gtk_widget_show (GTK_WIDGET(pad->window));
 	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
 
-	g_free (pstyle);
+	if (pstyle != &DEFAULT_INFO.style)
+		g_free (pstyle);
 
 	open_pad_files (pad, TRUE);
 
@@ -386,6 +387,7 @@ pad_node *create_pad_with_info (pad_info *info)
 
 	return pad;
 }
+
 
 
 
