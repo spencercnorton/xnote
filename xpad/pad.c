@@ -487,7 +487,7 @@ void pad_show (pad_node *pad)
 	gtk_window_present (pad->window);
 }
 
-void pad_show_all (pad_node *pad)
+void pads_show_all (void)
 {
 	pad_node *temp = first_pad;
 	
@@ -497,7 +497,11 @@ void pad_show_all (pad_node *pad)
 		
 		temp = temp->next;
 	}
-	
+}
+
+void pad_show_all (pad_node *pad)
+{
+	pads_show_all ();
 	pad_show (pad);
 }
 

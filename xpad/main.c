@@ -127,7 +127,8 @@ print_help (void)
 	        "                          0=none, 1=moderate, 2=debug\n"
 	        "                          default is 0\n"
 	        "  -n, --new             opens a new pad\n"
-	        "  -q, --quit            quits all open xpad sessions\n");
+	        "  -q, --quit            quits all open xpad sessions\n"
+	        "  -s, --showall         brings all pads to the foreground\n");
 	exit (0);
 }
 
@@ -174,7 +175,9 @@ static const argument arguments[] =
 	{FALSE, "-n", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "-q", FALSE, {gtk_main_quit}},
-	{FALSE, "--quit", FALSE, {gtk_main_quit}}
+	{FALSE, "--quit", FALSE, {gtk_main_quit}},
+	{FALSE, "-s", FALSE, {G_CALLBACK (pads_show_all)}},
+	{FALSE, "--showall", FALSE, {G_CALLBACK (pads_show_all)}}
 };
 
 #define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
