@@ -63,10 +63,11 @@ struct XpadPadPrivate
 	XpadPadGroup *group;
 };
 
-/*enum
+enum
 {
+	CLOSED,
 	LAST_SIGNAL
-};*/
+};
 
 enum
 {
@@ -117,7 +118,7 @@ static void xpad_pad_toolbar_popup (GtkWidget *toolbar, GtkMenu *menu, XpadPad *
 static void xpad_pad_toolbar_popdown (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad);
 static XpadPadGroup *xpad_pad_get_group (XpadPad *pad);
 
-/*static guint signals[LAST_SIGNAL] = { 0 };*/
+static guint signals[LAST_SIGNAL] = { 0 };
 
 GtkWidget *
 xpad_pad_new (XpadPadGroup *group)
@@ -146,6 +147,16 @@ xpad_pad_class_init (XpadPadClass *klass)
 	gobject_class->finalize = xpad_pad_finalize;
 	gobject_class->set_property = xpad_pad_set_property;
 	gobject_class->get_property = xpad_pad_get_property;
+	
+	signals[CLOSED] =
+		g_signal_new ("closed",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_FIRST,
+		              G_STRUCT_OFFSET (XpadPadClass, closed),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID,
+		              G_TYPE_NONE,
+		              0);
 	
 	/* Properties */
 	
@@ -505,6 +516,8 @@ xpad_pad_close (XpadPad *pad)
 		gtk_widget_destroy (pad->priv->properties);
 	
 	save_info (pad);
+	
+	g_signal_emit (pad, signals[CLOSED], 0);
 }
 
 static gboolean

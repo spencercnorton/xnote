@@ -47,6 +47,8 @@ struct XpadPad
 struct XpadPadClass
 {
 	GtkWindowClass parent_class;
+	
+	void (*closed) (XpadPad *pad);
 };
 
 GType xpad_pad_get_type (void);

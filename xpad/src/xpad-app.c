@@ -406,7 +406,8 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 static void
 xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)
 {
-	g_signal_connect_swapped (pad, "hide", G_CALLBACK (xpad_app_quit_if_no_pads), group);
+	g_signal_connect_swapped (pad, "closed", G_CALLBACK (xpad_app_quit_if_no_pads), group);
+	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_app_quit_if_no_pads), group);
 }
 
 
