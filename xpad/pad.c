@@ -76,12 +76,16 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 		if (gtk_window_get_decorated (temp->window) != decor)
 		{
 			gtk_window_set_decorated (temp->window, decor);
-			gtk_widget_hide (GTK_WIDGET (temp->window));
 			
-			/* we move it so wm's know where to place it */
-			gtk_window_move (temp->window, temp->x, temp->y);
-			
-			gtk_widget_show (GTK_WIDGET (temp->window));
+			if (!temp->hidden)
+			{
+				gtk_widget_hide (GTK_WIDGET (temp->window));
+				
+				/* we move it so wm's know where to place it */
+				gtk_window_move (temp->window, temp->x, temp->y);
+				
+				gtk_widget_show (GTK_WIDGET (temp->window));
+			}
 		}
 		temp = temp->next;
 	}
@@ -229,8 +233,19 @@ void pad_toolbar_update (pad_node *pad)
 
 static void quit_if_no_pads (void)
 {
-	if (!first_pad)
-		gtk_main_quit ();
+	gboolean alive = FALSE;
+	pad_node *p = first_pad;
+	
+	while (p)
+	{
+		if (!p->hidden)
+			alive = TRUE;
+		
+		p = p->next;
+	}
+	
+	if (!alive)
+		pad_close_all ();
 }
 
 /* unlinks pad from linked list of all pads */
@@ -305,10 +320,10 @@ gboolean pad_confirm_destroy (pad_node *pad)
 		gtk_container_set_border_width (GTK_CONTAINER (align), 6);
 		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), align, FALSE, FALSE, 3);
 		gtk_widget_show_all (align);
-
+		
 		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 		do_destroy = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
-
+		
 		/* If it has changed... */
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox)))
 		{
@@ -334,14 +349,23 @@ void pad_close (pad_node *pad)
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
 	
 	fio_save_pad (pad);
-	pad_remove (pad);
 	
-	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
-	pad_free (pad);
+	toolbar_hide (pad);
+	gtk_widget_hide (GTK_WIDGET (pad->window));
+	pad->hidden = TRUE;
 	
 	quit_if_no_pads ();
 }
 
+void pad_show (pad_node *pad)
+{
+	pad->hidden = FALSE;
+	
+	/* we move it so wm's know where to place it */
+	gtk_window_move (pad->window, pad->x, pad->y);
+	
+	gtk_window_present (pad->window);
+}
 
 void pad_close_all (void)
 {
@@ -349,9 +373,14 @@ void pad_close_all (void)
 	
 	while (temp)
 	{
-		pad_close (temp);
+		fio_save_pad (temp);
+		pad_remove (temp);
+		pad_free (temp);
+		
 		temp = first_pad;
 	}
+	
+	gtk_main_quit ();
 }
 
 static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
@@ -724,14 +753,16 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	{
 		pad_node *p = first_pad;
 		GList *list;
-		gboolean f = FALSE;
+		gboolean f = FALSE, any_hidden = FALSE;
+		gint n = 0;
 		
 		while (p)
 		{
 			GtkTextIter s, e;
 			GtkTextBuffer *buf;
 			gchar *content, *stripped;
-			char result [15];
+			char result [22] = "";	/* 14 chars, 1 null, and 7 for possible markup */
+			GtkWidget *label;
 			
 			GtkWidget *menu_item;
 			
@@ -741,26 +772,55 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 			content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 			stripped = g_strstrip (content);
 			
-			strcpy (result, "\"");
+			if (p->hidden)
+				strcat (result, "<i>");
+			
+			strcat (result, "\"");
 			strncat (result, stripped, 12);
 			strcat (result, "\"");
 			
+			if (p->hidden)
+				strcat (result, "</i>");
+			
 			g_strdelimit (result, "\n", ' ');
 			
-			menu_item = gtk_menu_item_new_with_label (result);
+			menu_item = gtk_menu_item_new ();
+			label = gtk_label_new (NULL);
+			gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+			gtk_label_set_markup (GTK_LABEL (label), result);
+			gtk_container_add (GTK_CONTAINER (menu_item), label);
 			
 			gtk_menu_shell_append (GTK_MENU_SHELL (menu_pads_sub), menu_item);
-			g_signal_connect_swapped (menu_item, "activate", G_CALLBACK (gtk_window_present), p->window);
+			g_signal_connect_swapped (menu_item, "activate", G_CALLBACK (pad_show), p);
 			
 			g_free (content);
 			
 			/* to make our life easier, we stick the number of the pad to the menu item */
 			g_object_set_data (G_OBJECT (menu_item), "num", &p->num);
 			
+			/* and if we are hidden */
+			g_object_set_data (G_OBJECT (menu_item), "hidden", &p->hidden);
+			
+			if (p->hidden)
+				any_hidden = TRUE;
+			
+			n++;
+			
 			p = p->next;
 		}
 		
 		list = gtk_container_get_children (GTK_CONTAINER (menu_pads_sub));
+		
+		if (any_hidden)
+		{
+			GtkWidget *separator;
+			
+			separator = gtk_separator_menu_item_new ();
+			
+			gtk_menu_shell_append (GTK_MENU_SHELL (menu_pads_sub), separator);
+			
+			n++;
+		}
 		
 		/**
 		 * Now, we need to run through pads again, to see which names are not unique or blank
@@ -771,6 +831,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 			GtkWidget *label;
 			const gchar *text;
 			gboolean unique;
+			gboolean hidden;
 			
 			label = gtk_bin_get_child (GTK_BIN (list->data));
 			text = gtk_label_get_text (GTK_LABEL (label));
@@ -780,6 +841,8 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 			/* if we earlier noted that this is non-unique */
 			if (g_object_get_data (G_OBJECT (list->data), "unique"))
 				unique = FALSE;
+			
+			hidden = *((gboolean *) g_object_get_data (G_OBJECT (list->data), "hidden"));
 			
 			if (unique)
 			{
@@ -809,15 +872,21 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 			
 			if (!unique)
 			{
-				gchar new_text[15];
+				gchar new_text[22];
 				gint num;
 				
 				num = *((gint *) g_object_get_data (G_OBJECT (list->data), "num"));
 				
-				sprintf (new_text, "Pad %i", num);
+				if (hidden)
+					sprintf (new_text, "<i>Pad %i</i>", num);
+				else
+					sprintf (new_text, "Pad %i", num);
 				
-				gtk_label_set_text (GTK_LABEL (label), new_text);
+				gtk_label_set_markup (GTK_LABEL (label), new_text);
 			}
+			
+			if (hidden)
+				gtk_menu_reorder_child (GTK_MENU (menu_pads_sub), GTK_WIDGET (list->data), n);
 			
 			list = list->next;
 		}
@@ -1041,6 +1110,7 @@ focus_out_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 static void
 pad_background_refresh (pad_node *pad)
 {
+#if DRAWING_ON
 	GdkWindow *win;
 	GdkRectangle rect = {0, 0, 0, 0};
 	
@@ -1050,11 +1120,13 @@ pad_background_refresh (pad_node *pad)
 	win = gtk_text_view_get_window (get_text (pad->window), GTK_TEXT_WINDOW_TEXT);
 	
 	gdk_window_invalidate_rect (win, &rect, FALSE);
+#endif
 }
 
 static void
 pad_background_draw (pad_node *pad, gint x, gint y)
 {
+#if DRAWING_ON
 	GdkRectangle brush;
 	GtkWidget *textbox;
 	GdkWindow *textwin;
@@ -1103,11 +1175,13 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 	
 	pad->last_draw_x = brush.x;
 	pad->last_draw_y = brush.y;
+#endif
 }
 
 static void
 pad_background_update (pad_node *pad)
 {
+#if DRAWING_ON
 	GtkAdjustment *ha, *va;
 	GtkWidget *textbox;
 	GdkWindow *textwin;
@@ -1132,19 +1206,23 @@ pad_background_update (pad_node *pad)
 	
 	if (pad->visible_back) gdk_pixmap_unref (pad->visible_back);
 	pad->visible_back = pix;
+#endif
 }
 
 static void
 pad_scrolled (GtkAdjustment *adjustment, pad_node *pad)
 {
+#if DRAWING_ON
 	pad_background_update (pad);
 	
 	pad_background_refresh (pad);
+#endif
 }
 
 static void
 pad_resize_background (pad_node *pad)
 {
+#if DRAWING_ON
 	GtkAdjustment *ha, *va;
 	GtkWidget *textbox;
 	GdkWindow *textwin;
@@ -1178,11 +1256,13 @@ pad_resize_background (pad_node *pad)
 	pad->background = pix;
 	
 	pad_background_update (pad);
+#endif
 }
 
 static void
 pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 {
+#if DRAWING_ON
 	gint h;
 	gboolean doit = FALSE;
 	
@@ -1211,11 +1291,13 @@ pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
+#endif
 }
 
 static void
 pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 {
+#if DRAWING_ON
 	gint w;
 	gboolean doit = FALSE;
 	
@@ -1246,10 +1328,12 @@ pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
 			pad_resize_background (pad);
 	}
+#endif
 }
 
 void pad_background_clear (pad_node *pad)
 {
+#if DRAWING_ON
 	GtkWidget *textbox;
 	gint w, h;
 	
@@ -1261,6 +1345,7 @@ void pad_background_clear (pad_node *pad)
 	pad_background_update (pad);
 	
 	pad_background_refresh (pad);
+#endif
 }
 
 static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
@@ -1397,6 +1482,7 @@ static pad_node *start_pad (void)
 	pad->visible_back = NULL;
 	pad->last_draw_x = pad->last_draw_y = -1;
 	pad->num = num++;
+	pad->hidden = FALSE;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)

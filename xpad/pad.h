@@ -53,6 +53,7 @@ struct pad_node_def
 	gchar *contentname;
 	gint locked;
 	gint num;
+	gboolean hidden;
 	
 	pad_style style;
 	

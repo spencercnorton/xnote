@@ -12,6 +12,9 @@
 
 #define VERSION				"1.6"
 
+/* this is for testing the drawing support */
+#define DRAWING_ON			0
+
 /* now define some structures here so that i don't have odd header dependencies */
 typedef struct xpad_toolbar_def xpad_toolbar;
 struct xpad_toolbar_def
