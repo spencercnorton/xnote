@@ -54,6 +54,7 @@ struct settings current_settings =
 		{0, 0, 0, 0}, // black text
 		{0, 0, 0, 0}, // black border
 		0, // border width
+		0, // padding
 		"serif Bold 16" // font
 	}
 };

@@ -184,14 +184,14 @@ void fio_save_as_defaults (struct settings *set)
 	sprintf (buf, "edit_lock %i\nconfirm_destroy %i\nsync_time %i\ndecorations %i\n"
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
-		"border_blue %d\nborder_width %d\nfontname %s\n",
+		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
 		set->edit_lock, set->confirm_destroy,
 		set->sync_time, set->decorations,
 		set->width, set->height,
 		set->style.back.red, set->style.back.green, set->style.back.blue,
 		set->style.text.red, set->style.text.green, set->style.text.blue,
 		set->style.border.red, set->style.border.green, set->style.border.blue,
-		set->style.border_width,
+		set->style.border_width, set->style.padding,
 		set->style.fontname);
 
 	fio_set_file (DEFAULTS_FILENAME, buf);
@@ -264,6 +264,7 @@ gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 								"border_green", &bord_G,
 								"border_blue", &bord_B,
 								"border_width", &starter->border_width,
+								"padding", &starter->padding,
 								"fontname", starter->fontname,
 								NULL );
 	if (Result == 0)
@@ -301,12 +302,12 @@ void fio_save_info_file (pad_node *pad)
 
     gtk_window_get_position (pad->window, &x, &y);
     gtk_window_get_size (pad->window, &width, &height);
-    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
           	x, y, width, height, 
 		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
 		pstyle->text.red, pstyle->text.green, pstyle->text.blue,
 		pstyle->border.red, pstyle->border.green, pstyle->border.blue,
-		pstyle->border_width,
+		pstyle->border_width, pstyle->padding,
 		pstyle->fontname);
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));

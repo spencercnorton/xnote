@@ -38,6 +38,8 @@ struct pad_node_def
 	gchar contentname[MAX_FILENAME_SIZE + 1];
 	
 	GtkWindow *window;
+	GtkWidget *eventbox;
+	GtkWidget *eventbox_outer;
 };
 
 // describes the custom styles of a pad
@@ -47,6 +49,7 @@ struct pad_style_def
 	GdkColor text;
 	GdkColor border;
 	gint border_width;
+	gint padding;
 	gchar fontname[MAX_FILENAME_SIZE + 1];
 };
 

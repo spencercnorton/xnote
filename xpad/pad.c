@@ -33,10 +33,11 @@ pad_node *last_pad = NULL;
 GtkTextView *get_text (GtkWindow *window)
 {
 	return  GTK_TEXT_VIEW (
+		 gtk_bin_get_child (GTK_BIN (
 		  gtk_bin_get_child (GTK_BIN (
 		   gtk_bin_get_child (GTK_BIN (window))
-		  ))
-		);
+		  )))
+		));
 }
 
 void pads_set_decorations (gboolean decor)
@@ -73,15 +74,23 @@ void pads_set_editable (gboolean editable)
 void pad_set_style (pad_node *pad, pad_style *pstyle)
 {
 	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
+	GtkRcStyle *style1 = gtk_widget_get_modifier_style (GTK_WIDGET (pad->eventbox_outer));
 
 	style->base[GTK_STATE_NORMAL] = pstyle->back;
 	style->text[GTK_STATE_NORMAL] = pstyle->text;
-	style->bg[GTK_STATE_NORMAL] = pstyle->border;
+	style->bg[GTK_STATE_NORMAL] = pstyle->back;
 	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
 	style->font_desc = pango_font_description_from_string (pstyle->fontname);
-	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->border_width);
+	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->padding);
+
+	style1->bg[GTK_STATE_NORMAL] = pstyle->border;
+	style1->color_flags[GTK_STATE_NORMAL] = GTK_RC_BG;
+	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle->border_width);
 
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
+	gtk_widget_modify_style (GTK_WIDGET (pad->eventbox_outer), style1);
+
+	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
 }
 
 // returned pad_style must be g_free'd
@@ -89,11 +98,13 @@ pad_style *pad_get_style (pad_node *pad)
 {
 	pad_style *pstyle = (pad_style *) g_malloc (sizeof (pad_style));
 	GtkStyle *style = gtk_widget_get_style (GTK_WIDGET(get_text(pad->window)));
+	GtkStyle *style1 = gtk_widget_get_style (GTK_WIDGET(pad->eventbox_outer));
 
 	pstyle->back = style->base[GTK_STATE_NORMAL];
 	pstyle->text = style->text[GTK_STATE_NORMAL];
-	pstyle->border = style->bg[GTK_STATE_NORMAL];
-	pstyle->border_width = gtk_container_get_border_width (GTK_CONTAINER (get_text (pad->window)));
+	pstyle->border = style1->bg[GTK_STATE_NORMAL];
+	pstyle->border_width = gtk_container_get_border_width (GTK_CONTAINER (pad->eventbox));
+	pstyle->padding = gtk_container_get_border_width (GTK_CONTAINER (get_text (pad->window)));
 	strcpy (pstyle->fontname, pango_font_description_to_string (style->font_desc));
 
 	return pstyle;
@@ -798,6 +809,7 @@ pad_node *start_pad (void)
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();
 	GtkWidget *eventbox = gtk_event_box_new ();
+	GtkWidget *eventbox1 = gtk_event_box_new ();
 	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
 
 	/* set textbox's properties */
@@ -806,15 +818,18 @@ pad_node *start_pad (void)
 
 	/* add textbox to window */
 	gtk_container_add (GTK_CONTAINER (eventbox), textbox);
-	gtk_container_add (GTK_CONTAINER (window), eventbox);
+	gtk_container_add (GTK_CONTAINER (eventbox1), eventbox);
+	gtk_container_add (GTK_CONTAINER (window), eventbox1);
 
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
-	g_signal_connect (eventbox, "event", G_CALLBACK (eventbox_event_handler), pad);
+	g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect_after (textbox, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 
 	pad->next = NULL;
 	pad->window = GTK_WINDOW(window);
+	pad->eventbox = eventbox;
+	pad->eventbox_outer = eventbox1;
 
 	/* check if this is first pad made */
 	if (first_pad == NULL)
