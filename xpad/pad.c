@@ -49,6 +49,8 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
 	{"/Edit/Clear Pad",			NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
+	{"/Edit/_Lock Style",		NULL,					menuitem_cb,	15,	"<CheckItem>"},
+	{"/Edit/sep2",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Preferences",		NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
 	{"/_Help",					NULL,					0,				0,	"<Branch>"},
@@ -939,6 +941,14 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		pad_clear (pad);
 		break;
 	
+	case 15:
+		/* only can get here through the menu, so we can assume widget is valid */
+		if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
+			pad_lock_style (pad);
+		else
+			pad_unlock_style (pad);
+		break;
+	
 	default:
 		break;
 	}
@@ -1040,6 +1050,10 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_item_factory_create_item (pad->menu, &entry, NULL, 1);
 	
 	block_toolbar_events (pad);
+	
+	/* set checkboxes */
+	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Lock Style");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->locked);
 	
 	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
 }
