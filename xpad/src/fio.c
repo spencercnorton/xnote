@@ -270,6 +270,8 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 			value_string = g_strdup_printf ("%i", va_arg (ap, gboolean));
 			break;
 		case 'h':
+			value_string = g_strdup_printf ("%" G_GUINT16_FORMAT, va_arg (ap, guint16));
+			break;
 		case 'i':
 			value_string = g_strdup_printf ("%i", va_arg (ap, gint));
 			break;
