@@ -40,7 +40,8 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/_Pad"), 				NULL,			0,		0, 	"<Branch>"},
 	{N_("/Pad/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
 	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
-	{"/Pad/_Properties", 			NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
+	{N_("/Pad/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
+	{N_("/Pad/_Properties"), 		NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
 	{"/Pad/sep2", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
 	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
@@ -50,12 +51,10 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
 	{N_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
 	{"/Edit/sep",				NULL,			0,		0,	"<Separator>"},
-	{N_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
-	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
 	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{N_("/_Notes"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Notes/_Show All"),		NULL,			menuitem_cb,	10,	"<Item>"},
-	{N_("/Notes/_Close All"),		NULL,			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{N_("/Notes/_Close All"),		"<control>Q",			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 	{"/Notes/sep",				NULL,			0,		0,	"<Separator>"},
 	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
@@ -1208,7 +1207,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	block_toolbar_events (pad);
 	
 	/* set checkboxes */
-	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Sticky"));
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Pad/Sticky"));
 	GTK_CHECK_MENU_ITEM (tmp)->active = pad->sticky;
 	
 	/* setup copy/cut/paste sensitivity */
