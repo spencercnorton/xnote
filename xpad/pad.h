@@ -41,6 +41,12 @@ struct pad_node_def
 	GtkWidget *eventbox;
 	GtkWidget *eventbox_outer;
 	GtkWidget *scrollbar;
+	GtkWidget *box;	/* holds textbox stuff and toolbar */
+	
+	/* toolbar related variables */
+	GtkWidget *toolbar;
+	guint toolbar_timeout;
+	gint toolbar_height;
 };
 
 /* describes the custom styles of a pad */
