@@ -35,10 +35,10 @@ GtkWidget *create_help (gint page)
 "There are two important non-obvious operations that you "
 "should be aware of:\n\n"
 
-"<b>moving</b>: To move a pad, hold down CTRL and drag "
+"<b>Moving</b>: To move a pad, hold down CTRL and drag "
 "with the left mouse button.\n\n"
 
-"<b>resizing</b>: To resize a pad, hold down CTRL and "
+"<b>Resizing</b>: To resize a pad, hold down CTRL and "
 "drag with the right mouse button.\n\n"
 );
 
@@ -96,6 +96,7 @@ GtkWidget *create_help (gint page)
 	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", 
 		G_CALLBACK (gtk_widget_destroy), dialog);
 	
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 	gtk_widget_show_all (dialog);
 	
 	return dialog;

@@ -356,6 +356,7 @@ GtkWidget *preferences_create (pad_node *pad)
 	g_signal_connect (GTK_OBJECT (checkbutton_decorations), "toggled", G_CALLBACK (change_decorations), (gpointer) window);
 	g_signal_connect (GTK_OBJECT (checkbutton_edit_lock), "toggled", G_CALLBACK (change_edit_lock), (gpointer) window);
 
+	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
 	gtk_window_set_position (GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 	gtk_widget_show_all (window);
 	
