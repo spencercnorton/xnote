@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "help.h"
 #include "toolbar.h"
+#include <string.h>
 
 /* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
@@ -69,6 +70,10 @@ help_window_new (GtkWidget *parent, gint page)
 	GtkWidget *hbox_font = gtk_hbox_new (FALSE, 3);
 	GtkWidget *vbox_misc = gtk_vbox_new (FALSE, 3);
 	GtkWidget *hbox_misc = gtk_hbox_new (FALSE, 3);
+	gchar bordertext[800];
+	gchar fonttext[800];
+	gchar toolbartext[700];
+	gchar misctext[1300];
 	
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_background), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_background), 6);
@@ -108,7 +113,7 @@ help_window_new (GtkWidget *parent, gint page)
 "color.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
 "there is text visible to be changed and that the pad does not have its style "
-"locked (right click on pad, look at \"Lock Style\").");
+"locked (right click on pad, make sure that \"Lock Style\" is disabled).");
 	gtk_label_set_line_wrap (GTK_LABEL (label_text_help), TRUE);
 
 	/* background setup */
@@ -120,38 +125,43 @@ help_window_new (GtkWidget *parent, gint page)
 "color wheel or enter values in the Red, Green, Blue text boxes to change the "
 "color.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
-"the pad does not have its style locked (right click on pad, look at \"Lock Style\").");
+"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled).");
 	gtk_label_set_line_wrap (GTK_LABEL (label_back_help), TRUE);
 
 	/* border setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), hbox_border, label_border);
 	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_border), label_border_help, FALSE, FALSE, 0);
-	gtk_label_set_markup (GTK_LABEL (label_border_help),
+	strcpy (bordertext,
 "Select the <b>color</b> you would like the border of pads to be.  Either click on the "
 "color wheel or enter values in the Red, Green, Blue text boxes to change the "
 "color.  You cannot change the border color if the border width is zero.\n\n"
-"You can also change the <b>size of the border</b> and the <b>amount of padding</b>.  The border "
+"You can also change the <b>size of the border</b> and the <b>amount of padding</b>.  The border ");
+	strcat (bordertext,
 "width controls how many pixels are drawn in an outline around the pad.  The padding "
 "controls how many pixels are drawn between the border and the text of the pad.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
-"the pad does not have its style locked (right click on pad, look at \"Lock Style\").");
+"the pad does not have its style locked (right click on pad, make sure that \"Lock Style\" is disabled).");
+
+	gtk_label_set_markup (GTK_LABEL (label_border_help), bordertext);
 	gtk_label_set_line_wrap (GTK_LABEL (label_border_help), TRUE);
 
 	/* font setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), hbox_font, label_font);
 	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_font), label_font_help, FALSE, FALSE, 0);
-	gtk_label_set_markup (GTK_LABEL (label_font_help),
+	strcpy (fonttext,
 "Select the <b>font face</b> you would like the text of pads to use.\n\n"
 "The font <b>family</b> determines the general look and feel of text.  When some of the "
 "available families are chosen, text will not be visible or will be garbled.  This means "
-"the font family is not installed correctly.  Please choose another family.\n\n"
+"the font family is not installed correctly.  Please choose another family.\n\n");
+	strcat (fonttext,
 "The font <b>style</b> controls whether the text is bold or italicized.\n\n"
 "The font <b>size</b> controls how large the text is.\n\n"
 "Changes will take effect immediately.  If you do not see a change, make sure that "
 "there is text visible to be changed and that the pad does not have its style locked "
-"(right click on pad, look at \"Lock Style\").");
+"(right click on pad, make sure that \"Lock Style\" is disabled).");
+	gtk_label_set_markup (GTK_LABEL (label_font_help), fonttext);
 	gtk_label_set_line_wrap (GTK_LABEL (label_font_help), TRUE);
 
 	/* toolbar  setup */
@@ -166,16 +176,18 @@ help_window_new (GtkWidget *parent, gint page)
 		gtk_box_pack_start (GTK_BOX (hbox_toolbar), vbox_toolbar, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), label_toolbar_help, FALSE, FALSE, 0);
-		gtk_label_set_markup (GTK_LABEL (label_toolbar_help),
+		strcpy (toolbartext,
 "You can control whether pads have a <b>toolbar</b> or not by clicking on the "
 "\"Enable toolbars\" option.  This affects all pads immediately.\n\n"
 "If the toolbar is enabled, you can customize which <b>buttons</b> appear by dragging "
 "the button you want from one box to another.  The upper box looks like a toolbar and "
-"contains the buttons that are currently enabled.  The lower box holds unused buttons.  "
+"contains the buttons that are currently enabled.  The lower box holds unused buttons.  ");
+		strcat (toolbartext,
 "Dropping a button moves it to the end of the box you dropped it in.\n\n"
 "If you don't know "
 "what a button does, try hovering your mouse over it for a bit until a box appears, "
 "describing the button.");
+		gtk_label_set_markup (GTK_LABEL (label_toolbar_help), toolbartext);
 		gtk_label_set_line_wrap (GTK_LABEL (label_toolbar_help), TRUE);
 	}
 	
@@ -184,22 +196,26 @@ help_window_new (GtkWidget *parent, gint page)
 	gtk_box_pack_start (GTK_BOX (vbox_misc), label_misc_help, FALSE, FALSE, 3);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_misc, label_misc);
 	gtk_label_set_line_wrap (GTK_LABEL (label_misc_help), TRUE);
-	gtk_label_set_markup (GTK_LABEL (label_misc_help),
+	strcpy (misctext,
 "If <b>edit lock</b> is enabled, pads that are not in focus lose the ability to "
 "be edited.  Rather, clicking and dragging on the surface of the pad will move it.  "
 "To edit a pad that is locked, double click on its surface.  This will allow you to "
 "change its text until the pad loses focus again.  If edit lock is not enabled, every "
-"pad is always editable -- to move it, either drag on the border or hold down CTRL and "
+"pad is always editable -- to move it, either drag on the border or hold down CTRL and ");
+	strcat (misctext,
 "left click.  Edit lock is disabled by default.\n\n"
 "If <b>confirm pad deletion</b> is enabled, a confirmation dialog will appear whenever "
 "you delete a non-empty pad.  Deleting a pad loses the pad contents irrevocably.  Delete "
 "confirmation is enabled by default.\n\n"
-"If <b>window decorations</b> are enabled, your window manager will draw a border and title "
+"If <b>window decorations</b> are enabled, your window manager will draw a border and title ");
+	strcat (misctext,
 "bar for each pad.  Window decorations are disabled by default.\n\n"
 "If window decorations are enabled, you can choose what happens when you click on your <b>window "
 "manager's close button</b>.  You can close and save all pads (quitting xpad), close and save "
 "the one pad you clicked on, or delete the pad (no confirmation is offered).  By default, "
 "only the one pad you clicked on is closed and saved.");
+
+	gtk_label_set_markup (GTK_LABEL (label_misc_help), misctext);
 	
 	gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (parent));
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (window), TRUE);
@@ -816,7 +832,7 @@ static GtkWidget *preferences_create (void)
 		
 		vbox_wm_close = gtk_vbox_new (FALSE, 3);
 		
-		gtk_label_set_markup (GTK_LABEL (label_frame_wm), "<b>Window Manager Close Action</b>");
+		gtk_label_set_markup (GTK_LABEL (label_frame_wm), "<b>Window Manager Close Action:</b>");
 		gtk_frame_set_shadow_type (GTK_FRAME (frame_wm_close), GTK_SHADOW_NONE);
 		gtk_frame_set_label_widget (GTK_FRAME (frame_wm_close), label_frame_wm);
 		
