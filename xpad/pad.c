@@ -192,7 +192,7 @@ static pad_node *get_pad (GtkWindow *window)
 static void quit_if_no_pads (void)
 {
 	if (!first_pad)
-		xpad_exit();
+		gtk_main_quit ();
 }
 
 // unlinks pad from linked list of all pads
@@ -744,10 +744,15 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 }
 
 static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
-{	
+{
 	/* set editable */
-	pad_set_editable (pad, current_settings.edit_lock == 0 ? TRUE : FALSE);
+	pad_set_editable (pad, current_settings.edit_lock == 0);
 	
+	/* we want to start off with valid values for position/size */
+	gtk_window_get_size (pad->window, &pad->width, &pad->height);
+	gtk_window_get_position (pad->window, &pad->x, &pad->y);
+	
+	/* save pad */
 	fio_save_pad (pad);
 }
 
