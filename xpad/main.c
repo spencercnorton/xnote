@@ -197,12 +197,12 @@ static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 		   the clipboard as a message passer.  On a 1, which is a 'are you alive?' ping,
 		   create a new pad.  The other client will see this data and leave; we take
 		   over his pad. */
+		pad_new ();
 		gtk_selection_data_set (selection_data, 
 			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
 			8,
 			"",
 			0);
-		pad_new ();
 	default:
 		break;
 	}
