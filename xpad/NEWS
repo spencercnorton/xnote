@@ -4,7 +4,7 @@ Version 2.2
 * New default location for configuration files: ~/.config/xpad
 * Updated icon (now uses lighter colors)
 * Use GOption for command-line parsing
-* New command-line option --hide-old (or -h) to not show old pads
+* New command-line option --hide-old (or -H) to not show old pads
 * Renamed command-line option --nonew to --no-new and added -N shortcut
 * Allow running from console if we don't need to do anything graphical
 * Readded keyboard shortcuts
