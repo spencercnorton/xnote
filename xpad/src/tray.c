@@ -179,16 +179,8 @@ static void docklet_create( void )
   GdkPixbuf *pixbuf;
   GtkTooltips *docklet_tips;
 
-  pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-                                     PACKAGE,
-                                     48,
-                                     0,
-                                     NULL);
-  if( !pixbuf ) return;
-
   docklet_remove();
 
-  toggle_state = SHOWN;
   docklet = egg_tray_icon_new (PACKAGE);
   box = gtk_event_box_new();
   icon = gtk_image_new();
@@ -201,6 +193,12 @@ static void docklet_create( void )
 
   g_object_ref( G_OBJECT(docklet) );
 
+  pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
+                                     PACKAGE,
+                                     24,
+                                     0,
+                                     NULL);
+  
   gtk_image_set_from_pixbuf( GTK_IMAGE(icon), pixbuf );
   g_object_unref( pixbuf );
 
@@ -209,6 +207,7 @@ static void docklet_create( void )
                         _("xpad: right click for more options..."),
                         _("Right click this icon for a menu of options pertaining to XPad. "
                         "Left click it to toggle whether or not the pads are displayed.") );
+  toggle_state = SHOWN;
 }
 
 static void docklet_remove( void )
