@@ -5,7 +5,7 @@ fixed bug that screwed up last toolbar button's toggle setting
 fixed toolbar hiding when you right click on another pad
 fixed style locking and sticky status changing on menu popup
 allow using system text color, background color, and font
-eggtray now appears, allowing users to hide all pads
+eggtray now appears, allowing users to hide all pads (thanks jgb3@email.byu.edu)
 no deletion confirmation if pad is only whitespace
 
 
