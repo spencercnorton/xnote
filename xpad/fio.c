@@ -166,18 +166,18 @@ void set_default_style (pad_style *style)
 	set_file ("default-style", buf);
 }
 
+/* returns a pad_style * that needs to be g_free'd. */
 pad_style *get_default_style ()
 {
 	gchar buf[MAX_FILE_SIZE];
 	gchar *item, *value;
-	pad_style *style;
+	pad_style *style = (pad_style *) g_malloc (sizeof (pad_style));
 	
 	if (get_file ("default-style", buf) > 0)
 	{
-		return &DEFAULT_INFO.style;
+		*style = DEFAULT_INFO.style;
+		return style;
 	}
-
-	style = (pad_style *) g_malloc (sizeof (pad_style));
 
 	item = strtok (buf, " ");
 	value = strtok (NULL, "\n");
