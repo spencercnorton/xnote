@@ -177,6 +177,7 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
 
 static void pad_free (pad_node *pad)
 {
+	g_signal_handlers_destroy (pad->window);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
 	g_free (pad->contentname);
 	g_free (pad->infoname);
@@ -186,8 +187,6 @@ static void pad_free (pad_node *pad)
 static void pad_destroy (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
-
-	g_signal_handlers_block_by_func (pad->window, pad_window_destroyed, pad);
 
 	fio_close_pad_files (pad);
 	fio_remove_pad_files (pad);
@@ -251,8 +250,6 @@ static gboolean pad_confirm_destroy (pad_node *pad)
 static void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
-
-	g_signal_handlers_block_by_func (pad->window, pad_window_destroyed, pad);
 
 	fio_save_pad (pad);
 	fio_close_pad_files (pad);

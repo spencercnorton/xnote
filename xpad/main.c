@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef G_OS_UNIX
+#if 0 /* G_OS_UNIX */
 #include <signal.h>
 #endif
 
@@ -206,7 +206,7 @@ static void clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 		gtk_selection_data_set (selection_data, 
 			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
 			8,
-			"",
+			(const guchar *) "",
 			0);
 	default:
 		break;
@@ -249,7 +249,8 @@ static int xpad_init (gpointer data)
 	
 	xpad_check_if_others ();
 	
-#ifdef G_OS_UNIX
+#if 0 
+	/*G_OS_UNIX */
 {
 	struct sigaction sa;
 	

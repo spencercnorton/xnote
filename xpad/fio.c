@@ -102,7 +102,8 @@ gchar *fio_find_free_filename (gchar *pattern)
 {
 	gchar *s = NULL;
 	
-	do	{
+	do
+	{
 		guint32 num = g_random_int ();
 		gchar *numstr = (gchar *) g_malloc (strlen (pattern) + 11); /* 10 for size of largest num, 1 for null byte */
 		
