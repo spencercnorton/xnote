@@ -40,6 +40,7 @@ struct XpadPadPrivate
 {
 	/* saved values */
 	gint x, y, width, height;
+	gboolean location_valid;
 	gchar *infoname;
 	gchar *contentname;
 	gboolean sticky;
@@ -180,6 +181,7 @@ xpad_pad_init (XpadPad *pad)
 	
 	pad->priv->x = 0;
 	pad->priv->y = 0;
+	pad->priv->location_valid = FALSE;
 	pad->priv->width = xpad_settings_get_width (xpad_settings ());
 	pad->priv->height = xpad_settings_get_height (xpad_settings ());
 	pad->priv->infoname = NULL;
@@ -298,7 +300,8 @@ xpad_pad_show (XpadPad *pad)
 	   again here after being shown.  This may create a visual effect if 
 	   the wm did ignore us, but is better than being in the wrong
 	   place, I guess. */
-	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
+	if (pad->priv->location_valid)
+		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	
 /*	g_object_set (G_OBJECT (pad),
 		"gravity", GDK_GRAVITY_STATIC,
@@ -749,6 +752,7 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 	pad->priv->y = event->y;
 	pad->priv->width = event->width;
 	pad->priv->height = event->height;
+	pad->priv->location_valid = TRUE;
 	
 	save_info (pad);
 	
@@ -996,6 +1000,7 @@ load_info (XpadPad *pad)
 		NULL))
 		return;
 	
+	pad->priv->location_valid = TRUE;
 	gtk_window_set_default_size (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
 	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	
