@@ -932,6 +932,8 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
 	
+	if (pad->visible_back && pad->background)
+	{
 	/* draw brush on both current background and master background */
 	gdk_draw_rectangle (pad->visible_back,
 					textbox->style->text_gc[GTK_STATE_NORMAL],
@@ -941,12 +943,20 @@ pad_background_draw (pad_node *pad, gint x, gint y)
 					textbox->style->text_gc[GTK_STATE_NORMAL],
 					TRUE,
 					ha->value + brush.x, va->value + brush.y, brush.width, brush.height);
+	}
+	else
+	{
+		printf ("not there\n");
+	}
 	
 	/* now make change visible */
 	gdk_window_invalidate_rect (GTK_WIDGET (pad->window)->window,
 			      &brush,
 			      TRUE);
-	
+	/*
+	gdk_window_invalidate_rect (pad->visible_back,
+			      &brush,
+			      TRUE);*/
 	pad_background_refresh (pad);
 }
 
@@ -1022,16 +1032,47 @@ pad_resize_background (pad_node *pad)
 }
 
 static void
-pad_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
+pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
 {
+	gint w, h;
+	
 	/* This is called if an adjustment member other than it's 'value'
 		changed -- here we are concerned about the 'upper' member */
 	
-	/* Here we assume that the value that changed is indeed the 'upper' 
-		member.  the others are usually static */
+	/* Here we find out if the upper member was the actual member changed */
 	
-	if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
-		pad_resize_background (pad);
+	if (!pad->background)
+		return;
+	
+	gdk_drawable_get_size (pad->background, &w, &h);
+	
+	if (h != adjustment->upper)
+	{
+		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
+			pad_resize_background (pad);
+	}
+}
+
+static void
+pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
+{
+	gint w, h;
+	
+	/* This is called if an adjustment member other than it's 'value'
+		changed -- here we are concerned about the 'upper' member */
+	
+	/* Here we find out if the upper member was the actual member changed */
+	
+	if (!pad->background)
+		return;
+	
+	gdk_drawable_get_size (pad->background, &w, &h);
+	
+	if (w != adjustment->upper)
+	{
+		if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
+			pad_resize_background (pad);
+	}
 }
 
 void pad_background_clear (pad_node *pad)
@@ -1067,6 +1108,8 @@ pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	/* we want to start off with valid values for position/size */
 	gtk_window_get_size (pad->window, &pad->width, &pad->height);
 	gtk_window_get_position (pad->window, &pad->x, &pad->y);
+	
+	pad_resize_background (pad);
 }
 
 static gboolean
@@ -1213,9 +1256,9 @@ static pad_node *start_pad (void)
 	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
 		, "value-changed", G_CALLBACK (pad_scrolled), pad);
 	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "changed", G_CALLBACK (pad_scroll_changed), pad);
+		, "changed", G_CALLBACK (pad_v_scroll_changed), pad);
 	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "changed", G_CALLBACK (pad_scroll_changed), pad);
+		, "changed", G_CALLBACK (pad_h_scroll_changed), pad);
 	
 	return pad;
 }
