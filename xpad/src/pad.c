@@ -1017,7 +1017,7 @@ disconnect_toolbar_events (pad_node *pad)
 static void
 disable_popup_handler (pad_node *pad)
 {
-	GdkRectangle rect;
+	GtkWidget *tmp;
 	
 	if (pad->toolbar)
 	{
@@ -1025,6 +1025,8 @@ disable_popup_handler (pad_node *pad)
 		
 		if (xpad_settings_get_auto_hide_toolbar ())
 		{
+			GdkRectangle rect;
+			
 			/**
 			 * We must check if we disabled off of pad and start the timeout if so.
 			 */
@@ -1038,6 +1040,15 @@ disable_popup_handler (pad_node *pad)
 				toolbar_start_timeout (pad);
 		}
 	}
+	
+	/* we must also re-enable menu widgets for cut/copy/paste, since we want the 
+	 user to be able to cut/copy/paste */
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Cut"));
+	gtk_widget_set_sensitive (tmp, TRUE);
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Copy"));
+	gtk_widget_set_sensitive (tmp, TRUE);
+	tmp = gtk_item_factory_get_item (pad->menu, _("/Edit/Paste"));
+	gtk_widget_set_sensitive (tmp, TRUE);
 }
 
 
