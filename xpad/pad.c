@@ -764,6 +764,9 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 static gboolean
 leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 {
+	if (!current_settings.auto_hide_toolbar)
+		return FALSE;
+	
 	/**
 	 * Here we remove the toolbar.
 	 */

@@ -228,6 +228,7 @@ void fio_save_default_settings (void)
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
 	gchar *buf;
+	gint memsize;
 	va_list ap;
 	
 	buf = fio_get_file (filename);
@@ -235,11 +236,19 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	if (!buf)
 		return 1;
 	
+	/* because of the way we look for a matching variable name, which is
+		to look for an endline, the variable name, and a space, we insert a
+		newline at the beginning, so that the first variable name is caught. */
+	buf = g_realloc (buf, strlen (buf) + 1);
+	g_memmove (buf + 1, buf, strlen (buf));
+	buf[0] = '\n';
+	
 	va_start (ap, filename);
 
 	while (1)
 	{
 		gchar *item;
+		gchar *fullitem;
 		gint *value;
 		gchar *where;
 		gchar *temp;
@@ -248,8 +257,10 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		item = va_arg (ap, gchar *);
 		if (!item)
 			break;
+		fullitem = (gchar *) g_malloc (strlen (item) + 3);
+		sprintf (fullitem, "\n%s ", item);
 		value = va_arg (ap, void *);
-		where  = strstr (buf, item);
+		where  = strstr (buf, fullitem);
 		
 		if (!where) continue;
 		
@@ -265,6 +276,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 			*((gchar **) value) = g_strdup (temp);
 		
 		g_free (temp);
+		g_free (fullitem);
 	}
 
 	va_end (ap);
