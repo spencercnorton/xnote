@@ -515,7 +515,6 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_global_preferences;
 	GtkWidget *separator2, *separator3, *separator4;
 	GtkWidget *tearoff;
-	GtkAccelGroup *accel_group = gtk_accel_group_new ();
 	
 	tearoff = gtk_tearoff_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
