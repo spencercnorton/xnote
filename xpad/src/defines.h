@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#include "config.h"
+#include "../config.h"
 #include "gettext.h"
 
 /**

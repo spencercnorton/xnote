@@ -5,6 +5,6 @@ desktopdir = $(shell $(top_srcdir)/scripts/finddesktopdir $(datadir)/application
 desktop_DATA = xpad.desktop
 
 EXTRA_DIST = scripts/config.rpath  xpad.desktop scripts/finddesktopdir scripts/install-sh\
- scripts/mkinstalldirs
+ scripts/mkinstalldirs scripts/config.sub scripts/config.guess
 
 ACLOCAL_AMFLAGS = -I m4

@@ -6,7 +6,7 @@ VERSION=`sed -n -e 's/^.*VERSION.*"\(.*\)"$/\1/p' src/defines.h`
 AC_INIT([src/fio.c])
 AC_CONFIG_AUX_DIR(scripts)
 AM_INIT_AUTOMAKE(xpad, 1.9)
-AM_CONFIG_HEADER(src/config.h:config.h.in)
+AM_CONFIG_HEADER(config.h:config.h.in)
 AC_PROG_MAKE_SET
 
 AC_SUBST(VERSION)
