@@ -3,7 +3,6 @@
 # Sets up autoconf.
 AC_INIT([Xpad],[2.2],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
-AC_CONFIG_AUX_DIR(scripts)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
 # Sets up automake.
@@ -18,10 +17,6 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GLIB_2_0(2.6.0,,AC_MSG_ERROR([
-  *** GLib 2.6 is required to build Xpad; please make sure you have the GLib
-  *** development headers installed. The latest version of GLib is
-  *** always available at http://gtk.org/.]))
 AM_PATH_GTK_2_0(2.6.0,,AC_MSG_ERROR([
   *** GTK+ 2.6 is required to build Xpad; please make sure you have the GTK+
   *** development headers installed. The latest version of GTK+ is
@@ -29,20 +24,21 @@ AM_PATH_GTK_2_0(2.6.0,,AC_MSG_ERROR([
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
 
 # Sets up marshaling (copied from Evolution).
 # We use AC_SUBST_FILE because AC_SUBST won't deal with newlines
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 XPAD_MARSHAL_RULE=$srcdir/marshal.mk
 AC_SUBST_FILE(XPAD_MARSHAL_RULE)
 
 # Sets up gettext.
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.12.1)
+GETTEXT_PACKAGE="$PACKAGE"
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext domain])
+AM_GLIB_GNU_GETTEXT
 
-# Determine if we're debugging
+# Determines if we're debugging.
 AC_ARG_ENABLE(debug,
   AC_HELP_STRING([--enable-debug=[no/yes]],[turn on debugging [default=no]]),
   enable_debug="$enableval",

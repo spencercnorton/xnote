@@ -1,3 +1,3 @@
 #!/bin/sh
-autoreconf --force --install --symlink --warnings=all
+autoreconf --force --install --symlink
 intltoolize --force --automake
