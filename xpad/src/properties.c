@@ -136,6 +136,55 @@ static gboolean change_font_3_args (GtkWidget *fontsel, gpointer middle, GtkWidg
 	return change_font (fontsel, checkbutton);
 }
 
+static void set_values (GObject *window)
+{
+	gpointer *p;
+	pad_style style;
+	
+	p = g_object_get_data (window, "use_global");
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (p)))
+	{
+		style = xpad_settings_get_style ();
+	}
+	else
+	{
+		p = g_object_get_data (window, "pad");
+		pad_style_copy (&style, &((pad_node *) p)->style);	}
+	
+	p = g_object_get_data (window, "use_text");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p),  !style.use_text);
+	
+	p = g_object_get_data (window, "text");
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (p), &style.text);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), style.use_text);
+	
+	p = g_object_get_data (window, "use_back");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), !style.use_back);
+	
+	p = g_object_get_data (window, "back");
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (p), &style.back);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), style.use_back);
+	
+	p = g_object_get_data (window, "use_font");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.fontname ? FALSE : TRUE);
+	
+	p = g_object_get_data (window, "font");
+	if (style.fontname) gtk_font_selection_set_font_name (GTK_FONT_SELECTION (p), style.fontname);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), style.fontname ? TRUE : FALSE);
+	
+	p = g_object_get_data (window, "border");
+	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (p), &style.border);
+	gtk_widget_set_sensitive (GTK_WIDGET (p), style.border_width);
+	
+	p = g_object_get_data (window, "padding");
+	gtk_adjustment_set_value (GTK_ADJUSTMENT (p), style.padding);
+	
+	p = g_object_get_data (window, "border_width");
+	gtk_adjustment_set_value (GTK_ADJUSTMENT (p), style.border_width);
+	
+	pad_style_free (&style);
+}
+
 static gboolean change_use_global (GtkToggleButton *togglebutton, GtkWidget *widget)
 {
 	gboolean use_global = gtk_toggle_button_get_active (togglebutton);
@@ -157,9 +206,10 @@ static gboolean change_use_global (GtkToggleButton *togglebutton, GtkWidget *wid
 		pad_lock_style (pad);
 	}
 	
+	set_values (G_OBJECT (gtk_widget_get_toplevel (GTK_WIDGET (togglebutton))));
+	
 	return FALSE;
 }
-
 
 /**
  * Note to the uncautious:  The following function is ugly as hell.  There are a lot of 
@@ -250,55 +300,50 @@ static GtkWidget *properties_create (pad_node *pad)
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
 		GtkWidget *checkbutton_use = gtk_check_button_new_with_mnemonic (_("_Use system text color"));
-		GdkColor c = xpad_settings_style_get_text_color ();
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 		gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use),  xpad_settings_style_get_system_text ());
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_text_color), (gpointer) color_text);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), separator, FALSE, FALSE, 9);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
-		gtk_widget_set_sensitive (color_text, !xpad_settings_style_get_system_text ());
 		g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) checkbutton_use);
 		
+		g_object_set_data (G_OBJECT (window), "text", color_text);
+		g_object_set_data (G_OBJECT (window), "use_text", checkbutton_use);
 	}
 	
 	/* background setup */
 	{
 		GtkWidget *separator = gtk_hseparator_new ();
 		GtkWidget *checkbutton_use = gtk_check_button_new_with_mnemonic (_("_Use system background color"));
-		GdkColor c = xpad_settings_style_get_back_color ();
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 		gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), xpad_settings_style_get_system_back ());
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_background_color), (gpointer) color_back);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), separator, FALSE, FALSE, 9);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 9);
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
-		gtk_widget_set_sensitive (color_back, !xpad_settings_style_get_system_back ());
 		g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) checkbutton_use);
+		
+		g_object_set_data (G_OBJECT (window), "back", color_back);
+		g_object_set_data (G_OBJECT (window), "use_back", checkbutton_use);
 	}
 	
 	/* border setup */
 	{
-		GdkColor c = xpad_settings_style_get_border_color ();
-		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
 		gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
 		
-		adjust_padding = gtk_adjustment_new (xpad_settings_style_get_padding (), 0.0, 100.0, 1.0, 5.0, 5.0);
+		adjust_padding = gtk_adjustment_new (0, 0.0, 100.0, 1.0, 5.0, 5.0);
 		spinner_padding = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_padding), 1.0, 0);
 		gtk_misc_set_alignment (GTK_MISC (label_padding), 0, 0.5);
 		gtk_entry_set_width_chars (GTK_ENTRY (spinner_padding), 3);
@@ -312,7 +357,7 @@ static GtkWidget *properties_create (pad_node *pad)
 	_("Choose the number of pixels around the text region.  This space is colored "
 	"the same and surrounds it on all sides."));
 		
-		adjust_border_width = gtk_adjustment_new (xpad_settings_style_get_border_width (), 0.0, 100.0, 1.0, 5.0, 5.0);
+		adjust_border_width = gtk_adjustment_new (0, 0.0, 100.0, 1.0, 5.0, 5.0);
 		spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
 		gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 0.5);
 		gtk_entry_set_width_chars (GTK_ENTRY (spinner_border_width), 3);
@@ -337,12 +382,12 @@ static GtkWidget *properties_create (pad_node *pad)
 		
 		gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 9);
 		
-		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &c);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 		g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
 		
-		if (xpad_settings_style_get_border_width () == 0)
-			gtk_widget_set_sensitive (color_border, FALSE);
+		g_object_set_data (G_OBJECT (window), "border", color_border);
+		g_object_set_data (G_OBJECT (window), "padding", adjust_padding);
+		g_object_set_data (G_OBJECT (window), "border_width", adjust_border_width);
 	}
 	
 	/* font setup */
@@ -354,7 +399,6 @@ static GtkWidget *properties_create (pad_node *pad)
 		gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_font), checkbutton_use, FALSE, FALSE, 9);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), xpad_settings_style_get_fontname () ? 0 : 1);
 		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_font), (gpointer) font_selection);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_font), separator, FALSE, FALSE, 9);
@@ -362,18 +406,20 @@ static GtkWidget *properties_create (pad_node *pad)
 		gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
 		gtk_widget_set_sensitive (font_selection, xpad_settings_style_get_fontname () ? 1 : 0);
 		
-		if (xpad_settings_style_get_fontname ())
-			gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), 
-				xpad_settings_style_get_fontname ());
-		
 		/* this is a bit hacky, but there is no font-changed signal! */
 		g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font_3_args), (gpointer) checkbutton_use);
 		/* key release event does not seem to be sent when I think it should */
 		gtk_widget_add_events(font_selection, GDK_KEY_RELEASE_MASK);
 		g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font_3_args), (gpointer) checkbutton_use);
+		
+		g_object_set_data (G_OBJECT (window), "font", font_selection);
+		g_object_set_data (G_OBJECT (window), "use_font", checkbutton_use);
 	}
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
+	g_object_set_data (G_OBJECT (window), "use_global", checkbutton_locked);
+	
+	set_values (G_OBJECT (window));
 	
 	g_signal_connect_swapped (G_OBJECT (window), "destroy", G_CALLBACK (g_nullify_pointer), &pad->properties);
 	gtk_window_set_transient_for (GTK_WINDOW (window), pad->window);
