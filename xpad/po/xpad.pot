@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-01 22:44-0500\n"
+"POT-Creation-Date: 2003-04-02 15:36-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:173
+#: src/main.c:178
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
-"  -V, --version         prints xpad version and exits\n"
-"  -h, --help            prints this usage information and exits\n"
+"  -V, --version         prints xpad version; exits\n"
+"  -h, --help            prints this usage information; exits\n"
 "  -v N, --verbosity=N   sets level of output\n"
 "                          0=none, 1=moderate, 2=debug\n"
 "                          default is 0\n"
 "  -n, --new             opens a new pad only\n"
 msgstr ""
 
-#: src/main.c:182
+#: src/main.c:187
 msgid ""
 "  --nonew               prevents xpad from making a new pad\n"
 "  -q, --quit            quits all open xpad sessions\n"
@@ -36,21 +36,21 @@ msgid ""
 "  --showall             brings all pads to the foreground\n"
 msgstr ""
 
-#: src/main.c:215
+#: src/main.c:230
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
 msgstr ""
 
-#: src/main.c:290
+#: src/main.c:317
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/main.c:334
+#: src/main.c:361
 #, c-format
 msgid "Didn't understand argument %s.\n"
 msgstr ""
 
-#: src/main.c:391
+#: src/main.c:418
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -60,17 +60,17 @@ msgstr ""
 msgid "Could not write to file %s."
 msgstr ""
 
-#: src/fio.c:91
+#: src/fio.c:92
 #, c-format
 msgid "Could not read from file %s."
 msgstr ""
 
-#: src/fio.c:411
+#: src/fio.c:414
 #, c-format
 msgid "Could not open xpad directory %s."
 msgstr ""
 
-#: src/fio.c:414
+#: src/fio.c:417
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -387,31 +387,31 @@ msgstr ""
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:884
+#: src/pad.c:885
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:935
+#: src/pad.c:936
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1072 src/pad.c:1258
+#: src/pad.c:1073 src/pad.c:1259
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1074 src/pad.c:1260
+#: src/pad.c:1075 src/pad.c:1261
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1076 src/pad.c:1264
+#: src/pad.c:1077 src/pad.c:1265
 msgid "/Edit/Paste"
 msgstr ""
 
-#: src/pad.c:1206
+#: src/pad.c:1207
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1252
+#: src/pad.c:1253
 msgid "/Pad/Sticky"
 msgstr ""
 

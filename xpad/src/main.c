@@ -174,30 +174,21 @@ print_help (void)
 	gchar *msg, *lmsg;
 	
 	msg = g_strconcat (
-		_("Usage: xpad [OPTIONS]\n"),
-	        "\n",
-	        "  -V, --version         ",
-		_("prints xpad version and exits\n"),
-	        "  -h, --help            ",
-		_("prints this usage information and exits\n"),
-	        "  -v N, --verbosity=N   ",
-		_("sets level of output\n"),
-	        "                          ",
-		_("0=none, 1=moderate, 2=debug\n"),
-	        "                          ",
-		_("default is 0\n"),
-	        "  -n, --new             ",
-		_("opens a new pad only\n"),
-		"  --nonew               ",
-		_("prevents xpad from making a new pad\n"),
-	        "  -q, --quit            ",
-		_("quits all open xpad sessions\n"),
-		"  -l, --list            ",
-		_("lists the titles of all pads\n"),
-		"  -s N, --show=N        ",
-		_("brings the Nth pad (1-based) to the foreground\n"),
-	        "  --showall             ",
-		_("brings all pads to the foreground\n"),
+		_(
+		"Usage: xpad [OPTIONS]\n"
+		"\n"
+		"  -V, --version         prints xpad version; exits\n"
+		"  -h, --help            prints this usage information; exits\n"
+		"  -v N, --verbosity=N   sets level of output\n"
+		"                          0=none, 1=moderate, 2=debug\n"
+		"                          default is 0\n"
+		"  -n, --new             opens a new pad only\n"),
+		_(
+		"  --nonew               prevents xpad from making a new pad\n"
+		"  -q, --quit            quits all open xpad sessions\n"
+		"  -l, --list            lists the titles of all pads\n"
+		"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
+		"  --showall             brings all pads to the foreground\n"),
 		NULL);
 	
 	lmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
