@@ -24,11 +24,9 @@ install:	xpad-target
 		install ./xpad $(BIN)
 		install ./xpad.1.gz $(MANDIR)
 
-remove:
-	rm /usr/bin/xpad
-
 uninstall:
-	rm /usr/bin/xpad
+	rm $(BIN)/xpad
+	rm $(MANDIR)/xpad.1.gz
 
 clean:
 	-rm -rf xpad core *.o tags
