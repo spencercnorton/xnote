@@ -123,7 +123,7 @@ GtkTextView *get_text (GtkWindow *window)
 void pads_set_decorations (gboolean decor, GtkWidget *caller)
 {
 	pad_node *temp;
-
+	
 	for (temp = first_pad; temp; temp = temp->next)
 	{
 		if (gtk_window_get_decorated (temp->window) != decor)
@@ -141,6 +141,7 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 		}
 	}
 	
+	fio_save_default_settings ();
 	gtk_window_present (GTK_WINDOW (caller));
 }
 
@@ -151,12 +152,12 @@ static void pad_set_editable (pad_node *pad, gboolean editable)
 	gtk_text_view_set_editable (get_text (pad->window), editable);
 	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
 	
-	cursor = gdk_cursor_new(editable ? GDK_XTERM : GDK_LEFT_PTR);
+	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
 	
 	gdk_window_set_cursor (gtk_text_view_get_window (get_text (
 		pad->window), GTK_TEXT_WINDOW_TEXT), cursor);
 	
-	gdk_cursor_unref (cursor);
+	if (cursor) gdk_cursor_unref (cursor);
 }
 
 void pad_clear (pad_node *pad)
@@ -253,6 +254,7 @@ void pad_style_free (pad_style *style)
 	g_free (style->fontname);
 }
 
+static
 void pad_set_scrollbars (pad_node *pad, gboolean on)
 {
 	if (on)
@@ -274,6 +276,18 @@ void pad_set_scrollbars (pad_node *pad, gboolean on)
 		gtk_adjustment_set_value (h, 0);
 		gtk_adjustment_set_value (v, 0);
 	}
+}
+
+void pads_set_scrollbars (gboolean on)
+{
+	pad_node *temp;
+	
+	for (temp = first_pad; temp; temp = temp->next)
+	{
+		pad_set_scrollbars (temp, on);
+	}
+	
+	fio_save_default_settings ();
 }
 
 void pad_toolbar_update (pad_node *pad)
@@ -350,11 +364,13 @@ pad_set_sticky (pad_node *pad, gboolean on)
 {
 	if (on) gtk_window_stick (pad->window);
 	else    gtk_window_unstick (pad->window);
-
+	
 	pad->sticky = on;
-
+	
 	/* make sure the toolbar widget is up to date */
 	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_sticky), on);
+	
+	fio_pad_save_info (pad);
 }
 
 void pad_toggle_sticky (pad_node *pad)
@@ -399,7 +415,7 @@ static void quit_if_no_pads (void)
 	}
 	
 	if (!p)
-		pad_close_all ();
+		pads_close_all ();
 }
 
 /* unlinks pad from linked list of all pads */
@@ -581,7 +597,7 @@ void pad_show_all (pad_node *pad)
 	pad_show (pad);
 }
 
-void pad_close_all (void)
+void pads_close_all (void)
 {
 	pad_node *temp;
 	
@@ -602,7 +618,7 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 	switch (current_settings.wm_close)
 	{
 	case 0: /* close all */
-		pad_close_all ();
+		pads_close_all ();
 		return TRUE;
 		break;
 	case 1: /* close this pad */
@@ -619,7 +635,7 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 
 void cleanup (void)
 {
-	pad_close_all();
+	pads_close_all();
 	
 	g_free (accel_group);
 }
@@ -941,7 +957,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		break;
 	
 	case 6:
-		pad_close_all ();
+		pads_close_all ();
 		break;
 	
 	case 7:
@@ -1501,6 +1517,8 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	pad->width = event->width;
 	pad->height = event->height;
 	
+	fio_pad_save_info (pad);
+	
 	return FALSE;
 }
 
@@ -1636,6 +1654,7 @@ void pad_set_title (pad_node *pad)
 
 gboolean text_changed (GtkTextBuffer *buf, pad_node *pad)
 {
+	fio_save_pad_content (pad);
 	pad_set_title (pad);
 	
 	return TRUE;

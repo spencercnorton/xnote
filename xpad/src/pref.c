@@ -415,15 +415,10 @@ static gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
 
 static gboolean change_scrollbars (GtkWidget *checkbutton, GtkWidget *window)
 {
-	pad_node *temp;
-	
 	current_settings.scrollbar = gtk_toggle_button_get_active (
 		GTK_TOGGLE_BUTTON (checkbutton));
 	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-		pad_set_scrollbars (temp, current_settings.scrollbar);
-	}
+	pads_set_scrollbars (current_settings.scrollbar);
 	
 	return FALSE;
 }

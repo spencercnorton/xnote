@@ -132,7 +132,7 @@ static void docklet_menu( GdkEventButton *event )
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
 
   entry = gtk_image_menu_item_new_from_stock( GTK_STOCK_QUIT, NULL );
-  g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(pad_close_all), NULL );
+  g_signal_connect( G_OBJECT(entry), "activate", G_CALLBACK(pads_close_all), NULL );
   gtk_menu_shell_append( GTK_MENU_SHELL(menu), entry );
   gtk_widget_show_all( menu );
   gtk_menu_popup( GTK_MENU(menu), NULL, NULL, NULL, NULL, event->button, event->time );

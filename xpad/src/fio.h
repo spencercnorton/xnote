@@ -26,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "pref.h"
 
-void fio_save_pad (pad_node *pad);
-void fio_save_pads (void);
 int fio_load_pads (void);
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);
@@ -39,6 +37,12 @@ void fio_open_pad_files (pad_node *pad, gboolean create);
 void fio_remove_pad_files (pad_node *pad);
 
 void fio_remove_file (const gchar *filename);
+
+void fio_save_pad_info (pad_node *pad);
+void fio_save_pad_content (pad_node *pad);
+void fio_save_pad (pad_node *pad);
+void fio_save_pads (void);
+
 
 #endif /* _FIO_H_ */
 

@@ -254,12 +254,9 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 }
 
 
-static void fio_save_info_file (pad_node *pad)
+void fio_save_pad_info (pad_node *pad)
 {
 	gchar info_file[MAX_FILE_SIZE + 1];
-	gchar *content;
-	GtkTextIter s, e;
-	GtkTextBuffer *buf;
 	gint height;
 	
 	if (!pad || pad->hidden)	/* don't bother saving hidden pads */
@@ -287,20 +284,29 @@ static void fio_save_info_file (pad_node *pad)
 		pad->style.fontname ? pad->style.fontname : "NULL");
 	
 	fio_set_file (pad->infoname, info_file);
+}
+
+void fio_save_pad_content (pad_node *pad)
+{
+	gchar *content;
+	GtkTextIter s, e;
+	GtkTextBuffer *buf;
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
-	
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+	
 	fio_set_file (pad->contentname, content);
+	
 	g_free (content);
 }
 
 /* save contents and locations of a pad */
 void fio_save_pad (pad_node *pad)
 {
-	fio_save_info_file (pad);
+	fio_save_pad_info (pad);
+	fio_save_pad_content (pad);
 }
 
 /* save contents and locations of all pads */
