@@ -339,7 +339,7 @@ egg_tray_icon_cancel_message (EggTrayIcon *icon,
   gboolean is_tray_icon;
 
   is_tray_icon = EGG_IS_TRAY_ICON (icon);
-  g_return_val_if_fail (is_tray_icon, 0);
+  g_return_if_fail (is_tray_icon);
   g_return_if_fail (id > 0);
   
   egg_tray_icon_send_manager_message (icon, SYSTEM_TRAY_CANCEL_MESSAGE,
