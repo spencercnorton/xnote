@@ -541,20 +541,24 @@ static void xpad_make_working_dir (void)
 #endif
 }
 
-static void
+/* returns 1 if files were made, 0 else */
+static gint
 xpad_make_needed_files (void)
 {
 	gchar *defaults;
+	gint rv = 0;
 	
 	defaults = g_build_filename (working_dir, DEFAULTS_FILENAME);
 	
 	if (!g_file_test (defaults, G_FILE_TEST_EXISTS))
 	{
 		fio_set_file (defaults, "");	/* make it start empty -- defaults will be filled in*/
-		show_help ();	/* if no defaults file, assume it is their first time and show some help */
+		rv = 1;
 	}
 	
 	g_free (defaults);
+	
+	return rv;
 }
 
 static void xpad_register_icons (void)
@@ -633,6 +637,7 @@ xpad_initial_save (gpointer data)
 /* data is an array of void pointers, indicating the argc and argv */
 static int xpad_init (gpointer data)
 {
+	gint first_time;
 	gpointer *newdata;
 	
 	newdata = (gpointer *) data;
@@ -646,7 +651,7 @@ static int xpad_init (gpointer data)
 	
 	xpad_make_working_dir ();
 	
-	xpad_make_needed_files ();
+	first_time = xpad_make_needed_files ();
 	
 	fio_load_default_settings ();
 	
@@ -667,6 +672,9 @@ static int xpad_init (gpointer data)
 	
 	/* when we get free time, save all the settings */
 	g_idle_add (xpad_initial_save, NULL);
+	
+	if (first_time)
+		show_help ();	/* if no defaults file, assume it is their first time and show some help */
 	
 	return 0;
 }
