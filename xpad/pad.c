@@ -477,31 +477,15 @@ gboolean pad_confirm_destroy (pad_node *pad)
 
 	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
 	{
-		GtkWidget *dialog, *checkbox, *align;
-
-		/* Create the widgets */
-		dialog = gtk_message_dialog_new (pad->window,
-        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
-        		GTK_MESSAGE_WARNING,
-        		GTK_BUTTONS_OK_CANCEL,
-        		"All contents are lost\nupon deletion.");
-
-		align = gtk_alignment_new (1, 0.5, 0, 0);
-		checkbox = gtk_check_button_new_with_label ("Don't show this warning again");
-		gtk_container_add (GTK_CONTAINER (align), checkbox);
-		gtk_container_set_border_width (GTK_CONTAINER (align), 6);
-		gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), align, FALSE, FALSE, 3);
-		gtk_widget_show_all (align);
+		GtkWidget *dialog;
 		
-		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-		do_destroy = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
+		dialog = xpad_alert_new (pad->window, GTK_STOCK_DIALOG_WARNING,
+			"Delete contents of this pad?",
+			"All text of this pad will be irrevocably lost.");
 		
-		/* If it has changed... */
-		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox)))
-		{
-			current_settings.confirm_destroy = FALSE;
-			fio_save_default_settings (); /* to catch the change in confirmation */
-		}
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, 1, GTK_STOCK_DELETE, 2, NULL);
+		
+		do_destroy = gtk_dialog_run (GTK_DIALOG (dialog)) == 2;
 		
 		gtk_widget_destroy (dialog);
 	}
@@ -637,13 +621,21 @@ static void pad_resize (pad_node *node, GdkEventButton *event)
 
 static void about_dialog (pad_node *pad)
 {
-	gchar text[100];
-
-	sprintf (text, "xpad %s\n%s\n\nUsing GTK+ %i.%i.%i",
-		VERSION, "http://xpad.sourceforge.net", 
-		gtk_major_version, gtk_minor_version, gtk_micro_version);
-
-	xpad_display_dialog_with_text (GTK_MESSAGE_INFO, text);
+	GtkWidget *dialog;
+	gchar text [524];
+	
+	sprintf (text, "You are using xpad %s with GTK+ %i.%i.%i.",
+		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
+	
+	dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_INFO,
+		text,
+		"For more information about xpad, visit http://xpad.sourceforge.net.");
+	
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
+	
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	
+	gtk_widget_destroy (dialog);
 }
 
 static void open_file_callback (GtkWidget *button, pad_node *pad)

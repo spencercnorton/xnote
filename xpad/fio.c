@@ -46,39 +46,46 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	FILE *file;
 	gchar *temp;
 	const gchar *errtext;
+	gboolean error = FALSE;
 	
 	temp = fio_fill_filename (name);
 	
-	if ( (file = fopen (temp, "w")) == NULL)
+	if ((file = fopen (temp, "w")) == NULL)
 	{
-		errtext = strerror(errno);
-		fprintf (stderr, 
-		         "Could not open file [%s] for writing: %s.\n", 
-			 temp,
-			 errtext);
-		xpad_display_dialog_with_text (GTK_MESSAGE_ERROR, errtext);
+		error = TRUE;
+	}
+	
+	if (!error && fputs (value, file) == EOF)
+	{
+		error = TRUE;
+	}
+	
+	if (error)
+	{
+		GtkWidget *dialog;
+		gchar usertext [524];
 		
-		g_free (temp);
-		return FALSE;
+		errtext = strerror (errno);
+		
+		sprintf (usertext, "Could not write to file %s:  %s.", temp, errtext);
+		
+		fprintf (stderr, usertext);
+		fprintf (stderr, "\n");
+		
+		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
+			usertext,
+			NULL);
+		
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
+		
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		
+		gtk_widget_destroy (dialog);
 	}
 	
 	g_free (temp);
-	
-	if (fputs (value, file) == EOF)
-	{
-		errtext = strerror(errno);
-		fprintf (stderr, 
-		         "Failed to write file [%s]: %s.\n", 
-			 name,
-			 errtext);
-		xpad_display_dialog_with_text (GTK_MESSAGE_ERROR, errtext);
-		
-		fclose (file);
-		return FALSE;
-	}
-	
-	fclose (file);
-	return TRUE;
+	if (file) fclose (file);
+	return !error;
 }
 
 
@@ -96,14 +103,24 @@ gchar *fio_get_file (const gchar *name)
 	
 	if (!g_file_get_contents (fullname, &contents, NULL, &errCode))
 	{
+		GtkWidget *dialog;
+		
 		errortext = errCode ? errCode->message : NULL;
-		if (!errortext) errortext = "Unknown error!";
-		if (verbosity >= 1)
-			fprintf (stderr, 
-			    	"Failed to read file [%s]: %s.\n", 
-				name,
-				errortext);
-		xpad_display_dialog_with_text (GTK_MESSAGE_ERROR, errortext);
+		if (!errortext) errortext = "Could not read from file '%s'.";
+		
+		fprintf (stderr, errortext);
+		fprintf (stderr, "\n");
+		
+		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
+			errortext,
+			NULL);
+		
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
+		
+		gtk_dialog_run (GTK_DIALOG (dialog));
+		
+		gtk_widget_destroy (dialog);
+		
 		g_free (fullname);
 		g_error_free (errCode);
 		return NULL;

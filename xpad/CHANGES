@@ -1,3 +1,8 @@
+1.7
+---
+Popup alerts are more pleasing.  (HIG compliant)
+
+
 1.6.1
 -----
 Fix segfault on startup if toolbar is disabled.

@@ -93,22 +93,48 @@ static gint at_gtk_exit (gpointer data)
 	return 0;
 }
 
-void xpad_display_dialog_with_text (GtkMessageType type, const gchar *text)
+/**
+ * Creates an alert with 'stock' used to create an icon and parent text of 'parent',
+ * secondary text of 'secondary'.  No buttons are added.
+ */
+GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary)
 {
-	GtkWidget *dialog;
-
-	dialog = gtk_message_dialog_new (NULL,
-        		GTK_DIALOG_MODAL,
-        		type,
-        		GTK_BUTTONS_CLOSE,
-        		text);
-
-	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-
-	gtk_dialog_run (GTK_DIALOG (dialog));
-
-	gtk_widget_destroy (dialog);
+	GtkWidget *dialog, *hbox, *image, *label;
+	gchar buf [1024];
+	
+	dialog = gtk_dialog_new_with_buttons (
+		"",
+		parent,
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+		NULL);
+	
+	hbox = gtk_hbox_new (FALSE, 12);
+	image = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_DIALOG);
+	label = gtk_label_new (NULL);
+	
+	sprintf (buf, "<span weight=\"bold\" size=\"larger\">%s</span>", primary);
+	if (secondary)
+		sprintf (buf, "%s\n\n%s", buf, secondary);
+	
+	gtk_label_set_markup (GTK_LABEL (label), buf);
+	
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
+	gtk_container_add (GTK_CONTAINER (hbox), image);
+	gtk_container_add (GTK_CONTAINER (hbox), label);
+	
+	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
+	gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 12);
+	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	
+	gtk_widget_show_all (hbox);
+	
+	return dialog;
 }
+
 
 static void xpad_catch_quit_signal (int signum)
 {
