@@ -1642,6 +1642,22 @@ gboolean text_changed (GtkTextBuffer *buf, pad_node *pad)
 }
 
 static void
+pad_add_menu_items (pad_node *pad)
+{
+	GtkItemFactoryEntry e;
+	int i;
+	
+	for (i = 0; i < G_N_ELEMENTS (menu_items); i++)
+	{
+		e = menu_items[i];
+		
+		e.path = _(menu_items[i].path);
+		
+		gtk_item_factory_create_item (pad->menu, &e, pad, 1);
+	}
+}
+
+static void
 pad_alloc_gtk (pad_node *pad)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -1693,11 +1709,11 @@ pad_alloc_gtk (pad_node *pad)
 	
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
-	
-	gtk_item_factory_create_items (pad->menu, G_N_ELEMENTS (menu_items), menu_items, pad);
-	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
+	pad_add_menu_items (pad);
 	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")),
 		"deactivate", G_CALLBACK (disable_popup_handler), pad);
+	
+	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
 	
 	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
