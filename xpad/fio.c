@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <glob.h>
 #include <unistd.h>
 
 
@@ -35,17 +34,17 @@ static gint fio_fill_filename (gchar *filename)
 {
 	size_t filename_len;
 
-	if (filename[0] == '/')
+	if (g_path_is_absolute (filename))
 		return 0;
-
+	
 	filename_len = strlen(filename);
-
+	
 	if ((filename_len + working_dir_len) > MAX_FILENAME_SIZE)
 	{
 		fprintf(stderr, "Full path to file is too long!\n");
 		return 0;
 	}
-
+	
 	memmove(filename + working_dir_len, filename, filename_len + 1);
 	memcpy(filename, working_dir, working_dir_len);
 	
@@ -320,14 +319,9 @@ static void fio_save_info_file (pad_node *pad)
 
 	fio_set_file (pad->contentname, content);
     g_free (content);
-
-/*
-	rewind (pad->file);
-	fputs (info_file, pad->file);
-	fflush(pad->file);
-*/
+	
 	fio_set_file (pad->infoname, info_file);
-
+	
 	g_free (pstyle);
 }
 
@@ -391,16 +385,14 @@ static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 
 void fio_load_pads (void)
 {
-	gint counter = 0, opened = 0;
-	glob_t globbuf;
-	gchar pattern[MAX_FILENAME_SIZE + 1];
+	gint opened = 0;
 	pad_node *pad;
 	pad_info info;
+	GDir *dir;
+	G_CONST_RETURN gchar *name;
+	GPatternSpec *spec;
 
-	strcpy (pattern, working_dir);
-	strcat (pattern, "info-*");
-
-	glob (pattern, GLOB_NOSORT, NULL, &globbuf);
+	spec = g_pattern_spec_new ("info-*");
 
 	/* set up some sort of defaults for these.  if xpad works
 	   right, these won't be used. */
@@ -409,10 +401,14 @@ void fio_load_pads (void)
 	info.y = 0;
 	info.width = 260;
 	info.height = 260;
-
-	while (counter < globbuf.gl_pathc)
+	
+	dir = g_dir_open (working_dir, 0, NULL);
+	
+	while ((name = g_dir_read_name (dir)))
 	{
-		if (!fio_get_info_from_file (globbuf.gl_pathv[counter++], &info))
+		printf ("checking %s\n", name);
+		if (g_pattern_match_string (spec, name) &&
+			!fio_get_info_from_file (name, &info))
 		{
 			/* some older versions of xpad only had relative filename
 				so, we have to add full path if it isn't there. */
@@ -425,7 +421,8 @@ void fio_load_pads (void)
 	if (opened == 0)
 		pad_new ();
 
-	globfree (&globbuf);
+	g_pattern_spec_free (spec);
+	g_dir_close (dir);
 }
 
 
