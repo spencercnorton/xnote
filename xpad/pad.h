@@ -36,6 +36,7 @@ struct pad_node_def
 	FILE *file;
 	gchar infoname[MAX_FILENAME_SIZE + 1];
 	gchar contentname[MAX_FILENAME_SIZE + 1];
+	
 	GtkWindow *window;
 };
 

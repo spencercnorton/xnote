@@ -181,8 +181,9 @@ void fio_save_as_defaults (struct settings *set)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 
-	sprintf (buf, "confirm_destroy %i\nsync_time %i\ndecorations %i\nwidth %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
-		set->confirm_destroy, set->sync_time, set->decorations,
+	sprintf (buf, "edit_lock %i\nconfirm_destroy %i\nsync_time %i\ndecorations %i\nwidth %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+		set->edit_lock, set->confirm_destroy,
+		set->sync_time, set->decorations,
 		set->width, set->height,
 		set->style.back.red, set->style.back.green, set->style.back.blue,
 		set->style.text.red, set->style.text.green, set->style.text.blue,

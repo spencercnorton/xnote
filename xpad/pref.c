@@ -145,6 +145,14 @@ void global_preferences_apply (GtkWidget *button)
 				     ))->next->data
 				    ));
 
+	current_settings.edit_lock = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (
+		 gtk_container_get_children (GTK_CONTAINER (
+		  gtk_bin_get_child (GTK_BIN (
+		   gtk_notebook_get_nth_page (notebook, 5)
+		  ))
+		 ))->next->next->next->data
+		));
+	
 	reset_sync ();
 	
 	pad_set_decorations (current_settings.decorations);
@@ -198,6 +206,7 @@ void global_preferences_open (pad_node *pad)
 	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_label ("Allow WM Decorations");
 	GtkWidget *checkbutton_autosave = gtk_check_button_new_with_label ("Autosave Pads");
 	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label ("Confirm Pad Destructions");
+	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_label ("Edit Lock (see help)");
 	GtkWidget *vbox_border = gtk_vbox_new (FALSE, 0);
 	GtkWidget *vbox_border_width = gtk_vbox_new (FALSE, 0);
 	GtkWidget *vbox_autosave = gtk_vbox_new (FALSE, 0);
@@ -299,6 +308,7 @@ void global_preferences_open (pad_node *pad)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_decorations), backup_settings.decorations);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_autosave), backup_settings.sync_time);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_confirm_destroy), backup_settings.confirm_destroy);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_edit_lock), backup_settings.edit_lock);
 	adjust_misc_autosave = gtk_adjustment_new (backup_settings.sync_time ? backup_settings.sync_time : 1, 1.0, INT_MAX, 1.0, 5.0, 5.0);
 	spinner_misc_autosave = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_misc_autosave), 1.0, 0);
 	gtk_entry_set_width_chars (GTK_ENTRY (spinner_misc_autosave), 4);
@@ -309,6 +319,7 @@ void global_preferences_open (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX(vbox_misc), checkbutton_confirm_destroy, FALSE, FALSE, 20);
 	gtk_box_pack_start (GTK_BOX(vbox_misc), checkbutton_decorations, FALSE, FALSE, 20);
 	gtk_box_pack_start (GTK_BOX(vbox_misc), vbox_autosave, FALSE, FALSE, 20);
+	gtk_box_pack_start (GTK_BOX(vbox_misc), checkbutton_edit_lock, FALSE, FALSE, 20);
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), align_5, label_misc);
 	gtk_signal_connect_object (GTK_OBJECT (checkbutton_autosave), "toggled", 
 		GTK_SIGNAL_FUNC (global_preferences_checkbutton_autosave_toggled), (gpointer) spinner_misc_autosave);

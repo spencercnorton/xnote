@@ -43,8 +43,6 @@ void fio_close_pad_files (pad_node *pad);
 void fio_remove_pad_files (pad_node *pad);
 void fio_remove_file (gchar *filename);
 
-extern const gchar *DEFAULTS_FILENAME;
-
 #endif /* _FIO_H_ */
 
 

@@ -605,7 +605,8 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				// raise window if clicked on
 				gtk_window_present (pad->window);
 				
-				if (event_button->state & GDK_CONTROL_MASK) {
+				if ((event_button->state & GDK_CONTROL_MASK) ||
+						current_settings.edit_lock) {
 					pad_move (pad, event);
 					return TRUE;
 				}

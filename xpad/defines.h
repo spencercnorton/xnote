@@ -5,6 +5,7 @@
  * This file is just used to hold all the common hard defines we need.
  */
 
+#define DEFAULTS_FILENAME "default-style"
 
 #define MAX_FILENAME_SIZE	1024
 
