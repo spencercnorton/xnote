@@ -1,527 +1,511 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Messages français pour GNU concernant xpad.
+# Copyright © 2004 Free Software Foundation, Inc.
+# Michel Robitaille <robitail@IRO.UMontreal.CA>, traducteur depuis/since 1996.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad 1.11\n"
+"Project-Id-Version: GNU xpad 1.13\n"
 "POT-Creation-Date: 2003-10-20 22:04-0400\n"
-"PO-Revision-Date: 2003-07-10 11:05-0500\n"
-"Last-Translator: Michael Terry <mterry@fastmail.fm>\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2004-01-06 16:00-0500\n"
+"Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
+"Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/main.c:205
 msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
-msgstr ""
+msgstr "valeur illégale pour l'option \"--verbosity\". Doit être 0, 1 ou 2.\n"
 
 #: src/main.c:267
 msgid "Prints usage information and exits"
-msgstr ""
+msgstr "Afficher l'aide-mémoire et quitter"
 
 #: src/main.c:268
 msgid "Prints xpad version and exits"
-msgstr ""
+msgstr "Afficher la version de xpad et quitter"
 
 #: src/main.c:269
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
-msgstr ""
+msgstr "Fixer le niveau de sortie de la mise au point (0, 1 ou 2; 0 par défaut)"
 
 #: src/main.c:270
-msgid ""
-"Prevents xpad from creating a new pad on startup if no previous pads exist"
-msgstr ""
+msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+msgstr "Bloquer la création d'un nouveau pad lors du démarrage si aucun pad n'existe"
 
 #. registered here a second time because it has effects both on local instances and remote instances
 #: src/main.c:274
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
-msgstr ""
+msgstr "Provoque la craétion d'un nouveau pad lors du démarrage si un pad existe déjà"
 
 #: src/main.c:275
 msgid "Causes all running xpad instances to close"
-msgstr ""
+msgstr "Provoque la fermeture de toutes les instances xpad"
 
 #: src/main.c:276
 msgid "Lists the titles of all open pads"
-msgstr ""
+msgstr "Liste les titres de tous les pads ouverts"
 
 #: src/main.c:277
-msgid ""
-"Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
-"be seen by using \"--list\""
-msgstr ""
+msgid "Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\""
+msgstr "Provoque le Nième pad (1-base) à s'afficher à l'usager; les numéros de pads peuvent être obtenus en utilisant l'option \"--list\""
 
 #: src/main.c:278
 msgid "Causes all pads to present themselves to the user"
-msgstr ""
+msgstr "Provoque l'affichage de tous les pads à l'usager"
 
 #: src/main.c:310
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
 msgstr ""
+"Usage: xpad [OPTIONS]\n"
+"\n"
 
 #: src/main.c:346
 #, c-format
 msgid "Missing companion argument to %s\n"
-msgstr ""
+msgstr "Argument compagnon manquant à %s\n"
 
 #: src/main.c:395
 #, c-format
 msgid "Didn't understand argument '%s'\n"
-msgstr ""
+msgstr "Argument mal compris '%s'.\n"
 
 #: src/main.c:451
 #, c-format
 msgid "Invalid number: '%s'\n"
-msgstr ""
+msgstr "Nombre invalide: « %s »\n"
 
 #: src/fio.c:84
 #, c-format
 msgid "Could not write to file %s."
-msgstr ""
+msgstr "N'a pu écrire dans le fichier %s."
 
 #: src/fio.c:110
 #, c-format
 msgid "Could not read from file %s."
-msgstr ""
+msgstr "N'a pu lire à partir du fichier %s."
 
 #: src/fio.c:438
 #, c-format
 msgid "Could not open directory %s."
-msgstr ""
+msgstr "Ne peut ouvrir le répertoire %s."
 
 #: src/fio.c:441
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
-msgstr ""
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgstr "Ce répertoire est nécessaire pour stocker les préférences et les information du pad. Xpad va maintenant fermer."
 
 #: src/pref.c:288 src/properties.c:228
 msgid "Background Color"
-msgstr ""
+msgstr "Couleur d'arrière plan"
 
 #: src/pref.c:289 src/properties.c:229
 msgid "Text Color"
-msgstr ""
+msgstr "Couleur de texte"
 
 #: src/pref.c:290 src/properties.c:230
 msgid "Border"
-msgstr ""
+msgstr "Bordure"
 
 #: src/pref.c:291 src/properties.c:231
 msgid "Border _width:"
-msgstr ""
+msgstr "largeur de bodure:"
 
 #: src/pref.c:292 src/pref.c:297 src/properties.c:232 src/properties.c:235
 msgid "pixels"
-msgstr ""
+msgstr "pixels"
 
 #: src/pref.c:293 src/properties.c:233
 msgid "Font Face"
-msgstr ""
+msgstr "Apparence de la fonte"
 
 #: src/pref.c:294
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: src/pref.c:295
 msgid "Toolbar"
-msgstr ""
+msgstr "Barre d'outils"
 
 #: src/pref.c:296 src/properties.c:234
 msgid "_Padding:"
-msgstr ""
+msgstr "_Remplissage:"
 
 #: src/pref.c:303
 msgid "Allow _window manager decorations"
-msgstr ""
+msgstr "Permettre l'utilisation des décorations du gestionnaire de _fenêtres"
 
 #: src/pref.c:304
 msgid "Con_firm pad destruction"
-msgstr ""
+msgstr "Con_firmer la destruction du pad"
 
 #: src/pref.c:305
 msgid "_Edit lock"
-msgstr ""
+msgstr "_Éditer le verrou"
 
 #: src/pref.c:350
 msgid "Global Preferences"
-msgstr ""
+msgstr "Préférences globales"
 
 #: src/pref.c:369 src/properties.c:303
 msgid "_Use system text color"
-msgstr ""
+msgstr "_Utiliser les couleurs système pour le texte"
 
 #: src/pref.c:392 src/properties.c:324
 msgid "_Use system background color"
-msgstr ""
+msgstr "_Utiliser les couleur système d'arrière plan"
 
 #: src/pref.c:428 src/properties.c:357
 msgid "The amount of space you want between the border and text."
-msgstr ""
+msgstr "La taille de L'espace désiré entre la bordure et le texte."
 
 #: src/pref.c:429 src/properties.c:358
-msgid ""
-"Choose the number of pixels around the text region.  This space is colored "
-"the same and surrounds it on all sides."
-msgstr ""
+msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
+msgstr "Choisir le nombre de pixels autour de la région du texte. Cet espace est coloré de manière identique de chaque côté."
 
 #: src/pref.c:442 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
-msgstr ""
+msgstr "La taille de l'espace que vous désirez entourant le pad."
 
 #: src/pref.c:443 src/properties.c:375
-msgid ""
-"Choose the number of pixels around the pad.  This space is colored "
-"independently and surrounds it on all sides."
-msgstr ""
+msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
+msgstr "Choisir le nombre de pixels autour du pad. Cet espace est coloré de manière différente sur tous les côtés."
 
 #: src/pref.c:469 src/properties.c:397
 msgid "_Use system font face"
-msgstr ""
+msgstr "_Utiliser l'apparence de la fonte système"
 
 #: src/pref.c:505
 msgid "Click and drag a button to move it."
-msgstr ""
+msgstr "Enfoncer le bouton et glisser pour le déplacer."
 
 #: src/pref.c:511
 msgid "_Enable toolbar"
-msgstr ""
+msgstr "_Autoriser la barre d'outils"
 
 #: src/pref.c:512
 msgid "_Auto-hide toolbar"
-msgstr ""
+msgstr "_Auto-cacher la barre d'outils"
 
 #: src/pref.c:522
 msgid "<b>Toolbar Buttons:</b>"
-msgstr ""
+msgstr "<b>Boutons de la barre d'outils:</b>"
 
 #: src/pref.c:523
 msgid "<b>Used Buttons:</b>"
-msgstr ""
+msgstr "<b>Boutons utilisés:</b>"
 
 #: src/pref.c:524
 msgid "<b>Unused Buttons:</b>"
-msgstr ""
+msgstr "<b>Boutons inutilisés:</b>"
 
 #: src/pref.c:642 src/pref.c:643
-msgid ""
-"If on, a toolbar will appear below each pad when the mouse hovers over it."
-msgstr ""
+msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr "SI activé, la barre d'outils va apparaître sous chaque pad lorsque le souris est au-dessus."
 
 #: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
-msgstr ""
+msgstr "Si activé, la barre d'outils va disparaître lorsque vous n'utilisez pas le pad."
 
 #: src/pref.c:659
 msgid "Allow _scrollbars"
-msgstr ""
+msgstr "Permettre les barres de _défilement"
 
 #: src/pref.c:660
 msgid "Pads start s_ticky"
-msgstr ""
+msgstr "Pads démarre en mode _collant"
 
 #: src/pref.c:663
 msgid "Close and save _all pads"
-msgstr ""
+msgstr "Fermer et sauvegarder _tous les pads"
 
 #: src/pref.c:665
 msgid "Close and save _pad"
-msgstr ""
+msgstr "Fermer et sauvegarder le _pad"
 
 #: src/pref.c:667
 msgid "_Destroy pad (no confirmation)"
-msgstr ""
+msgstr "_Détruire le pad (sans confirmation)"
 
 #: src/pref.c:672
 msgid "<b>Window Manager Close Action:</b>"
-msgstr ""
+msgstr "<b>Action de fermeture du gestionnaire de fenêtre:</b>"
 
 #: src/pref.c:717 src/pref.c:719
-msgid ""
-"If on, your window manager will add its own decorations to each pad.  For "
-"example, a titlebar and close button."
-msgstr ""
+msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
+msgstr "Si activé, votre gestionnaire de fenêtre ajoutera ses propres décorations à chaque pad.  Par exemple, une barre de titre et un bouton de fermeture."
 
 #: src/pref.c:723 src/pref.c:724
 msgid "If on, choosing to destroy a pad will prompt for conformation."
-msgstr ""
+msgstr "Si activé, la sélection de la destruction d'un pad provoquera un requête de confirmation."
 
 #: src/pref.c:727 src/pref.c:728
 msgid "If on, new pads are sticky by default."
-msgstr ""
+msgstr "Si activé, les nouveaux pad seront autocollants par défaut."
 
 #: src/pref.c:731 src/pref.c:733
-msgid ""
-"If on, scrollbars appear when text is larger than the pad.  If off, the pad "
-"resizes to fit the text."
-msgstr ""
+msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
+msgstr "Si activé, la barre de défilement appraît lorsque le text est plus grand que le pad. Sinon la taille est ajustée pour afficher le texte."
 
 #: src/pref.c:737 src/pref.c:740
-msgid ""
-"If on, when a pad loses focus, it will become uneditable.  This allows you "
-"to move it by left dragging.  To make it editable again, double-click the "
-"pad.  If off, pads are always editable."
-msgstr ""
+msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
+msgstr "Si activé, lorsque le pad n'est plus l'objet cible (focus), il devient non éditable. Cela vous permet de le déplacer en le faisant glisser par la gauche. Pour le rendre éditable à nouveau, double cliqur sur le pad. Si non activé, les pads sont toujours éditables."
 
 #: src/pref.c:745 src/pref.c:746
 msgid "All pads will close, saving contents first."
-msgstr ""
+msgstr "Tous les pads seront fermés en sauvegardant les contenus d'abord."
 
 #: src/pref.c:749 src/pref.c:750
 msgid "The pad you clicked the close button on will close, saving contents."
-msgstr ""
+msgstr "Le pad sur lequel vous avez cliqué sur le bouton de fermeture fermera en sauvegardant le contenu."
 
 #: src/pref.c:753 src/pref.c:755
-msgid ""
-"The pad you clicked the close button on will be destroyed, losing contents.  "
-"There will be no confirmation."
-msgstr ""
+msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
+msgstr "Le pad pour lequel vous avez cliqué le bouton de fermeture sera détruit perdant son contenu. Il n'y aura pas de confirmation."
 
 #: src/pad.c:40
 msgid "/_Pad"
-msgstr ""
+msgstr "/_Pad"
 
 #: src/pad.c:41
 msgid "/Pad/_New"
-msgstr ""
+msgstr "/Pad/_Nouveau"
 
 #: src/pad.c:42
 msgid "/Pad/sep1"
-msgstr ""
+msgstr "/Pad/sep1"
 
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
-msgstr ""
+msgstr "/Pad/_Autocollant"
 
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
-msgstr ""
+msgstr "/Pad/Proprié_tés"
 
 #: src/pad.c:45
 msgid "/Pad/sep2"
-msgstr ""
+msgstr "/Pad/sep2"
 
 #: src/pad.c:46
 msgid "/Pad/_Close"
-msgstr ""
+msgstr "/Pad/_Fermer"
 
 #: src/pad.c:47
 msgid "/Pad/_Delete"
-msgstr ""
+msgstr "/Pad/_Détruire"
 
 #. {N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 #: src/pad.c:49
 msgid "/_Edit"
-msgstr ""
+msgstr "/_Éditer"
 
 #: src/pad.c:50
 msgid "/Edit/C_ut"
-msgstr ""
+msgstr "/Editer/C_ouper"
 
 #: src/pad.c:51
 msgid "/Edit/_Copy"
-msgstr ""
+msgstr "/Editer/Co_pier"
 
 #: src/pad.c:52
 msgid "/Edit/_Paste"
-msgstr ""
+msgstr "/Editer/_Coller"
 
 #: src/pad.c:53
 msgid "/Edit/sep"
-msgstr ""
+msgstr "/Editer/sep"
 
 #: src/pad.c:54
 msgid "/Edit/Prefere_nces"
-msgstr ""
+msgstr "/Editer/Préfére_nces"
 
 #: src/pad.c:55
 msgid "/_Notes"
-msgstr ""
+msgstr "/_Notes"
 
 #: src/pad.c:56
 msgid "/Notes/_Show All"
-msgstr ""
+msgstr "/Notes/tout _Afficher"
 
 #: src/pad.c:57
 msgid "/Notes/_Close All"
-msgstr ""
+msgstr "/Notes/tout _Fermer"
 
 #: src/pad.c:58
 msgid "/Notes/sep"
-msgstr ""
+msgstr "/Notes/sep"
 
 #: src/pad.c:59
 msgid "/_Help"
-msgstr ""
+msgstr "/_Aide"
 
 #: src/pad.c:60
 msgid "/Help/_Contents"
-msgstr ""
+msgstr "/Aide/_Contenu"
 
 #: src/pad.c:61
 msgid "/Help/_About"
-msgstr ""
+msgstr "/Aide/_A propos"
 
 #: src/pad.c:68
 msgid "Open New Pad"
-msgstr ""
+msgstr "Ouvrir un nouveau pad"
 
 #: src/pad.c:69
 msgid "Close and Save Pad"
-msgstr ""
+msgstr "Fermer et sauvegarder le pad"
 
 #: src/pad.c:70
 msgid "Delete Pad"
-msgstr ""
+msgstr "Détruire le pad"
 
 #: src/pad.c:71
 msgid "Clear Pad Contents"
-msgstr ""
+msgstr "Effacer le contenu du pad"
 
 #: src/pad.c:72
 msgid "Edit Global Preferences"
-msgstr ""
+msgstr "Éditer les préférences globales"
 
 #: src/pad.c:73
 msgid "Edit Pad Properties"
-msgstr ""
+msgstr "Éditer les propriétés de pad"
 
 #: src/pad.c:74
 msgid "Close All Pads"
-msgstr ""
+msgstr "Fermer tous les pads"
 
 #: src/pad.c:75
 msgid "Toggle Stickiness"
-msgstr ""
+msgstr "Basculer le mode collant"
 
 #: src/pad.c:76
 msgid "Minimize Pads to System Tray"
-msgstr ""
+msgstr "Minimiser les pads au rayon système"
 
 #: src/pad.c:658
 msgid "Delete this pad?"
-msgstr ""
+msgstr "Détruire ce pad?"
 
 #: src/pad.c:659
 msgid "All text of this pad will be irrevocably lost."
-msgstr ""
+msgstr "Tous les texts de ce pad sont irrévocablement perdus."
 
 #: src/pad.c:839
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
-msgstr ""
+msgstr "Vous utilisez xpad %s avec GTK+ %i.%i.%i."
 
 #: src/pad.c:844
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
-msgstr ""
+msgstr "Visiter http://xpad.sourceforge.net pour plus d'informations à porpos de xpad."
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
 #: src/pad.c:969 src/pad.c:1147
 msgid "/Edit/Cut"
-msgstr ""
+msgstr "/Éditer/Couper"
 
 #: src/pad.c:971 src/pad.c:1149
 msgid "/Edit/Copy"
-msgstr ""
+msgstr "/Éditer/Copier"
 
 #: src/pad.c:973 src/pad.c:1153
 msgid "/Edit/Paste"
-msgstr ""
+msgstr "/Éditer/Coller"
 
 #: src/pad.c:1095
 msgid "/Notes"
-msgstr ""
+msgstr "/Notes"
 
 #. set checkboxes
 #: src/pad.c:1141
 msgid "/Pad/Sticky"
-msgstr ""
+msgstr "/Pad/Autocollants"
 
 #: src/help.c:46
 msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos.\n"
+"Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
 "\n"
 msgstr ""
+"Chaque session xpad consiste en un ou plusieurs pads ouverts. Cs pads sont à la base des notes autocollantes sur votre bureau sur lesquelles vous pouvez écrire des notes.\n"
+"\n"
 
 #: src/help.c:50
 msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the "
-"pad.\n"
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
+"<b>Pour déplacer un pad</b>, glisser par la gauche sur la barre d'outils, glisser par la droite sur la taille sur le bas à droite ou maintenir la touches CONTRÔLE alors que vous glissez n'importe où dans le pad.\n"
+"\n"
 
 #: src/help.c:54
 msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad.\n"
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
+"<b>Pour modifier la taille d'un pad</b>, faire glisser par la gauche la taille ou maintenir la touche CONTRÔLE alors que vous glissez n'importe où dans le pad.\n"
+"\n"
 
 #: src/help.c:57
 msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences.\n"
+"<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
 "\n"
 msgstr ""
+"<b>Pour modifier la configuration des couleurs</b>, cliquer avec le bouton droit et choisir Éditer->Préférences.\n"
+"\n"
 
 #: src/help.c:60
 msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy.\n"
+"Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
 "\n"
 msgstr ""
+"La plupart des actions sont disponibles à travers un menu popup qui apparaît lorsque vous cliquer à l'aide du bouton dront. Essayez-le et amusez-vous.\n"
+"\n"
 
 #: src/help.c:64
 msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
+msgstr "SVP transmettre vos commentaires ou rapports d'anomalies à xpad-devel@lists.sourceforge.net"
 
 #: src/help.c:73
 msgid "Help"
-msgstr ""
+msgstr "Aide"
 
 #: src/tray.c:129
 msgid "No_tes"
-msgstr ""
+msgstr "No_tes"
 
 #: src/tray.c:133
 msgid "_Show All"
-msgstr ""
+msgstr "_afficher tout"
 
 #: src/tray.c:137
 msgid "_Hide All"
-msgstr ""
+msgstr "_Cacher tout"
 
 #: src/tray.c:209
 msgid "xpad: right click for more options..."
-msgstr ""
+msgstr "xpad: cliquer sur le bouton droit pour plus d'options..."
 
 #: src/tray.c:210
-msgid ""
-"Right click this icon for a menu of options pertaining to XPad. Left click "
-"it to toggle whether or not the pads are displayed."
-msgstr ""
+msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
+msgstr "Cliquer avec le bouton droit cet icône pour obtenir le menu des options propores à Xpad. Cliquer avec le bouton gauche pour basculer le mode d'affichage des pads."
 
 #: src/properties.c:276
 msgid "Pad Properties"
-msgstr ""
+msgstr "Propriétés du pad"
 
 #: xpad.desktop.in.h:1
 msgid "Jot down notes for later"
-msgstr "Prenez des notes pour plus tard"
+msgstr "Garder les notes pour plus tard"
 
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr "MÃ©mos Autocollants"
+msgstr "Notes autocollantes"
 
 #: xpad.desktop.in.h:3
 msgid "Xpad"
-msgstr ""
+msgstr "Xpad"
