@@ -18,12 +18,18 @@ AC_PROG_INTLTOOL
 
 # Checks for libraries.
 AC_PATH_XTRA
+AM_PATH_GLIB_2_0
 AM_PATH_GTK_2_0(2.4.0)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
+
+# Sets up marshaling (copied from Evolution).
+# We use AC_SUBST_FILE because AC_SUBST won't deal with newlines
+XPAD_MARSHAL_RULE=$srcdir/marshal.mk
+AC_SUBST_FILE(XPAD_MARSHAL_RULE)
 
 # Sets up gettext.
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])

@@ -3,6 +3,7 @@ bin_PROGRAMS = xpad
 xpad_SOURCES = \
 	fio.c fio.h \
 	help.c help.h \
+	eggstatusicon.c eggstatusicon.h \
 	eggtrayicon.c eggtrayicon.h \
 	prefix.c prefix.h \
 	xpad-app.c xpad-app.h \
@@ -16,7 +17,14 @@ xpad_SOURCES = \
 	xpad-text-buffer.c xpad-text-buffer.h \
 	xpad-text-view.c xpad-text-view.h \
 	xpad-toolbar.c xpad-toolbar.h \
-	xpad-tray.c xpad-tray.h
+	xpad-tray.c xpad-tray.h \
+	$(MARSHAL_GENERATED)
+
+BUILT_SOURCES = $(MARSHAL_GENERATED)
+EXTRA_DIST = eggmarshalers.list
+
+MARSHAL_GENERATED = eggmarshalers.c eggmarshalers.h
+@XPAD_MARSHAL_RULE@
 
 localedir = $(datadir)/locale
 

@@ -22,68 +22,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../config.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "eggtrayicon.h"
-#include "fio.h"
+#include "eggstatusicon.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-preferences.h"
 #include "xpad-tray.h"
 
-/* much of this code is shamelessly copied from docklet.c, in the gaim/plugins/docklet
- * directory... since it was one of the only good examples that I could find for using
- * the system tray API. */
+static void xpad_tray_activate_cb (EggStatusIcon *icon);
+static void xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size);
+static void xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time);
 
-static void xpad_tray_popup (GdkEventButton *event);
-static void xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpointer user_data);
-static void xpad_tray_destroyed_cb (GtkWidget *tray);
-static void xpad_tray_pressed (void);
-
-static GtkWidget      *docklet = NULL;
-static gboolean        pads_showing;
-
-
-gboolean
-xpad_tray_is_open (void)
-{
-	return docklet && GTK_WIDGET_VISIBLE (docklet);
-}
+static EggStatusIcon  *docklet = NULL;
 
 void
 xpad_tray_open (void)
 {
-	GtkWidget      *box;
-	GtkWidget      *image;
-	GdkPixbuf      *pixbuf;
-	
 	xpad_tray_close ();
 	
-	docklet = GTK_WIDGET (egg_tray_icon_new (PACKAGE));
-	box = gtk_event_box_new ();
-	image = gtk_image_new ();
+	docklet = egg_status_icon_new ();
 	
-	g_signal_connect (box, "button-press-event", G_CALLBACK (xpad_tray_button_press_event_cb), NULL);
-	g_signal_connect (box, "destroy", G_CALLBACK (xpad_tray_destroyed_cb), NULL);
-	
-	gtk_container_add (GTK_CONTAINER (box), image);
-	gtk_container_add (GTK_CONTAINER (docklet), box);
-	gtk_widget_show_all (docklet);
-	
-	g_object_ref (docklet);
-	
-	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (),
-	                                   PACKAGE,
-	                                   24,
-	                                   0,
-	                                   NULL);
-	
-	if (pixbuf)
-	{
-		gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
-		g_object_unref (pixbuf);
-	}
-	
-	pads_showing = TRUE;
+	g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
+	g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
+	g_signal_connect (docklet, "size-changed", G_CALLBACK (xpad_tray_size_changed_cb), NULL);
 }
 
 void
@@ -93,6 +54,34 @@ xpad_tray_close (void)
     	g_object_unref (docklet);
 		docklet = NULL;
 	}
+}
+
+gboolean
+xpad_tray_is_open (void)
+{
+	if (docklet)
+	{
+		printf ("egg status icon is %i\n", egg_status_icon_is_visible (docklet));
+		return egg_status_icon_is_visible (docklet);
+	}
+	else
+		return FALSE;
+}
+
+static void
+xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size)
+{
+	GtkIconTheme *theme;
+	GdkPixbuf *pixbuf;
+	
+	theme = gtk_icon_theme_get_default ();
+	pixbuf = gtk_icon_theme_load_icon (theme,
+	                                   PACKAGE,
+	                                   size,
+	                                   0,
+	                                   NULL);
+	egg_status_icon_set_from_pixbuf (icon, pixbuf);
+	gdk_pixbuf_unref (pixbuf);
 }
 
 static gint
@@ -125,7 +114,7 @@ menu_spawn (XpadPadGroup *group)
 }
 
 static void
-xpad_tray_popup (GdkEventButton *event)
+xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 {
 	GtkWidget *menu, *item, *imgwidget;
 	gint i = 0;
@@ -204,40 +193,11 @@ xpad_tray_popup (GdkEventButton *event)
 	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1); i++;
 	gtk_widget_show (item);
 	
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, button, time);
 }
 
 static void
-xpad_tray_button_press_event_cb (GtkWidget *button, GdkEventButton *event, gpointer user_data)
-{
-	if (event->type != GDK_BUTTON_PRESS)
-		return;
-	
-	switch (event->button) {
-	case 1:
-		xpad_tray_pressed ();
-		break;
-	case 3:
-		xpad_tray_popup (event);
-		break;
-	}
-}
-
-static gboolean
-tray_create_idle (void)
-{
-	xpad_tray_open ();
-	return FALSE;
-}
-
-static void
-xpad_tray_destroyed_cb (GtkWidget *tray)
-{
-	g_idle_add ((GSourceFunc) tray_create_idle, NULL);
-}
-
-static void
-xpad_tray_pressed (void)
+xpad_tray_activate_cb (EggStatusIcon *icon)
 {
 	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
 	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
