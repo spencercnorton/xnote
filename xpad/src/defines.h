@@ -19,8 +19,6 @@
 /* files we use are not large */
 #define MAX_FILE_SIZE		1024
 
-#define VERSION				"1.8"
-
 #define TITLE_CHARS			10
 
 /* this is for testing the drawing support */
