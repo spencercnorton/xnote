@@ -1,4 +1,8 @@
-2003-11-10  Michael Terry  <mikix@users.sourceforge.net>
+2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
+
+	* main.c: Allow disabling nls to work
+
+2004-01-25  Michael Terry  <mikix@users.sourceforge.net>
 
 	* configure.ac: Use gettext 0.12.1, not 0.11.5
 	* defines.h: Use glib/gi18n.h, not gettext.h

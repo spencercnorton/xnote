@@ -1012,6 +1012,7 @@ int main (int argc, char *argv[])
 	
 	program_name = argv[0];
 	
+#if ENABLE_NLS
 #if HAVE_SETLOCALE
 	setlocale (LC_ALL, "");
 #endif
@@ -1019,6 +1020,7 @@ int main (int argc, char *argv[])
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
+#endif
 	
 	output = stdout;
 	
