@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-29 22:00-0400\n"
+"POT-Creation-Date: 2004-12-19 16:38-0500\n"
 "PO-Revision-Date: 2004-09-30 15:16+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -32,12 +32,12 @@ msgstr "Kon niet schrijven naar bestand %s."
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:453
+#: src/xpad-app.c:479
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Kon map %s niet openen."
 
-#: src/xpad-app.c:456
+#: src/xpad-app.c:482
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,35 +45,35 @@ msgstr ""
 "Deze map is nodig om de voorkeuren- en kladblokinformatie in op te slaan. "
 "Xpad sluit nu af."
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:882
 msgid "Prints usage information and exits"
 msgstr "Gebruiksinformatie weergeven en afsluiten"
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:883
 msgid "Prints xpad version and exits"
 msgstr "Versie van xpad weergeven en afsluiten"
 
-#: src/xpad-app.c:858
+#: src/xpad-app.c:884
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 "Voorkomen dat xpad een nieuw kladblok opent bij het starten, als er nog geen "
 "kladblok was"
 
-#: src/xpad-app.c:864
+#: src/xpad-app.c:890
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr "Zorgen dat xpad een nieuw kladblok opent, zelfs als er al een bestaat"
 
-#: src/xpad-app.c:865
+#: src/xpad-app.c:891
 msgid "Causes all running xpad instances to close"
 msgstr "Zorgen dat alle lopende xpad vensters sluiten"
 
-#: src/xpad-app.c:881
+#: src/xpad-app.c:907
 #, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad %s\n"
 
-#: src/xpad-app.c:925
+#: src/xpad-app.c:951
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -82,17 +82,17 @@ msgstr ""
 "Gebruik: %s [OPTIES]\n"
 "\n"
 
-#: src/xpad-app.c:963
+#: src/xpad-app.c:989
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Ontbrekend samengaand argument bij %s\n"
 
-#: src/xpad-app.c:1007
+#: src/xpad-app.c:1033
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Argument niet begrepen '%s'\n"
 
-#: src/xpad-app.c:1056
+#: src/xpad-app.c:1082
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Onjuist nummer: '%s'\n"
@@ -155,11 +155,11 @@ msgstr "_Vensterversieringen"
 msgid "_Notes"
 msgstr "_Notities"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:147
+#: src/xpad-pad.c:1335 src/xpad-tray.c:133
 msgid "_Show All"
 msgstr "Alle weergeven"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:154
+#: src/xpad-pad.c:1336 src/xpad-tray.c:140
 msgid "_Close All"
 msgstr "_Alle sluiten"
 

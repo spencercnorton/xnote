@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-29 22:00-0400\n"
+"POT-Creation-Date: 2004-12-19 16:38-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,61 +33,61 @@ msgstr ""
 msgid "Xpad"
 msgstr ""
 
-#: src/xpad-app.c:453
+#: src/xpad-app.c:479
 #, c-format
 msgid "Could not open directory %s."
 msgstr ""
 
-#: src/xpad-app.c:456
+#: src/xpad-app.c:482
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:882
 msgid "Prints usage information and exits"
 msgstr ""
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:883
 msgid "Prints xpad version and exits"
 msgstr ""
 
-#: src/xpad-app.c:858
+#: src/xpad-app.c:884
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr ""
 
-#: src/xpad-app.c:864
+#: src/xpad-app.c:890
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr ""
 
-#: src/xpad-app.c:865
+#: src/xpad-app.c:891
 msgid "Causes all running xpad instances to close"
 msgstr ""
 
-#: src/xpad-app.c:881
+#: src/xpad-app.c:907
 #, c-format
 msgid "Xpad %s\n"
 msgstr ""
 
-#: src/xpad-app.c:925
+#: src/xpad-app.c:951
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
 "\n"
 msgstr ""
 
-#: src/xpad-app.c:963
+#: src/xpad-app.c:989
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/xpad-app.c:1007
+#: src/xpad-app.c:1033
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr ""
 
-#: src/xpad-app.c:1056
+#: src/xpad-app.c:1082
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -150,11 +150,11 @@ msgstr ""
 msgid "_Notes"
 msgstr ""
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:147
+#: src/xpad-pad.c:1335 src/xpad-tray.c:133
 msgid "_Show All"
 msgstr ""
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:154
+#: src/xpad-pad.c:1336 src/xpad-tray.c:140
 msgid "_Close All"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-29 22:00-0400\n"
+"POT-Creation-Date: 2004-12-19 16:38-0500\n"
 "PO-Revision-Date: 2004-09-13 00:45-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
 "Language-Team: Irish <ga@li.org>\n"
@@ -32,12 +32,12 @@ msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:453
+#: src/xpad-app.c:479
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Níorbh fhéidir an chomhadlann %s a oscailt."
 
-#: src/xpad-app.c:456
+#: src/xpad-app.c:482
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -45,33 +45,33 @@ msgstr ""
 "Ní foláir don chomhadlann seo a bheith oscailte le haghaidh eolas faoi na "
 "ceapa agus do shainroghanna.  Druidfidh Xpad anois."
 
-#: src/xpad-app.c:856
+#: src/xpad-app.c:882
 msgid "Prints usage information and exits"
 msgstr "Taispeáin eolas faoin úsáid agus éirigh as"
 
-#: src/xpad-app.c:857
+#: src/xpad-app.c:883
 msgid "Prints xpad version and exits"
 msgstr "Taispeáin an leagan xpad agus éirigh as"
 
-#: src/xpad-app.c:858
+#: src/xpad-app.c:884
 msgid ""
 "Prevents xpad from creating a new pad on startup if no previous pads exist"
 msgstr "Cuir cosc ar ceap nua i dtosach mura bhfuil ceap ann cheana féin"
 
-#: src/xpad-app.c:864
+#: src/xpad-app.c:890
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
 msgstr "Cruthóidh xpad ceap nua i dtosach fiú má tá ceapa ann cheana féin"
 
-#: src/xpad-app.c:865
+#: src/xpad-app.c:891
 msgid "Causes all running xpad instances to close"
 msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
 
-#: src/xpad-app.c:881
+#: src/xpad-app.c:907
 #, c-format
 msgid "Xpad %s\n"
 msgstr "Xpad %s\n"
 
-#: src/xpad-app.c:925
+#: src/xpad-app.c:951
 #, c-format
 msgid ""
 "Usage: %s [OPTIONS]\n"
@@ -80,17 +80,17 @@ msgstr ""
 "Úsáid: %s [ROGHANNA]\n"
 "\n"
 
-#: src/xpad-app.c:963
+#: src/xpad-app.c:989
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Ní foláir argóint don rogha %s\n"
 
-#: src/xpad-app.c:1007
+#: src/xpad-app.c:1033
 #, c-format
 msgid "Didn't understand argument '%s'\n"
 msgstr "Argóint anaithnid %s.\n"
 
-#: src/xpad-app.c:1056
+#: src/xpad-app.c:1082
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Uimhir neamhbhailí: '%s'\n"
@@ -156,11 +156,11 @@ msgstr "Maisiúcháin _Fuinneoga"
 msgid "_Notes"
 msgstr "_Nótaí"
 
-#: src/xpad-pad.c:1335 src/xpad-tray.c:147
+#: src/xpad-pad.c:1335 src/xpad-tray.c:133
 msgid "_Show All"
 msgstr "_Taispeáin an t-iomlán"
 
-#: src/xpad-pad.c:1336 src/xpad-tray.c:154
+#: src/xpad-pad.c:1336 src/xpad-tray.c:140
 msgid "_Close All"
 msgstr "_Dún Gach Uile"
 
