@@ -18,5 +18,7 @@ xpad_SOURCES = \
 	xpad-toolbar.c xpad-toolbar.h \
 	xpad-tray.c xpad-tray.h
 
-AM_CFLAGS = @GTK_CFLAGS@ @X_CFLAGS@ @DEBUG_CFLAGS@
+localedir = $(datadir)/locale
+
+AM_CFLAGS = @GTK_CFLAGS@ @X_CFLAGS@ @DEBUG_CFLAGS@ -DDATADIR=\"$(datadir)\" -DLOCALEDIR=\"$(localedir)\"
 xpad_LDADD = @X_PRE_LIBS@ @X_LIBS@ @X_EXTRA_LIBS@ @GTK_LIBS@ @LIBINTL@

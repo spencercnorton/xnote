@@ -55,36 +55,33 @@ extern "C" {
 #define br_locate_prefix BR_NAMESPACE(br_locate_prefix)
 #define br_prepend_prefix BR_NAMESPACE(br_prepend_prefix)
 
-#ifndef BR_NO_MACROS
-	/* These are convience macros that replace the ones usually used
-	   in Autoconf/Automake projects */
-	#undef SELFPATH
-	#undef PREFIX
-	#undef PREFIXDIR
-	#undef BINDIR
-	#undef SBINDIR
-	#undef DATADIR
-	#undef LIBDIR
-	#undef LIBEXECDIR
-	#undef ETCDIR
-	#undef SYSCONFDIR
-	#undef CONFDIR
-	#undef LOCALEDIR
+/* These are convience macros that replace the ones usually used
+   in Autoconf/Automake projects */
+#undef SELFPATH
+#undef PREFIX
+#undef PREFIXDIR
+#undef BINDIR
+#undef SBINDIR
+#undef DATADIR
+#undef LIBDIR
+#undef LIBEXECDIR
+#undef ETCDIR
+#undef SYSCONFDIR
+#undef CONFDIR
+#undef LOCALEDIR
 
-	#define SELFPATH	(br_thread_local_store (br_locate ((void *) "")))
-	#define PREFIX		(br_thread_local_store (br_locate_prefix ((void *) "")))
-	#define PREFIXDIR	(br_thread_local_store (br_locate_prefix ((void *) "")))
-	#define BINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/bin")))
-	#define SBINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/sbin")))
-	#define DATADIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/share")))
-	#define LIBDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/lib")))
-	#define LIBEXECDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/libexec")))
-	#define ETCDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
-	#define SYSCONFDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
-	#define CONFDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
-	#define LOCALEDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/share/locale")))
-#endif /* BR_NO_MACROS */
-
+#define SELFPATH	(br_thread_local_store (br_locate ((void *) "")))
+#define PREFIX		(br_thread_local_store (br_locate_prefix ((void *) "")))
+#define PREFIXDIR	(br_thread_local_store (br_locate_prefix ((void *) "")))
+#define BINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/bin")))
+#define SBINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/sbin")))
+#define DATADIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/share")))
+#define LIBDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/lib")))
+#define LIBEXECDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/libexec")))
+#define ETCDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
+#define SYSCONFDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
+#define CONFDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
+#define LOCALEDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/share/locale")))
 
 /* The following functions are used internally by BinReloc
    and shouldn't be used directly in applications. */
@@ -106,21 +103,19 @@ char *br_prepend_prefix	(void *symbol, char *path);
 #define br_extract_dir BR_NAMESPACE(br_extract_dir)
 #define br_extract_prefix BR_NAMESPACE(br_extract_prefix)
 
-#ifndef BR_NO_MACROS
-	/* Convenience functions for concatenating paths */
-	#define BR_SELFPATH(suffix)	(br_thread_local_store (br_strcat (SELFPATH, suffix)))
-	#define BR_PREFIX(suffix)	(br_thread_local_store (br_strcat (PREFIX, suffix)))
-	#define BR_PREFIXDIR(suffix)	(br_thread_local_store (br_strcat (BR_PREFIX, suffix)))
-	#define BR_BINDIR(suffix)	(br_thread_local_store (br_strcat (BINDIR, suffix)))
-	#define BR_SBINDIR(suffix)	(br_thread_local_store (br_strcat (SBINDIR, suffix)))
-	#define BR_DATADIR(suffix)	(br_thread_local_store (br_strcat (DATADIR, suffix)))
-	#define BR_LIBDIR(suffix)	(br_thread_local_store (br_strcat (LIBDIR, suffix)))
-	#define BR_LIBEXECDIR(suffix)	(br_thread_local_store (br_strcat (LIBEXECDIR, suffix)))
-	#define BR_ETCDIR(suffix)	(br_thread_local_store (br_strcat (ETCDIR, suffix)))
-	#define BR_SYSCONFDIR(suffix)	(br_thread_local_store (br_strcat (SYSCONFDIR, suffix)))
-	#define BR_CONFDIR(suffix)	(br_thread_local_store (br_strcat (CONFDIR, suffix)))
-	#define BR_LOCALEDIR(suffix)	(br_thread_local_store (br_strcat (LOCALEDIR, suffix)))
-#endif
+/* Convenience functions for concatenating paths */
+#define BR_SELFPATH(suffix)	(br_thread_local_store (br_strcat (SELFPATH, suffix)))
+#define BR_PREFIX(suffix)	(br_thread_local_store (br_strcat (PREFIX, suffix)))
+#define BR_PREFIXDIR(suffix)	(br_thread_local_store (br_strcat (BR_PREFIX, suffix)))
+#define BR_BINDIR(suffix)	(br_thread_local_store (br_strcat (BINDIR, suffix)))
+#define BR_SBINDIR(suffix)	(br_thread_local_store (br_strcat (SBINDIR, suffix)))
+#define BR_DATADIR(suffix)	(br_thread_local_store (br_strcat (DATADIR, suffix)))
+#define BR_LIBDIR(suffix)	(br_thread_local_store (br_strcat (LIBDIR, suffix)))
+#define BR_LIBEXECDIR(suffix)	(br_thread_local_store (br_strcat (LIBEXECDIR, suffix)))
+#define BR_ETCDIR(suffix)	(br_thread_local_store (br_strcat (ETCDIR, suffix)))
+#define BR_SYSCONFDIR(suffix)	(br_thread_local_store (br_strcat (SYSCONFDIR, suffix)))
+#define BR_CONFDIR(suffix)	(br_thread_local_store (br_strcat (CONFDIR, suffix)))
+#define BR_LOCALEDIR(suffix)	(br_thread_local_store (br_strcat (LOCALEDIR, suffix)))
 
 char *br_strcat	(const char *str1, const char *str2);
 char *br_extract_dir	(const char *path);

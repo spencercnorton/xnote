@@ -1,6 +1,5 @@
 ideally, next release will see:
 -------------------------------
-objectification of codebase
 
 
 
@@ -8,7 +7,7 @@ on the horizon:
 ---------------
 creating new notes with preset content (from command line, from files)
 continue even if ~/.xpad is unavailable
-allow moving toolbar buttons with middle-drag
+transparency
 
 
 
@@ -22,7 +21,6 @@ undo
 ideas that I don't currently plan to implement:
 -----------------------------------------------
 applets for various WMs (hopefully we can standardize on eggtray)
-transparency (only when X can really support it.  current hacks are bad)
 
 
 
