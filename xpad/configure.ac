@@ -1,13 +1,16 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([src/fio.c])
+AC_INIT(xpad, 1.9-b3)
+AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
-AM_INIT_AUTOMAKE(xpad, 1.9-b3)
+
+dnl Set up automake
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h:config.h.in)
-AC_PROG_MAKE_SET
 
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
+AC_PROG_MAKE_SET
 
 dnl Checks for libraries.
 AC_PATH_XTRA
