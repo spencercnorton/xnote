@@ -974,7 +974,7 @@ load_info (XpadPad *pad)
 	gboolean locked = FALSE, follow_font = TRUE, follow_color = TRUE;
 	gboolean hidden = FALSE;
 	GdkColor text = {0}, back = {0};
-	gchar *fontname = NULL;
+	gchar *fontname = NULL, *oldcontentprefix;
 	
 	if (!pad->priv->infoname)
 		return;
@@ -1031,6 +1031,20 @@ load_info (XpadPad *pad)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
+	
+	/* Special check for contentname being absolute.  A while back,
+	   xpad had absolute pathnames, pointing to ~/.xpad/content-*.
+	   Now, files are kept in ~/.config/xpad, so using old config
+	   files with a new xpad will break pads.  We check to see if
+	   contentname is old pointer and then make it relative. */
+	oldcontentprefix = g_build_filename (g_get_home_dir (), ".xpad", "content-", NULL);
+	if (g_str_has_prefix (pad->priv->contentname, oldcontentprefix))
+	{
+		gchar *oldcontent = pad->priv->contentname;
+		pad->priv->contentname = g_path_get_basename (oldcontent);
+		g_free (oldcontent);
+	}
+	g_free (oldcontentprefix);
 	
 	if (hidden)
 		gtk_widget_hide (GTK_WIDGET (pad));
