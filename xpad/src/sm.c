@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <pwd.h>	/* for getpwuid */
 #include <sys/types.h>	/* for getuid and getpwuid */
 
-static SmcConn xpad_sm_conn;
+static SmcConn xpad_sm_conn = NULL;
 static int xpad_interact_style;
 static gboolean xpad_shutdown;
 static gboolean xpad_saving;
@@ -40,6 +40,8 @@ static int xpad_ice_fd;
 static gchar *client_id = NULL;
 static gboolean set_props = TRUE;
 static gboolean blocking = FALSE;
+
+static FILE *log = NULL;
 
 static void xpad_sm_save_yourself (SmcConn smc_conn, SmPointer client_data,
 	int save_type, Bool shutdown, int interact_style, Bool fast);
@@ -49,8 +51,8 @@ static void xpad_sm_save_complete (SmcConn smc_conn, SmPointer client_data);
 
 static void xpad_sm_block ();
 
-#define RETURN_IF_BAD_CONN(conn)	{if (xpad_sm_conn != conn) {printf ("bad conn\n");return;}}
-#define RETURN_IF_NOT_SAVING()		{if (!xpad_saving) {printf ("not saving, so ignored\n");return;}}
+#define RETURN_IF_BAD_CONN(conn)	{if (xpad_sm_conn != conn) {fprintf (log, "bad conn\n");fflush (log);return;}}
+#define RETURN_IF_NOT_SAVING()		{if (!xpad_saving) {fprintf (log, "not saving, so ignored\n");fflush (log);return;}}
 
 static gboolean xpad_sm_cycle (gpointer data)
 {
@@ -222,7 +224,7 @@ static void xpad_sm_set_properties (void)
 	vals.restart[0].value = command;
 	vals.restart[0].length = strlen (vals.restart[0].value);
 	
-	vals.restart[1].value = "--session";
+	vals.restart[1].value = "--sm-client-id";
 	vals.restart[1].length = strlen (vals.restart[1].value);
 	
 	vals.restart[2].value = client_id;
@@ -232,7 +234,7 @@ static void xpad_sm_set_properties (void)
 	vals.process->value = pid_str;
 	vals.process->length = strlen (vals.process->value);
 	
-	printf ("setting props\n");
+	fprintf (log, "setting props\n");fflush (log);
 	SmcSetProperties (xpad_sm_conn, 4, (SmProp **) &props);
 	
 	g_free (pid_str);
@@ -253,7 +255,14 @@ void xpad_sm_init (void)
 		{xpad_sm_save_complete, NULL},
 		{xpad_sm_shutdown_cancelled, NULL}};
 	
-	printf ("connecting with session id of %s\n", client_id);
+	if (xpad_sm_conn)
+	{
+		/* we were already connected... */
+		xpad_sm_shutdown ();
+	}
+	
+	if (!log) log = fopen ("/home/mike/.xpad/log", "w");
+	fprintf (log, "connecting with session id of %s\n", client_id);fflush (log);
 	xpad_saving = FALSE;
 	xpad_interact_style = SmInteractStyleAny;
 	xpad_sm_conn = SmcOpenConnection (NULL, NULL, 
@@ -261,10 +270,6 @@ void xpad_sm_init (void)
 		mask, &callbacks, client_id, &client_id_ret,
 		100, error_string_net);
 	
-	if (client_id)
-	{
-		g_free (client_id);
-	}
 	client_id = g_strdup (client_id_ret);
 	free (client_id_ret);
 	
@@ -272,11 +277,13 @@ void xpad_sm_init (void)
 	IceAddConnectionWatch (xpad_sm_ice_connection_watch, NULL);
 	
 	xpad_sm_add_cycle_to_main_loop (NULL);
+	
+	gdk_set_sm_client_id (client_id);
 }
 
 void xpad_sm_set_id (char *id)
 {
-	gboolean alread_set_up = client_id ? TRUE : FALSE;
+	gboolean alread_set_up = xpad_sm_conn ? TRUE : FALSE;
 	
 	if (alread_set_up)
 	{
@@ -303,6 +310,7 @@ void xpad_sm_shutdown (void)
 	}
 	
 	SmcCloseConnection (xpad_sm_conn, 0, NULL);
+	xpad_sm_conn = NULL;
 }
 
 static void xpad_sm_save_global (Bool fast)
@@ -325,7 +333,7 @@ static void xpad_sm_save_local (Bool fast)
 static void xpad_sm_save_yourself (SmcConn smc_conn, SmPointer client_data,
 	int save_type, Bool shutdown, int interact_style, Bool fast)
 {
-	printf ("got save_yourself\n");
+	fprintf (log, "got save_yourself\n");fflush (log);
 	RETURN_IF_BAD_CONN (smc_conn);
 	
 	xpad_interact_style = interact_style;
@@ -356,7 +364,7 @@ static void xpad_sm_save_yourself (SmcConn smc_conn, SmPointer client_data,
 
 static void xpad_sm_die (SmcConn smc_conn, SmPointer client_data)
 {
-	printf ("got die\n");
+	fprintf (log, "got die\n");fflush (log);
 	RETURN_IF_BAD_CONN (smc_conn);
 	xpad_shutdown = True;
 	
@@ -369,7 +377,7 @@ static void xpad_sm_die (SmcConn smc_conn, SmPointer client_data)
 
 static void xpad_sm_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 {
-	printf ("got shutdown_cancelled\n");
+	fprintf (log, "got shutdown_cancelled\n");fflush (log);
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	xpad_shutdown = False;
@@ -381,7 +389,7 @@ static void xpad_sm_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 
 static void xpad_sm_save_complete (SmcConn smc_conn, SmPointer client_data)
 {
-	printf ("got save_complete\n");
+	fprintf (log, "got save_complete\n");fflush (log);
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	

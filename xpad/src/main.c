@@ -280,7 +280,7 @@ static const argument arguments[] =
 	{FALSE, "-s", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
 	{FALSE, "--show", ARG_TYPE_INT, {G_CALLBACK (pad_show_p_to_i)}},
 	{FALSE, "--showall", ARG_TYPE_NONE, {G_CALLBACK (pads_show_all)}},
-	{FALSE, "--session", ARG_TYPE_STRING, {G_CALLBACK (set_session)}}
+	{FALSE, "--sm-client-id", ARG_TYPE_STRING, {G_CALLBACK (set_session)}}
 };
 
 #define NUM_ARGUMENTS (sizeof (arguments) / sizeof (argument))
@@ -921,6 +921,10 @@ static gboolean xpad_init (gpointer data)
 	tray_open ();
 #endif
 	
+	xpad_sm_init ();
+	
+	gdk_set_program_class (PACKAGE);
+	
 	xpad_set_default_icon ();
 	xpad_register_icons ();
 	
@@ -938,8 +942,6 @@ static gboolean xpad_init (gpointer data)
 	}
 	
 	handle_args (newdata[0], newdata[1], FALSE);
-	
-	xpad_sm_init ();
 	
 	/* when we get free time, save all the settings */
 	g_idle_add (xpad_initial_save, NULL);
