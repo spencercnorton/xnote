@@ -44,6 +44,10 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/File/_Delete",			NULL,					menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
 	{"/File/_Quit",				"<control>Q",			menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
 	{"/_Edit",					NULL,					0,				0,	"<Branch>"},
+	{"/Edit/C_ut",				"<control>X",			menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
+	{"/Edit/_Copy",				"<control>C",			menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
+	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
+	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Preferences",		NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
 	{"/_Help",					NULL,					0,				0,	"<Branch>"},
@@ -346,6 +350,33 @@ void pad_toggle_sticky (pad_node *pad)
 	pad_set_sticky (pad, !pad->sticky);
 }
 
+void pad_edit_cut (pad_node *pad)
+{
+	GtkTextBuffer *buf;
+	
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	
+	gtk_text_buffer_cut_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), TRUE);
+}
+
+void pad_edit_copy (pad_node *pad)
+{
+	GtkTextBuffer *buf;
+	
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	
+	gtk_text_buffer_copy_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
+}
+
+void pad_edit_paste (pad_node *pad)
+{
+	GtkTextBuffer *buf;
+	
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+
+	gtk_text_buffer_paste_clipboard (buf, gtk_clipboard_get (GDK_SELECTION_CLIPBOARD), NULL, TRUE);
+}
+
 static void quit_if_no_pads (void)
 {
 	gboolean alive = FALSE;
@@ -482,8 +513,6 @@ void pad_close (pad_node *pad)
 	
 	pad_free_gtk (pad);
 	
-	/*
-	gtk_widget_hide (GTK_WIDGET (pad->window));*/
 	pad->hidden = TRUE;
 	
 	quit_if_no_pads ();
@@ -498,9 +527,6 @@ void pad_show (pad_node *pad)
 	}
 	
 	pad->hidden = FALSE;
-	
-	/* we move it so wm's know where to place it */
-/*	gtk_window_move (pad->window, pad->x, pad->y);*/
 	
 	gtk_window_present (pad->window);
 }
@@ -827,7 +853,30 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 {
 	pad_node *pad;
 	
-	pad = (pad_node *) g_object_get_data (G_OBJECT (gtk_item_factory_from_widget (widget)), "pad");
+	/**
+	 * Sigh...  If the user presses the keyboard accelerator for one of the 
+	 * itemfactory entries, this function is run, but without a useful widget value.
+	 * Thus, we have no way of finding out what pad to use.  So, what we do is 
+	 * iterate over windows, finding the one with focus.
+	 */
+	pad = first_pad;
+	while (pad)
+	{
+		GtkWidget *w;
+		
+		w = gtk_window_get_focus (pad->window);
+		
+		if (GTK_WIDGET_HAS_FOCUS (w))
+		{
+			break;
+		}
+		
+		pad = pad->next;
+	}
+	
+	/* if no pad has focus, it must have been through popup menu */
+	if (!pad)
+		pad = (pad_node *) g_object_get_data (G_OBJECT (gtk_item_factory_from_widget (widget)), "pad");
 	
 	switch (callback_action)
 	{
@@ -869,6 +918,18 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 	
 	case 10:
 		pad_show_all (pad);
+		break;
+	
+	case 11:
+		pad_edit_cut (pad);
+		break;
+	
+	case 12:
+		pad_edit_copy (pad);
+		break;
+	
+	case 13:
+		pad_edit_paste (pad);
 		break;
 	
 	default:
