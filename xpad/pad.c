@@ -601,20 +601,17 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		
 			switch (event_key->keyval)
 			{
-		  		case GDK_c: // CTRL + SHIFT + c == close pad
-				if (event_key->state & GDK_SHIFT_MASK) {
-					pad_close_all ();
-					return TRUE;
-				}
-				break;
-		
 		  		case GDK_d: // CTRL + SHIFT + d == destroy pad
 				if (event_key->state & GDK_SHIFT_MASK) {
 					pad_destroy (pad);
 					return TRUE;
 				}
 				break;
-
+				
+		  		case GDK_q: // CTRL + q == quit
+				pad_close_all ();
+				return TRUE;
+				
 		  		case GDK_n: // CTRL + n == new pad
 				pad_new ();
 				return TRUE;
@@ -732,7 +729,7 @@ pad_node *start_pad (void)
 	g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 	g_signal_connect (window, "configure-event", G_CALLBACK (pad_save_location), pad);
-	g_signal_connect_after (textbox, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
+	g_signal_connect_after (window, "focus-out-event", G_CALLBACK (focus_out_handler), pad);
 
 	pad->next = NULL;
 	pad->window = GTK_WINDOW(window);
@@ -774,7 +771,11 @@ pad_node *pad_new (void)
 
 	pad = start_pad ();
 
-	gtk_window_set_default_size (pad->window, current_settings.width, current_settings.height);
+	gtk_window_set_default_size (pad->window, 
+		current_settings.style.padding + current_settings.style.border_width
+			+ current_settings.width,
+		current_settings.style.padding + current_settings.style.border_width
+			+ current_settings.height);
 
 	pad_set_style (pad, &current_settings.style);
 

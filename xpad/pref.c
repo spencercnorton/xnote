@@ -166,7 +166,7 @@ gboolean change_edit_lock (GtkWidget *checkbutton, GtkWidget *window)
 	return FALSE;
 }
 
-void pref_close ()
+void pref_close (void)
 {
 	pref_window = NULL;
 	fio_save_as_defaults (&current_settings);
@@ -194,7 +194,7 @@ GtkWidget *preferences_create (pad_node *pad)
 	GtkWidget *color_border = gtk_color_selection_new ();
 	GtkWidget *font_selection = gtk_font_selection_new ();
 	GtkWidget *checkbutton_decorations = gtk_check_button_new_with_label ("Allow window manager decorations");
-	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label ("Confirm pad destructions");
+	GtkWidget *checkbutton_confirm_destroy = gtk_check_button_new_with_label ("Confirm pad deletion");
 	GtkWidget *checkbutton_edit_lock = gtk_check_button_new_with_label ("Edit lock");
 	GtkWidget *separator_border = gtk_hseparator_new ();
 	GtkObject *adjust_padding;
@@ -243,11 +243,11 @@ GtkWidget *preferences_create (pad_node *pad)
 	g_signal_connect (GTK_OBJECT (window), "destroy", 
 		G_CALLBACK (pref_close), NULL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox), GTK_BUTTONBOX_END);
-	gtk_box_set_spacing (GTK_BOX(buttonbox), 10);
+	gtk_box_set_spacing (GTK_BOX(buttonbox), 0);
 	gtk_box_pack_start_defaults (GTK_BOX(buttonbox), button_help);
 	gtk_box_pack_end_defaults (GTK_BOX(buttonbox), button_close);
 	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonbox), button_help, TRUE);
-	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 6);
 
 	// vbox_global setup
 	gtk_box_pack_start (GTK_BOX(vbox_global), notebook, TRUE, TRUE, 0);
@@ -341,8 +341,8 @@ GtkWidget *preferences_create (pad_node *pad)
 "a titlebar and close button.");
 
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_confirm_destroy, 
-"If on, choosing to destroy a pad will prompt for conformation.",
-"If on, choosing to destroy a pad will prompt for conformation.");
+"If on, choosing to delete a pad will prompt for conformation.",
+"If on, choosing to delete a pad will prompt for conformation.");
 
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_options), checkbutton_edit_lock, 
 "If on, when a pad loses focus, it will become uneditable.  "

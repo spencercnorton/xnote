@@ -2,7 +2,7 @@
 ---
 added a padding option
 redesigned preferences window with auto-apply
-removed close individual pads from menu
+redesigned menu
 closing a pad with window decorations on will now save position correctly
 misc. small bugs
 
