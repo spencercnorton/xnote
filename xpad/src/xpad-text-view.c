@@ -211,7 +211,7 @@ xpad_text_view_style_set (GtkWidget *widget, GtkStyle *previous_style)
 	if (!previous_style || !gdk_color_equal (&c, &previous_style->text[GTK_STATE_NORMAL]))
 	{
 		const gchar *name = gtk_widget_get_name (widget);
-		gchar *style_string = g_strdup_printf ("style '%s' {GtkWidget::cursor_color = {%i, %i, %i}} widget '*%s' style '%s'", name, c.red, c.green, c.blue, name, name);
+		gchar *style_string = g_strdup_printf ("style '%s' {GtkWidget::cursor_color = {%" G_GUINT16_FORMAT ", %" G_GUINT16_FORMAT ", %" G_GUINT16_FORMAT "}} widget '*%s' style '%s'", name, c.red, c.green, c.blue, name, name);
 		gtk_rc_parse_string (style_string);
 		g_free (style_string);
 		gtk_widget_reset_rc_styles (widget);
