@@ -1,5 +1,5 @@
-xpad version 0.2.3.1 README
--------------------------
+xpad version 1.0 README
+-----------------------
 
 xpad is a virtual sticky pad system for X using GTK+ 2.0.
 
@@ -21,9 +21,9 @@ USAGE NOTES
      Closing a pad saves the contents for later.  Destroying one destroys
 		the contents.
 
-     Hold down CTRL and left drag to move a pad.  Hold down CTRL and right
-          drag to resize a pad.
-     
+     Hold down CTRL and left-click drag to move a pad.  Hold down CTRL and 
+		right-drag to resize a pad.
+
      Add xpad to your ~/.xinitrc to have xpad start with every X boot.
 
 
@@ -33,17 +33,19 @@ COMMAND ARGUMENTS
 	Standard GTK+ arguments are understood.  In addition, the following
 		arguments are available.
 
-	--version:		Prints version information.
+	--help:			Prints usage information and exits.
 
-	--sync-time=%d:	Where %d is the number of seconds between each 
-					"sync," or saving of the pad's contents.  Entering
-					0 indicates no syncing.  Default is 60.
+	--version:		Prints version information and exits.
+
+	--verbosity=%i: Where %i is the amount of output you desire.  0 is none;
+					1 is moderate; 2 is debug.  Default is 0.
+
 
 ----------------------------------------------------------------------------
 BUGS
 ----------------------------------------------------------------------------
-     Font switching isn't perfect.  The weight and size can be changed, but
-	not the font name.
+     Font switching isn't perfect.  It does not auto-select your current font.
+	I believe this to be a GTK+ problem.
 
 
 ----------------------------------------------------------------------------
@@ -52,11 +54,15 @@ LICENSE NOTES
      xpad is licensed under the terms of the GNU Public License.  See
           COPYING for more information.
 
+     The icon xpad.xpm is released under the terms of the GNU Public
+          License.  See COPYING for more information.  It was made by
+          Nestor Di.
+
      If you make any bug fixes / improvements, please email me at
           msterry@student.umass.edu and let me know so I can implement the 
           patch.  Or, I encourage you to check out the CVS at sourceforge.
 
+
 ----------------------------------------------------------------------------
 Copyright (c) 2001 Michael Terry
-
-
+http://xpad.sourceforge.net

@@ -18,68 +18,146 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "xpad.xpm"
 #include "main.h"
 #include "pad.h"
 #include "fio.h"
-#include <sys/stat.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <signal.h>
 #include <string.h>
 
-/* static data */
 gchar working_dir[MAX_FILENAME_SIZE];
-const gchar *VERSION = "xpad v0.2.3.1";
-gint update_time = 60; /* sync time in seconds */
+const gchar *VERSION = "xpad v1.0";
+gint verbosity = 0; /* output level */
+guint autosave_timeout_id = -1;
 
-void sigcatch (int signum)
+gint sync_time = 60; /* sync time in seconds */
+gboolean decorations = 0; /* whether pads have wm decorations or not */
+gboolean confirm_destroy = 1;
+gint dwidth = 260;
+gint dheight = 260;
+
+void xpad_exit ()
 {
+	if (verbosity >= 2) printf ("Initiating shutdown.\n");
 	cleanup ();
-
+	if (verbosity >= 2) printf ("Exiting GTK+.\n");
 	gtk_exit (0);
 }
 
+void sigcatch (int signum)
+{
+	if (verbosity >= 2) printf ("xpad caught a signal.  Shutting down.\n");
+	cleanup ();
+	gtk_exit (0);
+}
+
+
+/* 
+   TODO: make args more OO, with registering of each possible param
+         and systematic treatment of short/long names and callbacks
+*/
 void handle_args (int *argc, char ***argv)
 {
 	gint i;
 
-	for (i = 0; i < *argc; i++)
+	for (i = 1; i < *argc; i++)
 	{
-		if (strcmp ((*argv)[i], "--version") == 0)
+		int shortform = 0;
+
+		if (!strcmp ((*argv)[i], "--version") || (shortform = !strcmp ((*argv)[i], "-V")))
 		{
 			printf ("%s\n", VERSION);
-			gtk_exit (0);
+			xpad_exit ();
 		}
-		if (strncmp ((*argv)[i], "--sync-time=", 12) == 0)
+		else if (!strcmp ((*argv)[i], "--help") || (shortform = !strcmp ((*argv)[i], "-h")))
 		{
-			char *value = (char *) strchr ((*argv)[i], '=');
-			value++;
-			update_time = atoi (value);
-
-			if (update_time < 0)
-			{
-				printf ("sync-time cannot be less than 0.\n");
-				gtk_exit (0);
-			}
+			printf ("Usage: xpad [OPTIONS]\n");
+			printf ("\n");
+			printf ("  -V, --version         print xpad version; exit\n");
+			printf ("  -h, --help            print this usage information; exit\n");
+			printf ("  -v N, --verbosity=N   set level of output\n");
+			printf ("                          0=none, 1=moderate, 2=debug\n");
+			printf ("                          default is 0\n");
+			xpad_exit ();
 		}
+		else if (!strncmp ((*argv)[i], "--verbosity=", 12) || (shortform = !strcmp ((*argv)[i], "-v")))
+		{
+			gint temp;
+			gchar *value;
+
+			if (shortform)
+			{
+				if (++i == *argc)
+				{
+					printf ("Missing companion argument to -v.\n");
+					xpad_exit ();
+				}
+
+				value = (*argv)[i];
+			}
+			else
+				value = (gchar *) strchr ((*argv)[i], '=') + 1;
+
+			temp = atoi (value);
+
+			if (temp < 0 || temp > 2)
+			{
+				printf ("Illegal verbosity value.  Must be between 0 and 2 inclusive.\n");
+				xpad_exit ();
+			}
+			else
+				verbosity = temp;
+		}
+		else
+			printf ("Didn't understand argument %s.\n", (*argv)[i]);
 	}
 }
 
 /* an occasional checkup to sync contents. */
-int checkup (gpointer data)
+int sync_pads (gpointer data)
 {
-	save_pads ();
+	if (verbosity >= 1) printf ("Auto-saving pads.\n");
+
+	fio_save_pads ();
 
 	return 1;
 }
 
+
+void reset_sync ()
+{
+	if (autosave_timeout_id > 0)
+		gtk_timeout_remove (autosave_timeout_id);
+
+	if (sync_time)
+		autosave_timeout_id = gtk_timeout_add (sync_time * 1000, sync_pads, NULL);
+}
+
+
+void xpad_set_default_icon ()
+{
+	GdkPixmap *pixmap;
+	GdkPixbuf *pixbuf;
+	GdkPixbuf *pixbuf_full;
+
+	pixmap = gdk_pixmap_colormap_create_from_xpm_d (NULL, gdk_colormap_get_system (), NULL, NULL, xpad_icon_xpm);
+
+	pixbuf = gdk_pixbuf_get_from_drawable (NULL, pixmap, NULL, 0, 0, 0, 0, -1, -1);
+
+	pixbuf_full = gdk_pixbuf_add_alpha (pixbuf, TRUE, 0, 0, 0);
+
+	gtk_window_set_default_icon_list (g_list_append (NULL, pixbuf_full));
+
+	g_object_unref (pixbuf);
+	g_object_unref (pixmap);
+	g_object_unref (pixbuf_full);
+}
+
+
 void xpad_init ()
 {
 	struct sigaction sa;
-
-	/* save contents every "update_time" seconds */
-	if (update_time > 0)
-		gtk_timeout_add (update_time * 1000, checkup, NULL);
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -96,12 +174,33 @@ void xpad_init ()
 
 	strcpy (working_dir, getenv("HOME"));
 	strcat (working_dir, "/.xpad/");
+	
+	default_style = DEFAULT_STYLE;
 
-	/* load default info */
-	current_info = DEFAULT_INFO;
+	fio_get_values_from_file (DEFAULTS_FILENAME, 
+						  "decorations", &decorations,
+						  "sync_time", &sync_time,
+						  "height", &dheight,
+						  "width", &dwidth,
+						  "confirm_destroy", &confirm_destroy,
+						  NULL);
+	if (fio_get_style_from_file (DEFAULTS_FILENAME, &default_style))
+	{
+		fio_save_defaults ();
+		help_dialog ();
+	}
 
+	/* save contents every "sync_time" seconds */
+	reset_sync ();
+	
+	if (verbosity >= 2)
+		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
+			sync_time, verbosity, decorations);
+
+	xpad_set_default_icon ();
+			
 	/* load all pads */
-	load_pads();
+	fio_load_pads();
 }
 
 int main (int argc, char *argv[])
@@ -115,9 +214,7 @@ int main (int argc, char *argv[])
 
 	gtk_main ();
 
-	cleanup ();
-
-	gtk_exit (0);
+	xpad_exit ();
 
 	return 0;
 }

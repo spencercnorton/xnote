@@ -21,9 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _PAD_H_
 #define _PAD_H_
 
+#include "main.h"
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include "main.h"
+
 
 typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;
@@ -32,42 +33,45 @@ typedef struct pad_style_def pad_style;
 struct pad_node_def
 {
         pad_node *next;
-	gchar fontname[MAX_FILENAME_SIZE];
-	gboolean hidden;
 	FILE *file;
-	gchar infoname[MAX_FILENAME_SIZE];
-	gchar contentname[MAX_FILENAME_SIZE];
+	gchar infoname[MAX_FILENAME_SIZE + 1];
+	gchar contentname[MAX_FILENAME_SIZE + 1];
         GtkWindow *window;
 };
 
 struct pad_style_def
 {
-	gint width;
-	gint height;
 	GdkColor back;
 	GdkColor text;
-	gchar fontname[MAX_FILENAME_SIZE];
+	GdkColor border;
+	gint border_width;
+	gchar fontname[MAX_FILENAME_SIZE + 1];
 };
 
 struct pad_info_def
 {
         gint x;
         gint y;
+	gint width;
+	gint height;
 	pad_style style;
-	gchar infoname[MAX_FILENAME_SIZE];
-	gchar contentname[MAX_FILENAME_SIZE];
-        gchar content[MAX_FILE_SIZE];
+	gchar infoname[MAX_FILENAME_SIZE + 1];
+	gchar contentname[MAX_FILENAME_SIZE + 1];
 };
 
-extern pad_info DEFAULT_INFO;
 extern pad_node *first_pad;
 extern pad_node *last_pad;
-extern pad_info current_info;
+extern pad_style default_style;
+extern const pad_style DEFAULT_STYLE;
 
-pad_node *create_pad_with_info (pad_info *info);
-pad_node *create_pad ();
-pad_node *get_pad (GtkWindow *window);
+void help_dialog ();
+pad_node *pad_new_with_info (pad_info *info);
+pad_node *pad_new ();
+GtkTextView *get_text (GtkWindow *window);
 void cleanup ();
+void pad_set_style (pad_node *pad, pad_style *pstyle);
+pad_style *pad_get_style (pad_node *pad);
+void pad_set_decorations (gboolean decor);
 
 #endif /* _PAD_H_ */
 

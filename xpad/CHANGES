@@ -1,3 +1,45 @@
+1.0
+---
+added an open file dialog
+added a save as dialog
+closed pads are handled more consistently
+unified color/font change screens
+fixed font not being saved correctly
+added ability to fine tune default pad settings, including size (before this was all handled transparently, but size was not always updated)
+added optional confirmation to pad destroys
+window decorations can now be turned on (in global pref screen)
+added border color and border width options
+added gui for sync time (autosaving) control
+took out --sync-time and -s (you can do same thing with above gui)
+stopped new pads always being placed in same spot
+added help screen, which opens when you click on "help" from right-click menu and on first run
+much cleaner internal api
+made xpad more theme-friendly
+resizing/moving now works even if numpad is on
+xpad 1.0 can now open much older versions of xpad's files (tested to 0.2.1)
+added app icon (thanks nestor di)
+
+0.2.5
+-----
+added --help
+added short forms of arguments (e.g. -h, -v, -V, -s)
+added more output messages
+stopped pad raising above popup on right click
+fixed bug where old pads wouldn't open upon startup
+no size limit on pads
+
+0.2.4
+-----
+fixed small memory leak if no default-style file
+pads rise to foreground if clicked on now
+added "close all" option on popup
+prints out a message when autosaving
+added --verbosity= option.  (0 is default - no messages; 1 is 
+	moderate - important things like autosaving; 2 is debug -	
+	more info than necessary)
+removed some possible buffer overflows if text is too large (a hardcoded limit of 20k chars now)
+misc. code cleanups
+
 0.2.3.1
 -------
 fixed nasty bug where, if you didn't have a working ~/.xpad/default-styles

@@ -25,12 +25,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 
 enum {
-	MAX_FILENAME_SIZE=1024,
-	MAX_FILE_SIZE=2048
+	MAX_FILENAME_SIZE=1024
 };
+
+void xpad_exit ();
+int sync_pads (gpointer data);
+void reset_sync ();
 
 extern gchar working_dir[MAX_FILENAME_SIZE];
 extern const gchar *VERSION;
+extern gint verbosity;
+extern gboolean decorations;
+extern gint sync_time;
+extern gboolean confirm_destroy;
+extern gint dwidth;
+extern gint dheight;
+extern guint autosave_timeout_id;
+
 
 #endif /* _MAIN_H_ */
 

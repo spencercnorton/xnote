@@ -26,44 +26,49 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <glob.h>
 #include <unistd.h>
-#include <sys/file.h>
+#include <fcntl.h>
+#include <ctype.h>
 #include <sys/stat.h>
 
-/* helper func to get textbox from window */
-GtkTextView *get_text (GtkWindow *window)
+
+
+const gint MAX_FILE_SIZE = 1024;
+const gchar *DEFAULTS_FILENAME = "default-style";
+
+
+/* sets filename to full path of filename (prepends working_dir to it) 
+   returns 0 if filename was full path, 1 if we added to it.
+*/
+gint fio_fill_filename (gchar *filename)
 {
-	GList *kids = gtk_container_children (GTK_CONTAINER (window));
-	
-	do
-	{
-		if (strcmp (gtk_widget_get_name (kids->data), "GtkTextView") == 0)
-			return kids->data;
-
-		kids = kids->next;
-	} while (kids != NULL);
-	
-	return NULL;
-}
-
-int set_file (const char *name, const char *value)
-{
-        FILE *file;
-        gchar temp[MAX_FILENAME_SIZE];
-
-	if (name[0] == '/')
-		strcpy (temp, name);
+	if (filename[0] == '/')
+		return 0;
 	else
 	{
-	        strcpy (temp, working_dir);
-        	strcat (temp, name);
+		gchar temp[MAX_FILENAME_SIZE + 1];
+		
+		strcpy (temp, filename);
+	        strcpy (filename, working_dir);
+        	strcat (filename, temp);
+        	
+        	return 1;
 	}
+}
 
+gint fio_set_file (const gchar *name, const gchar *value)
+{
+        FILE *file;
+        gchar temp[MAX_FILENAME_SIZE + 1];
+
+	strcpy (temp, name);
+	fio_fill_filename (temp);
+        
         if ( (file = fopen (temp, "w")) == NULL)
         {
-                fprintf (stderr, "Cannot open %s.\n", temp);
+                if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", temp);
                 return 1;
         }
-        
+
         fputs (value, file);
 
         fclose (file);
@@ -72,33 +77,37 @@ int set_file (const char *name, const char *value)
 }
 
 
-int get_file (const char *name, char *value)
+// a negative size means all of the file
+gint fio_get_file (const gchar *name, gchar *value, const gint size)
 {
-	gchar temp[MAX_FILENAME_SIZE];
+	gchar temp[MAX_FILENAME_SIZE + 1];
         gchar c[2];
 	FILE *file;
-        
-	if (name[0] == '/')
-		strcpy (temp, name);
-	else
-	{
-	        strcpy (temp, working_dir);
-	        strcat (temp, name);
-	}
-	
+	unsigned int counter = 0;
+
+	strcpy (temp, name);
+	fio_fill_filename (temp);
+
 	strcpy (value, "");
 
 	/* check if file exists */
         if ( (file = fopen (temp, "r")) == NULL)
         {
+		if (verbosity >= 1) printf ("Could not open file [%s] for reading.\n", temp);
 		return 1;
 	}
 	else
         {
 	        c[1] = '\0';
-	
+
 	        while ( (c[0] = fgetc(file)) != EOF )
-	                strcat (value, c);
+	                if (size < 0 || counter++ < size)
+					strcat (value, c);
+				else
+				{
+					if (verbosity >= 1) printf ("Reached size limit for file [%s].\n", temp);
+					break;
+				}
 	}
 	
 	fclose (file);
@@ -106,7 +115,7 @@ int get_file (const char *name, char *value)
 	return 0;
 }
 
-void open_pad_files (pad_node *pad, gboolean create)
+void fio_open_pad_files (pad_node *pad, gboolean create)
 {
 	struct flock fl = {F_WRLCK, SEEK_SET, 0, 0, getpid()};
 
@@ -115,22 +124,27 @@ void open_pad_files (pad_node *pad, gboolean create)
 		strcpy (pad->infoname, working_dir);
 		strcat (pad->infoname, "info-XXXXXX");
 		mkstemp (pad->infoname);
-	
+		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
+
 		strcpy (pad->contentname, working_dir);
 		strcat (pad->contentname, "content-XXXXXX");
 		mkstemp (pad->contentname);
+		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
 	}
 
 	if ( (pad->file = fopen (pad->infoname, "w")) == NULL)
         {
-                fprintf (stderr, "Cannot open %s.\n", pad->infoname);
+                if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", pad->infoname);
                 return;
         }
+
+	if (verbosity >= 2) printf ("Locking file [%s].\n", pad->infoname);
 
 	fcntl (fileno(pad->file), F_SETLK, &fl);
 }
 
-void close_pad_files (pad_node *pad)
+
+void fio_close_pad_files (pad_node *pad)
 {
 	struct flock fl = {F_UNLCK, SEEK_SET, 0, 0, getpid()};
 	fcntl (fileno(pad->file), F_SETLK, &fl);
@@ -138,98 +152,112 @@ void close_pad_files (pad_node *pad)
 }
 
 
-void set_default_style_from_pad (pad_node *pad)
+void fio_save_defaults ()
 {
-	GtkStyle *style;
-	pad_style pstyle;
+	gchar buf[MAX_FILE_SIZE + 1];
 
-	style = gtk_widget_get_style (GTK_WIDGET(get_text(pad->window)));
+	sprintf (buf, "confirm_destroy %i\nsync_time %i\ndecorations %i\nwidth %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+		confirm_destroy, sync_time, decorations,
+		dwidth, dheight,
+            	default_style.back.red, default_style.back.green, default_style.back.blue,
+		default_style.text.red, default_style.text.green, default_style.text.blue,
+		default_style.border.red, default_style.border.green, default_style.border.blue,
+		default_style.border_width,
+		default_style.fontname);
 
-	gdk_window_get_size (GTK_WIDGET(pad->window)->window, &pstyle.width, &pstyle.height);
-	pstyle.text = style->text[GTK_STATE_NORMAL];
-	pstyle.back = style->base[GTK_STATE_NORMAL];
-	strcpy (pstyle.fontname, pango_font_description_to_string (style->font_desc));
-
-	set_default_style (&pstyle);
+	fio_set_file (DEFAULTS_FILENAME, buf);
 }
 
-void set_default_style (pad_style *style)
+
+/* list is a variable number of (gchar *) / (gchar * or gint *) groups, 
+	terminated by a NULL variable */
+gint fio_get_values_from_file (const gchar *filename, ...)
 {
-	gchar buf[MAX_FILE_SIZE];
+	gchar buf[MAX_FILE_SIZE + 1];
+	va_list ap;
 
-	sprintf (buf, "width %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nfontname %s\n",
-		style->width, style->height,
-            	style->back.red, style->back.green, style->back.blue,
-		style->text.red, style->text.green, style->text.blue,
-		style->fontname);
+	if (fio_get_file (filename, buf, MAX_FILE_SIZE))
+		return 1;
 
-	set_file ("default-style", buf);
-}
+	va_start (ap, filename);
 
-/* returns a pad_style * that needs to be g_free'd. */
-pad_style *get_default_style ()
-{
-	gchar buf[MAX_FILE_SIZE];
-	gchar *item, *value;
-	pad_style *style = (pad_style *) g_malloc (sizeof (pad_style));
-	
-	if (get_file ("default-style", buf) > 0)
+	while (1)
 	{
-		*style = DEFAULT_INFO.style;
-		return style;
+		gchar *item;
+		gint *value;
+		gchar *where;
+		gchar *temp;
+		gint size;
+
+		item = va_arg (ap, gchar *);
+		if (!item)
+			break;
+		value = va_arg (ap, void *);
+		where  = strstr (buf, item);
+
+		if (!where) continue;
+
+		where = strstr (where, " ") + 1;
+
+		temp = (gchar *) g_malloc ((size = strcspn (where, "\n")) + 1);
+		strncpy (temp, where, size);
+		temp[size] = '\0';
+
+		if (isdigit (temp[0]))
+			*((gint *) value) = atoi (temp);
+		else
+			strcpy ((gchar *) value, temp);
+
+		g_free (temp);
 	}
 
-	item = strtok (buf, " ");
-	value = strtok (NULL, "\n");
+	va_end (ap);
 
-	while (item != NULL)
-        {
-		if (strcmp (item, "width") == 0)
-			style->width = atoi (value);
-		else if (strcmp (item, "height") == 0)
-			style->height = atoi (value);
-		else if (strcmp (item, "back_red") == 0)
-			style->back.red = atoi (value);
-		else if (strcmp (item, "back_green") == 0)
-			style->back.green = atoi (value);
-		else if (strcmp (item, "back_blue") == 0)
-			style->back.blue = atoi (value);
-		else if (strcmp (item, "text_red") == 0)
-			style->text.red = atoi (value);
-		else if (strcmp (item, "text_green") == 0)
-			style->text.green = atoi (value);
-		else if (strcmp (item, "text_blue") == 0)
-			style->text.blue = atoi (value);
-		else if (strcmp (item, "fontname") == 0)
-			strcpy(style->fontname, value);
-
-		item = strtok (NULL, " ");
-		value = strtok (NULL, "\n");
-	}
-	
-	return style;
+	return 0;
 }
 
-void save_info_file (pad_node *pad)
+
+gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 {
-        gchar info_file[MAX_FILE_SIZE] = "";
+	return fio_get_values_from_file (	filename, 
+									"back_red", &starter->back.red,
+									"back_green", &starter->back.green,
+									"back_blue", &starter->back.blue,
+									"text_red", &starter->text.red,
+									"text_green", &starter->text.green,
+									"text_blue", &starter->text.blue,
+									"border_red", &starter->border.red,
+									"border_green", &starter->border.green,
+									"border_blue", &starter->border.blue,
+									"border_width", &starter->border_width,
+									"fontname", starter->fontname,
+									NULL );
+}
+
+
+void fio_save_info_file (pad_node *pad)
+{
+        gchar info_file[MAX_FILE_SIZE + 1];
         gint x, y, height, width;
         gchar *content;
-	gchar temp[MAX_FILENAME_SIZE] = "";
-	GdkColor back, text;
-	GtkTextIter s, e;	
+	gchar temp[MAX_FILENAME_SIZE + 1];
+	pad_style *pstyle;
+	GtkTextIter s, e;
 	GtkTextBuffer *buf;
-	GtkStyle *style;
 
-	style = gtk_widget_get_style (GTK_WIDGET (get_text(GTK_WINDOW(pad->window))));
+	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 
-	back = style->base[GTK_STATE_NORMAL];
-	text = style->text[GTK_STATE_NORMAL]; 
+	pstyle = pad_get_style (pad);
 
-        gdk_window_get_origin (GTK_WIDGET(pad->window)->window, &x, &y);
-        gdk_window_get_size (GTK_WIDGET(pad->window)->window, &width, &height);
-        sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nfontname %s\n",
-            	x, y, width, height, back.red, back.green, back.blue, text.red, text.green, text.blue, pad->fontname);
+        gtk_window_get_position (pad->window, &x, &y);
+        gtk_window_get_size (pad->window, &width, &height);
+        sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\nfontname %s\n",
+            	x, y, width, height, 
+		pstyle->back.red, pstyle->back.green, pstyle->back.blue,
+		pstyle->text.red, pstyle->text.green, pstyle->text.blue,
+		pstyle->border.red, pstyle->border.green, pstyle->border.blue,
+		pstyle->border_width,
+		pstyle->fontname);
 
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
@@ -239,36 +267,37 @@ void save_info_file (pad_node *pad)
 	sprintf (temp, "content %s\n", pad->contentname);
 	strcat (info_file, temp);
 
-        set_file (pad->contentname, content);
+        fio_set_file (pad->contentname, content);
         g_free (content);
 
 	rewind (pad->file);
 	x = fputs (info_file, pad->file);
 	fflush(pad->file);
+
+	g_free (pstyle);
 }
 
 /* save contents and locations of a pad */
-void save_pad (pad_node *pad)
+void fio_save_pad (pad_node *pad)
 {
-	save_info_file (pad);
+	fio_save_info_file (pad);
 }
 
 /* save contents and locations of all pads */
-void save_pads ()
+void fio_save_pads ()
 {
 	pad_node *current = first_pad;
 
 	while (current != NULL)
 	{
-		save_pad (current);
+		fio_save_pad (current);
 		current = current->next;
 	}
 }
 
-/* removes a file, within working_dir */
-void remove_file (gchar *filename)
+void fio_remove_file (gchar *filename)
 {
-	gchar long_filename[MAX_FILENAME_SIZE];
+	gchar long_filename[MAX_FILENAME_SIZE + 1];
 
 	if (filename[0] == '/')
 		strcpy (long_filename, filename);
@@ -278,90 +307,60 @@ void remove_file (gchar *filename)
 	remove (long_filename);
 }
 
-void remove_pad_files (pad_node *pad)
+void fio_remove_pad_files (pad_node *pad)
 {
-	remove_file (pad->infoname);
-	remove_file (pad->contentname);
+	fio_remove_file (pad->infoname);
+	fio_remove_file (pad->contentname);
 }
 
 /* filename must be absolute */
-pad_node *load_info_file (gchar *filename)
+gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
-        gchar info_file[MAX_FILE_SIZE];
-	pad_info info;
-	gchar *item, *value;
-	gint retvalue;
-	pad_node *pad;
-	FILE *file;
-	struct flock lock;
-
-	if ( (retvalue = get_file (filename, info_file)) > 0)
-		return NULL;
+	gint fd;
 
 	/* check if there is a previous lock on this file */
-	file = fopen (filename, "r");
-	fcntl (fileno (file), F_GETLK, &lock);
-	fclose (file);
+	fd = open (filename, O_RDONLY);
 
-	/* there is a lock, so stop loading it */
-	if (lock.l_type != F_UNLCK)
-		return NULL;
-
-	info = DEFAULT_INFO;
-
-	item = strtok (info_file, " ");
-	value = strtok (NULL, "\n");
-        
-	while (item != NULL)
-        {
-		if (strcmp (item, "x") == 0)
-                	info.x = atoi (value);   
-                else if (strcmp (item, "y") == 0)
-                        info.y = atoi (value);
-                else if (strcmp (item, "width") == 0)
-                        info.style.width = atoi (value);
-                else if (strcmp (item, "height") == 0)
-                        info.style.height = atoi (value);
-		else if (strcmp (item, "back_red") == 0)
-			info.style.back.red = atoi (value);
-		else if (strcmp (item, "back_green") == 0)
-			info.style.back.green = atoi (value);
-		else if (strcmp (item, "back_blue") == 0)
-			info.style.back.blue = atoi (value);
-		else if (strcmp (item, "text_red") == 0)
-			info.style.text.red = atoi (value);
-		else if (strcmp (item, "text_green") == 0)
-			info.style.text.green = atoi (value);
-		else if (strcmp (item, "text_blue") == 0)
-			info.style.text.blue = atoi (value);
-		else if (strcmp (item, "fontname") == 0)
-			strcpy(info.style.fontname, value);
-                else if (strcmp (item, "content") == 0)
-		{
-                        get_file (value, info.content);
-			strcpy (info.contentname, value);
-		}
-
-		item = strtok (NULL, " ");
-		value = strtok (NULL, "\n");
+	if (fd == -1)
+	{
+		if (verbosity >= 1) printf ("Could not open file [%s] for reading.\n", filename);
+		return 1;
 	}
 
-	strcpy (info.infoname, filename);
+	/* if there is a lock, stop loading it */
+	if (lockf (fd, F_TEST, 0) == -1)
+	{
+		if (verbosity >= 2) printf ("Ignoring [%s].\n", filename);
+		return 1;
+	}
 
-	pad = create_pad_with_info (&info);
+	close (fd);
 
-	return pad;
+	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
+
+	fio_get_style_from_file (filename, &info->style);
+	fio_get_values_from_file (  filename,
+							"x", &info->x,
+							"y", &info->y,
+							"width", &info->width,
+							"height", &info->height,
+							"content", info->contentname,
+							NULL);
+	strcpy (info->infoname, filename);
+
+	return 0;
 }
 
 
-void load_pads ()
+void fio_load_pads ()
 {
 	gint counter = 0, opened = 0;
 	glob_t globbuf;
-	gchar pattern[MAX_FILENAME_SIZE];
+	gchar pattern[MAX_FILENAME_SIZE + 1];
 	pad_node *pad;
+	pad_info info;
 
-	/* make all directory exists */
+	/* make sure directory exists */
 	mkdir (working_dir, 00777);
 
 	strcpy (pattern, working_dir);
@@ -369,43 +368,31 @@ void load_pads ()
 
 	glob (pattern, GLOB_NOSORT, NULL, &globbuf);
 
+	/* set up some sort of defaults for these.  if xpad works
+	   right, these won't be used. */
+	info.style = default_style;
+	info.x = 0;
+	info.y = 0;
+	info.width = 260;
+	info.height = 260;
+
 	while (counter < globbuf.gl_pathc)
 	{
-		pad = load_info_file (globbuf.gl_pathv[counter++]);
-		
-		if (pad != NULL)
+		if (!fio_get_info_from_file (globbuf.gl_pathv[counter++], &info))
 		{
+			/* some older versions of xpad only had relative filename
+				so, we have to add full path if it isn't there. */
+			fio_fill_filename (info.contentname);
+			pad = pad_new_with_info (&info);
+			fio_save_pad (pad);
 			opened ++;
-			save_pad (pad);
 		}
 	}
 
 	if (opened == 0)
-		create_pad ();
+		pad_new ();
 
 	globfree (&globbuf);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

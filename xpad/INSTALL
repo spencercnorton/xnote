@@ -4,9 +4,10 @@ compiling.  This includes associated packages like Pango.
 Type "make" to compile xpad.
 
 Type "make install" as root to install the binary to /usr/local/bin.
+Or, just copy the executable "xpad" to where ever you want.
 
 If you're upgrading from a previous version of xpad, be aware that
-xpad v0.2.3 has a new file-naming system.  Old notes will
+xpads v0.2.0 and up have a new file-naming system.  Old notes will
 not carry over, and you're free to delete old note files.   
 This will not be done for you, and since previous versions 
 of xpad had some issues with leaving dangling files, you   

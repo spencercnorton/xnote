@@ -19,18 +19,74 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "pad.h"
-#include "font.h"
-#include "color.h"
+#include "pref.h"
 #include "fio.h"
-#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/file.h>
 
-pad_info DEFAULT_INFO = {0, 0, {260, 260, {0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, "annstone 12"}, ""};
-pad_info current_info;
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
-unsigned char pad_num = 0;
 
-void pad_close (pad_node *node);
+const pad_style DEFAULT_STYLE = {{0, 0xe000, 0xe000, 0x5600}, {0, 0, 0, 0}, {0, 0, 0, 0}, 0, "serif Bold 16"};
+pad_style default_style;
+
+/* helper func to get textbox from window */
+GtkTextView *get_text (GtkWindow *window)
+{
+	return  GTK_TEXT_VIEW (
+		  gtk_bin_get_child (GTK_BIN (
+		   gtk_bin_get_child (GTK_BIN (window))
+		  ))
+		);
+}
+
+void pad_set_decorations (gboolean decor)
+{
+	pad_node *temp = first_pad;
+
+	while (temp)
+	{
+		if (gtk_window_get_decorated (temp->window) != decor)
+		{
+			gint x, y;
+
+        		gtk_window_get_position (temp->window, &x, &y);
+			gtk_window_set_decorated (temp->window, decor);
+			gtk_window_reshow_with_initial_size (temp->window);
+			gtk_window_move (temp->window, x, y);
+		}
+		temp = temp->next;
+	}
+}
+
+void pad_set_style (pad_node *pad, pad_style *pstyle)
+{
+	GtkRcStyle *style = gtk_widget_get_modifier_style (GTK_WIDGET (get_text (pad->window)));
+
+	style->base[GTK_STATE_NORMAL] = pstyle->back;
+	style->text[GTK_STATE_NORMAL] = pstyle->text;
+	style->bg[GTK_STATE_NORMAL] = pstyle->border;
+	style->color_flags[GTK_STATE_NORMAL] = GTK_RC_TEXT | GTK_RC_BG | GTK_RC_BASE;
+	style->font_desc = pango_font_description_from_string (pstyle->fontname);
+	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle->border_width);
+
+	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
+}
+
+// returned pad_style must be g_free'd
+pad_style *pad_get_style (pad_node *pad)
+{
+	pad_style *pstyle = (pad_style *) g_malloc (sizeof (pad_style));
+	GtkStyle *style = gtk_widget_get_style (GTK_WIDGET(get_text(pad->window)));
+
+	pstyle->back = style->base[GTK_STATE_NORMAL];
+	pstyle->text = style->text[GTK_STATE_NORMAL];
+	pstyle->border = style->bg[GTK_STATE_NORMAL];
+	pstyle->border_width = gtk_container_get_border_width (GTK_CONTAINER (get_text (pad->window)));
+	strcpy (pstyle->fontname, pango_font_description_to_string (style->font_desc));
+
+	return pstyle;
+}
 
 pad_node *get_pad (GtkWindow *window)
 {
@@ -47,154 +103,453 @@ pad_node *get_pad (GtkWindow *window)
 	return NULL;
 }
 
-void free_all_pads ()
+void quit_if_no_pads ()
 {
-	pad_node *current = first_pad;
+	if (!first_pad)
+		xpad_exit();
+}
 
-	while (first_pad != NULL)
-	{
-		current = first_pad;
+// unlinks pad from linked list of all pads
+void pad_remove (pad_node *pad)
+{
+	if (!pad || !pad->window)
+		return;
+
+	// first, find pad in linked list, and remove it 
+	if (first_pad == pad) // first in list 
 		first_pad = first_pad->next;
+	else
+	{
+		pad_node *temp;
+		for (temp = first_pad; temp->next; temp = temp->next)
+		{
+			if (temp->next == pad)
+			{
+				temp->next = pad->next;
 
-		gtk_widget_destroy (GTK_WIDGET(current->window));
+				if (pad == last_pad)
+					last_pad = temp;
 
-		close_pad_files (current);
-		g_free (current);
+				break;
+			}
+		}
+	}
+}
+
+void pad_window_destroyed (GtkWidget *window, pad_node *pad)
+{	
+	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
+
+	// widget is gone, but we can clean up pad memory
+	fio_save_pad (pad);
+	fio_close_pad_files (pad);
+	pad_remove (pad);
+
+	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
+	g_free (pad);
+
+	quit_if_no_pads ();
+}
+
+void pad_destroy (pad_node *pad)
+{
+	if (verbosity >= 1) printf ("Destroying pad [%s].\n", pad->infoname);
+
+	g_signal_handlers_block_by_func (pad->window, G_CALLBACK (pad_window_destroyed), pad);
+
+	fio_close_pad_files (pad);
+	fio_remove_pad_files (pad);
+	pad_remove (pad);
+
+	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
+	gtk_widget_destroy (GTK_WIDGET(pad->window));
+	g_free (pad);
+
+	quit_if_no_pads ();
+}
+
+
+void pad_close (pad_node *pad)
+{
+	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
+
+	g_signal_handlers_block_by_func (pad->window, G_CALLBACK (pad_window_destroyed), pad);
+
+	fio_save_pad (pad);
+	fio_close_pad_files (pad);
+	pad_remove (pad);
+
+	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
+	gtk_widget_destroy (GTK_WIDGET(pad->window));
+	g_free (pad);
+
+	quit_if_no_pads ();
+}
+
+
+void pad_close_all ()
+{
+	pad_node *temp = first_pad;
+
+	while (temp)
+	{
+		pad_close (temp);
+		temp = first_pad;
 	}
 }
 
 void cleanup ()
 {
-	free_all_pads();
+	pad_close_all();
 }
 
-void quit_if_no_pads ()
+/* must be full filename */
+void pad_fill_with_file (pad_node *pad, gchar *filename)
 {
-	gboolean pad_exists = FALSE;
-	pad_node *current = first_pad;
+	gchar *contentbuf;
+	struct stat statbuf;
+	GtkTextBuffer *buffer;
+	GtkTextView *textbox = get_text (pad->window);
 	
-	if (current == NULL)
-		gtk_main_quit();
-
-	while (current != NULL)
-	{
-		if (current->hidden == FALSE)
-		{
-			pad_exists = TRUE;
-			break;
-		}
-
-		current = current->next;
-	}
-
-	if (pad_exists == FALSE)
-	{
-		cleanup ();
-		gtk_main_quit();
-	}
+	stat (filename, &statbuf);
+	contentbuf = (gchar *) g_malloc (statbuf.st_size + 1);
+	fio_get_file (filename, contentbuf, statbuf.st_size);
+	buffer = gtk_text_view_get_buffer (textbox);
+	gtk_text_buffer_set_text (buffer, contentbuf, -1);
+	g_free (contentbuf);
 }
-
-/* destroy one pad */
-void pad_destroy (pad_node *node)
-{
-	GtkWindow *window = node->window;
-	pad_node *current = first_pad;
-	pad_node *old_node = first_pad;
-	
-	if (window == NULL || first_pad == NULL) 
-		return;
-
-	/* first, find window in linked list, and remove pad */
-	if (first_pad == node) /* first in list */
-		first_pad = first_pad->next;
-	else
-	{
-		while (current->next != NULL)
-		{
-			if (current->next->window == window)
-			{
-				old_node = current->next;
-				current->next = current->next->next;
-				
-				if (old_node == last_pad)
-					last_pad = current;
-				
-				break;
-			}
-			current = current->next;
-		}
-	}
-	if (old_node != node)
-		return; /* must already be destroyed */
-
-	/* then, destroy the widget */
-	gtk_widget_destroy (GTK_WIDGET(window));
-	node->window = NULL;
-	close_pad_files (node);
-
-	g_free(node);
-
-	remove_pad_files (node);
-
-	quit_if_no_pads ();
-}
-
-
-void pad_close (pad_node *node)
-{
-	GtkWindow *window = node->window;
-
-	if (window == NULL || first_pad == NULL) 
-		return;
-
-	/* then, hide the widget */
-	gtk_widget_hide(GTK_WIDGET(window));
-
-	(get_pad (window))->hidden = TRUE;
-
-	save_pad (node);
-	close_pad_files (node);
-
-	quit_if_no_pads ();
-}
-
 
 void pad_move (pad_node *node, GdkEvent *event)
 {
-	gint x, y;
 	GdkEventButton *eb = (GdkEventButton *) event;
 
-	gdk_window_get_root_origin (GTK_WIDGET(node->window)->window, &x, &y);
-
-	gtk_window_begin_move_drag (node->window, eb->button, eb->x + x, eb->y + y, eb->time);
+	gtk_window_begin_move_drag (node->window, eb->button, eb->x_root, eb->y_root, eb->time);
 }
 
 void pad_resize (pad_node *node, GdkEvent *event)
 {
-	gint x, y;
 	GdkEventButton *eb = (GdkEventButton *) event;
 
-	gdk_window_get_root_origin (GTK_WIDGET(node->window)->window, &x, &y);
-
-	gtk_window_begin_resize_drag (node->window, GDK_WINDOW_EDGE_SOUTH_EAST, eb->button, eb->x + x, eb->y + y, eb->time);
+	gtk_window_begin_resize_drag (node->window, GDK_WINDOW_EDGE_SOUTH_EAST, eb->button, eb->x_root, eb->y_root, eb->time);
 }
 
-static gboolean event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
+void display_dialog_with_text (pad_node *pad, const gchar *text)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new (pad->window,
+        		GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+        		GTK_MESSAGE_INFO,
+        		GTK_BUTTONS_CLOSE,
+        		text);
+
+	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+
+	gtk_dialog_run (GTK_DIALOG (dialog));
+
+	gtk_widget_destroy (dialog);
+}
+
+
+void about_dialog (pad_node *pad)
+{
+	gchar text[100];
+
+	sprintf (text, "%s\n%s\n\n%s", VERSION, "http://xpad.sourceforge.net", "licensed under the terms of the GPL");
+
+	display_dialog_with_text (pad, text);
+}
+
+void help_dialog ()
+{
+	GtkWidget *dialog, *label, *button;
+  
+	/* Create the widgets */
+  
+	dialog = gtk_dialog_new ();
+	label = gtk_label_new ("");
+	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
+
+	gtk_label_set_markup (GTK_LABEL (label), 
+"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which you write notes or messages.\n
+xpad was designed with ease of use in mind, but if you have troubles, here's how to do most things you would want to:\n
+\n
+<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n
+<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  To change the default size for new pads, right click on a pad and select \"Global Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n
+<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \"New Pad\" from the menu.\n
+<b>colors</b>: If black on yellow isn't your thing, change the default color by right clicking on the pad you want to change and selecting \"Pad Preferences\" from the menu.  An options menu will now pop up and you can change the background color, text color, font, and border.  These settings only affect the pad you clicked on.\n
+<b>defaults</b>: To change the colors and other options used when a new pad is created, right click on a pad, choose \"Global Preferences\" and enjoy.\n
+<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every 60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" from the right-click menu, all contents are irrevocably lost).\n
+<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad contents -- they will be erased.\n
+<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that this pad contains only a copy of the file; destroying the pad does nothing to the original file.\n
+");
+
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+
+	gtk_window_set_title (GTK_WINDOW (dialog), "xpad help");
+
+	/* Add the label, and show everything we've added to the dialog. */
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
+	gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
+
+	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+
+	gtk_widget_show_all (dialog);
+
+	gtk_dialog_run (GTK_DIALOG(dialog));
+
+	gtk_widget_destroy (dialog);
+}
+
+void pad_confirm_destroy (pad_node *pad)
+{
+	if (confirm_destroy)
+	{
+		GtkWidget *dialog, *label, *checkbox;
+		gboolean said_yes = FALSE;
+
+		/* Create the widgets */
+
+		dialog = gtk_dialog_new_with_buttons ("Destroy Confirmation",
+				pad->window,
+				GTK_DIALOG_MODAL,
+				GTK_STOCK_YES,
+				GTK_RESPONSE_YES,
+				GTK_STOCK_NO,
+				GTK_RESPONSE_NO,
+				NULL);
+
+		label = gtk_label_new ("Are you sure you want\nto destroy this pad?\n\n");
+
+		checkbox = gtk_check_button_new_with_label ("Don't ask this again.");
+
+		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
+		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), checkbox);
+		gtk_widget_show_all (dialog);
+
+		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
+
+		confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
+		fio_save_defaults ();
+
+		gtk_widget_destroy (dialog);
+
+		if (said_yes)
+			pad_destroy (pad);
+	}
+	else
+		pad_destroy (pad);
+}
+
+
+void open_file_callback (GtkWidget *button, pad_node *pad)
+{
+	GtkTextIter s, e;
+	GtkTextBuffer *buf;
+	gchar *content;
+	gchar *filename;
+	GtkFileSelection *selector;
+
+	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
+
+	filename = (gchar *) gtk_file_selection_get_filename (selector);
+
+	/* test if we can read it. */
+	if (open (filename, O_RDONLY) == -1)
+	{
+		display_dialog_with_text (pad, "Cannot open file.");
+		return;
+	}
+
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	gtk_text_buffer_get_start_iter (buf, &s);
+	gtk_text_buffer_get_end_iter (buf, &e);
+        content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+
+	if (!strcmp (content, ""))
+		pad_fill_with_file (pad, filename);
+	else
+	{
+		pad_node *newpad = pad_new ();
+		pad_fill_with_file (newpad, filename);
+	}
+
+	g_free (content);
+}
+
+void open_file (pad_node *pad)
+{
+	GtkWidget *filedialog;
+
+	filedialog = gtk_file_selection_new ("Open which file?");
+
+	g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->ok_button),
+			"clicked",
+			G_CALLBACK (open_file_callback),
+			(gpointer) pad);
+
+	/* Ensure that the dialog box is destroyed when the user clicks a button. */
+
+	g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->ok_button),
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy), 
+                             (gpointer) filedialog); 
+
+	g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->cancel_button),
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy),
+                             (gpointer) filedialog); 
+   
+	/* Display that dialog */
+   
+	gtk_widget_show (filedialog);
+}
+
+void save_as_file_callback (GtkWidget *button, pad_node *pad)
+{
+	GtkTextIter s, e;
+	GtkTextBuffer *buf;
+	gchar *content;
+	gchar *filename;
+	GtkFileSelection *selector;
+
+	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
+
+	filename = (gchar *) gtk_file_selection_get_filename (selector);
+
+	/* test if we can read it. */
+	if (open (filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR) == -1)
+	{
+		display_dialog_with_text (pad, "Cannot write to file.");
+		return;
+	}
+
+	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
+	gtk_text_buffer_get_start_iter (buf, &s);
+	gtk_text_buffer_get_end_iter (buf, &e);
+        content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+
+	fio_set_file (filename, content);
+
+	g_free (content);
+}
+
+void save_as_file (pad_node *pad)
+{
+	GtkWidget *filedialog;
+
+	filedialog = gtk_file_selection_new ("Save as which file?");
+
+	g_signal_connect (GTK_FILE_SELECTION (filedialog)->ok_button,
+			"clicked",
+			G_CALLBACK (save_as_file_callback),
+			pad);
+
+	/* Ensure that the dialog box is destroyed when the user clicks a button. */
+
+	g_signal_connect_swapped (GTK_FILE_SELECTION (filedialog)->ok_button,
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy), 
+                             filedialog); 
+
+	g_signal_connect_swapped (GTK_FILE_SELECTION (filedialog)->cancel_button,
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy),
+                             filedialog); 
+
+	/* Display that dialog */
+   
+	gtk_widget_show (filedialog);
+}
+
+GtkMenu *pad_create_popup (pad_node *pad, GtkMenu *menu)
+{
+	GtkWidget *menu_item_about;
+	GtkWidget *menu_item_help;
+	GtkWidget *menu_item_new_pad;
+	GtkWidget *menu_item_destroy;
+	GtkWidget *menu_item_close;
+	GtkWidget *menu_item_close_all;
+	GtkWidget *menu_item_save_as;
+	GtkWidget *menu_item_open;
+	GtkWidget *menu_item_pad_preferences;
+	GtkWidget *menu_item_global_preferences;
+	GtkWidget *separator1, *separator2, *separator3, *separator4;
+
+	separator1 = gtk_separator_menu_item_new ();
+	separator2 = gtk_separator_menu_item_new ();
+        separator3 = gtk_separator_menu_item_new ();
+	separator4 = gtk_separator_menu_item_new ();
+	menu_item_about = gtk_menu_item_new_with_mnemonic ("_About");
+	menu_item_help = gtk_menu_item_new_with_mnemonic ("_Help");
+	menu_item_new_pad = gtk_menu_item_new_with_mnemonic ("_New Pad");
+	menu_item_save_as = gtk_menu_item_new_with_mnemonic ("_Save As");
+	menu_item_open = gtk_menu_item_new_with_mnemonic ("_Open");
+	menu_item_destroy = gtk_menu_item_new_with_mnemonic ("Destroy");
+	menu_item_close = gtk_menu_item_new_with_mnemonic ("Close");
+	menu_item_close_all = gtk_menu_item_new_with_mnemonic ("Close All");
+	menu_item_pad_preferences = gtk_menu_item_new_with_mnemonic ("Pad Preferences");
+	menu_item_global_preferences = gtk_menu_item_new_with_mnemonic ("Global Preferences");
+
+	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator1);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_save_as);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_open);
+	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_new_pad);
+
+        gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator2);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_pad_preferences);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_global_preferences);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator4);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close_all);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_destroy);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator3);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_help);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_about);
+
+	g_signal_connect_swapped (menu_item_destroy, "activate", G_CALLBACK (pad_confirm_destroy), pad);
+	g_signal_connect_swapped (menu_item_close, "activate", G_CALLBACK (pad_close), pad);
+	g_signal_connect_swapped (menu_item_close_all, "activate", G_CALLBACK (pad_close_all), NULL);
+	g_signal_connect (menu_item_new_pad, "activate", G_CALLBACK (pad_new), NULL);
+	g_signal_connect_swapped (menu_item_about, "activate", G_CALLBACK (about_dialog), pad);	
+	g_signal_connect_swapped (menu_item_help, "activate", G_CALLBACK (help_dialog), NULL);
+	g_signal_connect_swapped (menu_item_open, "activate", G_CALLBACK (open_file), pad);
+	g_signal_connect_swapped (menu_item_save_as, "activate", G_CALLBACK (save_as_file), pad);
+	g_signal_connect_swapped (menu_item_pad_preferences, "activate", G_CALLBACK (pad_preferences_open), pad);
+	g_signal_connect_swapped (menu_item_global_preferences, "activate", G_CALLBACK (global_preferences_open), pad);
+
+	gtk_widget_show_all (GTK_WIDGET(menu));
+
+	return menu;
+}
+
+
+GtkMenu *textbox_populate_popup (GtkTextView *textview, GtkMenu *menu, pad_node *pad)
+{
+	return pad_create_popup (pad, menu);
+}
+
+static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
 {
 	GdkEventButton *event_button;
 
 	g_return_val_if_fail (event != NULL, FALSE);
-	
+
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		event_button = (GdkEventButton *) event;
-		
-		if (event_button->button == 1 && event_button->state == GDK_CONTROL_MASK )
+
+		// raise window if clicked on
+		if (event_button->button == 1)
+			gtk_window_present (pad->window);
+
+		if (event_button->button == 1 && (event_button->state & GDK_CONTROL_MASK) )
 		{
 			pad_move (pad, event);
 			return TRUE;
 		}
-		else if (event_button->button == 3 && event_button->state == GDK_CONTROL_MASK )
+		else if (event_button->button == 3 && (event_button->state & GDK_CONTROL_MASK) )
 		{
 			pad_resize (pad, event);
 			return TRUE;
@@ -204,80 +559,6 @@ static gboolean event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad
 	return FALSE;
 }
 
-void about_dialog (pad_node *node)
-{
-	GtkWidget *dialog;
-
-	dialog = gtk_message_dialog_new (node->window,
-        		GTK_DIALOG_DESTROY_WITH_PARENT,
-        		GTK_MESSAGE_INFO,
-        		GTK_BUTTONS_CLOSE,
-        		VERSION);
-
-	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
-
-	gtk_dialog_run (GTK_DIALOG (dialog));
-
-	gtk_widget_destroy (dialog);
-}
-
-void popup (GtkTextView *textview, GtkMenu *menu, pad_node *node)
-{
-	GtkWidget *menu_item_about;
-	GtkWidget *menu_item_font;
-	GtkWidget *menu_item_new_pad;
-	GtkWidget *menu_item_destroy;
-	GtkWidget *menu_item_close;
-	GtkWidget *menu_item_back_color;
-	GtkWidget *menu_item_text_color;
-	GtkWidget *separator1, *separator2, *separator3, *separator4;
-
-	separator1 = gtk_separator_menu_item_new ();
-	separator2 = gtk_separator_menu_item_new ();
-	separator3 = gtk_separator_menu_item_new ();
-	separator4 = gtk_separator_menu_item_new ();
-	menu_item_about = gtk_menu_item_new_with_mnemonic ("_About");
-	menu_item_new_pad = gtk_menu_item_new_with_mnemonic ("_New Pad");
-	menu_item_destroy = gtk_menu_item_new_with_mnemonic ("_Destroy");
-	menu_item_close = gtk_menu_item_new_with_mnemonic ("_Close");
-	menu_item_back_color = gtk_menu_item_new_with_mnemonic ("_Background Color");
-	menu_item_text_color = gtk_menu_item_new_with_mnemonic ("_Text Color");
-	menu_item_font = gtk_menu_item_new_with_mnemonic ("_Font");
-
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), separator1);
-	gtk_menu_shell_prepend (GTK_MENU_SHELL(menu), menu_item_new_pad);
-
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator2);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_back_color);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_text_color);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_font);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator4);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_close);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_destroy);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), separator3);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), menu_item_about);
-
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_destroy), "activate", GTK_SIGNAL_FUNC (pad_destroy), (gpointer) node);
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_close), "activate", GTK_SIGNAL_FUNC (pad_close), (gpointer) node);
-	gtk_signal_connect (GTK_OBJECT (menu_item_new_pad), "activate", GTK_SIGNAL_FUNC (create_pad), NULL);
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_back_color), "activate", GTK_SIGNAL_FUNC (back_color_select), (gpointer) node->window);
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_text_color), "activate", GTK_SIGNAL_FUNC (text_color_select), (gpointer) node->window);
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_font), "activate", GTK_SIGNAL_FUNC (font_select), (gpointer) node);
-	gtk_signal_connect_object (GTK_OBJECT (menu_item_about), "activate", GTK_SIGNAL_FUNC (about_dialog), (gpointer) node);
-
-	gtk_widget_show (menu_item_new_pad);
-	gtk_widget_show (separator1);
-	gtk_widget_show (separator2);
-	gtk_widget_show (separator3);
-	gtk_widget_show (separator4);
-	gtk_widget_show (menu_item_destroy);
-	gtk_widget_show (menu_item_back_color);
-	gtk_widget_show (menu_item_text_color);
-	gtk_widget_show (menu_item_font);
-	gtk_widget_show (menu_item_close);
-	gtk_widget_show (menu_item_about);
-}
-
 
 /*
    creates and returns a pad with an *unshown* window -- to 
@@ -285,104 +566,93 @@ void popup (GtkTextView *textview, GtkMenu *menu, pad_node *node)
 */
 pad_node *start_pad ()
 {
-	GtkWidget *window;
-	GtkWidget *textbox;
-	pad_node *node = (pad_node *) g_malloc(sizeof(pad_node));	
-
-	/* make widgets */
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	textbox = gtk_text_view_new ();
+	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	GtkWidget *textbox = gtk_text_view_new ();
+	GtkWidget *eventbox = gtk_event_box_new ();
+	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
 
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
 
 	/* add textbox to window */
-	gtk_container_add (GTK_CONTAINER (window), textbox);
+	gtk_container_add (GTK_CONTAINER (eventbox), textbox);
+	gtk_container_add (GTK_CONTAINER (window), eventbox);
 
-	/* if a wm wants us to close, we close */
-	gtk_signal_connect_object (GTK_OBJECT (window), "destroy", GTK_SIGNAL_FUNC(pad_destroy), (gpointer) node);
+	g_signal_connect (textbox, "event", G_CALLBACK (pad_event_handler), pad);
+	g_signal_connect (eventbox, "event", G_CALLBACK (pad_event_handler), pad);
+	g_signal_connect (textbox, "populate-popup", G_CALLBACK (textbox_populate_popup), pad);
+	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 
-	gtk_signal_connect (GTK_OBJECT (textbox), "event", GTK_SIGNAL_FUNC(event_handler), (gpointer) node);
-	gtk_signal_connect (GTK_OBJECT (textbox), "populate-popup", GTK_SIGNAL_FUNC(popup), (gpointer) node);
-
-	/* display widgets */	
-	gtk_widget_show (textbox);
-	gtk_widget_realize (window); /* still have to set decorations */
-
-	node->hidden = FALSE;
-	node->next = NULL;
-	node->window = GTK_WINDOW(window);
+	pad->next = NULL;
+	pad->window = GTK_WINDOW(window);
 
 	/* check if this is first pad made */
 	if (first_pad == NULL)
 	{
-		last_pad = node;
-		first_pad = node;
+		last_pad = pad;
+		first_pad = pad;
 	}
 	else
 	{
-		last_pad->next = node;
-		last_pad = node;
+		last_pad->next = pad;
+		last_pad = pad;
 	}
-
-	/* remove wm decorations */
-	gtk_window_set_decorated (GTK_WINDOW(window), FALSE);
-        
-	return node;
-}
-
-pad_node *create_pad ()
-{
-	pad_node *pad = start_pad ();
-	GtkStyle *style = gtk_style_new ();
-	pad_style *pstyle = get_default_style ();
-
-	gtk_window_set_default_size (pad->window, pstyle->width, pstyle->height);
-
-	style->base[GTK_STATE_NORMAL] = pstyle->back;
-	style->text[GTK_STATE_NORMAL] = pstyle->text;
-	style->font_desc = pango_font_description_from_string (pstyle->fontname);
-	strcpy (pad->fontname, pstyle->fontname);
-	gtk_widget_set_style (GTK_WIDGET(get_text (pad->window)), style);
-
-	gtk_widget_show (GTK_WIDGET(pad->window));
-	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
-
-	g_free (pstyle);
-
-	open_pad_files (pad, TRUE);
+	
+	/* set wm decorations */
+	gtk_window_set_decorated (GTK_WINDOW(window), decorations);
 
 	return pad;
 }
 
-pad_node *create_pad_with_info (pad_info *info)
+pad_node *pad_new ()
 {
-	pad_node *pad = start_pad ();
-	GtkStyle *style = gtk_style_new();
-	GtkTextBuffer *buffer;
-	GtkTextView *textbox = get_text (pad->window);	
+	pad_node *pad;
 
-	gtk_window_set_default_size (pad->window, info->style.width, info->style.height);
-	gtk_widget_set_uposition (GTK_WIDGET(pad->window), info->x, info->y);
+	if (verbosity >= 2) printf ("Making new pad.\n");
 
-	/* set content of textbox */
-	buffer = gtk_text_view_get_buffer (textbox);
-	gtk_text_buffer_set_text (buffer, info->content, -1);
+	pad = start_pad ();
 
-	style->base[GTK_STATE_NORMAL] = info->style.back;
-	style->text[GTK_STATE_NORMAL] = info->style.text;
-	style->font_desc = pango_font_description_from_string (info->style.fontname);
-	strcpy (pad->fontname, info->style.fontname);
-	gtk_widget_set_style (GTK_WIDGET(textbox), style);
+	gtk_window_set_default_size (pad->window, dwidth, dheight);
 
-	gtk_widget_show (GTK_WIDGET(pad->window));
-	gtk_widget_grab_focus (GTK_WIDGET(textbox));
+	pad_set_style (pad, &default_style);
+
+	fio_open_pad_files (pad, TRUE);
+
+	gtk_window_set_role (pad->window, pad->infoname);
+
+	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
+
+	gtk_widget_show_all (GTK_WIDGET(pad->window));
+	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
+
+	return pad;
+}
+
+pad_node *pad_new_with_info (pad_info *info)
+{
+	pad_node *pad;
+
+	if (verbosity >= 2) printf ("Making new pad with info.\n");
+
+	pad = start_pad ();
+
+	gtk_window_set_default_size (pad->window, info->width, info->height);
+	gtk_window_move (pad->window, info->x, info->y);
+
+	pad_fill_with_file (pad, info->contentname);
+
+	pad_set_style (pad, &info->style);
 
 	strcpy (pad->infoname, info->infoname);
 	strcpy (pad->contentname, info->contentname);
-	
-	open_pad_files (pad, FALSE);
+
+	fio_open_pad_files (pad, FALSE);
+
+	gtk_window_set_role (pad->window, pad->infoname);
+
+	gtk_widget_show_all (GTK_WIDGET(pad->window));
+	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
 
 	return pad;
 }

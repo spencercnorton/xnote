@@ -24,21 +24,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include "pad.h"
 
-/* helper func to get textbox from window */
-GtkTextView *get_text (GtkWindow *window);
+void fio_save_pad (pad_node *pad);
+void fio_save_pads ();
+void fio_load_pads ();
+gint fio_get_file (const gchar *name, gchar *value, const gint size);
+gint fio_set_file (const gchar *name, const gchar *value);
 
-void save_pad (pad_node *pad);
-void save_pads ();
-void commit_pads ();
-void load_pads ();
-void remove_pad_files (pad_node *pad);
+gint fio_fill_filename (gchar *filename);
 
-pad_style *get_default_style ();
-void set_default_style (pad_style *style);
-void set_default_style_from_pad (pad_node *pad);
+gint fio_get_values_from_file (const gchar *filename, ...);
+gint fio_get_style_from_file (const gchar *filename, pad_style *starter);
+void fio_save_defaults ();
 
-void open_pad_files (pad_node *pad, gboolean create);
-void close_pad_files (pad_node *pad);
+void fio_open_pad_files (pad_node *pad, gboolean create);
+void fio_close_pad_files (pad_node *pad);
+void fio_remove_pad_files (pad_node *pad);
+void fio_remove_file (gchar *filename);
+
+extern const gchar *DEFAULTS_FILENAME;
 
 #endif /* _FIO_H_ */
 
