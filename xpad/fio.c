@@ -515,6 +515,8 @@ void fio_load_pads (void)
 	info.y = 0;
 	info.width = 260;
 	info.height = 260;
+	info.sticky = 0;
+	info.locked = 0;
 	
 	dir = g_dir_open (working_dir, 0, NULL);
 	
