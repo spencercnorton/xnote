@@ -74,7 +74,8 @@ GtkWidget *create_help (gint page)
 "Any pad without focus is in Move Mode.  To enter Edit "
 "Mode for any pad, double click on it with the left mouse "
 "button.  Now this pad will be editable until it loses focus.\n\n"
-"If Edit Lock is disabled, all pads are always in Edit Mode.\n");
+"If Edit Lock is disabled, all pads are in Edit Mode.\n\n"
+"To enable Edit Lock, go to Preferences->Options.");
 
 	gtk_label_set_line_wrap (GTK_LABEL (edittext), TRUE);
 	gtk_container_add (GTK_CONTAINER (align3), edittext);
