@@ -196,6 +196,20 @@ pad_show_p_to_i (gint *n)
 	pad_show_by_num (*n);
 }
 
+static void
+list_pads (void)
+{
+	pad_node *temp = first_pad;
+	gint i = 0;
+	
+	while (temp)
+	{
+		printf ("%i %s\n", ++i, temp->title);
+		
+		temp = temp->next;
+	}
+}
+
 struct argument_def
 {
 	gboolean local;
@@ -223,6 +237,8 @@ static const argument arguments[] =
 	{FALSE, "--new", FALSE, {G_CALLBACK (pad_new)}},
 	{FALSE, "-q", FALSE, {gtk_main_quit}},
 	{FALSE, "--quit", FALSE, {gtk_main_quit}},
+	{FALSE, "-l", FALSE, {list_pads}},
+	{FALSE, "--list", FALSE, {list_pads}},
 	{FALSE, "-s", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
 	{FALSE, "--show", TRUE, {G_CALLBACK (pad_show_p_to_i)}},
 	{FALSE, "--showall", FALSE, {G_CALLBACK (pads_show_all)}}
@@ -254,8 +270,6 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 	for (i = 1; i < *argc; i++)
 	{
 		gboolean longform;
-		
-		printf ("handling %s\n", (*argv)[i]);
 		
 		/* Find matching argument; there can be only one.
 		 */
