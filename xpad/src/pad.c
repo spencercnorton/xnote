@@ -147,11 +147,11 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
     param will be presented afterward */
 void pad_set_decorations (pad_node *pad, gboolean decor)
 {
-	gtk_window_set_decorated (pad->window, decor);
-	
 	if (!pad->hidden)
 	{
 		gtk_widget_hide (GTK_WIDGET (pad->window));
+		
+		gtk_window_set_decorated (pad->window, decor);
 		
 		/* we move it so wm's know where to place it */
 		gtk_window_move (pad->window, pad->x, pad->y);
@@ -339,8 +339,7 @@ void pad_set_fontname (pad_node *pad, const gchar *fontname)
 	GtkWidget *text = GTK_WIDGET (get_text (pad->window));
 	PangoFontDescription *fontdesc;
 	
-	fontdesc = fontname ? pango_font_description_from_string (fontname) :
-		NULL;
+	fontdesc = fontname ? pango_font_description_from_string (fontname) : NULL;
 	
 	gtk_widget_modify_font (text, fontdesc);
 	
@@ -358,40 +357,33 @@ static void pad_update_style (pad_node *pad)
 	pad_style pstyle;
 	GtkWidget *text, *outline;
 	
+	if (pad->hidden)
+		return;
+	
 	if (pad->locked)
-		pstyle = pad->style;
+		pad_style_copy (&pstyle, &pad->style);
 	else
 		pstyle = xpad_settings_get_style ();
 	
 	text = GTK_WIDGET (get_text (pad->window));
 	outline = pad->eventbox_outer;
 	
-	gtk_widget_modify_base (text, GTK_STATE_NORMAL, 
-		pstyle.use_back ? &pstyle.back : NULL);
-	
+	gtk_widget_modify_base (text, GTK_STATE_NORMAL, pstyle.use_back ? &pstyle.back : NULL);
 	gtk_widget_modify_bg (text, GTK_STATE_NORMAL, &text->style->base[GTK_STATE_NORMAL]);
+	gtk_widget_modify_text (text, GTK_STATE_NORMAL,	pstyle.use_text ? &pstyle.text : NULL);
+	gtk_widget_modify_font (text, pstyle.fontname ? pango_font_description_from_string (pstyle.fontname) : NULL);
 	
-	gtk_widget_modify_text (text, GTK_STATE_NORMAL,
-		pstyle.use_text ? &pstyle.text : NULL);
+	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &text->style->base[GTK_STATE_NORMAL]);
 	
-	gtk_widget_modify_font (text, pstyle.fontname ? 
-		pango_font_description_from_string (pstyle.fontname) : NULL);
-	
-	
-	gtk_widget_modify_bg (outline, GTK_STATE_NORMAL, &pstyle.border);
-	
-	
-	gtk_container_set_border_width (GTK_CONTAINER (get_text (pad->window)), pstyle.padding);
+	gtk_container_set_border_width (GTK_CONTAINER (text), pstyle.padding);
 	gtk_container_set_border_width (GTK_CONTAINER (pad->eventbox), pstyle.border_width);
 	
 	gtk_widget_queue_draw (GTK_WIDGET (pad->window));
 	
-	if (!pad->locked)
-		pad_style_free (&pstyle);
-	else
-	{
+	if (pad->locked)
 		fio_save_pad_info (pad);
-	}
+	
+	pad_style_free (&pstyle);
 }
 
 void pad_style_copy (pad_style *dest, pad_style *source)
@@ -450,12 +442,7 @@ void pad_toolbar_update (pad_node *pad)
 		func = ((const toolbar_button *) g_object_get_data 
 			(G_OBJECT (widget), "tb"))->func;
 		
-		if (func == G_CALLBACK (pad_toggle_lock))
-		{
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
-				pad->locked);
-		}
-		else if (func == G_CALLBACK (pad_toggle_sticky))
+		if (func == G_CALLBACK (pad_toggle_sticky))
 		{
 			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget),
 				pad->sticky);
@@ -1025,7 +1012,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		break;
 	
 	case 7:
-		preferences_open ();
+		preferences_open (pad);
 		break;
 	
 	case 8:
@@ -1290,9 +1277,6 @@ pad_lock_style (pad_node *pad)
 	pad->style = xpad_settings_get_style ();
 	pad->locked = 1;
 	
-	/* make sure the toolbar widget is up to date */
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), TRUE);
-	
 	fio_save_pad_info (pad);
 }
 
@@ -1301,9 +1285,6 @@ pad_unlock_style (pad_node *pad)
 {
 	pad->locked = 0;
 	pad_update_style (pad);
-	
-	/* make sure the toolbar widget is up to date */
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), FALSE);
 	
 	fio_save_pad_info (pad);
 }
@@ -1677,10 +1658,16 @@ void pad_set_title (pad_node *pad)
 	
 	g_free (pad->title);
 	pad->title = g_strdup (content);
+	g_free (content);
 	
 	gtk_window_set_title (pad->window, pad->title);
 	
-	g_free (content);
+	if (pad->properties)
+	{
+		gchar *properties_title = g_strdup_printf (_("%s Properties"), pad->title);
+		gtk_window_set_title (GTK_WINDOW (pad->properties), properties_title);
+		g_free (properties_title);
+	}
 }
 
 
@@ -1714,7 +1701,6 @@ pad_add_menu_items (pad_node *pad)
 static void
 normalize_dimensions (gint *x, gint *y, gint *width, gint *height)
 {
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
 	GdkScreen *screen;
 	gint screenw, screenh;
 	
@@ -1730,7 +1716,6 @@ normalize_dimensions (gint *x, gint *y, gint *width, gint *height)
 	
 	if (*y >= screenh)
 		*y %= screenh;
-#endif
 }
 
 
@@ -1778,10 +1763,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
 	gtk_window_set_role (GTK_WINDOW (window), role);
-	
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION >= 2))
 	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
-#endif
 	
 	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
@@ -1794,8 +1776,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
 	pad_add_menu_items (pad);
-	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")),
-		"deactivate", G_CALLBACK (disable_popup_handler), pad);
+	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
 	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
 	
@@ -1813,14 +1794,10 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
 	
-	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "value-changed", G_CALLBACK (pad_scrolled), pad);
-	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "value-changed", G_CALLBACK (pad_scrolled), pad);
-	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "changed", G_CALLBACK (pad_v_scroll_changed), pad);
-	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
-		, "changed", G_CALLBACK (pad_h_scroll_changed), pad);
+	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "value-changed", G_CALLBACK (pad_scrolled), pad);
+	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "value-changed", G_CALLBACK (pad_scrolled), pad);
+	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "changed", G_CALLBACK (pad_v_scroll_changed), pad);
+	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "changed", G_CALLBACK (pad_h_scroll_changed), pad);
 }
 
 /*
@@ -1886,8 +1863,6 @@ pad_node *pad_new (void)
 	
 	pad_set_sticky (pad, xpad_settings_get_sticky_on_start ());
 	
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
-	
 	pad->style = xpad_settings_get_style ();
 	pad_update_style (pad);
 	
@@ -1933,10 +1908,7 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	pad_set_sticky (pad, info->sticky);
 	
-	/* we need to especially set this widget because when toolbar was loaded, we didn't know lock value */
-	pad_toolbar_set_widget (pad, G_CALLBACK (pad_toggle_lock), (gboolean) pad->locked);
-	
-	pad_style_copy (&pad->style, &info->style);
+	pad->style = info->style;
 	pad_update_style (pad);
 	
 	gtk_widget_show_all (pad->eventbox_outer);

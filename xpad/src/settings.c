@@ -245,7 +245,7 @@ void xpad_settings_style_set_back_color (GdkColor *back)
 	}
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_back_color (PAD, back);
+	if (!PAD->locked && !PAD->hidden) pad_set_back_color (PAD, back);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -269,7 +269,7 @@ void xpad_settings_style_set_text_color (GdkColor *text)
 	}
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_text_color (PAD, text);
+	if (!PAD->locked && !PAD->hidden) pad_set_text_color (PAD, text);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -285,7 +285,7 @@ void xpad_settings_style_set_border_color (GdkColor *border)
 	current_settings.style.border = *border;
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_border_color (PAD, border);
+	if (!PAD->locked && !PAD->hidden) pad_set_border_color (PAD, border);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -312,7 +312,7 @@ void xpad_settings_style_set_border_width (gint width)
 	current_settings.style.border_width = width;
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_border_width (PAD, width);
+	if (!PAD->locked && !PAD->hidden) pad_set_border_width (PAD, width);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -328,7 +328,7 @@ void xpad_settings_style_set_padding (gint padding)
 	current_settings.style.padding = padding;
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_padding (PAD, padding);
+	if (!PAD->locked && !PAD->hidden) pad_set_padding (PAD, padding);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -345,7 +345,7 @@ void xpad_settings_style_set_fontname (const gchar *fontname)
 	current_settings.style.fontname = g_strdup (fontname);
 	
 	PAD_ITERATE_START
-	if (!PAD->locked) pad_set_fontname (PAD, fontname);
+	if (!PAD->locked && !PAD->hidden) pad_set_fontname (PAD, fontname);
 	PAD_ITERATE_END
 	
 	xpad_settings_save_to_file ();
@@ -360,7 +360,7 @@ static void xpad_settings_load_defaults (void)
 {
 	current_settings.width = 200;
 	current_settings.height = 200;
-	current_settings.decorations = 0;
+	current_settings.decorations = 1;
 	current_settings.confirm_destroy = 1;
 	current_settings.sticky_on_start = 0;
 	current_settings.edit_lock = 0;

@@ -21,7 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _PREF_H_
 #define _PREF_H_
 
-void preferences_open (void);
+#include "pad.h"
+
+void preferences_open (pad_node *pad);
 void pref_close (void);
 
 #endif /* _PREF_H_ */

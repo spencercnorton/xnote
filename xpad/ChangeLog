@@ -1,3 +1,26 @@
+2003-11-10  Michael Terry  <mikix@users.sourceforge.net>
+	* configure.ac: Bump version to 1.14, define GETTEXT_PACKAGE,
+	  modify comments, and require GTK+ 2.3 or greater.
+	* Makefile.am: Take out *_DISABLE_DEPRECATED flags for now, until
+	  xpad compiles clean on GTK+ 2.3 and we do something smarter with
+	  them.
+	* src/eggtrayicon.c, src/eggtrayicon.h: Update to latest libegg code.
+	* src/main.c: Use GETTEXT_PACKAGE.
+	* src/pad.c: Only decorate visible pads, and only after hiding them.
+	  Only style visible pads.  Remove some toggle_lock toolbar code.
+	  Update to use new preference paradigm.  Remove #ifdefs for old
+	  versions of GTK+.  Fix a small memory leak with fontname strings
+	  and creating a pad with info.
+	* src/pad.h: Don't include pref.h
+	* src/pref.c: Totally redesign style portions.  Took out border
+	  customization and window close button control.  Use new
+	  GtkColorButton and GtkFontButton.  Fix some spacing per HIG.
+	* src/pref.h: Require a pad when opening preferences.
+	* src/properties.c: Totally redesign, using new GtkColorButton and
+	  GtkFontButton.  Set title to use pad's title.
+	* src/settings.c: Only apply style changes to visible pads.  Change
+	  default decorations preference to 'on.'
+
 2003-11-07  Michael Terry  <mikix@users.sourceforge.net>
 	* src/main.c, src/tray.c: Use GTK+ 2.3 GtkIconTheme instead of built
 	  in pixmaps

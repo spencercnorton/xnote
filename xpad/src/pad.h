@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include "defines.h"
 #include "help.h"
-#include "pref.h"
 
 typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;

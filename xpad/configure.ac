@@ -1,34 +1,40 @@
-dnl Process this file with autoconf to produce a configure script.
-AC_INIT([xpad],[1.13],[xpad-devel@lists.sourceforge.net])
+# Process this file with autoconf to produce a configure script.
+
+# Sets up autoconf.
+AC_INIT([xpad],[1.14],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
-dnl Set up automake
+# Sets up automake.
 AM_INIT_AUTOMAKE([gnits dist-bzip2])
 
-dnl Checks for programs.
+# Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_INTLTOOL
 
-dnl Checks for libraries.
+# Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GTK_2_0(2.0.0)
+AM_PATH_GTK_2_0(2.3.0)
 
-dnl Checks for typedefs, structures, and compiler characteristics.
+# Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
 
-dnl Checks for header files.
+# Checks for header files.
 AC_CHECK_HEADERS(locale.h)
 
-dnl Checks for library functions.
+# Checks for library functions.
 AC_CHECK_FUNCS(setlocale)
 
+# Sets up gettext.
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$PACKAGE", [gettext domain])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.11.5)
+
+# Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in])
 AC_OUTPUT
