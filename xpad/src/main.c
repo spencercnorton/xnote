@@ -119,6 +119,7 @@ static gint at_gtk_exit (gpointer data)
 		unlink (master_name);
 		g_free (master_name);
 	}
+	printf ("master\n");
 	
 	g_free (working_dir);
 	g_slist_free (current_settings.toolbar_buttons);

@@ -62,7 +62,7 @@ void tray_open (void)
 
 void tray_close (void)
 {
-  if (GTK_WIDGET_VISIBLE(docklet)) {
+  if (docklet && GTK_WIDGET_VISIBLE(docklet)) {
     docklet_remove();
   }
   if( menu )
