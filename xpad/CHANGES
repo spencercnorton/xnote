@@ -1,3 +1,9 @@
+1.2
+---
+fixed an issue causing black on black with big-endian architectures
+added "Edit Lock" mode
+general code cleanup
+
 1.1
 ---
 simplified popup menu (removed GTK+ default cut/copy/paste/input method/insert)
