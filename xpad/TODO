@@ -1,12 +1,7 @@
-make less posix-oriented (i.e. be ready for GTK+ 2 on win32) -- we're pretty close now
+make less posix-oriented (i.e. be ready for GTK+ 2 on win32)
+	-- we're pretty close now
 
 native titlebar/resizer
 toolbar for delete/new etc actions
 
 get rid of static filename buffers
-
-fix no-smaller-than-largest-line window behavior
-
-fix text disappearing (type test at top of blank pad.  press enter until
-	the text disappears.  type test2.  it comes back)
-
