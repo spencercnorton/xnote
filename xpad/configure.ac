@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(xpad, 1.11)
+AC_INIT([xpad],[1.11-b2],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
+AC_CONFIG_HEADERS([config.h:config.h.in])
 
 dnl Set up automake
-AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h:config.h.in)
+AM_INIT_AUTOMAKE([dist-bzip2 std-options])
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -31,5 +31,6 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.11.5)
-AC_OUTPUT(Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in)
+AM_GNU_GETTEXT_VERSION(0.12.1)
+AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in])
+AC_OUTPUT
