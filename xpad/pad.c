@@ -47,6 +47,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Edit/C_ut",				"<control>X",			menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
 	{"/Edit/_Copy",				"<control>C",			menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
 	{"/Edit/_Paste",			"<control>V",			menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
+	{"/Edit/Delete All",		NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Preferences",		NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
@@ -932,6 +933,10 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		pad_edit_paste (pad);
 		break;
 	
+	case 14:
+		pad_clear (pad);
+		break;
+	
 	default:
 		break;
 	}
@@ -1538,7 +1543,7 @@ void pad_set_title (pad_node *pad)
 	GtkTextIter s, e;
 	gchar *content, *tmp;
 	gint n;
-	gchar result [TITLE_CHARS + 3];	/* 1 null, 2 quotes, and TITLE_CHARS characters */
+	gchar result [TITLE_CHARS + 1];	/* 1 null and TITLE_CHARS characters */
 	
 	buf = gtk_text_view_get_buffer (get_text (pad->window));
 	gtk_text_buffer_get_start_iter (buf, &s);
@@ -1564,11 +1569,11 @@ void pad_set_title (pad_node *pad)
 		{
 			if (g_unichar_isgraph (u))
 			{
-				pad->title[n++] = (char) u;
+				result[n++] = (char) u;
 			}
 			else if (g_unichar_isspace (u) && n > 0)
 			{
-				pad->title[n++] = ' ';
+				result[n++] = ' ';
 			}
 			else if (u == '\0')
 			{
@@ -1579,11 +1584,11 @@ void pad_set_title (pad_node *pad)
 		tmp = g_utf8_next_char (tmp);
 	}
 	
-	pad->title[n] = '\0';
+	result[n] = '\0';
 	
-	sprintf (result, "\"%s\"", pad->title);
+	sprintf (pad->title, "\"%s\"", result);
 	
-	gtk_window_set_title (pad->window, result);
+	gtk_window_set_title (pad->window, pad->title);
 }
 
 

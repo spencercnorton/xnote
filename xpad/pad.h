@@ -60,7 +60,7 @@ struct pad_node_def
 	/* generated values */
 	gint num;
 	gboolean hidden;
-	gchar title [TITLE_CHARS + 1];
+	gchar title [TITLE_CHARS + 3];	/* make room for quotes */
 	GtkItemFactory *menu;
 	
 	/* main textbox stuff */
