@@ -350,11 +350,15 @@ static void xpad_settings_load_defaults (void)
 	current_settings.auto_hide_toolbar = 1;
 	current_settings.scrollbar = 1;
 	
-	g_slist_append (current_settings.toolbar_buttons,
+	current_settings.toolbar_buttons = NULL;
+	current_settings.toolbar_buttons = 
+		g_slist_append (current_settings.toolbar_buttons,
 		(toolbar_button *) get_toolbar_button_by_name ("New"));
-	g_slist_append (current_settings.toolbar_buttons,
+	current_settings.toolbar_buttons = 
+		g_slist_append (current_settings.toolbar_buttons,
 		(toolbar_button *) get_toolbar_button_by_name ("Delete"));
-	g_slist_append (current_settings.toolbar_buttons,
+	current_settings.toolbar_buttons = 
+		g_slist_append (current_settings.toolbar_buttons,
 		(toolbar_button *) get_toolbar_button_by_name ("Quit"));
 }
 
