@@ -3,62 +3,91 @@
 "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
-   id="svg114"
-   sodipodi:version="0.31.1"
-   width="750pt"
-   height="750pt"
-   sodipodi:docbase="/home/mike/"
-   sodipodi:docname="/home/mike/xpad.svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink">
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg114"
+   sodipodi:version="0.34"
+   width="750pt"
+   height="750pt"
+   sodipodi:docbase="/home/mike/Code/xpad/images/hicolor/scalable/apps/"
+   sodipodi:docname="/home/mike/Code/xpad/images/hicolor/scalable/apps/xpad.svg">
   <defs
      id="defs116">
+    <linearGradient
+       id="linearGradient620">
+      <stop
+         style="stop-color:#eedd88;stop-opacity:1;"
+         offset="0"
+         id="stop621" />
+      <stop
+         style="stop-color:#665500;stop-opacity:1;"
+         offset="1"
+         id="stop622" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient617">
+      <stop
+         style="stop-color:#ffee99;stop-opacity:1;"
+         offset="0"
+         id="stop618" />
+      <stop
+         style="stop-color:#eedd88;stop-opacity:1;"
+         offset="1"
+         id="stop619" />
+    </linearGradient>
     <linearGradient
        id="linearGradient127">
       <stop
          style="stop-color:#cccd00;stop-opacity:1;"
-         offset="0.000000"
+         offset="0"
          id="stop128" />
       <stop
          style="stop-color:#656700;stop-opacity:1;"
-         offset="1.000000"
+         offset="1"
          id="stop129" />
     </linearGradient>
     <linearGradient
        id="linearGradient119">
       <stop
          style="stop-color:#ffff32;stop-opacity:1;"
-         offset="0.000000"
+         offset="0"
          id="stop120" />
       <stop
          style="stop-color:#d7d50a;stop-opacity:1;"
-         offset="1.000000"
+         offset="1"
          id="stop121" />
     </linearGradient>
     <linearGradient
-       xlink:href="#linearGradient119"
-       id="linearGradient122" />
+       xlink:href="#linearGradient127"
+       id="linearGradient122"
+       x1="6.86358881e-9"
+       y1="8.00783795e-9"
+       x2="1"
+       y2="8.00783795e-9" />
     <radialGradient
-       xlink:href="#linearGradient119"
+       xlink:href="#linearGradient617"
        id="radialGradient124"
-       cx="0.112188"
-       cy="-0.208131"
-       fx="0.112188"
-       fy="-0.208131"
-       r="1.57408"
+       cx="0.11218809"
+       cy="-0.20813093"
+       fx="0.11218809"
+       fy="-0.20813093"
+       r="1.57407999"
+       gradientUnits="objectBoundingBox"
+       spreadMethod="pad" />
+    <radialGradient
+       xlink:href="#linearGradient620"
+       id="radialGradient126"
+       cx="1.22448003"
+       cy="0.11697659"
+       fx="1.22448003"
+       fy="0.11697659"
+       r="1.49687004"
        gradientUnits="objectBoundingBox"
        spreadMethod="pad" />
     <radialGradient
        xlink:href="#linearGradient127"
-       id="radialGradient126"
-       cx="1.22448"
-       cy="0.116977"
-       fx="1.22448"
-       fy="0.116977"
-       r="1.49687"
-       gradientUnits="objectBoundingBox"
-       spreadMethod="pad" />
+       id="radialGradient616" />
   </defs>
   <sodipodi:namedview
      id="base" />
