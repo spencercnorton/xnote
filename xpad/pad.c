@@ -554,7 +554,8 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	/**
 	 * Here we remove the toolbar.
 	 */
-	if (event->detail != GDK_NOTIFY_INFERIOR)
+	if (event->detail != GDK_NOTIFY_INFERIOR &&
+		event->mode == GDK_CROSSING_NORMAL)
 	{
 		if (!pad->toolbar->timeout)
 			toolbar_start_timeout (pad);
