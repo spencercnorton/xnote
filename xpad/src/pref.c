@@ -272,7 +272,6 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 	xpad_settings_add_toolbar_button (tb->name);	
 }
 
-
 /**
  * Note to the uncautious:  The following function is ugly as hell.  There are a lot of 
  * widgets define at the top that are not used until several pages down, there are random
