@@ -85,19 +85,19 @@ prepdistdir:
 tar.gz: ../$(VERNAME).tar.gz
 ../$(VERNAME).tar.gz: prepdistdir
 	(cd ..;\
-	tar cf - $(VERNAME) | gzip --best > $(VERNAME).tar.gz;\
+	tar cfh - $(VERNAME) | gzip --best > $(VERNAME).tar.gz;\
 	rm -r $(VERNAME))
 
 tar.Z: ../$(VERNAME).tar.Z
 ../$(VERNAME).tar.Z: prepdistdir
 	(cd ..;\
-	tar cf - $(VERNAME) | compress > $(VERNAME).tar.Z;\
+	tar cfh - $(VERNAME) | compress > $(VERNAME).tar.Z;\
 	rm -r $(VERNAME))
 
 tar.bz2: ../$(VERNAME).tar.bz2
 ../$(VERNAME).tar.bz2: prepdistdir
 	(cd ..;\
-	tar cf - $(VERNAME) | bzip2 -f --best > $(VERNAME).tar.bz2;\
+	tar cfh - $(VERNAME) | bzip2 -f --best > $(VERNAME).tar.bz2;\
 	rm -r $(VERNAME))
 
 zip: ../$(VERNAME).zip
