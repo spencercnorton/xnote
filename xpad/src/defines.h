@@ -1,8 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#include <gtk/gtk.h>
 #include "../config.h"
-
 #include "gettext.h"
 
 /**
