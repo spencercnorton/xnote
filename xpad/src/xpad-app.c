@@ -74,7 +74,11 @@
 
 static gint xpad_argc;
 static gchar **xpad_argv;
-static gboolean make_new_pad_if_none;
+static gboolean option_nonew;
+static gboolean option_new;
+static gboolean option_version;
+static gboolean option_quit;
+static gchar *option_smid;
 static gchar *config_dir;
 static gchar *program_path;
 static gchar *server_filename;
@@ -83,13 +87,13 @@ static FILE *output;
 static gboolean xpad_translucent = FALSE;
 static XpadPadGroup *pad_group;
 
-static gint      process_args               (gint argc, gchar **argv, gboolean local_args);
+static gboolean  process_local_args         (gint *argc, gchar **argv[]);
+static gboolean  process_remote_args        (gint *argc, gchar **argv[]);
 static gint      xpad_app_check_if_others   (void);
 
 static gboolean  config_dir_exists          (void);
 static gchar    *make_config_dir            (void);
 static void      register_stock_icons       (void);
-static void      set_default_icon           (void);
 static gint      xpad_app_load_pads         (void);
 
 
@@ -137,14 +141,13 @@ xpad_app_init (int argc, char **argv)
 	}
 	config_dir = make_config_dir ();
 	
-	make_new_pad_if_none = TRUE;
-	process_args (xpad_argc, xpad_argv, TRUE);
+	process_local_args (&xpad_argc, &xpad_argv);
 	
 	if (xpad_app_check_if_others ())
 		exit (0);
 	
 	register_stock_icons ();
-	set_default_icon ();
+	gtk_window_set_default_icon_name (PACKAGE);
 	
 	xpad_tray_open ();
 	xpad_session_manager_init ();
@@ -152,7 +155,7 @@ xpad_app_init (int argc, char **argv)
 	/* load all pads */
 	pad_group = NULL;
 	if (xpad_app_load_pads () == 0) {
-		if (make_new_pad_if_none) {
+		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
 		}
@@ -160,7 +163,7 @@ xpad_app_init (int argc, char **argv)
 			exit (0);
 	}
 	
-	process_args (xpad_argc, xpad_argv, FALSE);
+	process_remote_args (&xpad_argc, &xpad_argv);
 }
 
 
@@ -383,54 +386,6 @@ register_stock_icons (void)
 
 
 static void
-set_default_icon (void)
-{
-	GList *icons = NULL;
-	GtkIconTheme *theme = gtk_icon_theme_get_default ();
-	GdkPixbuf *pixbuf;
-	
-	pixbuf = gtk_icon_theme_load_icon (theme,
-	                                   PACKAGE,
-	                                   16,
-	                                   0,
-	                                   NULL);
-	if (pixbuf)
-		icons = g_list_append (icons, pixbuf);
-	
-	pixbuf = gtk_icon_theme_load_icon (theme,
-	                                   PACKAGE,
-	                                   24,
-	                                   0,
-	                                   NULL);
-	if (pixbuf)
-		icons = g_list_append (icons, pixbuf);
-	
-	pixbuf = gtk_icon_theme_load_icon (theme,
-	                                   PACKAGE,
-	                                   32,
-	                                   0,
-	                                   NULL);
-	if (pixbuf)
-		icons = g_list_append (icons, pixbuf);
-	
-	pixbuf = gtk_icon_theme_load_icon (theme,
-	                                   PACKAGE,
-	                                   48,
-	                                   0,
-	                                   NULL);
-	if (pixbuf)
-		icons = g_list_append (icons, pixbuf);
-	
-	if (icons) {
-		gtk_window_set_default_icon_list (icons);
-		
-		g_list_foreach (icons, (GFunc) g_object_unref, NULL);
-		g_list_free (icons);
-	}
-}
-
-
-static void
 xpad_app_pad_hidden (XpadPadGroup *group, XpadPad *pad)
 {
 	if (!xpad_tray_is_open ())
@@ -631,7 +586,7 @@ xpad_app_read_from_proc_file (void)
 	/* here we redirect singleton->priv->output to the socket */
 	output = fdopen (client_fd, "w");
 	
-	if (!process_args (argc, argv, FALSE))
+	if (!process_remote_args (&argc, &argv))
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
@@ -639,7 +594,7 @@ xpad_app_read_from_proc_file (void)
 		v[0] = PACKAGE;
 		v[1] = "--new";
 		
-		process_args (c, v, FALSE);
+		process_remote_args (&c, &v);
 		
 		g_free (v);
 	}
@@ -850,253 +805,98 @@ xpad_app_check_if_others (void)
  * Here are the functions called when arguments are passed to us.
  */
 
-
-enum {
-	XPAD_ARG_TYPE_NONE,
-	XPAD_ARG_TYPE_INT,
-	XPAD_ARG_TYPE_STRING
+static GOptionEntry local_options[] =
+{
+	{"version", 'v', 0, G_OPTION_ARG_NONE, &option_version, N_("Print version number and quit"), NULL},
+	{"nonew", 'N', 0, G_OPTION_ARG_NONE, &option_nonew, N_("Don't create a new pad on startup if no previous pads exist"), NULL},
+	{NULL}
 };
 
-struct argument
+static GOptionEntry remote_options[] =
 {
-	gboolean local;
-	const gchar *short_name;
-	const gchar *long_name;
-	guint type;
-	union {
-		void (*func) (void);
-		void (*func_arg) (void *);
-	} callbacks;
-	const gchar *help_comment;
+	{"new", 'n', 0, G_OPTION_ARG_NONE, &option_new, N_("Create a new pad on startup even if pads already exist"), NULL},
+	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_quit, N_("Close all pads"), NULL},
+	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid, NULL, NULL},
+	{NULL}
 };
 
-static void missing_companion_arg (const char argname[]);
-static void xpad_app_args_print_help (void);
-static void xpad_app_args_print_version (void);
-static void xpad_app_args_set_nonew (void);
-static void xpad_app_args_set_session (const gchar *str);
-static void xpad_app_args_spawn_pad (void);
-
-static const struct argument arguments[] =
+static gboolean
+process_local_args (gint *argc, gchar **argv[])
 {
-	{TRUE, "-h", "--help", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_print_help)}, N_("Prints usage information and exits")},
-	{TRUE, "-v", "--version", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_print_version)}, N_("Prints xpad version and exits")},
-	{TRUE, NULL, "--nonew", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_set_nonew)}, N_("Prevents xpad from creating a new pad on startup if no previous pads exist")},
+	GError *error = NULL;
+	GOptionContext *context;
 	
-	/* above are local arguments, the ones below are run by the remote instance */
+	option_version = FALSE;
+	option_nonew = FALSE;
 	
-	/* --nonew is here twice because it does things for both local and remote instances.  in remote, it stops the remote instance from thinking there were no args and spawning a new pad */
-	{FALSE, NULL, "--nonew", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_set_nonew)}, NULL},
-	{FALSE, "-n", "--new", XPAD_ARG_TYPE_NONE, {G_CALLBACK (xpad_app_args_spawn_pad)}, N_("Causes xpad to create a new pad on startup even if pads already exist")},
-	{FALSE, "-q", "--quit", XPAD_ARG_TYPE_NONE, {G_CALLBACK (gtk_main_quit)}, N_("Causes all running xpad instances to close")},
-	{FALSE, NULL, "--sm-client-id", XPAD_ARG_TYPE_STRING, {G_CALLBACK (xpad_app_args_set_session)}, NULL}
-};
-
-
-static void
-xpad_app_args_spawn_pad (void)
-{
-	GtkWidget *pad = xpad_pad_new (pad_group);
-	gtk_widget_show (pad);
-}
-
-
-static void
-xpad_app_args_print_version (void)
-{
-	fprintf (output, _("Xpad %s\n"), PACKAGE_VERSION);
-	exit (0);
-}
-
-
-static void
-xpad_app_args_set_nonew (void)
-{
-	make_new_pad_if_none = FALSE;
-}
-
-
-static void
-xpad_app_args_set_session (const gchar *str)
-{
-	xpad_session_manager_set_id (str);
-}
-
-
-static void
-xpad_app_args_print_help (void)
-{
-	gchar *msg, *tmp_msg, *lmsg;
-	gint  largest_size, i;
-
-	for (largest_size = -1, i = 0; i < G_N_ELEMENTS (arguments); i++)
+	context = g_option_context_new (NULL);
+	g_option_context_set_ignore_unknown_options (context, TRUE);
+	g_option_context_set_help_enabled (context, FALSE);
+	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
+	if (g_option_context_parse (context, argc, argv, &error))
 	{
-		if (arguments[i].help_comment)
+		if (option_version)
 		{
-			gchar *addition = g_strconcat ("  * ", 
-				arguments[i].short_name ? arguments[i].short_name : "",
-				arguments[i].type == XPAD_ARG_TYPE_INT ? " #" : "",
-				(arguments[i].short_name && arguments[i].long_name) ? ", " : "",
-				arguments[i].long_name ? arguments[i].long_name : "",
-				arguments[i].type == XPAD_ARG_TYPE_INT ? "=#" : "",
-				NULL);
-			if (largest_size == -1 || strlen (addition) > largest_size)
-			{
-				largest_size = strlen (addition);
-			}
-			g_free (addition);
+			fprintf (output, _("Xpad %s\n"), PACKAGE_VERSION);
+			exit (0);
 		}
 	}
-
-	msg = g_strdup_printf (_("Usage: %s [OPTIONS]\n\n"), g_get_prgname ());
-
-	for (i = 0; i < G_N_ELEMENTS (arguments); i++)
+	else
 	{
-		if (arguments[i].help_comment)
+		fprintf (output, "%s\n", error->message);
+		exit (1);
+	}
+	
+	g_option_context_free (context);
+	
+	return(option_version || option_nonew);
+}
+
+static gboolean
+process_remote_args (gint *argc, gchar **argv[])
+{
+	GError *error = NULL;
+	GOptionContext *context;
+	
+	option_nonew = FALSE;
+	option_new = FALSE;
+	option_quit = FALSE;
+	option_smid = NULL;
+	
+	context = g_option_context_new (NULL);
+	g_option_context_set_ignore_unknown_options (context, TRUE);
+	/* We do local here as well as remote because we want --help to pick up
+	   both.  It can't hurt, since the local options were removed in a
+	   prior pass. */
+	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
+	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
+	if (g_option_context_parse (context, argc, argv, &error))
+	{
+		if (option_smid)
+			xpad_session_manager_set_id (option_smid);
+		
+		if (option_new)
 		{
-			gchar *padding;
-			gchar *addition = g_strconcat ("  * ", 
-				arguments[i].short_name ? arguments[i].short_name : "",
-				arguments[i].type == XPAD_ARG_TYPE_INT ? " #" : "",
-				(arguments[i].short_name && arguments[i].long_name) ? ", " : "",
-				arguments[i].long_name ? arguments[i].long_name : "",
-				arguments[i].type == XPAD_ARG_TYPE_INT ? "=#" : "",
-				NULL);
-
-			padding = g_strnfill (largest_size - strlen (addition) + 3, ' ');
-
-			tmp_msg = msg;
-			msg = g_strconcat (msg, addition, padding, _(arguments[i].help_comment), "\n", NULL);
-			g_free (tmp_msg);
+			GtkWidget *pad = xpad_pad_new (pad_group);
+			gtk_widget_show (pad);
+		}
+		
+		if (option_quit)
+		{
+			if (gtk_main_level () > 0)
+				gtk_main_quit ();
+			else
+				exit (0);
 		}
 	}
-	
-	lmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
-	
-	if (lmsg)
-		fprintf (output, lmsg);
-	
-	g_free (msg);
-	g_free (lmsg);
-	
-	exit (0);
-}
-
-
-static void
-missing_companion_arg (const char argname[])
-{
-	g_printerr (_("Missing companion argument to %s\n"), argname);
-	exit(1);
-}
-
-
-static gint
-process_args (gint argc, gchar **argv, gboolean local)
-{
-	gint i, j, recognized_at;
-	gint rv = 0;
-	size_t short_arglen[G_N_ELEMENTS (arguments)];
-	size_t long_arglen[G_N_ELEMENTS (arguments)];
-	
-	/* Set up array of argument lengths to avoid having to compute them every 
-	 * time through our inner loop.  This probably ought to be global, but it
-	 * won't matter all that much.
-	 */
-	for (j = G_N_ELEMENTS (arguments) - 1; j >= 0; j--) {
-		short_arglen[j] = arguments[j].short_name ? strlen (arguments[j].short_name) : 0;
-		long_arglen[j] = arguments[j].long_name ? strlen (arguments[j].long_name) : 0;
+	else
+	{
+		fprintf (output, "%s\n", error->message);
+		/* Don't quit.  Bad options passed to the main xpad program by other
+		   iterations shouldn't close the main one. */
 	}
 	
-	for (i = 1; i < argc; i++) {
-		gboolean longform;
-		
-		/* Find matching argument; there can be only one.
-		 */
-		recognized_at = -1;
-		for (j = G_N_ELEMENTS (arguments) - 1; j >= 0; j--) {
-			if ((arguments[j].short_name && strncmp (argv[i], arguments[j].short_name, short_arglen[j]) == 0) ||
-			    (arguments[j].long_name && strncmp (argv[i], arguments[j].long_name, long_arglen[j]) == 0)) {
-				recognized_at = j;
-				
-				if (arguments[j].local == local)
-					break;
-			}
-		}
-		
-		if (recognized_at < 0) {
-		  	/* Argument not found in list.  Either its "local" setting mismatched
-			 * the one passed to us, or we got an invalid argument.  Check for the
-			 * latter only if we're doing local; otherwise just ignore the argument.
-			 */
-			if (local) {
-				g_printerr (_("Didn't understand argument '%s'\n"), argv[i]);
-				exit (1);
-			}
-			else {
-				continue;
-			}
-		}
-		else {
-			j = recognized_at;
-		}
-		
-		/* (from this point on, we know our argument was recognized) */
-		
-		longform = (strncmp (argv[i], "--", 2) == 0);
-		
-		if (arguments[j].local != local) {
-			/* We ignore this argument, but if it is in short form and expects a
-			 * companion argument, make sure we skip the companion argument on our
-			 * next iteration.
-			 */
-			if (arguments[j].type != XPAD_ARG_TYPE_NONE)
-				i++;
-			
-			/* Don't accept this argument, but don't complain either. */
-			continue;
-		}
-
-		if (arguments[j].type != XPAD_ARG_TYPE_NONE) {
-			long int int_arg;
-			char *companion, *endptr;
-			
-			if (argv[i][longform ? long_arglen[j] : short_arglen[j]] == '=') {
-				companion = &argv[i][longform ? long_arglen[j] : short_arglen[j] + 1];
-			}
-			else {
-				i++;
-				if (i >= argc)
-				  	missing_companion_arg (longform ? arguments[j].long_name : arguments[j].short_name);
-				
-				companion = argv[i];
-			}
-			
-			if (!*companion)
-				missing_companion_arg (longform ? arguments[j].long_name : arguments[j].short_name);
-			
-			if (arguments[j].type == XPAD_ARG_TYPE_INT) {
-				int_arg = strtol (companion, &endptr, 10);
-				
-				if (*endptr) {
-					g_printerr (_("Invalid number: '%s'\n"), companion);
-					
-					if (local)
-						exit(1);
-				}
-				else {
-					arguments[j].callbacks.func_arg (&int_arg);
-				}
-			}
-			else { /* string */
-				arguments[j].callbacks.func_arg (companion);
-			}
-		}
-		else {
-			arguments[j].callbacks.func ();
-		}
-		rv++;
-	}
+	g_option_context_free (context);
 	
-	return rv;
+	return(option_nonew || option_new || option_quit || option_smid);
 }

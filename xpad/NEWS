@@ -1,3 +1,7 @@
+Version 2.1
+* Fix tray icon being the wrong size
+* Fix xpad to close when no tray and no open pads
+
 Version 2.0
 * Fix notes list to display correct number of pads
 * Fix notification icon from not doing anything
