@@ -73,7 +73,7 @@ help_window_new (GtkWidget *parent, gint page)
 	gchar bordertext[800];
 	gchar fonttext[800];
 	gchar toolbartext[700];
-	gchar misctext[1300];
+	gchar misctext[1600];
 	
 	gtk_container_set_border_width (GTK_CONTAINER (vbox_background), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox_background), 6);
@@ -201,14 +201,18 @@ help_window_new (GtkWidget *parent, gint page)
 "be edited.  Rather, clicking and dragging on the surface of the pad will move it.  "
 "To edit a pad that is locked, double click on its surface.  This will allow you to "
 "change its text until the pad loses focus again.  If edit lock is not enabled, every "
-"pad is always editable -- to move it, either drag on the border or hold down CTRL and ");
+"pad is always editable -- to move it, either drag on the border or hold down CTRL and "
+"left click.  Edit lock is disabled by default.\n\n");
 	strcat (misctext,
-"left click.  Edit lock is disabled by default.\n\n"
 "If <b>confirm pad deletion</b> is enabled, a confirmation dialog will appear whenever "
 "you delete a non-empty pad.  Deleting a pad loses the pad contents irrevocably.  Delete "
-"confirmation is enabled by default.\n\n"
-"If <b>window decorations</b> are enabled, your window manager will draw a border and title ");
+"confirmation is enabled by default.\n\n");
 	strcat (misctext,
+"If <b>allow scrollbars</b> is enabled, when a pad is smaller than the text area it "
+"contains, scrollbars appear so you can view all the text.  If they are disabled, the "
+"pad resizes to fit the text.\n\n");
+	strcat (misctext,
+"If <b>window decorations</b> are enabled, your window manager will draw a border and title "
 "bar for each pad.  Window decorations are disabled by default.\n\n"
 "If window decorations are enabled, you can choose what happens when you click on your <b>window "
 "manager's close button</b>.  You can close and save all pads (quitting xpad), close and save "
