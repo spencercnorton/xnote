@@ -5,21 +5,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad-1.10\n"
-"POT-Creation-Date: 2003-03-25 18:39-0500\n"
-"PO-Revision-Date: 2003-04-27 15:32+0300\n"
+"Project-Id-Version: xpad-1.11-b1\n"
+"POT-Creation-Date: 2003-04-02 15:36-0500\n"
+"PO-Revision-Date: 2003-05-29 19:24+0300\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:173
+#: src/main.c:178
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
-"  -V, --version         prints xpad version and exits\n"
-"  -h, --help            prints this usage information and exits\n"
+"  -V, --version         prints xpad version; exits\n"
+"  -h, --help            prints this usage information; exits\n"
 "  -v N, --verbosity=N   sets level of output\n"
 "                          0=none, 1=moderate, 2=debug\n"
 "                          default is 0\n"
@@ -34,7 +34,7 @@ msgstr ""
 "                          implicit e 0\n"
 "  -n, --new             deschide doar un pad nou.\n"
 
-#: src/main.c:182
+#: src/main.c:187
 msgid ""
 "  --nonew               prevents xpad from making a new pad\n"
 "  -q, --quit            quits all open xpad sessions\n"
@@ -48,21 +48,21 @@ msgstr ""
 "  -s N, --show=N        aducere al N-lea pad (1-based) in prim-plan\n"
 "  --showall             aducere toate pad0urile în prim plan\n"
 
-#: src/main.c:215
+#: src/main.c:230
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
 msgstr "Valoare ilegalã de detaliere. Trebuie sã fie între 0 ºi 2 inclusiv.\n"
 
-#: src/main.c:290
+#: src/main.c:317
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Lipseºte parametrul pereche pentru %s\n"
 
-#: src/main.c:334
+#: src/main.c:361
 #, c-format
 msgid "Didn't understand argument %s.\n"
 msgstr "Nu am înþeles parametrul %s.\n"
 
-#: src/main.c:391
+#: src/main.c:418
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Numãr invalid: '%s'\n"
@@ -72,41 +72,41 @@ msgstr "Numãr invalid: '%s'\n"
 msgid "Could not write to file %s."
 msgstr "Nu am putut scrie în fiºierul %s."
 
-#: src/fio.c:91
+#: src/fio.c:92
 #, c-format
 msgid "Could not read from file %s."
 msgstr "Nu am putut citi din fiºierul %s."
 
-#: src/fio.c:411
+#: src/fio.c:414
 #, c-format
 msgid "Could not open xpad directory %s."
 msgstr "Nu am putut deschide directorul xpad %s."
 
-#: src/fio.c:414
+#: src/fio.c:417
 msgid "This directory is needed to store preference and pad information.  Xpad will close now."
 msgstr "Acest director este necesar pentru stocare preferinþe ºi informaþii. Xpad seva închide acum."
 
-#: src/pref.c:281
+#: src/pref.c:281 src/properties.c:228
 msgid "Background Color"
 msgstr "Culoare fundal"
 
-#: src/pref.c:282
+#: src/pref.c:282 src/properties.c:229
 msgid "Text Color"
 msgstr "Culoare Text"
 
-#: src/pref.c:283
+#: src/pref.c:283 src/properties.c:230
 msgid "Border"
 msgstr "Margine"
 
-#: src/pref.c:284
+#: src/pref.c:284 src/properties.c:231
 msgid "Border _width:"
 msgstr "Lãþime(_width) margine:"
 
-#: src/pref.c:285 src/pref.c:290
+#: src/pref.c:285 src/pref.c:290 src/properties.c:232 src/properties.c:235
 msgid "pixels"
 msgstr "pixeli"
 
-#: src/pref.c:286
+#: src/pref.c:286 src/properties.c:233
 msgid "Font Face"
 msgstr "Faþã font"
 
@@ -118,7 +118,7 @@ msgstr "Opþiuni"
 msgid "Toolbar"
 msgstr "Barã de unelte"
 
-#: src/pref.c:289
+#: src/pref.c:289 src/properties.c:234
 msgid "_Padding:"
 msgstr "Umplere(_Padding)"
 
@@ -138,31 +138,31 @@ msgstr "Blocare _Edit"
 msgid "Global Preferences"
 msgstr "Preferinþe globale"
 
-#: src/pref.c:362
+#: src/pref.c:362 src/properties.c:303
 msgid "_Use system text color"
 msgstr "_Utilizeazã culorile sistemului"
 
-#: src/pref.c:385
+#: src/pref.c:385 src/properties.c:324
 msgid "_Use system background color"
 msgstr "_Utilizeazã culoarea de fundal a sistemului"
 
-#: src/pref.c:421
+#: src/pref.c:421 src/properties.c:357
 msgid "The amount of space you want between the border and text."
 msgstr "Cuantumul de spaþiu pe care îl doriþi între margine ºi text."
 
-#: src/pref.c:422
+#: src/pref.c:422 src/properties.c:358
 msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
 msgstr "Alegeþi numãrul de pixeli din jurul regiunii de text. Acest spaþiu e colorat la fel ºi o înconjoarã din toate pãrþile."
 
-#: src/pref.c:435
+#: src/pref.c:435 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
 msgstr "Cuantumul de spaþiu care sa înconjoare padul."
 
-#: src/pref.c:436
+#: src/pref.c:436 src/properties.c:375
 msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
 msgstr "Alegeþi numãrul de pixeli din jurul padului. Acest spaþiu este colorat independent ºi înconjoarã din toate pãrþile."
 
-#: src/pref.c:462
+#: src/pref.c:462 src/properties.c:397
 msgid "_Use system font face"
 msgstr "_Utilizeazã faþa fontului sistemului"
 
@@ -254,6 +254,10 @@ msgstr "/_Pad"
 msgid "/Pad/_New"
 msgstr "/Pad/_Nou"
 
+#: src/pad.c:42
+msgid "/Pad/sep1"
+msgstr "/Pad/sep1"
+
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
 msgstr "/Pad/Lipicios(_Sticky)"
@@ -261,6 +265,10 @@ msgstr "/Pad/Lipicios(_Sticky)"
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
 msgstr "/Pad/Proprie_tãþi"
+
+#: src/pad.c:45
+msgid "/Pad/sep2"
+msgstr "/Pad/sep2"
 
 #: src/pad.c:46
 msgid "/Pad/_Close"
@@ -286,6 +294,10 @@ msgstr "/Edit/_Copiere"
 msgid "/Edit/_Paste"
 msgstr "/Edit/Alipire(_Paste)"
 
+#: src/pad.c:53
+msgid "/Edit/sep"
+msgstr "/Editare/sep"
+
 #: src/pad.c:54
 msgid "/Edit/Prefere_nces"
 msgstr "/Edit/Preferi_nþe"
@@ -301,6 +313,10 @@ msgstr "/Note/_Afiºare Toate(_Show All)"
 #: src/pad.c:57
 msgid "/Notes/_Close All"
 msgstr "/Note/Închidere toate(_Close All)"
+
+#: src/pad.c:58
+msgid "/Notes/sep"
+msgstr "/Note/sep"
 
 #: src/pad.c:59
 msgid "/_Help"
@@ -367,31 +383,31 @@ msgstr "Folosiþi xpad %s cu GTK+ %i/%i.%i."
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr "Vizitaþi http://xpad.sourceforge.net pentru mai multe informaþii."
 
-#: src/pad.c:884
+#: src/pad.c:885
 msgid "Open which file?"
 msgstr "Ce fiºier sã deschid?"
 
-#: src/pad.c:935
+#: src/pad.c:936
 msgid "Save as which file?"
 msgstr "Salvez ca ºi ce fiºier?"
 
-#: src/pad.c:1072 src/pad.c:1258
+#: src/pad.c:1073 src/pad.c:1259
 msgid "/Edit/Cut"
 msgstr "/Editare/Tãiere(cut)"
 
-#: src/pad.c:1074 src/pad.c:1260
+#: src/pad.c:1075 src/pad.c:1261
 msgid "/Edit/Copy"
 msgstr "/Editare/Copiere"
 
-#: src/pad.c:1076 src/pad.c:1264
+#: src/pad.c:1077 src/pad.c:1265
 msgid "/Edit/Paste"
 msgstr "/Editare/Alipire(Paste)"
 
-#: src/pad.c:1206
+#: src/pad.c:1207
 msgid "/Notes"
 msgstr "/Note"
 
-#: src/pad.c:1252
+#: src/pad.c:1253
 msgid "/Pad/Sticky"
 msgstr "/Pad/Lipicios(Sticky)"
 
@@ -460,6 +476,10 @@ msgstr "xpad: click dreapta pentru mai multe opþiuni..."
 #: src/tray.c:204
 msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
 msgstr "Click dreapta pe acest icon pentru un meniu de opþiuni corespunzãtoare Xpad. Click drepta pentru a modifica(toggle) dacã pad-urile sa fie afiºate sau nu."
+
+#: src/properties.c:276
+msgid "Pad Properties"
+msgstr "Proprietãþi Pad"
 
 #~ msgid "Windows"
 #~ msgstr "Ferestre"
