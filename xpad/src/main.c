@@ -865,9 +865,6 @@ static void SetQuitSignals(void)
 static gboolean
 xpad_initial_save (gpointer data)
 {
-	/* save open pads */
-	fio_save_pads ();
-	
 	return FALSE;	/* remove ourselves from idle list */
 }
 

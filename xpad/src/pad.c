@@ -640,8 +640,6 @@ void pad_hide (pad_node *pad)
 	
 	toolbar_hide (pad);
 	
-	fio_save_pad (pad);
-	
 	pad_free_gtk (pad);
 	
 	pad->hidden = TRUE;
