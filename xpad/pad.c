@@ -145,18 +145,6 @@ static void pad_set_style (pad_node *pad, pad_style *pstyle)
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
 }
 
-static void pads_update_style ()
-{
-	pad_node *temp = first_pad;
-
-	while (temp)
-	{
-		pad_set_style (temp, &current_settings.style);
-		
-		temp = temp->next;
-	}
-}
-
 // returned pad_style must be g_free'd
 pad_style *pad_get_style (pad_node *pad)
 {
@@ -172,21 +160,6 @@ pad_style *pad_get_style (pad_node *pad)
 	strcpy (pstyle->fontname, pango_font_description_to_string (style->font_desc));
 
 	return pstyle;
-}
-
-static pad_node *get_pad (GtkWindow *window)
-{
-	pad_node *current = first_pad;
-
-	while (current != NULL)
-	{
-		if (current->window == window)
-			return current;
-
-		current = current->next;
-	}
-
-	return NULL;
 }
 
 static void quit_if_no_pads (void)
