@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-25 18:39-0500\n"
+"POT-Creation-Date: 2003-04-01 22:18-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,27 +76,27 @@ msgid ""
 "close now."
 msgstr ""
 
-#: src/pref.c:281
+#: src/pref.c:281 src/properties.c:228
 msgid "Background Color"
 msgstr ""
 
-#: src/pref.c:282
+#: src/pref.c:282 src/properties.c:229
 msgid "Text Color"
 msgstr ""
 
-#: src/pref.c:283
+#: src/pref.c:283 src/properties.c:230
 msgid "Border"
 msgstr ""
 
-#: src/pref.c:284
+#: src/pref.c:284 src/properties.c:231
 msgid "Border _width:"
 msgstr ""
 
-#: src/pref.c:285 src/pref.c:290
+#: src/pref.c:285 src/pref.c:290 src/properties.c:232 src/properties.c:235
 msgid "pixels"
 msgstr ""
 
-#: src/pref.c:286
+#: src/pref.c:286 src/properties.c:233
 msgid "Font Face"
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Toolbar"
 msgstr ""
 
-#: src/pref.c:289
+#: src/pref.c:289 src/properties.c:234
 msgid "_Padding:"
 msgstr ""
 
@@ -128,35 +128,35 @@ msgstr ""
 msgid "Global Preferences"
 msgstr ""
 
-#: src/pref.c:362
+#: src/pref.c:362 src/properties.c:303
 msgid "_Use system text color"
 msgstr ""
 
-#: src/pref.c:385
+#: src/pref.c:385 src/properties.c:324
 msgid "_Use system background color"
 msgstr ""
 
-#: src/pref.c:421
+#: src/pref.c:421 src/properties.c:357
 msgid "The amount of space you want between the border and text."
 msgstr ""
 
-#: src/pref.c:422
+#: src/pref.c:422 src/properties.c:358
 msgid ""
 "Choose the number of pixels around the text region.  This space is colored "
 "the same and surrounds it on all sides."
 msgstr ""
 
-#: src/pref.c:435
+#: src/pref.c:435 src/properties.c:374
 msgid "The amount of space you want surrounding the pad."
 msgstr ""
 
-#: src/pref.c:436
+#: src/pref.c:436 src/properties.c:375
 msgid ""
 "Choose the number of pixels around the pad.  This space is colored "
 "independently and surrounds it on all sides."
 msgstr ""
 
-#: src/pref.c:462
+#: src/pref.c:462 src/properties.c:397
 msgid "_Use system font face"
 msgstr ""
 
@@ -258,12 +258,20 @@ msgstr ""
 msgid "/Pad/_New"
 msgstr ""
 
+#: src/pad.c:42
+msgid "/Pad/sep1"
+msgstr ""
+
 #: src/pad.c:43
 msgid "/Pad/_Sticky"
 msgstr ""
 
 #: src/pad.c:44
 msgid "/Pad/Proper_ties"
+msgstr ""
+
+#: src/pad.c:45
+msgid "/Pad/sep2"
 msgstr ""
 
 #: src/pad.c:46
@@ -290,6 +298,10 @@ msgstr ""
 msgid "/Edit/_Paste"
 msgstr ""
 
+#: src/pad.c:53
+msgid "/Edit/sep"
+msgstr ""
+
 #: src/pad.c:54
 msgid "/Edit/Prefere_nces"
 msgstr ""
@@ -304,6 +316,10 @@ msgstr ""
 
 #: src/pad.c:57
 msgid "/Notes/_Close All"
+msgstr ""
+
+#: src/pad.c:58
+msgid "/Notes/sep"
 msgstr ""
 
 #: src/pad.c:59
@@ -379,15 +395,15 @@ msgstr ""
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1072 src/pad.c:1258
+#: src/pad.c:1072 src/pad.c:1259
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1074 src/pad.c:1260
+#: src/pad.c:1074 src/pad.c:1261
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1076 src/pad.c:1264
+#: src/pad.c:1076 src/pad.c:1265
 msgid "/Edit/Paste"
 msgstr ""
 
@@ -395,7 +411,7 @@ msgstr ""
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1252
+#: src/pad.c:1253
 msgid "/Pad/Sticky"
 msgstr ""
 
@@ -463,4 +479,8 @@ msgstr ""
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
+msgstr ""
+
+#: src/properties.c:276
+msgid "Pad Properties"
 msgstr ""
