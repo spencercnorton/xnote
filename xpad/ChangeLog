@@ -12,17 +12,14 @@
 	* xpad.desktop.in: Change 'xpad' to 'Xpad'
 
 2003-10-03  Michael Terry  <mikix@users.sourceforge.net>
-
 	* configure.ac, src/main.c: More correct check for locale.h and make
 	  translations work again
 
 2003-10-01  Michael Terry  <mikix@users.sourceforge.net>
-
 	* configure.ac, THANKS: Bumped version to 1.12, set Automake
 	  strictness to gnits level, and added THANKS file
 
 2003-09-29  Michael Terry  <mikix@users.sourceforge.net>
-
 	* src/pref.c: Made 'Auto-hide toolbar' button sensitive depending
 	  on toolbar being enabled or not
 	* src/settings.c: Save new list pointer when removing and appending
