@@ -1,16 +1,17 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
-Name=Sticky Notes
-Name[de]=Klebrige Anmerkungen
-Name[es]=Notas Pegajosas
-Name[fr]=Notes Collantes
-Name[it]=Note Appiccicose
-Name[jp]=粘着性があるノート
-Name[ko]=끈끈한 주
-Name[pt]=Notas Pegajosas
-Name[ru]=Липкие Счета
-Name[zh]=稠粘笔记
+Name=xpad
+GenericName=Sticky Notes
+GenericName[de]=Klebrige Anmerkungen
+GenericName[es]=Notas Pegajosas
+GenericName[fr]=Notes Collantes
+GenericName[it]=Note Appiccicose
+GenericName[jp]=粘着性があるノート
+GenericName[ko]=끈끈한 주
+GenericName[pt]=Notas Pegajosas
+GenericName[ru]=Липкие Счета
+GenericName[zh]=稠粘笔记
 Comment=Jot down notes for later
 Comment[de]=Schreiben Sie Anmerkungen für später nieder
 Comment[es]=Apunte las notas para más adelante
