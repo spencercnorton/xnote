@@ -1,6 +1,18 @@
+Version 2.2
+* Bumped GTK+ dependency to 2.6
+* New About dialog (using GtkAboutDialog)
+* New default location for configuration files: ~/.config/xpad
+* Updated icon (now uses lighter colors)
+* Use GOption for command-line parsing
+* New command-line option --hide-old (or -h) to not show old pads
+* Renamed command-line option --nonew to --no-new and added -N shortcut
+* Allow running from console if we don't need to do anything graphical
+
+
 Version 2.1
 * Fix tray icon being the wrong size
 * Fix xpad to close when no tray and no open pads
+
 
 Version 2.0
 * Fix notes list to display correct number of pads

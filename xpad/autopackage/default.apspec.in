@@ -7,13 +7,13 @@ ShortName: xpad
 URL: http://xpad.sourceforge.net/
 Maintainer: Michael Terry <mike@mterry.name>
 Packager: Michael Terry <mike@mterry.name>
-Summary: Xpad is a sticky notes program.
+Summary: Xpad is a sticky notes application.
 License: GPL
 SoftwareVersion: @VERSION@
 PackageVersion: 1
 
 [Description]
-Xpad is a sticky notes program.
+Xpad is a sticky notes application.
 
 [BuildPrepare]
 prepareBuild
@@ -25,7 +25,7 @@ unprepareBuild
 echo '*' | import
 
 [Prepare]
-require @gtk.org/gtk 2.4
+require @gtk.org/gtk 2.6
 
 [Install]
 installExe bin/*
