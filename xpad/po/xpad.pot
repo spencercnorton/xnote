@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-08 14:08-0500\n"
+"POT-Creation-Date: 2003-02-12 14:02-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -362,40 +362,40 @@ msgstr ""
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:814
+#: src/pad.c:808
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:819
+#: src/pad.c:813
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:860
+#: src/pad.c:854
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:911
+#: src/pad.c:905
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1048 src/pad.c:1229
+#: src/pad.c:1042 src/pad.c:1224
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1050 src/pad.c:1231
+#: src/pad.c:1044 src/pad.c:1226
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1052 src/pad.c:1235
+#: src/pad.c:1046 src/pad.c:1230
 msgid "/Edit/Paste"
 msgstr ""
 
-#: src/pad.c:1181
+#: src/pad.c:1176
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1223
+#: src/pad.c:1218
 msgid "/Pad/Sticky"
 msgstr ""
 

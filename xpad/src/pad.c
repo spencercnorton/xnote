@@ -41,7 +41,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Pad/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
 	{"/Pad/sep1", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
-	{N_("/Pad/_Properties"), 		NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
+	{N_("/Pad/Proper_ties"), 		NULL,			menuitem_cb,	17,	"<StockItem>", GTK_STOCK_PROPERTIES},
 	{"/Pad/sep2", 				NULL,			0,		0,	"<Separator>"},
 	{N_("/Pad/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
 	{N_("/Pad/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
@@ -51,7 +51,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{N_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
 	{N_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
 	{"/Edit/sep",				NULL,			0,		0,	"<Separator>"},
-	{N_("/Edit/_Preferences"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
+	{N_("/Edit/Prefere_nces"),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{N_("/_Notes"),				NULL,			0,		0,	"<Branch>"},
 	{N_("/Notes/_Show All"),		NULL,			menuitem_cb,	10,	"<Item>"},
 	{N_("/Notes/_Close All"),		"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
@@ -775,6 +775,7 @@ static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 {
 	gchar *contentbuf;
 	GtkTextBuffer *buffer;
+	GtkTextIter iter;
 	GtkTextView *textbox = get_text (pad->window);
 	
 	contentbuf = fio_get_file (filename);
@@ -784,6 +785,10 @@ static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 	buffer = gtk_text_view_get_buffer (textbox);
 	gtk_text_buffer_set_text (buffer, contentbuf, -1);
 	g_free (contentbuf);
+	
+	gtk_text_buffer_get_start_iter (buffer, &iter);
+	gtk_text_buffer_place_cursor (buffer, &iter);
+	
 	return TRUE;
 }
 
