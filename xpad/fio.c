@@ -247,19 +247,38 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 
 gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
 {
-	return fio_get_values_from_file (	filename, 
-									"back_red", &starter->back.red,
-									"back_green", &starter->back.green,
-									"back_blue", &starter->back.blue,
-									"text_red", &starter->text.red,
-									"text_green", &starter->text.green,
-									"text_blue", &starter->text.blue,
-									"border_red", &starter->border.red,
-									"border_green", &starter->border.green,
-									"border_blue", &starter->border.blue,
-									"border_width", &starter->border_width,
-									"fontname", starter->fontname,
-									NULL );
+	gint back_R, back_G, back_B,
+	     text_R, text_G, text_B,
+	     bord_R, bord_G, bord_B;
+	gint Result;
+
+	Result = fio_get_values_from_file (filename, 
+								"back_red", &back_R,
+								"back_green", &back_G,
+								"back_blue", &back_B,
+								"text_red", &text_R,
+								"text_green", &text_G,
+								"text_blue", &text_B,
+								"border_red", &bord_R,
+								"border_green", &bord_G,
+								"border_blue", &bord_B,
+								"border_width", &starter->border_width,
+								"fontname", starter->fontname,
+								NULL );
+
+	starter->back.red = back_R;
+	starter->back.green = back_G;
+	starter->back.blue = back_B;
+
+	starter->text.red = text_R;
+	starter->text.green = text_G;
+	starter->text.blue = text_B;
+
+	starter->border.red = bord_R;
+	starter->border.green = bord_G;
+	starter->border.blue = bord_B;
+
+	return Result;
 }
 
 

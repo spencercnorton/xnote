@@ -167,6 +167,7 @@ void xpad_set_default_icon (void)
 void xpad_init (void)
 {
 	struct sigaction sa;
+	gint decor_int = decorations;
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -186,12 +187,15 @@ void xpad_init (void)
 	default_style = DEFAULT_STYLE;
 	
 	fio_get_values_from_file (DEFAULTS_FILENAME, 
-						  "decorations", &decorations,
+						  "decorations", &decor_int,
 						  "sync_time", &sync_time,
 						  "height", &dheight,
 						  "width", &dwidth,
 						  "confirm_destroy", &confirm_destroy,
 						  NULL);
+
+	decorations = decor_int;
+
 	if (fio_get_style_from_file (DEFAULTS_FILENAME, &default_style))
 	{
 		// this happens if there isn't a ~/.xpad directory (i.e. first run)
