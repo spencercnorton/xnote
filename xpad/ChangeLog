@@ -1,3 +1,6 @@
+2003-10-23  Michael Terry  <mikix@users.sourceforge.net>
+	* po/es.po, po/ga.po, po/nl.po: Update translations
+
 2003-10-20  Michael Terry  <mikix@users.sourceforge.net>
 	* configure.ac: Remove unused header/function tests
 	* src/main.c: Fix segfault if can't connect to master socket

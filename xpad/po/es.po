@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xpad 1.12\n"
+"Project-Id-Version: xpad 1.13\n"
 "POT-Creation-Date: 2003-10-20 22:04-0400\n"
-"PO-Revision-Date: 2003-10-08 13:42+0200\n"
+"PO-Revision-Date: 2003-10-23 21:31+0200\n"
 "Last-Translator: Ramon Rey Vicente <ramon.rey@hispalinux.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,21 +29,16 @@ msgstr "Muestra la versión de xpad y termina"
 
 #: src/main.c:269
 msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
-msgstr ""
-"Configura la cantidad de información de depuración que muestra (puede ser 0, "
-"1 ó 2; por defecto es 0)"
+msgstr "Configura la cantidad de información de depuración que muestra (puede ser 0, 1 ó 2; por defecto es 0)"
 
 #: src/main.c:270
-msgid ""
-"Prevents xpad from creating a new pad on startup if no previous pads exist"
-msgstr ""
-"Impide que xpad cree una nota nueva al inicio si no existen notas previas"
+msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+msgstr "Impide que xpad cree una nota nueva al inicio si no existen notas previas"
 
 #. registered here a second time because it has effects both on local instances and remote instances
 #: src/main.c:274
 msgid "Causes xpad to create a new pad on startup even if pads already exist"
-msgstr ""
-"Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
+msgstr "Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
 
 #: src/main.c:275
 msgid "Causes all running xpad instances to close"
@@ -54,12 +49,9 @@ msgid "Lists the titles of all open pads"
 msgstr "Lista los títulos de todas las notas abiertas"
 
 #: src/main.c:277
-msgid ""
-"Causes the Nth pad (1-based) to present itself to the user; pad numbers can "
-"be seen by using \"--list\""
+msgid "Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\""
 msgstr ""
-"Hace que la nota n-ésima (desde 1) se presente a sí misma al usuario; los "
-"números\n"
+"Hace que la nota n-ésima (desde 1) se presente a sí misma al usuario; los números\n"
 "de nota pueden verse usando \"--list\""
 
 #: src/main.c:278
@@ -103,12 +95,9 @@ msgid "Could not open directory %s."
 msgstr "No se puede abrir el directorio %s."
 
 #: src/fio.c:441
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
 msgstr ""
-"Este directorio se necesita para almacenar las preferencias e información "
-"sobre\n"
+"Este directorio se necesita para almacenar las preferencias e información sobre\n"
 "las notas. Xpad se cerrará ahora."
 
 #: src/pref.c:288 src/properties.c:228
@@ -176,9 +165,7 @@ msgid "The amount of space you want between the border and text."
 msgstr "La cantidad de espacio que se desea entre el borde y el texto."
 
 #: src/pref.c:429 src/properties.c:358
-msgid ""
-"Choose the number of pixels around the text region.  This space is colored "
-"the same and surrounds it on all sides."
+msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
 msgstr ""
 "Elija el número de píxeles alrededor de una región de texto. Este espacio\n"
 "se colorea igual y la rodea por todas partes."
@@ -188,9 +175,7 @@ msgid "The amount of space you want surrounding the pad."
 msgstr "La cantidad de espacio deseado rodeando la nota."
 
 #: src/pref.c:443 src/properties.c:375
-msgid ""
-"Choose the number of pixels around the pad.  This space is colored "
-"independently and surrounds it on all sides."
+msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
 msgstr ""
 "Elija el número de píxeles alrededor de la nota. Este espacio se colorea\n"
 "independientemente y la rodea por todas partes."
@@ -224,16 +209,12 @@ msgid "<b>Unused Buttons:</b>"
 msgstr "<b>Botones sin usar:</b>"
 
 #: src/pref.c:642 src/pref.c:643
-msgid ""
-"If on, a toolbar will appear below each pad when the mouse hovers over it."
-msgstr ""
-"Si se activa, aparecerá una barra de herramientas bajo cada nota cuando el "
-"ratón pase sobre ella."
+msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr "Si se activa, aparecerá una barra de herramientas bajo cada nota cuando el ratón pase sobre ella."
 
 #: src/pref.c:646 src/pref.c:647
 msgid "If on, the toolbar will disappear when you are not using the pad."
-msgstr ""
-"Si se activa, la barra de herramientas desapacerá cuando no se use la nota."
+msgstr "Si se activa, la barra de herramientas desapacerá cuando no se use la nota."
 
 #: src/pref.c:659
 msgid "Allow _scrollbars"
@@ -260,9 +241,7 @@ msgid "<b>Window Manager Close Action:</b>"
 msgstr "<b>Acción del gestor de ventanas para cerrar:</b>"
 
 #: src/pref.c:717 src/pref.c:719
-msgid ""
-"If on, your window manager will add its own decorations to each pad.  For "
-"example, a titlebar and close button."
+msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
 msgstr ""
 "Si se activa, el gestor de ventanas añadirá sus propias decoraciones a\n"
 "cada nota. Por ejemplo, una barra de título y un botón para cerrar."
@@ -276,19 +255,14 @@ msgid "If on, new pads are sticky by default."
 msgstr "Si se activa, las nuevas notas serán pegajosas por defecto."
 
 #: src/pref.c:731 src/pref.c:733
-msgid ""
-"If on, scrollbars appear when text is larger than the pad.  If off, the pad "
-"resizes to fit the text."
+msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
 msgstr ""
 "Si se activa, las barras de desplazamiento aparecen cuando el\n"
 "texto sea más grande que la nota. Si se desactiva, la nota se\n"
 "redimensiona para acomodar el texto."
 
 #: src/pref.c:737 src/pref.c:740
-msgid ""
-"If on, when a pad loses focus, it will become uneditable.  This allows you "
-"to move it by left dragging.  To make it editable again, double-click the "
-"pad.  If off, pads are always editable."
+msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
 msgstr ""
 "Si se activa, cuando una nota pierde el foco, se vuelve\n"
 "ineditable. Esto permite moverla arrastrándola con el botón\n"
@@ -306,9 +280,7 @@ msgstr ""
 "salvando sus contenidos."
 
 #: src/pref.c:753 src/pref.c:755
-msgid ""
-"The pad you clicked the close button on will be destroyed, losing contents.  "
-"There will be no confirmation."
+msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
 msgstr ""
 "La nota en la que se ha presionado el botón \"cerrar\" será\n"
 "destruida, perdiendo sus contenidos. No se pedirá confirmación."
@@ -449,8 +421,7 @@ msgstr "Está usando xpad %s con GTK+ %i.%i.%i."
 
 #: src/pad.c:844
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
-msgstr ""
-"Visite http://xpad.sourceforge.net para más información acerca de xpad."
+msgstr "Visite http://xpad.sourceforge.net para más información acerca de xpad."
 
 #. we must also re-enable menu widgets for cut/copy/paste, since we want the
 #. user to be able to cut/copy/paste
@@ -477,8 +448,7 @@ msgstr "/Nota/Pegajosa"
 
 #: src/help.c:46
 msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos.\n"
+"Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
 "\n"
 msgstr ""
 "Cada sesión de xpad consiste en una o más notas abiertas. Estas notas son\n"
@@ -487,9 +457,7 @@ msgstr ""
 
 #: src/help.c:50
 msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the "
-"pad.\n"
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
 "<b>Para mover una nota</b>, arrastre con el botón izquierdo sobre la\n"
@@ -499,8 +467,7 @@ msgstr ""
 
 #: src/help.c:54
 msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad.\n"
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
 "\n"
 msgstr ""
 "<b>Para redimensionar la nota</b>, arrastre con el botón izquierdo en\n"
@@ -510,8 +477,7 @@ msgstr ""
 
 #: src/help.c:57
 msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences.\n"
+"<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
 "\n"
 msgstr ""
 "<b>Para cambiar la configuración de color</b>, haga click con el botón\n"
@@ -520,8 +486,7 @@ msgstr ""
 
 #: src/help.c:60
 msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy.\n"
+"Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
 "\n"
 msgstr ""
 "La mayoría de las acciones están disponibles mediante el menú\n"
@@ -530,9 +495,7 @@ msgstr ""
 
 #: src/help.c:64
 msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
-"Por favor, envíe comentarios o informes de error a xpad-devel@lists."
-"sourceforge.net"
+msgstr "Por favor, envíe comentarios o informes de error a xpad-devel@lists.sourceforge.net"
 
 #: src/help.c:73
 msgid "Help"
@@ -555,9 +518,7 @@ msgid "xpad: right click for more options..."
 msgstr "xpad: haga click con el botón derecho para más opciones..."
 
 #: src/tray.c:210
-msgid ""
-"Right click this icon for a menu of options pertaining to XPad. Left click "
-"it to toggle whether or not the pads are displayed."
+msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
 msgstr ""
 "Click con el botón derecho sobre este icono para un menú de opciones\n"
 "pertenecientes a XPad. Click con el botón izquierdo para cambiar la\n"
@@ -576,6 +537,5 @@ msgid "Sticky Notes"
 msgstr "Notas pegajosas"
 
 #: xpad.desktop.in.h:3
-#, fuzzy
 msgid "Xpad"
-msgstr "xpad"
+msgstr "Xpad"
