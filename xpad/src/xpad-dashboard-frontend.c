@@ -120,7 +120,6 @@ xpad_dashboard_frontend_does_text_break (GtkTextIter *start, GtkTextIter *end)
 	GtkTextIter i = *start;
 	
 	do {
-		g_print ("checking character for break: %c\n", (char) gtk_text_iter_get_char (&i));
 		if (gtk_text_iter_starts_word (&i) ||
 		    gtk_text_iter_ends_word (&i))
 			return TRUE;
@@ -197,25 +196,25 @@ xpad_dashboard_frontend_init_for_pad (pad_node *pad)
 	g_return_if_fail (pad != NULL);
 	
 	g_signal_connect (
-		G_OBJECT (pad->window),
+		pad->window,
 		"focus-in-event",
 		G_CALLBACK (xpad_dashboard_frontend_focus_in_cb),
 		pad);
 	
 	g_signal_connect (
-		G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview))),
+		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
 		"insert-text",
 		G_CALLBACK (xpad_dashboard_frontend_insert_text_cb),
 		pad);
 	
 	g_signal_connect (
-		G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview))),
+		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
 		"changed",
 		G_CALLBACK (xpad_dashboard_frontend_changed_cb),
 		pad);
 	
 	g_signal_connect (
-		G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview))),
+		gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview)),
 		"delete-range",
 		G_CALLBACK (xpad_dashboard_frontend_delete_range_cb),
 		pad);
