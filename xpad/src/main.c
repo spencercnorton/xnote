@@ -171,21 +171,43 @@ void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *seco
 static void
 print_help (void)
 {
-	fprintf (output,
-		_("Usage: xpad [OPTIONS]\n"
-	        "\n"
-	        "  -V, --version         prints xpad version and exits\n"
-	        "  -h, --help            prints this usage information and exits\n"
-	        "  -v N, --verbosity=N   sets level of output\n"
-	        "                          0=none, 1=moderate, 2=debug\n"
-	        "                          default is 0\n"
-	        "  -n, --new             opens a new pad only\n"));
-	fprintf (output,
-		_("  --nonew               prevents xpad from making a new pad\n"
-	        "  -q, --quit            quits all open xpad sessions\n"
-		"  -l, --list            lists the titles of all pads\n"
-		"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
-	        "  --showall             brings all pads to the foreground\n"));
+	gchar *msg, *lmsg;
+	
+	msg = g_strconcat (
+		_("Usage: xpad [OPTIONS]\n"),
+	        "\n",
+	        "  -V, --version         ",
+		_("prints xpad version and exits\n"),
+	        "  -h, --help            ",
+		_("prints this usage information and exits\n"),
+	        "  -v N, --verbosity=N   ",
+		_("sets level of output\n"),
+	        "                          ",
+		_("0=none, 1=moderate, 2=debug\n"),
+	        "                          ",
+		_("default is 0\n"),
+	        "  -n, --new             ",
+		_("opens a new pad only\n"),
+		"  --nonew               ",
+		_("prevents xpad from making a new pad\n"),
+	        "  -q, --quit            ",
+		_("quits all open xpad sessions\n"),
+		"  -l, --list            ",
+		_("lists the titles of all pads\n"),
+		"  -s N, --show=N        ",
+		_("brings the Nth pad (1-based) to the foreground\n"),
+	        "  --showall             ",
+		_("brings all pads to the foreground\n"),
+		NULL);
+	
+	lmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
+	
+	if (lmsg)
+		fprintf (output, lmsg);
+	
+	g_free (msg);
+	g_free (lmsg);
+	
 	exit (0);
 }
 
@@ -237,8 +259,20 @@ static void
 list_pads (void)
 {
 	const pad_node *temp;
+	
 	for (temp = first_pad; temp; temp = temp->next)
-		fprintf (output, "%s\n", temp->title);
+	{
+		gchar *title, *ltitle;
+		
+		title = g_strconcat (temp->title, "\n", NULL);
+		ltitle = g_locale_from_utf8 (title, -1, NULL, NULL, NULL);
+		
+		if (ltitle)
+			fprintf (output, "%s", ltitle);
+		
+		g_free (title);
+		g_free (ltitle);
+	}
 }
 
 enum arg_type {
