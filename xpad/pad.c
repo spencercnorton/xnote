@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001 Michael Terry
+Copyright (c) 2001-2002 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -271,18 +271,7 @@ void help_dialog ()
 	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 
 	gtk_label_set_markup (GTK_LABEL (label), 
-"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which you write notes or messages.\n
-xpad was designed with ease of use in mind, but if you have troubles, here's how to do most things you would want to:\n
-\n
-<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n
-<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  To change the default size for new pads, right click on a pad and select \"Global Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n
-<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \"New Pad\" from the menu.\n
-<b>colors</b>: If black on yellow isn't your thing, change the default color by right clicking on the pad you want to change and selecting \"Pad Preferences\" from the menu.  An options menu will now pop up and you can change the background color, text color, font, and border.  These settings only affect the pad you clicked on.\n
-<b>defaults</b>: To change the colors and other options used when a new pad is created, right click on a pad, choose \"Global Preferences\" and enjoy.\n
-<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every 60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" from the right-click menu, all contents are irrevocably lost).\n
-<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad contents -- they will be erased.\n
-<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that this pad contains only a copy of the file; destroying the pad does nothing to the original file.\n
-");
+"xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which you write notes or messages.\nxpad was designed with ease of use in mind, but if you have troubles, here's how to do most things you would want to:\n\n<b>moving</b>: To move a pad, hold down CTRL and drag with the left mouse button.\n<b>resizing</b>: To resize a pad, hold down CTRL and drag with the right mouse button.  To change the default size for new pads, right click on a pad and select \"Global Preferences\".  On the tab \"Default Size\", you can change the appropriate values.\n<b>making new pads</b>: To open a new pad, right click on an existing pad.  Select \"New Pad\" from the menu.\n<b>colors</b>: If black on yellow isn't your thing, change the default color by right clicking on the pad you want to change and selecting \"Pad Preferences\" from the menu.  An options menu will now pop up and you can change the background color, text color, font, and border.  These settings only affect the pad you clicked on.\n<b>defaults</b>: To change the colors and other options used when a new pad is created, right click on a pad, choose \"Global Preferences\" and enjoy.\n<b>saving</b>: To save pads, you do nothing.  All pads are autosaved, by default every 60 seconds, and are saved when closed (not when destroyed -- if you choose \"Destroy\" from the right-click menu, all contents are irrevocably lost).\n<b>closing pads</b>: To close a pad and <i>keep</i> its contents, choose \"Close\" from the right-click menu.  Again, \"Destroy\" is only if you are sure you don't want the pad contents -- they will be erased.\n<b>opening files</b>: xpad allows you to open an arbitrary file into a pad.  Note that this pad contains only a copy of the file; destroying the pad does nothing to the original file.\n");
 
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
@@ -544,16 +533,17 @@ static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 {
 	GdkEventButton *event_button;
 
-	g_return_val_if_fail (event != NULL, FALSE);
+	if (event == NULL)
+		return FALSE;
 
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		event_button = (GdkEventButton *) event;
-
+		
 		// raise window if clicked on
 		if (event_button->button == 1)
 			gtk_window_present (pad->window);
-
+		
 		if (event_button->button == 1 && (event_button->state & GDK_CONTROL_MASK) )
 		{
 			pad_move (pad, event);
