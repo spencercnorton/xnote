@@ -32,6 +32,7 @@ struct settings {
 	int sync_time;
 	int decorations;
 	int confirm_destroy;
+	int edit_lock;
 	pad_style style;
 };
 

@@ -31,9 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/stat.h>
 
 
-const gchar *DEFAULTS_FILENAME = "default-style";
-
-
 /* sets filename to full path of filename (prepends working_dir to it) 
    returns 0 if filename was full path, 1 if we added to it.
 */

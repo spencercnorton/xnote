@@ -47,6 +47,7 @@ struct settings current_settings =
 	60, // sync time in seconds
 	0, // decorations are off
 	1, // destroy confirmations on
+	0, // edit lock off
 	{ // default style
 		{0, 0xe000, 0xe000, 0x5600}, // yellow background
 		{0, 0, 0, 0}, // black text
@@ -206,6 +207,7 @@ void xpad_init (void)
 						  "height", &current_settings.height,
 						  "width", &current_settings.width,
 						  "confirm_destroy", &current_settings.confirm_destroy,
+						  "edit_lock", &current_settings.edit_lock,
 						  NULL);
 
 	if (fio_get_style_from_file (DEFAULTS_FILENAME, &current_settings.style))
