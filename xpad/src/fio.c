@@ -217,12 +217,18 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 			case 'u':
 				*((guint *) value) = (guint) strtoul (temp, NULL, 0);
 				break;
+			case 'h':
+				*((guint16 *) value) = (guint16) strtoul (temp, NULL, 0);
+				break;
 			case 's':
 				g_free (*((gchar **) value));
 				*((gchar **) value) = g_strdup (temp);
 				break;
 			case 'b':
 				*((gboolean *) value) = atoi (temp) ? TRUE : FALSE;
+				break;
+			default:
+				g_warning ("Bad type to fio_get_values_from_file: %c\n", type);
 				break;
 			}
 		
@@ -250,38 +256,35 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 	buf = g_strdup ("");
 	while ((item = va_arg (ap, gchar *)))
 	{
-		gchar *tmp_string, *final_string;
-		union {
-			gchar *s;
-			gint i;
-			guint u;
-		} value;
-		gchar type;
+		gchar *final_string;
+		gchar *value_string;
 		
-		type = item[0];
 		item = &item[2]; /* skip type and '|' */
 		
 		/* translate our types to printf types */
-		switch (type)
+		switch (item[0])
 		{
 		case 'b':
-			type = 'i';
-			value.i = va_arg (ap, gboolean);
+			value_string = g_strdup_printf ("%i", va_arg (ap, gboolean));
 			break;
+		case 'h':
 		case 'i':
-			value.i = va_arg (ap, gint);
+			value_string = g_strdup_printf ("%i", va_arg (ap, gint));
 			break;
 		case 'u':
-			value.u = va_arg (ap, guint);
+			value_string = g_strdup_printf ("%u", va_arg (ap, guint));
 			break;
 		case 's':
-			value.s = va_arg (ap, gchar *);
+			value_string = g_strdup_printf ("%s", va_arg (ap, gchar *));
+			break;
+		default:
+			g_warning ("Bad type to fio_set_values_to_file: %c\n", item[0]);
+			value_string = g_strdup ("");
 			break;
 		}
 		
-		tmp_string = g_strdup_printf ("%s%s %%%c", (buf[0] == 0) ? "" : "\n", item, type);
-		final_string = g_strdup_printf (tmp_string, value);
-		g_free (tmp_string);
+		final_string = g_strdup_printf ("%s%s %s", (buf[0] == 0) ? "" : "\n", item, value_string);
+		g_free (value_string);
 		
 		tmpbuf = buf;
 		buf = g_strconcat (buf, final_string, NULL);

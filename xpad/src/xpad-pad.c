@@ -41,7 +41,7 @@ struct XpadPadPrivate
 	gint x, y, width, height;
 	gchar *infoname;
 	gchar *contentname;
-	gint sticky;
+	gboolean sticky;
 	
 	/* this was added to differentiate between a pad that has been explicitly closed,
 	 * and a pad that has been merely hidden to the system tray */
@@ -964,12 +964,12 @@ load_info (XpadPad *pad)
 		"b|follow_color", &follow_color,
 		"b|sticky", &pad->priv->sticky,
 		"b|hidden", &hidden,
-		"i|back_red", &back.red,
-		"i|back_green", &back.green,
-		"i|back_blue", &back.blue,
-		"i|text_red", &text.red,
-		"i|text_green", &text.green,
-		"i|text_blue", &text.blue,
+		"h|back_red", &back.red,
+		"h|back_green", &back.green,
+		"h|back_blue", &back.blue,
+		"h|text_red", &text.red,
+		"h|text_green", &text.green,
+		"h|text_blue", &text.blue,
 		"s|fontname", &fontname,
 		"s|content", &pad->priv->contentname,
 		NULL))
@@ -1048,12 +1048,12 @@ save_info (XpadPad *pad)
 		"b|follow_color", xpad_text_view_get_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"b|sticky", pad->priv->sticky,
 		"b|hidden", GTK_WIDGET_VISIBLE (pad),
-		"i|back_red", style->base[GTK_STATE_NORMAL].red,
-		"i|back_green", style->base[GTK_STATE_NORMAL].green,
-		"i|back_blue", style->base[GTK_STATE_NORMAL].blue,
-		"i|text_red", style->text[GTK_STATE_NORMAL].red,
-		"i|text_green", style->text[GTK_STATE_NORMAL].green,
-		"i|text_blue", style->text[GTK_STATE_NORMAL].blue,
+		"h|back_red", style->base[GTK_STATE_NORMAL].red,
+		"h|back_green", style->base[GTK_STATE_NORMAL].green,
+		"h|back_blue", style->base[GTK_STATE_NORMAL].blue,
+		"h|text_red", style->text[GTK_STATE_NORMAL].red,
+		"h|text_green", style->text[GTK_STATE_NORMAL].green,
+		"h|text_blue", style->text[GTK_STATE_NORMAL].blue,
 		"s|fontname", fontname,
 		"s|content", pad->priv->contentname,
 		NULL);
