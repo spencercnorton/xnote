@@ -44,7 +44,8 @@ toolbar_show (pad_node *pad)
 {
 	if (!toolbar_is_visible (pad->toolbar))
 	{
-		gtk_window_resize (pad->window, pad->width, pad->height + pad->toolbar->height);
+		pad->height += pad->toolbar->height;
+		gtk_window_resize (pad->window, pad->width, pad->height);
 		gtk_widget_show_all (pad->toolbar->bar);
 		
 		toolbar_set_visible (pad->toolbar, TRUE);
@@ -56,8 +57,9 @@ toolbar_hide (pad_node *pad)
 {
 	if (toolbar_is_visible (pad->toolbar))
 	{
+		pad->height -= pad->toolbar->height;
 		gtk_widget_hide (pad->toolbar->bar);
-		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
+		gtk_window_resize (pad->window, pad->width, pad->height);
 		
 		toolbar_set_visible (pad->toolbar, FALSE);
 	}
