@@ -45,7 +45,6 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 {
 	FILE *file;
 	gchar *temp;
-	const gchar *errtext;
 	gboolean error = FALSE;
 	
 	temp = fio_fill_filename (name);
@@ -65,9 +64,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		GtkWidget *dialog;
 		gchar usertext [524];
 		
-		errtext = g_strerror (errno);
-		
-		sprintf (usertext, "Could not write to file %s:  %s.", temp, errtext);
+		sprintf (usertext, _("Could not write to file %s."), temp);
 		fprintf (stderr, "%s\n", usertext);
 		
 		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
@@ -555,10 +552,10 @@ int fio_load_pads (void)
 	{
 		gchar errtext [500];
 		
-		sprintf (errtext, "Could not open xpad directory '%s'.\n", working_dir);
+		sprintf (errtext, _("Could not open xpad directory %s."), working_dir);
 		
 		xpad_show_error (NULL, errtext,
-			"This directory is needed to store preference and pad information.  Xpad will close now.");
+			_("This directory is needed to store preference and pad information.  Xpad will close now."));
 		
 		gtk_main_quit ();
 		return -1;

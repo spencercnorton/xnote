@@ -41,33 +41,33 @@ static GtkWidget *create_help (gint page)
 	
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
-	helplabel = gtk_label_new ("Introduction");
+	helplabel = gtk_label_new (_("Introduction"));
 	styletext = gtk_label_new ("");
-	stylelabel = gtk_label_new ("Style Locking");
+	stylelabel = gtk_label_new (_("Style Locking"));
 	notebook = gtk_notebook_new ();
 	
 	strcpy (helptextbuf, 
-"Each xpad session consists of one or more open pads.  "
+_("Each xpad session consists of one or more open pads.  "
 "These pads are basically textboxes on your desktop in which "
-"you can write memos.\n\n"
-
-"The contents of pads are transparently "
-"saved and reloaded when xpad is next started.\n\n");
-	strcat (helptextbuf,
-"To move a pad, left drag on the toolbar, right drag "
-"on the resizer in the bottom right, or hold down CTRL "
-"while left dragging anywhere on the pad.\n\n");
-	strcat (helptextbuf,
-"To resize a pad, left drag on the resizer or hold down "
-"CTRL while right dragging anywhere on the pad.\n\n");
+"you can write memos.\n\n")
 	strcat (helptextbuf, 
-"Most actions are available throught the popup menu "
+_("The contents of pads are transparently "
+"saved and reloaded when xpad is next started.\n\n"));
+	strcat (helptextbuf,
+_("To move a pad, left drag on the toolbar, right drag "
+"on the resizer in the bottom right, or hold down CTRL "
+"while left dragging anywhere on the pad.\n\n"));
+	strcat (helptextbuf,
+_("To resize a pad, left drag on the resizer or hold down "
+"CTRL while right dragging anywhere on the pad.\n\n"));
+	strcat (helptextbuf, 
+_("Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
-"enjoy.\n\n"
+"enjoy.\n\n")
+	strcat (helptextbuf,
+_("Please send comments or bug reports to "
+"xpad-devel@lists.sourceforge.net"));
 
-"Please send comments or bug reports to "
-"xpad-devel@lists.sourceforge.net"
-);
 	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
 
 	gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
@@ -77,12 +77,12 @@ static GtkWidget *create_help (gint page)
 	
 	
 	gtk_label_set_markup (GTK_LABEL (styletext),
-"If a pad's style is locked, any changes made in the preference "
+_("If a pad's style is locked, any changes made in the preference "
 "window to the text, background, or border color or the font face "
 "do not affect that pad.\n\n"
 "To lock a pad's style, right click on a "
 "pad to open the popup menu and select \"Lock Style\".  "
-"By default, pads are not locked.");
+"By default, pads are not locked."));
 
 	gtk_misc_set_padding (GTK_MISC (styletext), 12, 12);
 	gtk_misc_set_alignment (GTK_MISC (styletext), 0, 0);
@@ -91,7 +91,7 @@ static GtkWidget *create_help (gint page)
 	
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), page);
 	
-	gtk_window_set_title (GTK_WINDOW (dialog), "xpad Help");
+	gtk_window_set_title (GTK_WINDOW (dialog), _("Xpad Help"));
 	
 	/* Add the label, and show everything we've added to the dialog. */
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);
