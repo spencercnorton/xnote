@@ -40,10 +40,10 @@ INSTALL = @INSTALL@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 datadir = @datadir@
-bindir = $(exec_prefix)/bin
-libdir = $(prefix)/lib
-infodir = $(prefix)/info
-mandir = $(prefix)/man
+bindir = @bindir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
 icondir = $(datadir)/pixmaps/xpad
 
 SOURCES=main.c fio.c pref.c pad.c help.c toolbar.c tray.c eggtrayicon.c
@@ -63,17 +63,17 @@ install: all
 
 uninstall:
 	/bin/rm -f $(bindir)/xpad
-	/bin/rm -f $(mandir)/xpad.1*
-	/bin/rm -f $(icondir)/xpad/xpad.xpm
+	/bin/rm -f $(mandir)/man1/xpad.1*
+	/bin/rm -f $(icondir)/xpad.xpm
 
 xpad: $(OBJS)
 	$(CC) $(LDFLAGS) -o xpad $(OBJS) $(LIBS)
 
 clean:
-	/bin/rm -f core *.o $(OBJS)
+	/bin/rm -f core *.o *~ .\#* $(OBJS)
 
 distclean: clean
-	/bin/rm -f Makefile config.h config.status config.cache config.log
+	/bin/rm -f Makefile config.h config.status config.cache config.log stamp-h
 
 mostlyclean: clean
 
@@ -100,6 +100,13 @@ tar.bz2: ../$(VERNAME).tar.bz2
 	(cd ..;\
 	cp -r main $(VERNAME);\
 	tar cf - $(VERNAME) | bzip2 -f --best > $(VERNAME).tar.bz2;\
+	rm -r $(VERNAME))
+
+zip: ../$(VERNAME).zip
+../$(VERNAME).zip: distclean
+	(cd ..;\
+	cp -r main $(VERNAME);\
+	zip -9 -qr - $(VERNAME) > $(VERNAME).zip;\
 	rm -r $(VERNAME))
 
 uuencode: tar.gz
