@@ -3,77 +3,75 @@
 "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
-   id="svg101"
+   id="svg114"
    sodipodi:version="0.31.1"
-   width="300pt"
-   height="300pt"
+   width="750pt"
+   height="750pt"
    sodipodi:docbase="/home/mike/"
    sodipodi:docname="/home/mike/xpad.svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs
-     id="defs103">
+     id="defs116">
     <linearGradient
-       id="linearGradient115">
+       id="linearGradient127">
       <stop
          style="stop-color:#cccd00;stop-opacity:1;"
          offset="0.000000"
-         id="stop116" />
+         id="stop128" />
       <stop
          style="stop-color:#656700;stop-opacity:1;"
          offset="1.000000"
-         id="stop117" />
+         id="stop129" />
     </linearGradient>
     <linearGradient
-       id="linearGradient108">
+       id="linearGradient119">
       <stop
          style="stop-color:#ffff32;stop-opacity:1;"
          offset="0.000000"
-         id="stop109" />
+         id="stop120" />
       <stop
          style="stop-color:#d7d50a;stop-opacity:1;"
          offset="1.000000"
-         id="stop110" />
+         id="stop121" />
     </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient119"
+       id="linearGradient122" />
     <radialGradient
-       xlink:href="#linearGradient108"
-       id="radialGradient114"
-       cx="0.172866"
-       cy="0.255923"
-       fx="0.172866"
-       fy="0.255923"
-       r="0.710874"
+       xlink:href="#linearGradient119"
+       id="radialGradient124"
+       cx="0.112188"
+       cy="-0.208131"
+       fx="0.112188"
+       fy="-0.208131"
+       r="1.57408"
        gradientUnits="objectBoundingBox"
        spreadMethod="pad" />
     <radialGradient
-       xlink:href="#linearGradient115"
-       id="radialGradient121"
-       cx="0.344017"
-       cy="0.25121"
-       fx="0.344017"
-       fy="0.25121"
-       r="0.795467"
+       xlink:href="#linearGradient127"
+       id="radialGradient126"
+       cx="1.22448"
+       cy="0.116977"
+       fx="1.22448"
+       fy="0.116977"
+       r="1.49687"
        gradientUnits="objectBoundingBox"
-       gradientTransform="matrix(0.99998,1.92326e-06,-6.89559e-08,1.00002,-1.16753e-07,4.22504e-08)"
        spreadMethod="pad" />
   </defs>
   <sodipodi:namedview
-     id="base"
-     showgrid="false"
-     showborder="true"
-     gridcolor="#3f3fff"
-     gridopacity="0.184314" />
+     id="base" />
   <path
-     style="font-size:12;fill:url(#radialGradient121);fill-rule:evenodd;stroke-width:1pt;fill-opacity:1;"
-     d="M 55.5629 419.94 L 68.0548 551.079 L 179.552 443.388 L 55.5629 419.94 z "
-     id="path107"
+     style="font-size:12;fill:url(#radialGradient126);fill-rule:evenodd;stroke-width:1pt;"
+     d="M 95.6693 157.021 L 463.524 575.987 L 461.852 158.95 L 95.6693 157.021 z "
+     id="path125"
      sodipodi:nodetypes="cccc"
-     transform="matrix(0.969374,0.245593,-0.245593,0.969374,247.966,-213.326)" />
+     transform="matrix(0.663002,-0.216353,0.18759,0.574854,81.5526,619.267)" />
   <path
-     style="font-size:12;fill:url(#radialGradient114);fill-rule:evenodd;stroke-width:5;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:butt;"
-     d="M 225.743 265.58 L 225.743 549.419 L 367.663 549.419 C 414.969 549.419 415.799 454.806 405.01 438.207 C 446.507 458.956 509.582 454.806 509.582 407.5 L 509.582 265.58 L 225.743 265.58 z "
-     id="path105"
+     style="font-size:12;fill:url(#radialGradient124);fill-rule:evenodd;stroke-width:18.75;stroke:#000000;stroke-opacity:1;stroke-dasharray:none;"
+     d="M 125.36 122.06 L 125.36 471.748 C 125.36 588.311 248.894 610.175 377.552 568.389 C 321.415 651.266 359.585 821.436 476.697 821.436 L 828.034 821.436 L 828.034 122.06 L 125.36 122.06 z "
+     id="path118"
      sodipodi:nodetypes="ccccccc"
-     transform="matrix(0.969374,0.245593,-0.245593,0.969374,-65.0236,-282.349)" />
+     transform="matrix(0.958362,-0.285556,0.285556,0.958362,-120.492,206.174)" />
 </svg>

@@ -1,7 +1,14 @@
 1.11
------
-add new icon and install icon family into new location per icon theme spec
-add russian translation and fix up code to be able to use it
+----
+added missing "include <sys/time.h>" (by netgeek@speakeasy.net)
+added new icon and install icon family into new location per icon theme spec
+added russian translation (by avl@cad.ru) and fix up code to be able to use it
+
+
+1.10.1
+------
+fixed some compile-time issues, particularly with GTK+ 2.0
+
 
 1.10
 ----
