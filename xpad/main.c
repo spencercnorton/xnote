@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "help.h"
 #include "fio.h"
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -65,7 +66,7 @@ guint autosave_timeout_id = -1;
 
 gboolean make_new_pad = TRUE;
 gboolean open_old_pads = TRUE;
-gint master_fd;
+gint master_fd = -1;
 FILE *output;
 gchar *master_name = NULL;
 
@@ -108,6 +109,7 @@ static gint at_gtk_exit (gpointer data)
 	if (master_name)
 	{
 		close (master_fd);
+		master_fd = -1;
 		unlink (master_name);
 		g_free (master_name);
 	}
@@ -249,14 +251,9 @@ pad_show_p_to_i (gint *n)
 static void
 list_pads (void)
 {
-	pad_node *temp = first_pad;
-	
-	while (temp)
-	{
+	const pad_node *temp;
+	for (temp = first_pad; temp; temp = temp->next)
 		fprintf (output, "%s\n", temp->title);
-		
-		temp = temp->next;
-	}
 }
 
 struct argument_def
@@ -487,33 +484,28 @@ string_to_args (const char *string, char ***argv)
 	char **list;
 	
 	/* first, find out how many arguments we have */
-	tmp = string;
-	num = 0;
-	while (1)
-	{
-		num ++;
-		tmp = strchr (tmp, ' ');
-		if (tmp)	{tmp ++;}
-		else		{break;}
-	}
+	num = 1;
+	for (tmp = strchr (string, ' '); tmp; tmp = strchr (tmp+1, ' '))
+	  num++;
 	
 	list = (char **) g_malloc (sizeof (char *) * (num + 1));
 	
 	for (i = 0; i < num; i++)
 	{
-		gchar *p = strchr (string, ' ');
+		size_t len;
+
+		/* string points to beginning of current arg */
+		tmp = strchr (string, ' '); /* NULL or end of this arg */
+
+		if (tmp) len = tmp - string;
+		else   len = strlen (string);
 		
-		if (p)
-			p[0] = '\0';
+		list[i] = g_malloc (len + 1);
+		strncpy (list[i], string, len);
+		list[i][len] = '\0';
 		
-		list[i] = g_malloc (strlen (string) + 1);
-		strcpy (list[i], string);
-		
-		if (p)
-		{
-			p[0] = ' ';
-			string = p + 1;
-		}
+		/* make string point to beginning of next arg */
+		string = tmp + 1;
 	}
 	
 	list[i] = NULL;	/* null terminate list */
@@ -533,24 +525,49 @@ read_from_proc_file (void)
 	gchar *args;
 	struct sockaddr_un client;
 	socklen_t client_len;
+	size_t bytes;
 	
 	if (verbosity >= 1) printf ("Accepting client connection.\n");
 	
 	/* accept waiting connection */
 	client_fd = accept (master_fd, (struct sockaddr *) &client, &client_len);
+	if (client_fd == -1) return;
 	
 	/* get size of args */
-	read (client_fd, &size, sizeof (size));
+	bytes = read (client_fd, &size, sizeof (size));
+	if (bytes != sizeof(size))
+	{
+	  if (bytes < 0) 
+	    perror("Error on client connection");
+	  else if (bytes == 0)
+	    fprintf(stderr, "No data on client connection\n");
+	  else
+	    fprintf(stderr, "Expected %d bytes, got %d!\n",sizeof(size),bytes);
+
+	  goto close_client_fd;
+	}
 	
 	/* alloc memory */
 	args = (gchar *) g_malloc (size);
+	if (!args)
+	{
+		fprintf(stderr, "Out of memory\n");
+		goto close_client_fd;
+	}
 	
 	/* read args */
-	read (client_fd, args, size);
+	bytes = read (client_fd, args, size);
+	if (bytes < size)
+	{
+		if (bytes < 0) perror("Error on client connection");
+		else fprintf(stderr, "Broken client connection");
+		goto close_client_fd;
+	}
 	
 	argc = string_to_args (args, &argv);
 	
-	if (verbosity >= 2)	printf ("Handling %i foreign args '%s'.\n", argc, args);
+	if (verbosity >= 2) 
+	  fprintf (stderr, "Handling %i foreign args '%s'.\n", argc, args);
 	
 	g_free (args);
 	
@@ -561,7 +578,7 @@ read_from_proc_file (void)
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
-		gchar **v = g_malloc (sizeof (gchar *) * 2);
+		gchar **v = g_malloc (sizeof (gchar *) * c);
 		v[0] = "xpad";
 		v[1] = "--new";
 		
@@ -573,27 +590,26 @@ read_from_proc_file (void)
 	/* restore standard output */
 	fclose (output);
 	output = stdout;
-	close (client_fd);
 	
 	g_strfreev (argv);
+
+close_client_fd:
+	close (client_fd);
 }
 
 static gboolean
 poll_master_fd (gpointer data)
 {
 	fd_set fdset;
-	struct timeval tv = {0, 0};	/* non-blocking mode */
+	struct timeval tv = {0, 1000};	/* (almost) non-blocking mode */
 	gint num;
 	
 	FD_ZERO (&fdset);
 	FD_SET (master_fd, &fdset);
 	num = select (master_fd + 1, &fdset, NULL, NULL, &tv);
 	
-	if (num > 0)
-	{
-		if (FD_ISSET (master_fd, &fdset))
-			read_from_proc_file ();
-	}
+	if ((num > 0) && FD_ISSET (master_fd, &fdset))
+		read_from_proc_file ();
 	
 	return TRUE;
 }
@@ -612,7 +628,10 @@ open_proc_file (void)
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, master_name);
 	if (bind (master_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
-		printf ("error binding\n");
+	{
+		perror("Failed to bind master socket");
+		return 1;
+	}
 	
 	/* listen for connections */
 	listen (master_fd, 5);
@@ -678,7 +697,10 @@ xpad_pass_args (int *argc, char ***argv)
 	
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
+	{
 		printf ("error on connect\n");
+		goto done;
+	}
 	
 	size = args_to_string (argc, argv, &args) + 1;
 	
@@ -694,24 +716,28 @@ xpad_pass_args (int *argc, char ***argv)
 	{
 		/* wait for response */
 		FD_ZERO (&fdset);
-		FD_SET (client_fd, &fdset);
-		select (client_fd + 1, &fdset, NULL, NULL, NULL);	/* block until we are answered */
+		FD_SET (client_fd, &fdset);	
+		/* block until we are answered, or an error occurs */
+		select (client_fd + 1, &fdset, NULL, &fdset, NULL);
 		
 		do
 		{
-			bytesRead = read (client_fd, &buf, 128);
+			bytesRead = read (client_fd, buf, 128);
 			
-			if (bytesRead > 0)
+			if (bytesRead < 0)
 			{
-				buf[bytesRead] = '\0';
-				
-				printf (buf);
+			  perror("Error reading from master socket");
+			  goto done;
 			}
+
+			buf[bytesRead] = '\0';
+			printf ("%s", buf);
 		}
-		while (bytesRead >= 128);
+		while (bytesRead > 0);
 	}
 	while (bytesRead > 0);
 	
+done:
 	close (client_fd);
 	
 	g_free (args);
