@@ -70,7 +70,6 @@ GtkWidget *
 toolbar_button_new (const toolbar_button *tb)
 {
 	GtkWidget *button;
-	/*GtkWidget *eventbox;*/
 	GtkWidget *image;
 	
 	switch (tb->type)
@@ -89,13 +88,7 @@ toolbar_button_new (const toolbar_button *tb)
 	
 	gtk_container_add (GTK_CONTAINER (button), image);
 	
-	g_object_set_data (G_OBJECT (button), "func", (void *) tb->func);
-	/*
-	eventbox = gtk_event_box_new ();
-	
-	gtk_container_add (GTK_CONTAINER (eventbox), button);
-	
-	return eventbox;*/
+	g_object_set_data (G_OBJECT (button), "tb", (void *) tb);
 	
 	return button;
 }
@@ -136,33 +129,18 @@ toolbar_add_button (xpad_toolbar *xt, const toolbar_button *tb)
 		button, tb->desc, tb->desc);
 }
 
-void
-toolbar_add_item (gpointer gname, gpointer gxt)
+static void
+toolbar_add_item (gpointer gtb, gpointer gxt)
 {
-	const gchar *name = (const gchar *) gname;
+	const toolbar_button *tb = (const toolbar_button *) gtb;
 	xpad_toolbar *xt = (xpad_toolbar *) gxt;
 	
-	if (!g_ascii_strcasecmp (name, "sep"))
+	if (!g_ascii_strcasecmp (tb->name, "sep"))
 	{
 		toolbar_add_separator (xt);
 	}
 	else
 	{
-		gint i;
-		const toolbar_button *tb = NULL;
-		
-		for (i = 0; i < NUM_BUTTONS; i++)
-		{
-			if (!g_ascii_strcasecmp (buttons[i].name, name))
-			{
-				tb = &buttons[i];
-				break;
-			}
-		}
-		
-		if (!tb)
-			return;
-		
 		toolbar_add_button (xt, tb);
 	}
 }
@@ -215,7 +193,7 @@ toolbar_update (xpad_toolbar *xt)
 {
 	GtkRequisition req;
 	GList *list, *temp;
-	GtkWidget *box = toolbar_get_box (xt->bar);
+	GtkWidget *box = toolbar_get_container (xt);
 	
 	if (verbosity >= 2) printf ("Updating toolbar.\n");
 	

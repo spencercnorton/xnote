@@ -29,17 +29,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
 
-const toolbar_button *get_toolbar_button (GCallback func)
+const toolbar_button *get_toolbar_button_by_func (GCallback func)
 {
 	gint i;
 	
 	for (i = 0; i < NUM_BUTTONS; i++)
-	{
 		if (buttons[i].func == func)
-		{
 			return &buttons[i];
-		}
-	}
+	
+	return NULL;
+}
+
+const toolbar_button *get_toolbar_button_by_name (const gchar *name)
+{
+	gint i;
+	
+	for (i = 0; i < NUM_BUTTONS; i++)
+		if (!g_ascii_strcasecmp (name, buttons[i].name))
+			return &buttons[i];
 	
 	return NULL;
 }
@@ -188,25 +195,9 @@ void pad_style_free (pad_style *style)
 	g_free (style->fontname);
 }
 
-static void pad_toolbar_update (pad_node *pad)
+void pad_toolbar_update (pad_node *pad)
 {
 	GList *list, *tmp;
-	
-	list = tmp = toolbar_get_buttons (pad->toolbar);
-	
-	while (tmp)
-	{
-		GCallback func;
-		GtkWidget *widget = GTK_WIDGET (tmp->data);
-		
-		func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
-		
-		g_signal_handlers_disconnect_by_func (widget, (void *) func, pad);
-		
-		tmp = tmp->next;
-	}
-	
-	g_list_free (list);
 	
 	toolbar_update (pad->toolbar);
 	
@@ -217,7 +208,8 @@ static void pad_toolbar_update (pad_node *pad)
 		GCallback func;
 		GtkWidget *widget = GTK_WIDGET (tmp->data);
 		
-		func = G_CALLBACK (g_object_get_data (G_OBJECT (widget), "func"));
+		func = ((const toolbar_button *) g_object_get_data 
+			(G_OBJECT (widget), "tb"))->func;
 		
 		if (func == G_CALLBACK (pad_toggle_lock))
 		{
@@ -244,7 +236,7 @@ static void pad_remove (pad_node *pad)
 {
 	if (!pad || !pad->window)
 		return;
-
+	
 	/*  first, find pad in linked list, and remove it  */
 	if (first_pad == pad) /* first in list  */
 		first_pad = first_pad->next;
@@ -273,6 +265,7 @@ static void pad_free (pad_node *pad)
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
 	g_free (pad->contentname);
 	g_free (pad->infoname);
+	pad_style_free (&pad->style);
 	g_free (pad);
 }
 
@@ -337,13 +330,13 @@ gboolean pad_confirm_destroy (pad_node *pad)
 void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
-
+	
 	fio_save_pad (pad);
 	pad_remove (pad);
-
+	
 	if (verbosity >= 2) printf ("Freeing pad's memory [%s].\n", pad->infoname);
 	pad_free (pad);
-
+	
 	quit_if_no_pads ();
 }
 
@@ -351,7 +344,7 @@ void pad_close (pad_node *pad)
 void pad_close_all (void)
 {
 	pad_node *temp = first_pad;
-
+	
 	while (temp)
 	{
 		pad_close (temp);

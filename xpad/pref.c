@@ -209,32 +209,6 @@ void pref_close (void)
 }
 
 static void
-remove_button (GCallback func)
-{
-	pad_node *temp;
-	const toolbar_button *tb;
-	
-	/* find toolbar button */
-	tb = get_toolbar_button (func);
-	
-	if (!tb)
-		return;
-	
-	/*current_settings.toolbar_buttons
-	
-	current_settings.toolbar_buttons = 
-		g_slist_remove (current_settings.toolbar_buttons,
-		(void *) tb->name);*/
-	
-	for (temp = first_pad; temp; temp = temp->next)
-	{
-	/*	GtkWidget *cont = toolbar_get_container (temp->toolbar);*/
-		
-	}
-	
-}
-
-static void
 data_get (GtkWidget *widget, GdkDragContext *drag_context, 
 	GtkSelectionData *data, guint info, guint time, gpointer user_data)
 {
@@ -251,11 +225,25 @@ unused_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 {
 	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
 	GtkWidget *parent = gtk_widget_get_parent (source);
+	const toolbar_button *tb;
+	pad_node *temp;
 	
 	gtk_widget_ref (source);
 	gtk_container_remove (GTK_CONTAINER (parent), source);
 	gtk_box_pack_start (GTK_BOX (user_data), source, FALSE, FALSE, 0);
 	gtk_widget_unref (source);
+	
+	if (parent != GTK_WIDGET (user_data))
+	{
+		tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
+		
+		current_settings.toolbar_buttons = 
+			g_slist_remove (current_settings.toolbar_buttons,
+			tb);
+		
+		for (temp = first_pad; temp; temp = temp->next)
+			pad_toolbar_update (temp);
+	}
 }
 
 static void
@@ -264,11 +252,27 @@ toolbar_data_receive (GtkWidget *widget, GdkDragContext *drag_context, gint x,
 {
 	GtkWidget *source = gtk_drag_get_source_widget (drag_context);
 	GtkWidget *parent = gtk_widget_get_parent (source);
+	const toolbar_button *tb;
+	pad_node *temp;
 	
 	gtk_widget_ref (source);
 	gtk_container_remove (GTK_CONTAINER (parent), source);
 	gtk_container_add (GTK_CONTAINER (user_data), source);
 	gtk_widget_unref (source);
+	
+	tb = (const toolbar_button *) g_object_get_data (G_OBJECT (source), "tb");
+	
+	if (parent == GTK_WIDGET (user_data))
+		current_settings.toolbar_buttons = 
+			g_slist_remove (current_settings.toolbar_buttons,
+			tb);
+	
+	current_settings.toolbar_buttons = 
+		g_slist_append (current_settings.toolbar_buttons,
+		(gpointer) tb);
+	
+	for (temp = first_pad; temp; temp = temp->next)
+		pad_toolbar_update (temp);
 }
 
 static GtkWidget *preferences_create (void)
@@ -441,7 +445,7 @@ static GtkWidget *preferences_create (void)
 		GtkWidget *frame = gtk_frame_new ("Buttons");
 		xpad_toolbar *xt = toolbar_new ();
 		gint i;
-		GList *inxt, *tmp, *inxt_funcs = NULL;
+		GList *inxt, *tmp;
 		GtkWidget *buttonbox = gtk_hbox_new (FALSE, 3);
 		GtkTooltips *tt = gtk_tooltips_new ();
 		GtkTargetEntry entry;
@@ -468,7 +472,7 @@ static GtkWidget *preferences_create (void)
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), frame, FALSE, FALSE, 3);
 		gtk_widget_set_sensitive (frame, current_settings.toolbar);
-
+		
 		gtk_container_add (GTK_CONTAINER (frame), vbox_frame);
 		
 		gtk_box_pack_start (GTK_BOX (vbox_frame), toolbar_frame, FALSE, FALSE, 3);
@@ -487,12 +491,6 @@ static GtkWidget *preferences_create (void)
 		{
 			GtkWidget *widget = GTK_WIDGET (tmp->data);
 			
-			if (toolbar_is_button (widget))
-				inxt_funcs = g_list_append (inxt_funcs,
-					g_object_get_data (G_OBJECT (widget), "func"));
-			else
-				widget = gtk_bin_get_child (GTK_BIN (widget));
-			
 			gtk_drag_source_set (widget,
 				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
 			
@@ -507,24 +505,42 @@ static GtkWidget *preferences_create (void)
 		/* build list of all toolbar buttons not in xt */
 		for (i = 0; i < NUM_BUTTONS; i++)
 		{
-			if (!g_list_find (inxt_funcs, (void *) buttons[i].func))
+			GSList *tmp;
+			const toolbar_button *tb;
+			GtkWidget *b;
+			
+			tmp = current_settings.toolbar_buttons;
+			
+			while (tmp)
 			{
-				GtkWidget *b = toolbar_button_new (&buttons[i]);
+				tb = (const toolbar_button *) tmp->data;
 				
-				gtk_box_pack_start (GTK_BOX (buttonbox), b, FALSE,
-					FALSE, 0);
+				if (!g_ascii_strcasecmp (tb->name, buttons[i].name))
+					break;
 				
-				gtk_drag_source_set (b,
-					GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
-				
-				g_signal_connect (b, "drag-data-get", 
-					G_CALLBACK (data_get), NULL);
-				
-				gtk_tooltips_set_tip (tt, b, buttons[i].desc, buttons[i].desc);
+				tmp = tmp->next;
 			}
+			
+			if (tmp)	/* we found it, so we don't add it to our list of unused buttons */
+				continue;
+			
+			tb = &buttons[i];
+			
+			b = toolbar_button_new (tb);
+			
+			gtk_box_pack_start (GTK_BOX (buttonbox), b, FALSE,
+				FALSE, 0);
+			
+			gtk_drag_source_set (b,
+				GDK_BUTTON1_MASK, &entry, 1, GDK_ACTION_MOVE);
+			
+			g_signal_connect (b, "drag-data-get", 
+				G_CALLBACK (data_get), NULL);
+			
+			g_object_set_data (G_OBJECT (b), "tb", (void *) tb);
+			
+			gtk_tooltips_set_tip (tt, b, buttons[i].desc, buttons[i].desc);
 		}
-		
-		g_list_free (inxt_funcs);
 		
 		{
 			GtkWidget *cont = toolbar_get_container (xt);

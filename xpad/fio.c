@@ -188,7 +188,7 @@ void fio_save_default_settings (void)
 	
 	while (tmp)
 	{
-		strcat (buf, tmp->data);
+		strcat (buf, ((const toolbar_button *) tmp->data)->name);
 		tmp = tmp->next;
 		
 		if (tmp)
@@ -388,13 +388,17 @@ gint fio_load_default_settings (void)
 	if (!buttons) /* no buttons specified, so we make our own */
 	{
 		current_settings.toolbar_buttons = 
-			g_slist_append (current_settings.toolbar_buttons, g_strdup ("New"));
+			g_slist_append (current_settings.toolbar_buttons,
+			(toolbar_button *) get_toolbar_button_by_name ("New"));
 		current_settings.toolbar_buttons = 
-			g_slist_append (current_settings.toolbar_buttons, g_strdup ("Delete"));
+			g_slist_append (current_settings.toolbar_buttons,
+			(toolbar_button *) get_toolbar_button_by_name ("Delete"));
 /*		current_settings.toolbar_buttons = 
-			g_slist_append (current_settings.toolbar_buttons, g_strdup ("sep"));*/
+			g_slist_append (current_settings.toolbar_buttons,
+			(toolbar_button *) get_toolbar_button_by_name ("sep"));*/
 		current_settings.toolbar_buttons = 
-			g_slist_append (current_settings.toolbar_buttons, g_strdup ("Clear"));
+			g_slist_append (current_settings.toolbar_buttons,
+			(toolbar_button *) get_toolbar_button_by_name ("Clear"));
 	}
 	else
 	{
@@ -408,10 +412,11 @@ gint fio_load_default_settings (void)
 		i = 0;
 		while ((temp = button_names[i++]))
 		{
-			dup = g_strstrip (g_strdup (temp));
+			dup = g_strstrip (temp);
 			
 			current_settings.toolbar_buttons = 
-				g_slist_append (current_settings.toolbar_buttons, dup);
+				g_slist_append (current_settings.toolbar_buttons,
+				(toolbar_button *) get_toolbar_button_by_name (dup));
 		}
 		
 		g_strfreev  (button_names);
