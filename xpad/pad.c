@@ -864,10 +864,10 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 	pad = first_pad;
 	while (pad)
 	{
-		GtkWidget *w;
-		
-		if (pad->hidden)
+		if (!pad->hidden)
 		{
+			GtkWidget *w;
+			
 			w = gtk_window_get_focus (pad->window);
 			
 			if (GTK_WIDGET_HAS_FOCUS (w))
