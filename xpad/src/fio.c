@@ -89,6 +89,8 @@ gchar *fio_get_file (const gchar *name)
 		
 		sprintf (usertext, _("Could not read from file %s."), fullname);
 		xpad_show_error (NULL, usertext, NULL);
+		
+		rv = NULL;
 	}
 	
 	g_free (fullname);
