@@ -50,6 +50,7 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Edit/Clea_r Pad",		NULL,					menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Lock Style",		NULL,					menuitem_cb,	15,	"<CheckItem>"},
+	{"/Edit/_Sticky",			NULL,					menuitem_cb,	16,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,					0,				0,	"<Separator>"},
 	{"/Edit/_Preferences...",	NULL,					menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
 	{"/_Windows",				NULL,					0,				0,	"<Branch>"},
@@ -966,6 +967,11 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 			pad_unlock_style (pad);
 		break;
 	
+	case 16:
+		/* only can get here through the menu, so we can assume widget is valid */
+		pad_set_sticky (pad, gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)));
+		break;
+
 	default:
 		break;
 	}
@@ -1071,7 +1077,9 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	/* set checkboxes */
 	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Lock Style");
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->locked);
-	
+	tmp = gtk_item_factory_get_item (pad->menu, "/Edit/Sticky");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->sticky);
+
 	gtk_item_factory_popup (pad->menu, event->x_root, event->y_root, event->button, event->time);
 }
 

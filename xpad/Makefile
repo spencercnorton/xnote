@@ -29,8 +29,12 @@ install:	xpad-target
 
 uninstall:
 	rm $(BIN)/xpad
-	rm $(MANDIR)/xpad.1
+	rm $(MANDIR)/xpad.1*
 	rm $(ICONDIR)/xpad.xpm
 
 clean:
-	-rm -rf xpad *.o
+	rm -rf xpad *.o
+
+dist:
+	rm -rf xpad *.o
+	
