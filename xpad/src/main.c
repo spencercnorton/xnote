@@ -967,7 +967,7 @@ int main (int argc, char *argv[])
 	
 	output = stdout;
 	
-	gtk_init(&argc, &argv);
+	gtk_init (&argc, &argv);
 	
 	handle_args (&argc, &argv, TRUE);
 	

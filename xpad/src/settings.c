@@ -439,7 +439,8 @@ static void xpad_settings_load_from_file (void)
 		
 		while (current_settings.toolbar_buttons)
 		{
-			g_slist_delete_link (current_settings.toolbar_buttons,
+			current_settings.toolbar_buttons = 
+				g_slist_delete_link (current_settings.toolbar_buttons,
 				current_settings.toolbar_buttons);
 		}
 		
