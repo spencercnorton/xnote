@@ -991,8 +991,8 @@ int main (int argc, char *argv[])
 	gpointer args[2];
 	
 	setlocale (LC_ALL, "");
-	bindtextdomain ("", "");
-	textdomain ("");
+	bindtextdomain ("xpad", "");
+	textdomain ("xpad");
 	
 	output = stdout;
 	
