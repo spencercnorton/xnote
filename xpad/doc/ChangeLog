@@ -1,3 +1,11 @@
+1.10
+----
+rewrote applet popup menu to be more consistent and hopefully useful
+fixed crash when closing a pad that had provided text in a cut/paste
+normalize pad dimensions when opening in case the values got messed up
+misc. small bugs
+
+
 1.9.1
 -----
 fix a segfault when show all is selected after a new pad is made

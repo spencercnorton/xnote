@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-12 14:02-0500\n"
+"POT-Creation-Date: 2003-03-25 18:39-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgid "Allow _window manager decorations"
 msgstr ""
 
 #: src/pref.c:297
-msgid "_Confirm pad destruction"
+msgid "Con_firm pad destruction"
 msgstr ""
 
 #: src/pref.c:298
@@ -263,7 +263,7 @@ msgid "/Pad/_Sticky"
 msgstr ""
 
 #: src/pad.c:44
-msgid "/Pad/_Properties"
+msgid "/Pad/Proper_ties"
 msgstr ""
 
 #: src/pad.c:46
@@ -291,7 +291,7 @@ msgid "/Edit/_Paste"
 msgstr ""
 
 #: src/pad.c:54
-msgid "/Edit/_Preferences"
+msgid "/Edit/Prefere_nces"
 msgstr ""
 
 #: src/pad.c:55
@@ -354,48 +354,48 @@ msgstr ""
 msgid "Minimize Pads to System Tray"
 msgstr ""
 
-#: src/pad.c:632
+#: src/pad.c:657
 msgid "Delete this pad?"
 msgstr ""
 
-#: src/pad.c:633
+#: src/pad.c:658
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:808
+#: src/pad.c:838
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:813
+#: src/pad.c:843
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:854
+#: src/pad.c:884
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:905
+#: src/pad.c:935
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1042 src/pad.c:1224
+#: src/pad.c:1072 src/pad.c:1258
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1044 src/pad.c:1226
+#: src/pad.c:1074 src/pad.c:1260
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1046 src/pad.c:1230
+#: src/pad.c:1076 src/pad.c:1264
 msgid "/Edit/Paste"
 msgstr ""
 
-#: src/pad.c:1176
+#: src/pad.c:1206
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1218
+#: src/pad.c:1252
 msgid "/Pad/Sticky"
 msgstr ""
 
@@ -443,24 +443,24 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/tray.c:116
-msgid "Windows"
+#: src/tray.c:123
+msgid "No_tes"
 msgstr ""
 
-#: src/tray.c:192
-msgid "XPad: right click for more options..."
+#: src/tray.c:127
+msgid "_Show All"
 msgstr ""
 
-#: src/tray.c:193
+#: src/tray.c:131
+msgid "_Hide All"
+msgstr ""
+
+#: src/tray.c:203
+msgid "xpad: right click for more options..."
+msgstr ""
+
+#: src/tray.c:204
 msgid ""
 "Right click this icon for a menu of options pertaining to XPad. Left click "
 "it to toggle whether or not the pads are displayed."
-msgstr ""
-
-#: src/tray.c:222
-msgid "Hide Pads"
-msgstr ""
-
-#: src/tray.c:222
-msgid "Show Pads"
 msgstr ""

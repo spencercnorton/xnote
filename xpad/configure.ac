@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(xpad, 1.9.1)
+AC_INIT(xpad, 1.10)
 AC_CONFIG_SRCDIR(src/fio.c)
 AC_CONFIG_AUX_DIR(scripts)
 
