@@ -308,12 +308,13 @@ pad_toolbar_set_widget (pad_node *pad, GCallback target_func, gboolean value)
 {
 	GList *list, *tmp;
 	GCallback func = NULL;
+	GtkWidget *widget = NULL;
 	
 	list = toolbar_get_buttons (pad->toolbar);
 	
 	for (tmp = list; tmp && (func != target_func); tmp = tmp->next)
 	{
-		GtkWidget *widget = GTK_WIDGET (tmp->data);
+		widget = GTK_WIDGET (tmp->data);
 		
 		func = ((const toolbar_button *) g_object_get_data 
 			(G_OBJECT (widget), "tb"))->func;
