@@ -728,9 +728,6 @@ void pads_close_all (void)
 	
 	for (temp = first_pad; temp; temp = first_pad)
 	{
-		if (temp->window)
-			fio_save_pad (temp);
-		
 		pad_remove (temp);
 		pad_free (temp);
 	}
