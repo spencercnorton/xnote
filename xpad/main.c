@@ -18,6 +18,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+/* define _GNU_SOURCE here because that makes our sockets work nice
+ Unfortunately, we lose portability... */
+#define _GNU_SOURCE	1
+
 #include "xpad.xpm"
 #include "lock.xpm"
 #include "sticky.xpm"
@@ -27,6 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #if defined (G_OS_UNIX)
  
@@ -35,6 +41,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  /* required by mkdir */
  #include <sys/stat.h>
  #include <sys/types.h>
+ 
+ /* required by socket stuff */
+ #include <sys/un.h>
+ #include <sys/socket.h>
+ #include <sys/select.h>
  
 #elif defined (G_OS_WIN32)
  
@@ -53,6 +64,9 @@ gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
 gboolean make_new_pad = TRUE;
+gint master_fd;
+FILE *output;
+gchar *master_name = NULL;
 
 /**
  * This variable holds all the changeable settings for this session.
@@ -89,6 +103,13 @@ static gint at_gtk_exit (gpointer data)
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	pref_close ();
 	cleanup ();
+	
+	if (master_name)
+	{
+		close (master_fd);
+		unlink (master_name);
+		g_free (master_name);
+	}
 	
 	g_free (working_dir);
 	g_slist_free (current_settings.toolbar_buttons);
@@ -138,6 +159,25 @@ GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *p
 	return dialog;
 }
 
+/* must be at least primary */
+void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
+{
+	GtkWidget *dialog;
+	
+	fprintf (stderr, primary);
+	fprintf (stderr, "\n");
+	
+	dialog = xpad_alert_new (parent, GTK_STOCK_DIALOG_ERROR,
+		primary,
+		secondary);
+	
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
+	
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	
+	gtk_widget_destroy (dialog);
+}
+
 
 static void xpad_catch_quit_signal (int signum)
 {
@@ -149,7 +189,7 @@ static void xpad_catch_quit_signal (int signum)
 static void
 print_help (void)
 {
-	printf ("Usage: xpad [OPTIONS]\n"
+	fprintf (output, "Usage: xpad [OPTIONS]\n"
 	        "\n"
 	        "  -V, --version         prints xpad version; exits\n"
 	        "  -h, --help            prints this usage information; exits\n"
@@ -166,7 +206,7 @@ print_help (void)
 static void
 print_version (void)
 {
-	printf ("xpad v%s\n", VERSION);
+	fprintf (output, "xpad v%s\n", VERSION);
 	exit (0);
 }
 
@@ -200,11 +240,10 @@ static void
 list_pads (void)
 {
 	pad_node *temp = first_pad;
-	gint i = 0;
 	
 	while (temp)
 	{
-		printf ("%i %s\n", ++i, temp->title);
+		fprintf (output, "%s\n", temp->title);
 		
 		temp = temp->next;
 	}
@@ -259,14 +298,14 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 	gint i, j, recognized_at;
 	gint rv = 0;
 	size_t arglen[NUM_ARGUMENTS];
-
+	
 	/* Set up array of argument lengths to avoid having to compute them every 
 	 * time through our inner loop.  This probably ought to be global, but it
 	 * won't matter all that much.
 	 */
 	for (j = NUM_ARGUMENTS-1; j >= 0; j--)
 		arglen[j] = strlen(arguments[j].name);
-
+	
 	for (i = 1; i < *argc; i++)
 	{
 		gboolean longform;
@@ -321,7 +360,7 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			/* Don't accept this argument, but don't complain either. */
 			continue;
 		}
-
+		
 		if (arguments[j].second)
 		{
 			/* right now we only do integer arguments... */
@@ -347,8 +386,6 @@ static gint handle_args (int *argc, char ***argv, gboolean local)
 			if (!*companion) missing_companion_arg(arguments[j].name);
 			
 			arg = strtol(companion, &endptr, 10);
-			
-			printf ("%s to %i\n", companion, (int) arg);
 			
 			if (*endptr)
 			{
@@ -404,33 +441,27 @@ args_to_string (int *argc, char ***argv, char **dest)
 {
 	gint i;
 	gint size = 0;
-	gint extra;
-	gchar num [11];
 	gchar *p;
 	
 	for (i = 0; i < *argc; i++)
 		size += strlen ((*argv)[i]) + 1;
 	
-	sprintf (num, "%i", *argc);
+	*dest = g_malloc (size);
 	
-	extra = strlen (num) + 1;
-	
-	*dest = g_malloc (size + extra);
-	
-	strcpy (*dest, num);
-	p = (*dest) + extra;
+	p = *dest;
 	
 	for (i = 0; i < *argc; i++)
 	{
 		strcpy (p, (*argv)[i]);
-		p += strlen ((*argv)[i]) + 1;
+		p += strlen ((*argv)[i]);
+		p[0] = ' ';
+		p += 1;
 	}
 	
-	if (*argc == 1)
-	{
-	}
+	p --;
+	p[0] = '\0';
 	
-	return size + extra;
+	return size;
 }
 
 /*
@@ -440,35 +471,163 @@ static gint
 string_to_args (const char *string, char ***argv)
 {
 	gint num, i;
+	const gchar *tmp;
 	char **list;
 	
-	num = atoi (string);
-	string += strlen (string) + 1;
+	/* first, find out how many arguments we have */
+	tmp = string;
+	num = 0;
+	while (1)
+	{
+		num ++;
+		tmp = strchr (tmp, ' ');
+		if (tmp)	{tmp ++;}
+		else		{break;}
+	}
 	
-	list = g_malloc (sizeof (char *) * num);
+	list = (char **) g_malloc (sizeof (char *) * (num + 1));
 	
 	for (i = 0; i < num; i++)
 	{
+		gchar *p = strchr (string, ' ');
+		
+		if (p)
+			p[0] = '\0';
+		
 		list[i] = g_malloc (strlen (string) + 1);
 		strcpy (list[i], string);
-		string += strlen (string) + 1;
+		
+		if (p)
+		{
+			p[0] = ' ';
+			string = p + 1;
+		}
 	}
+	
+	list[i] = NULL;	/* null terminate list */
 	
 	*argv = list;
 	
 	return num;
 }
 
+/* This reads a line from the proc file.  This line will contain a filename to get further data from. */
+static void
+read_from_proc_file (void)
+{
+	gint argc;
+	gchar **argv;
+	gint client_fd, size;
+	gchar *args;
+	struct sockaddr_un client;
+	socklen_t client_len;
+	
+	if (verbosity >= 1) printf ("Accepting client connection.\n");
+	
+	/* accept waiting connection */
+	client_fd = accept (master_fd, (struct sockaddr *) &client, &client_len);
+	
+	/* get size of args */
+	read (client_fd, &size, sizeof (size));
+	
+	/* alloc memory */
+	args = (gchar *) g_malloc (size);
+	
+	/* read args */
+	read (client_fd, args, size);
+	
+	argc = string_to_args (args, &argv);
+	
+	if (verbosity >= 2)	printf ("Handling %i foreign args '%s'.\n", argc, args);
+	
+	g_free (args);
+	
+	/* here we redirect output to the socket */
+	output = fdopen (client_fd, "a");
+	
+	if (!handle_args (&argc, &argv, FALSE))
+	{
+		/* if there were no non-local arguments, insert --new as argument */
+		gint c = 2;
+		gchar **v = g_malloc (sizeof (gchar *) * 2);
+		v[0] = "xpad";
+		v[1] = "--new";
+		
+		handle_args (&c, &v, FALSE);
+		
+		g_free (v);
+	}
+	
+	/* restore standard output */
+	fclose (output);
+	output = stdout;
+	close (client_fd);
+	
+	g_strfreev (argv);
+}
+
+static gboolean
+poll_master_fd (gpointer data)
+{
+	fd_set fdset;
+	struct timeval tv = {0, 0};	/* non-blocking mode */
+	gint num;
+	
+	FD_ZERO (&fdset);
+	FD_SET (master_fd, &fdset);
+	num = select (master_fd + 1, &fdset, NULL, NULL, &tv);
+	
+	if (num > 0)
+	{
+		if (FD_ISSET (master_fd, &fdset))
+			read_from_proc_file ();
+	}
+	
+	return TRUE;
+}
+
+static gint
+open_proc_file (void)
+{
+	struct sockaddr_un master;
+	
+	if (verbosity >= 2) printf ("Creating master socket '%s'.\n", master_name);
+	
+	unlink (master_name);
+	
+	/* create the socket */
+	master_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
+	master.sun_family = AF_LOCAL;
+	strcpy (master.sun_path, master_name);
+	if (bind (master_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
+		printf ("error binding\n");
+	
+	/* listen for connections */
+	listen (master_fd, 5);
+	
+	gtk_idle_add (poll_master_fd, NULL);
+	
+	return 0;
+}
+
 static void
 clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
 	*selection_data, guint info, gpointer data)
 {
+	static gboolean first_time = TRUE;
+	
+	if (first_time)
+	{
+		first_time = FALSE;
+		
+		open_proc_file ();
+	}
+	
 	switch (info)
 	{
 	case 1:
-		/* Fill the selection with nonsense data -- it is not used.  We are just using 
-		   the clipboard as a message passer.  On a 1, which is a 'are you alive?' ping,
-		   respond.  The other client will see this data and leave; we take
+		/* Fill the selection with the filename of our proc_file.  On a 1, which is a 
+		   'are you alive?' ping, respond.  The other client will see this data and leave; we take
 		   over his arguments. */
 		gtk_selection_data_set (selection_data, 
 			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
@@ -483,82 +642,70 @@ clipboard_get (GtkClipboard *clipboard, GtkSelectionData
 static void
 clipboard_clear (GtkClipboard *clipboard, gpointer data)
 {
-	/* no data needs to be freed, but we need to ask the other xpad that took our data
-	    what the arguments were.*/
-	
-	GtkSelectionData *temp;
-	
-	/* set up target list with simple string target w/ value of 1 */
-	GtkTargetEntry targets[] = {{"STRING", 0, 1}};
-	
-	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
-		gdk_atom_intern ("STRING", FALSE))))
-	{
-		gint argc;
-		gchar **argv;
-		gint i;
-		
-		argc = string_to_args ((char *) temp->data, &argv);
-		
-		if (!handle_args (&argc, &argv, FALSE))
-		{
-			/* if there were no non-local arguments, insert --new as argument */
-			gint c = 2;
-			gchar **v = g_malloc (sizeof (gchar *) * 2);
-			v[0] = "xpad";
-			v[1] = "--new";
-			
-			handle_args (&c, &v, FALSE);
-			
-			g_free (v);
-		}
-		
-		for (i = 0; i < argc; i++)
-			g_free (argv[i]);
-		
-		g_free (argv);
-		
-		gtk_selection_data_free (temp);
-		
-		/* claim clipboard again */
-		gtk_clipboard_set_with_data (clipboard, targets, 1, 
-			clipboard_get, clipboard_clear, NULL);
-	}
+	/* No data needs to be freed, This shouldn't be called anyway -- we retain
+	  control over clipboard throughout our life. */
 }
 
 static void
-newxpad_clipboard_clear (GtkClipboard *clipboard, gpointer data)
+xpad_pass_args (int *argc, char ***argv)
 {
-	/* other xpad got our message, let's get the hell out of here */
-	gtk_main_quit ();
-}
-
-static void
-newxpad_clipboard_get (GtkClipboard *clipboard, GtkSelectionData 
-	*selection_data, guint info, gpointer data)
-{
-	gpointer *newdata;
-	gint size;
+	int client_fd;
+	struct sockaddr_un master;
+	fd_set fdset;
+	gchar buf [129];
 	gchar *args;
+	gint size;
+	gint bytesRead;
 	
-	newdata = (gpointer *) data;
+	/* create master socket */
+	client_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
+	master.sun_family = AF_LOCAL;
+	strcpy (master.sun_path, master_name);
 	
-	switch (info)
+	if (verbosity >= 2) printf ("Connecting and sending to master socket '%s'.\n", master_name);
+	
+	/* connect to master socket */
+	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
+		printf ("error on connect\n");
+	
+	size = args_to_string (argc, argv, &args) + 1;
+	
+	/* first, write length of string */
+	write (client_fd, &size, sizeof (size));
+	
+	/* now, write string */
+	write (client_fd, args, size);
+	
+	if (verbosity >= 2) printf ("Blocking on master socket.\n");
+	
+	do
 	{
-	case 1:
-		size = args_to_string (newdata[0], newdata[1], &args);
+		/* wait for response */
+		FD_ZERO (&fdset);
+		FD_SET (client_fd, &fdset);
+		select (client_fd + 1, &fdset, NULL, NULL, NULL);	/* block until we are answered */
 		
-		/* Fill the selection with our arguments. */
-		gtk_selection_data_set (selection_data, 
-			gdk_atom_intern ("_XPAD_EXISTS", FALSE),
-			8,
-			(const guchar *) args,
-			size);
-		g_free (args);
-		break;
-	default:
-		break;
+		do
+		{
+			bytesRead = read (client_fd, &buf, 128);
+			
+			if (bytesRead > 0)
+			{
+				buf[bytesRead] = '\0';
+				
+				printf (buf);
+			}
+		}
+		while (bytesRead >= 128);
 	}
+	while (bytesRead > 0);
+	
+	close (client_fd);
+	
+	g_free (args);
+	g_free (master_name);
+	
+	gtk_main_quit ();
 }
 
 static gint xpad_check_if_others (gpointer data)
@@ -566,23 +713,27 @@ static gint xpad_check_if_others (gpointer data)
 	GtkClipboard *clipboard = gtk_clipboard_get (gdk_atom_intern ("_XPAD_EXISTS", FALSE));
 	GtkSelectionData *temp;
 	
-	/* set up target list with simple string target w/ value of 1 */
-	GtkTargetEntry targets[] = {{"STRING", 0, 1}};
-		
+	/* create master socket name */
+	master_name = g_build_filename (working_dir, "server", NULL);
+	
 	if ((temp = gtk_clipboard_wait_for_contents (clipboard, 
 		gdk_atom_intern ("STRING", FALSE))))
 	{
-		/* If there was anything in the clipboard, that means there is another
-		     xpad session going on, and so we exit after posting our arguments. */
-		gtk_selection_data_free (temp);
+		gpointer *newdata;
 		
-		gtk_clipboard_set_with_data (clipboard, targets, 1,
-			newxpad_clipboard_get, newxpad_clipboard_clear, data);
+		newdata = (gpointer *) data;
+		
+		xpad_pass_args (newdata[0], newdata[1]);
+		
+		gtk_selection_data_free (temp);
 		
 		return 1;
 	}
 	else
 	{
+		/* set up target list with simple string target w/ value of 1 */
+		GtkTargetEntry targets[] = {{"STRING", 0, 1}};
+		
 		/* no one else is alive.  claim the clipboard. */
 		
 		gtk_clipboard_set_with_data (clipboard, targets, 1, 
@@ -736,14 +887,14 @@ static int xpad_init (gpointer data)
 	
 	gtk_quit_add (0, at_gtk_exit, NULL);
 	
-	if (xpad_check_if_others (data))
-		return 0;
-	
-	SetQuitSignals();
-	
 	xpad_make_working_dir ();
 	
 	first_time = xpad_make_needed_files ();
+	
+	SetQuitSignals();
+	
+	if (xpad_check_if_others (data))
+		return 0;
 	
 	fio_load_default_settings ();
 	
@@ -784,6 +935,8 @@ static int xpad_init (gpointer data)
 int main (int argc, char *argv[])
 {
 	gpointer args[2];
+	
+	output = stdout;
 	
 	gtk_init(&argc, &argv);
 	

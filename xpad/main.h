@@ -42,6 +42,7 @@ struct settings {
 };
 
 GtkWidget *xpad_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary);
+void xpad_show_error (GtkWindow *parent, const gchar *primary, const gchar *secondary);
 
 extern gchar *working_dir;
 extern gint verbosity;

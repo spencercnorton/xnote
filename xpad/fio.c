@@ -302,8 +302,6 @@ static void fio_save_info_file (pad_node *pad)
 	if (pad->toolbar && toolbar_is_visible (pad->toolbar))
 		height -= pad->toolbar->height;
 	
-	printf ("saving x:%i, y:%i\n", pad->x, pad->y);
-	
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
 		"sticky %d\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
@@ -345,7 +343,7 @@ void fio_save_pads (void)
 	}
 }
 
-static void fio_remove_file (gchar *filename)
+void fio_remove_file (const gchar *filename)
 {
 	gchar *temp;
 	

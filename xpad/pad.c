@@ -662,9 +662,9 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 	gboolean newPad;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
-
+	
 	filename = gtk_file_selection_get_filename (selector);
-
+	
 	newPad = !pad_is_empty(pad);
 	if (newPad)
 	{
