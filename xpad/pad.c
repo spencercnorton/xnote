@@ -111,6 +111,8 @@ void pad_clear (pad_node *pad)
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	
 	gtk_text_buffer_set_text (buf, "", 0);
+	
+	pad_background_clear (pad);
 }
 
 static gboolean pad_get_editable (pad_node *pad)
@@ -705,6 +707,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
+static void pad_background_draw (pad_node *pad, gint x, gint y);
 
 static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
 {
@@ -713,6 +716,24 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 	
 	switch (event->type)
 	{
+		case GDK_MOTION_NOTIFY:
+		{
+			GdkEventMotion *event_motion = (GdkEventMotion *) event;
+			gint x, y;
+			GdkModifierType mask;
+			
+			gdk_window_get_pointer (event_motion->window, &x, &y, &mask);
+			
+			if ((mask & GDK_CONTROL_MASK) &&
+				(mask & GDK_SHIFT_MASK) &&
+				(mask & GDK_BUTTON1_MASK))
+			{
+				pad_background_draw (pad, x, y);
+				return TRUE;
+			}
+		}
+		break;
+		
 		case GDK_BUTTON_PRESS: 
 		{
 			GdkEventButton *event_button = (GdkEventButton *) event;
@@ -722,6 +743,13 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				case 1:
 				/* raise window if clicked on */
 				gtk_window_present (pad->window);
+				
+				if ((event_button->state & GDK_CONTROL_MASK) &&
+					(event_button->state & GDK_SHIFT_MASK))
+				{
+					pad_background_draw (pad, event_button->x, event_button->y);
+					return TRUE;
+				}
 				
 				if ((event_button->state & GDK_CONTROL_MASK) ||
 						(current_settings.edit_lock && 
@@ -873,10 +901,157 @@ focus_out_handler (GtkWidget *widget, GdkEventFocus *event, pad_node *pad)
 	return FALSE;
 }
 
+static void
+pad_background_refresh (pad_node *pad)
+{
+	GdkWindow *win;
+	GdkRectangle rect = {0, 0, 0, 0};
+	
+	rect.width = pad->width;
+	rect.height = pad->height;
+	
+	win = gtk_text_view_get_window (get_text (pad->window), GTK_TEXT_WINDOW_TEXT);
+	
+	gdk_window_invalidate_rect (win, &rect, FALSE);
+}
+
+static void
+pad_background_draw (pad_node *pad, gint x, gint y)
+{
+	GdkRectangle brush;
+	GtkWidget *textbox;
+	GtkAdjustment *ha, *va;
+	
+	brush.x = x - 1;
+	brush.y = y - 1;
+	brush.width = 2;
+	brush.height = 2;
+	
+	textbox = GTK_WIDGET (get_text (pad->window));
+	
+	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	
+	/* draw brush on both current background and master background */
+	gdk_draw_rectangle (pad->visible_back,
+					textbox->style->text_gc[GTK_STATE_NORMAL],
+					TRUE,
+					brush.x, brush.y, brush.width, brush.height);
+	gdk_draw_rectangle (pad->background,
+					textbox->style->text_gc[GTK_STATE_NORMAL],
+					TRUE,
+					ha->value + brush.x, va->value + brush.y, brush.width, brush.height);
+	
+	/* now make change visible */
+	gdk_window_invalidate_rect (GTK_WIDGET (pad->window)->window,
+			      &brush,
+			      TRUE);
+	
+	pad_background_refresh (pad);
+}
+
+static void
+pad_background_update (pad_node *pad)
+{
+	GtkAdjustment *ha, *va;
+	GtkWidget *textbox;
+	GdkWindow *textwin;
+	GdkPixmap *pix;
+	
+	textbox = GTK_WIDGET (get_text (pad->window));
+	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
+	
+	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	
+	pix = gdk_pixmap_new (textwin, pad->width, pad->height, -1);
+	
+	gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1,
+		0, 0, pad->width, pad->height);
+	gdk_draw_drawable (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], pad->background,
+		ha->value, va->value, 0, 0, pad->width, pad->height);
+	
+	gdk_window_set_back_pixmap (textwin, pix, FALSE);
+	
+	if (pad->visible_back) gdk_pixmap_unref (pad->visible_back);
+	pad->visible_back = pix;
+}
+
+static void
+pad_scrolled (GtkAdjustment *adjustment, pad_node *pad)
+{
+	pad_background_update (pad);
+	
+	pad_background_refresh (pad);
+}
+
+static void
+pad_resize_background (pad_node *pad)
+{
+	GtkAdjustment *ha, *va;
+	GtkWidget *textbox;
+	GdkWindow *textwin;
+	GdkPixmap *pix;
+	gint height, width;
+	
+	textbox = GTK_WIDGET (get_text (pad->window));
+	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
+	
+	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
+	
+	width = ha->upper;
+	height = va->upper;
+	pix = gdk_pixmap_new (textwin, width, height, -1);
+	
+	if (pad->background)
+	{
+		gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, width, height);
+		gdk_draw_drawable (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], pad->background, 0, 0, 0, 0, -1, -1);
+		
+		gdk_pixmap_unref (pad->background);
+	}
+	else
+	{
+		gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, width, height);
+	}
+	
+	pad->background = pix;
+	
+	pad_background_update (pad);
+}
+
+static void
+pad_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
+{
+	/* This is called if an adjustment member other than it's 'value'
+		changed -- here we are concerned about the 'upper' member */
+	
+	/* Here we assume that the value that changed is indeed the 'upper' 
+		member.  the others are usually static */
+	
+	if (GTK_WIDGET_REALIZED (GTK_WIDGET (get_text (pad->window))))
+		pad_resize_background (pad);
+}
+
+void pad_background_clear (pad_node *pad)
+{
+	GtkWidget *textbox;
+	gint w, h;
+	
+	textbox = GTK_WIDGET (get_text (pad->window));
+	
+	gdk_drawable_get_size (pad->background, &w, &h);
+	gdk_draw_rectangle (pad->background, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, w, h);
+	
+	pad_background_update (pad);
+}
+
 static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
 {
 	pad->x = event->x;
 	pad->y = event->y;
+	
 	pad->width = event->width;
 	pad->height = event->height;
 	
@@ -986,7 +1161,7 @@ static pad_node *start_pad (void)
 	/* We want to make xpad moveable anywhere a lower widget doesn't have priority */
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 	g_signal_connect (window, "button-press-event", G_CALLBACK (window_button_handler), pad);
-
+	
 	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
 	/*//g_signal_connect (eventbox1, "event", G_CALLBACK (eventbox_event_handler), pad);*/
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
@@ -1003,6 +1178,8 @@ static pad_node *start_pad (void)
 	pad->scrollbar = scroll;
 	pad->box = box;
 	pad->toolbar = NULL;
+	pad->background = NULL;
+	pad->visible_back = NULL;
 	
 	/* check if this is first pad made */
 	if (first_pad == NULL)
@@ -1030,6 +1207,15 @@ static pad_node *start_pad (void)
 	/* make sure that we save after pad is realized */
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
+	
+	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
+		, "value-changed", G_CALLBACK (pad_scrolled), pad);
+	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
+		, "value-changed", G_CALLBACK (pad_scrolled), pad);
+	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
+		, "changed", G_CALLBACK (pad_scroll_changed), pad);
+	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
+		, "changed", G_CALLBACK (pad_scroll_changed), pad);
 	
 	return pad;
 }

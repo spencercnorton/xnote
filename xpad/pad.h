@@ -62,6 +62,9 @@ struct pad_node_def
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
 	
 	xpad_toolbar *toolbar;
+	
+	GdkPixmap *background;
+	GdkPixmap *visible_back;
 };
 
 /* used to keep all the persistant data we need for one pad */
@@ -100,6 +103,7 @@ void pad_clear (pad_node *pad);
 void pad_toggle_lock (pad_node *pad);
 void pad_style_copy (pad_style *dest, pad_style *source);
 void pad_style_free (pad_style *dest);
+void pad_background_clear (pad_node *pad);
 
 void pad_remove_toolbar (pad_node *pad);
 void pad_add_toolbar (pad_node *pad);
