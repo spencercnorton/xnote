@@ -15,7 +15,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/main.c:173
-#, fuzzy
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
@@ -36,7 +35,6 @@ msgstr ""
 "  -n, --new             просто открыть новый стикер\n"
 
 #: src/main.c:182
-#, fuzzy
 msgid ""
 "  --nonew               prevents xpad from making a new pad\n"
 "  -q, --quit            quits all open xpad sessions\n"
@@ -52,48 +50,40 @@ msgstr ""
 
 
 #: src/main.c:215
-#, fuzzy
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
 msgstr "Неверное значение уровня детализации. Должно быть от 0 до 2 включительно. \n"
 
 #: src/main.c:290
-#, fuzzy
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr "Пропущен дополнительный аргумент к %s\n"
 
 #: src/main.c:334
-#, fuzzy
 #, c-format
 msgid "Didn't understand argument %s.\n"
 msgstr "Неизвестный аргумент %s.\n"
 
 #: src/main.c:391
-#, fuzzy
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr "Неправильный номер: '%s'\n"
 
 #: src/fio.c:67
-#, fuzzy
 #, c-format
 msgid "Could not write to file %s."
 msgstr "Не могу писать в файл %s."
 
 #: src/fio.c:91
-#, fuzzy
 #, c-format
 msgid "Could not read from file %s."
 msgstr "Не могу читать из файла %s."
 
 #: src/fio.c:411
-#, fuzzy
 #, c-format
 msgid "Could not open xpad directory %s."
 msgstr "Не могу открыть xpad директорию %s."
 
 #: src/fio.c:414
-#, fuzzy
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
