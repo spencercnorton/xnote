@@ -83,6 +83,7 @@ static GtkWidget *menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_g
 static GtkWidget *menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
 static void xpad_pad_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_pad_dispose (GObject *object);
 static void xpad_pad_finalize (GObject *object);
 static void xpad_pad_show (XpadPad *pad);
 static gboolean xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event);
@@ -141,6 +142,7 @@ xpad_pad_class_init (XpadPadClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	
+	gobject_class->dispose = xpad_pad_dispose;
 	gobject_class->finalize = xpad_pad_finalize;
 	gobject_class->set_property = xpad_pad_set_property;
 	gobject_class->get_property = xpad_pad_get_property;
@@ -302,17 +304,26 @@ xpad_pad_show (XpadPad *pad)
 }
 
 static void
-xpad_pad_finalize (GObject *object)
+xpad_pad_dispose (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 	
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
 	
+	gtk_widget_destroy (pad->priv->menu);
+	gtk_widget_destroy (pad->priv->highlight_menu);
+	
+	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
+}
+
+static void
+xpad_pad_finalize (GObject *object)
+{
+	XpadPad *pad = XPAD_PAD (object);
+	
 	g_free (pad->priv->infoname);
 	g_free (pad->priv->contentname);
-	g_free (pad->priv->menu);
-	g_free (pad->priv->highlight_menu);
 	
 	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 	
