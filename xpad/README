@@ -7,9 +7,9 @@ xpad is a virtual sticky pad system using GTK+ 2.
 --------------------------------------------------------------------------
 INSTALLATION NOTES
 --------------------------------------------------------------------------
-	 To compile, just type "make" and / or "make install".
+     To compile, just type "make" and / or "make install".
 
-     Read the INSTALL file for more.
+     Read the INSTALL file for more information.
 
 
 --------------------------------------------------------------------------
@@ -24,7 +24,7 @@ USAGE NOTES
 
      xpad stores its files in ~/.xpad.
 
-	 To change the default size of pads, edit ~/.xpad/default-style
+     To change the default size of pads, edit ~/.xpad/default-style
 
 
 --------------------------------------------------------------------------
@@ -33,19 +33,21 @@ COMMAND ARGUMENTS
 	Standard GTK+ arguments are understood.  In addition, the following
 		arguments are available.
 
-	--help, -h:			Prints usage information and exits.
+	--help, -h:          Prints usage information and exits.
 
-	--version, -V:		Prints version information and exits.
+	--version, -V:       Prints version information and exits.
 
-	--verbosity=%i, -v:	Where %i is the amount of output you desire.
-				0 is none; 1 is moderate; 2 is debug.  
-				Default is 0
+	--verbosity=N, -v:   Where N is the amount of output you desire.
+                              0 is none; 1 is moderate; 2 is debug.  
+                              Default is 0
 	
-	--new, -n:			Opens a new pad.
+	--new, -n:           Opens a new pad.
 	
-	--quit, -q:			Quits all xpad sessions.
+	--quit, -q:          Quits all xpad sessions.
 	
+        --showall, -s:       Presents all the pads to the foreground.
 	
+
 --------------------------------------------------------------------------
 KNOWN BUGS
 --------------------------------------------------------------------------
@@ -67,7 +69,7 @@ KNOWN BUGS
 		This happens on at least Gnome.
 		This does *not* happen on at least Blackbox.
 	
-    If you have any patches / suggestions, please email us at
+	If you have any patches / suggestions, please email us at
 		xpad-devel@lists.sourceforge.net and let us know so we can 
 		do something about it.  It will never get fixed if we don't
 		know about it!
@@ -83,10 +85,14 @@ LICENSE NOTES
           License.  See COPYING for more information.  It was made by
           Nestor Di.
 	
-	The icon lock.xpm is released under the terms of the GNU Public
-		  License.  See COPYING for more information.  It was created
-		  for the KDE project.
+     The icon lock.xpm is released under the terms of the GNU Public
+	  License.  See COPYING for more information.  It was created
+	  for the KDE project (http://www.kde.org).
 
+     The icon sticky.xpm is released under the terms of the GNU Public
+	  License.  See COPYING for more information.  It was created
+	  for the Window Manager Icons Project 
+	  (http://wm-icons.sourceforge.net).
 
 --------------------------------------------------------------------------
 Copyright (c) 2001-2002 Michael Terry
