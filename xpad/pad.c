@@ -1544,7 +1544,8 @@ void pad_set_title (pad_node *pad)
 	gchar *content, *tmp;
 	gint n;
 	gchar result [TITLE_CHARS + 1];	/* 1 null and TITLE_CHARS characters */
-	gboolean more;
+	const char *more = "";
+	gunichar u;
 	
 	buf = gtk_text_view_get_buffer (get_text (pad->window));
 	gtk_text_buffer_get_start_iter (buf, &s);
@@ -1552,7 +1553,6 @@ void pad_set_title (pad_node *pad)
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 	
 	tmp = content;
-	n = 0;
 	
 	/**
 	 * Unfortunately, I had some real problems taking the UTF-8 encoded text from
@@ -1560,49 +1560,38 @@ void pad_set_title (pad_node *pad)
 	 * little utf8->ascii conversion must take place.
 	 */
 	
-	more = FALSE;
-	while (1)
+	n = 0;
+	u = g_utf8_get_char (tmp);
+	while (u && (n < TITLE_CHARS))
 	{
-		gunichar u;
-		
-		u = g_utf8_get_char (tmp);
-		
-		if (u <= 0x7F)	/* is ASCII*/
+		if (u <= 0x7F)	/* is ASCII */
 		{
-			if (g_unichar_isgraph (u))
-			{
-				if (n < TITLE_CHARS)
-				{
-					result[n++] = (char) u;
-				}
-				else
-				{
-					more = TRUE;
-					break;
-				}
-			}
-			else if (g_unichar_isspace (u) && n > 0)
-			{
-				if (n < TITLE_CHARS)
-				{
-					result[n++] = ' ';
-				}
-			}
-			else if (u == '\0')
-			{
-				break;
-			}
+			char c = 0;
+
+			if (g_unichar_isgraph (u)) 	c = (char)u;
+			else if (g_unichar_isspace (u))	c = ' ';
+			
+			if (c) result[n++] = c;
 		}
-		
+
 		tmp = g_utf8_next_char (tmp);
+		u = g_utf8_get_char (tmp);
 	}
-	
+
 	result[n] = '\0';
 	
-	if (more)
-		sprintf (pad->title, "%s...", result);
-	else
-		strcpy (pad->title, result);
+	/* There may be more text than we want to fit into our title.  If 
+	 * there's anything in that tail other than whitespace, we'll want
+	 * to append an ellipsis ("...") to signify this.
+	 */
+  	while (u && ((u > 0x7f) || !g_unichar_isgraph(u)))
+	{
+	  tmp = g_utf8_next_char (tmp);
+	  u = g_utf8_get_char (tmp);
+	}
+	if (u) more = "...";
+	
+	sprintf (pad->title, "%s%s", result, more);
 	
 	gtk_window_set_title (pad->window, pad->title);
 }
