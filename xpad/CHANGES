@@ -1,3 +1,13 @@
+1.6
+---
+rearrange popup menu
+add popup menu submenu that allows you to choose windows to focus on
+allow reopening of closed pads
+
+1.5.1
+-----
+fix a possible segfault on startup
+
 1.5
 ---
 fixed a bug that stopped saving of defaults on shutdown

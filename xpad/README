@@ -24,6 +24,8 @@ USAGE NOTES
 
      xpad stores its files in ~/.xpad.
 
+	 To change the default size of pads, edit ~/.xpad/default-style
+
 
 --------------------------------------------------------------------------
 COMMAND ARGUMENTS
@@ -72,8 +74,8 @@ LICENSE NOTES
           Nestor Di.
 	
 	The icon lock.xpm is released under the terms of the GNU Public
-		  License.  See COPYING for more information.  It was taken
-		  from the KDE project.
+		  License.  See COPYING for more information.  It was created
+		  for the KDE project.
 
 
 --------------------------------------------------------------------------
