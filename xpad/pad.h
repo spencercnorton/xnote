@@ -98,7 +98,6 @@ struct pad_info_def
 };
 
 extern pad_node *first_pad;
-extern pad_node *last_pad;
 
 pad_node *pad_new_with_info (pad_info *info);
 pad_node *pad_new (void);
