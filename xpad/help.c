@@ -35,6 +35,7 @@ static GtkWidget *create_help (gint page)
 {
 	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
 	GtkWidget *styletext, *stylelabel;
+	gchar helptextbuf[600];
 	
 	/**
 	 * NOTE:  ISO C89 compilers don't have to support strings larger than `509'.
@@ -51,7 +52,7 @@ static GtkWidget *create_help (gint page)
 	stylelabel = gtk_label_new ("Style Locking");
 	notebook = gtk_notebook_new ();
 	
-	gtk_label_set_markup (GTK_LABEL (helptext), 
+	strcpy (helptextbuf, 
 "Each xpad session consists of one or more open pads.  "
 "These pads are basically textboxes on your desktop in which "
 "you can write memos.\n\n"
@@ -60,18 +61,10 @@ static GtkWidget *create_help (gint page)
 "saved and reloaded when xpad is next started.\n\n"
 
 "To move a pad, left drag on the toolbar or right drag "
-"on the resizer in the bottom right.  To resize a pad, "
+"on the resizer in the bottom right.  To resize a pad, ");
+	strcat (helptextbuf, 
 "left drag on the resizer.\n\n"
-/*
-"There are two important non-obvious operations that you "
-"should be aware of:\n\n"
 
-"<b>Moving</b>: To move a pad, hold down CTRL and drag "
-"with the left mouse button.\n\n"
-
-"<b>Resizing</b>: To resize a pad, hold down CTRL and "
-"drag with the right mouse button.\n\n"
-*/
 "Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
 "enjoy.\n\n"
@@ -79,6 +72,7 @@ static GtkWidget *create_help (gint page)
 "Please send comments or bug reports to "
 "xpad-devel@lists.sourceforge.net"
 );
+	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
 
 	gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
 	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
