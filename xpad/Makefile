@@ -3,7 +3,7 @@ OBJECTS=main.o \
 	fio.o \
 	pref.o \
 	pad.o 
-CFLAGS=-Wall `pkg-config --cflags gtk+-2.0`
+CFLAGS=-Wall -O2 `pkg-config --cflags gtk+-2.0`
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 
 #debian-friendly var
