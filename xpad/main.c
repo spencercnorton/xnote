@@ -618,6 +618,18 @@ static void SetQuitSignals(void)
 #endif
 
 
+static gboolean
+xpad_initial_save (gpointer data)
+{
+	/* we want to make sure we save any new format changes */
+	fio_save_default_settings ();
+	
+	/* save open pads */
+	fio_save_pads ();
+	
+	return FALSE;	/* remove ourselves from idle list */
+}
+
 /* data is an array of void pointers, indicating the argc and argv */
 static int xpad_init (gpointer data)
 {
@@ -638,9 +650,6 @@ static int xpad_init (gpointer data)
 	
 	fio_load_default_settings ();
 	
-	/* we want to make sure we save any new format changes */
-	fio_save_default_settings ();
-	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
 	
@@ -655,6 +664,9 @@ static int xpad_init (gpointer data)
 	fio_load_pads();
 	
 	handle_args (newdata[0], newdata[1], FALSE);
+	
+	/* when we get free time, save all the settings */
+	g_idle_add (xpad_initial_save, NULL);
 	
 	return 0;
 }

@@ -892,9 +892,6 @@ pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	/* we want to start off with valid values for position/size */
 	gtk_window_get_size (pad->window, &pad->width, &pad->height);
 	gtk_window_get_position (pad->window, &pad->x, &pad->y);
-	
-	/* save pad */
-	fio_save_pad (pad);
 }
 
 static gboolean
