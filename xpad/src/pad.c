@@ -247,6 +247,8 @@ void pad_style_copy (pad_style *dest, pad_style *source)
 	dest->back = source->back;
 	dest->text = source->text;
 	dest->border = source->border;
+	dest->use_back = source->use_back;
+	dest->use_text = source->use_text;
 	dest->border_width = source->border_width;
 	dest->padding = source->padding;
 	dest->fontname = g_strdup (source->fontname);
