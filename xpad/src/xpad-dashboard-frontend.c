@@ -18,9 +18,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
 #include "xpad-dashboard-frontend.h"
 #include "dashboard-frontend.h"
-#include "defines.h"
 #include "pad.h"
 
 static void

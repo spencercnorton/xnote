@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001-2003 Michael Terry
+Copyright (c) 2001-2004 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,8 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include "defines.h"
-#include "help.h"
 
 typedef struct pad_node_def pad_node;
 typedef struct pad_info_def pad_info;
@@ -62,16 +60,10 @@ struct pad_node_def
 	
 	/* toolbar stuff */
 	GtkWidget *toolbar;
+	guint toolbar_timeout;
 	
 	/* properties window */
 	GtkWidget *properties;
-	
-#if DRAWING_ON
-	/* background image stuff */
-	GdkPixmap *background;
-	GdkPixmap *visible_back;
-	gint last_draw_x, last_draw_y;
-#endif
 };
 
 /* used to keep all the persistant data we need for one pad */

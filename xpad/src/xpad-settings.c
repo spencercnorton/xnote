@@ -19,12 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include <string.h>
-#include "defines.h"
 #include "xpad-settings.h"
 #include "fio.h"
 
 G_DEFINE_TYPE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
 #define XPAD_SETTINGS_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_SETTINGS, XpadSettingsPrivate))
+
+#define DEFAULTS_FILENAME	"default-style"
 
 struct XpadSettingsPrivate 
 {
@@ -261,6 +262,9 @@ xpad_settings_finalize (GObject *object)
 
 void xpad_settings_set_width (XpadSettings *settings, guint width)
 {
+	if (settings->priv->width == width)
+		return;
+	
 	settings->priv->width = width;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -275,6 +279,9 @@ guint xpad_settings_get_width (XpadSettings *settings)
 
 void xpad_settings_set_height (XpadSettings *settings, guint height)
 {
+	if (settings->priv->height == height)
+		return;
+	
 	settings->priv->height = height;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -289,6 +296,9 @@ guint xpad_settings_get_height (XpadSettings *settings)
 
 void xpad_settings_set_has_decorations (XpadSettings *settings, gboolean decorations)
 {
+	if (settings->priv->has_decorations == decorations)
+		return;
+	
 	settings->priv->has_decorations = decorations;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -303,6 +313,9 @@ gboolean xpad_settings_get_has_decorations (XpadSettings *settings)
 
 void xpad_settings_set_confirm_destroy (XpadSettings *settings, gboolean confirm)
 {
+	if (settings->priv->confirm_destroy == confirm)
+		return;
+	
 	settings->priv->confirm_destroy = confirm;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -317,6 +330,9 @@ gboolean xpad_settings_get_confirm_destroy (XpadSettings *settings)
 
 void xpad_settings_set_edit_lock (XpadSettings *settings, gboolean lock)
 {
+	if (settings->priv->edit_lock == lock)
+		return;
+	
 	settings->priv->edit_lock = lock;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -331,6 +347,9 @@ gboolean xpad_settings_get_edit_lock (XpadSettings *settings)
 
 void xpad_settings_set_has_toolbar (XpadSettings *settings, gboolean toolbar)
 {
+	if (settings->priv->has_toolbar == toolbar)
+		return;
+	
 	settings->priv->has_toolbar = toolbar;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -345,6 +364,9 @@ gboolean xpad_settings_get_has_toolbar (XpadSettings *settings)
 
 void xpad_settings_set_sticky (XpadSettings *settings, gboolean sticky)
 {
+	if (settings->priv->sticky == sticky)
+		return;
+	
 	settings->priv->sticky = sticky;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -359,6 +381,9 @@ gboolean xpad_settings_get_sticky (XpadSettings *settings)
 
 void xpad_settings_set_autohide_toolbar (XpadSettings *settings, gboolean hide)
 {
+	if (settings->priv->autohide_toolbar == hide)
+		return;
+	
 	settings->priv->autohide_toolbar = hide;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -373,6 +398,9 @@ gboolean xpad_settings_get_autohide_toolbar (XpadSettings *settings)
 
 void xpad_settings_set_has_scrollbar (XpadSettings *settings, gboolean scrollbar)
 {
+	if (settings->priv->has_scrollbar == scrollbar)
+		return;
+	
 	settings->priv->has_scrollbar = scrollbar;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
@@ -446,8 +474,13 @@ G_CONST_RETURN GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings
 
 void xpad_settings_set_back_color (XpadSettings *settings, const GdkColor *back)
 {
-	gdk_color_free (settings->priv->back);
-	settings->priv->back = gdk_color_copy (back);
+	if (settings->priv->back)
+		gdk_color_free (settings->priv->back);
+	
+	if (back)
+		settings->priv->back = gdk_color_copy (back);
+	else
+		settings->priv->back = NULL;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
 	
@@ -461,8 +494,13 @@ G_CONST_RETURN GdkColor *xpad_settings_get_back_color (XpadSettings *settings)
 
 void xpad_settings_set_text_color (XpadSettings *settings, const GdkColor *text)
 {
-	gdk_color_free (settings->priv->text);
-	settings->priv->text = gdk_color_copy (text);
+	if (settings->priv->text)
+		gdk_color_free (settings->priv->text);
+	
+	if (text)
+		settings->priv->text = gdk_color_copy (text);
+	else
+		settings->priv->text = NULL;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
 	

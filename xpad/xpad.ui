@@ -14,6 +14,12 @@
       <separator name='sep1'/>
       <menuitem name='PreferencesItem' action='PreferencesAction'/>
     </menu>
+    <menu name='ViewItem' action='ViewMenu'>
+      <menuitem name='ShowToolbarItem' action='ShowToolbarAction'/>
+      <menuitem name='AutohideToolbarItem' action='AutohideToolbarAction'/>
+      <menuitem name='ShowScrollbarItem' action='ShowScrollbarAction'/>
+      <menuitem name='WindowDecorationsItem' action='WindowDecorationsAction'/>
+    </menu>
     <menu name='NotesItem' action='NotesMenu'>
       <menuitem name='ShowAllItem' action='ShowAllAction'/>
       <menuitem name='CloseAllItem' action='CloseAllAction'/>
@@ -24,5 +30,16 @@
       <menuitem name='ContentsItem' action='ContentsAction'/>
       <menuitem name='AboutItem' action='AboutAction'/>
     </menu>
+  </popup>
+  
+  <popup name='HighlightPopupItem'>
+      <menuitem name='CutItem' action='CutAction'/>
+      <menuitem name='CopyItem' action='CopyAction'/>
+      <menuitem name='PasteItem' action='PasteAction'/>
+      <separator name='sep1'/>
+      <menuitem name='BoldItem' action='BoldAction'/>
+      <menuitem name='ItalicItem' action='ItalicAction'/>
+      <menuitem name='UnderlineItem' action='UnderlineAction'/>
+      <menuitem name='StrikethroughItem' action='StrikethroughAction'/>
   </popup>
 </ui>

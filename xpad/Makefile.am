@@ -7,4 +7,6 @@ dist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 dist_pkgdata_DATA = xpad.ui xpad-tray.ui
 
-EXTRA_DIST = scripts/intltool-extract.in scripts/intltool-merge.in scripts/intltool-update.in
+EXTRA_DIST = $(desktop_in_files) scripts/intltool-extract.in scripts/intltool-merge.in scripts/intltool-update.in
+
+DISTCLEANFILES = xpad.desktop intltool-extract intltool-merge intltool-update po/xpad.pot

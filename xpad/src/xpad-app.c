@@ -29,6 +29,9 @@
 #include <string.h>
 #include <stdlib.h> /* for exit */
 
+#include "../config.h"
+#include <glib/gi18n.h>
+
 #include "fio.h" /* for fio_get_info_from_file */
 #include "xpad-app.h"
 #include "xpad-pad-group.h"
@@ -79,7 +82,8 @@ XpadPadGroup *pad_group;
 static gint      process_args               (gint argc, gchar **argv, gboolean local_args);
 static gint      xpad_app_check_if_others   (void);
 
-static gchar     *make_config_dir           (void);
+static gboolean  config_dir_exists          (void);
+static gchar    *make_config_dir            (void);
 static void      register_stock_icons       (void);
 static void      set_default_icon           (void);
 static gint      xpad_app_load_pads         (void);
@@ -111,6 +115,10 @@ xpad_app_init (int argc, char **argv)
 		program_path = NULL;
 	
 	/* Set up config directory. */
+	if (!config_dir_exists ())
+	{
+		show_help ();
+	}
 	config_dir = make_config_dir ();
 	
 	make_new_pad_if_none = TRUE;
@@ -197,6 +205,40 @@ xpad_app_get_pad_group (void)
 }
 
 
+static gboolean
+config_dir_exists (void)
+{
+	gchar *dir = NULL;
+	gboolean exists = FALSE;
+	
+#if defined (G_OS_UNIX)
+	
+	/* create a hidden directory under the user's home */
+	dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
+	
+	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+	
+#elif defined (G_OS_WIN32)
+	
+	/* If someone has a better place to put our stuff, I'm all ears. */
+	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
+	
+	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+	
+#elif defined (G_OS_BEOS)
+	
+	/* If someone has a better place to put our stuff, I'm all ears. */
+	dir = g_build_filename (g_get_home_dir (), "xpad", NULL);
+	
+	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+	
+#endif
+	
+	g_free (dir);
+	
+	return exists;
+}
+
 /**
  * Creates the directory if it does not exist.
  * Returns newly allocated dir name, NULL if an error occurred.
@@ -204,7 +246,7 @@ xpad_app_get_pad_group (void)
 static gchar *
 make_config_dir (void)
 {
-	gchar *dir;
+	gchar *dir = NULL;
 	
 #if defined (G_OS_UNIX)
 	
@@ -212,7 +254,7 @@ make_config_dir (void)
 	dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
 	
 	/* make sure directory exists */
-	mkdir (dir, 770); /* give group and user all rights */
+	mkdir (dir, 0700); /* give user all rights */
 	
 #elif defined (G_OS_WIN32)
 	

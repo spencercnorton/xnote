@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001-2003 Michael Terry
+Copyright (c) 2001-2004 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,11 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <glib/gi18n.h>
 #include "fio.h"
 #include "pad.h"
 #include "xpad-settings.h"
 #include "xpad-app.h"
 #include "xpad-text-view.h"
+#include "xpad-text-buffer.h"
 
 
 /* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
@@ -99,20 +101,11 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 gchar *fio_get_file (const gchar *name)
 {
 	gchar *fullname;
-	gchar *rv;
+	gchar *rv = NULL;
 	
 	fullname = fio_fill_filename (name);
 	
-	if (!g_file_get_contents (fullname, &rv, NULL, NULL))
-	{
-		gchar *usertext;
-		
-		usertext = g_strdup_printf (_("Could not read from file %s."), fullname);
-		xpad_app_error (NULL, usertext, NULL);
-		g_free (usertext);
-		
-		rv = NULL;
-	}
+	g_file_get_contents (fullname, &rv, NULL, NULL);
 	
 	g_free (fullname);
 	return rv;
@@ -327,8 +320,9 @@ void fio_save_pad_info (pad_node *pad)
 		return;
 	
 	height = pad->height;
-	/*if (GTK_WIDGET_IS_VISIBLE (pad->toolbar))
-		height -= pad->toolbar->height;*/
+	if (GTK_WIDGET_VISIBLE (pad->toolbar))
+		height -= pad->toolbar->allocation.height;
+	g_print ("saving %i,%i\n", pad->height, pad->width);
 	
 	style = gtk_widget_get_modifier_style (pad->textview);
 	fontname = style->font_desc ? pango_font_description_to_string (style->font_desc) : NULL;
@@ -356,16 +350,13 @@ void fio_save_pad_info (pad_node *pad)
 void fio_save_pad_content (pad_node *pad)
 {
 	gchar *content;
-	GtkTextIter s, e;
 	GtkTextBuffer *buf;
 	
 	if (!pad || !pad->contentname)
 		return;
 	
 	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
-	gtk_text_buffer_get_start_iter (buf, &s);
-	gtk_text_buffer_get_end_iter (buf, &e);
-	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
+	content = xpad_text_buffer_get_text_with_tags (XPAD_TEXT_BUFFER (buf));
 	
 	fio_set_file (pad->contentname, content);
 	

@@ -2,17 +2,18 @@
 # Copyright (C) 2003-2004 Michael Terry
 
 # Package source files
-src/dashboard-frontend.c
-src/main.c
-src/fio.c
-src/pref.c
-src/pad.c
-src/help.c
-src/toolbar.c
 src/eggtrayicon.c
+src/fio.c
+src/pad.c
+src/pref.c
 src/properties.c
-src/settings.c
-src/xpad-dashboard-frontend.c
+src/xpad-app.c
+src/xpad-grip-tool-item.c
+src/xpad-pad-group.c
 src/xpad-session-manager.c
+src/xpad-settings.c
+src/xpad-text-buffer.c
+src/xpad-text-view.c
+src/xpad-toolbar.c
 src/xpad-tray.c
 xpad.desktop.in

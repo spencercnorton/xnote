@@ -18,10 +18,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
+#include <glib/gi18n.h>
 #include "properties.h"
 #include "xpad-settings.h"
 #include "pad.h"
-#include "defines.h"
 #include "xpad-text-view.h"
 
 

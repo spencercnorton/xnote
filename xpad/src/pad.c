@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2001-2003 Michael Terry
+Copyright (c) 2001-2004 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,8 +18,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
+#include <glib/gi18n.h>
 #include "pad.h"
 #include "pref.h"
 #include "fio.h"
@@ -27,9 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-settings.h"
 #include "properties.h"
 #include "xpad-app.h"
-#include "xpad-dashboard-frontend.h"
+/*#include "xpad-dashboard-frontend.h"*/
 #include "xpad-tray.h"
 #include "xpad-text-view.h"
+#include "xpad-text-buffer.h"
 #include "xpad-toolbar.h"
 
 pad_node *first_pad = NULL;
@@ -40,11 +43,17 @@ void pad_edit_cut (pad_node *pad);
 void pad_edit_copy (pad_node *pad);
 void pad_edit_paste (pad_node *pad);
 static void about_dialog (pad_node *pad);
+static gboolean toolbar_hide_timeout (gpointer data);
+static void toolbar_start_timeout (pad_node *pad);
+static void toolbar_end_timeout (pad_node *pad);
+static void toolbar_hide (pad_node *pad);
+static void toolbar_show (pad_node *pad);
 
 GtkActionEntry pad_actions[] = 
 {
 	{"PadMenu", NULL, N_("_Pad"), NULL, NULL, NULL},
 	{"EditMenu", NULL, N_("_Edit"), NULL, NULL, NULL},
+	{"ViewMenu", NULL, N_("_View"), NULL, NULL, NULL},
 	{"NotesMenu", NULL, N_("_Notes"), NULL, NULL, NULL},
 	{"HelpMenu", NULL, N_("_Help"), NULL, NULL, NULL},
 	{"NewAction", GTK_STOCK_NEW, N_("_New"), "<control>N", N_("Create a new pad"), G_CALLBACK (menuitem_cb)},
@@ -61,6 +70,7 @@ GtkActionEntry pad_actions[] =
 	{"AboutAction", GTK_STOCK_DIALOG_INFO, N_("_About"), NULL, N_("Display information about xpad"), G_CALLBACK (menuitem_cb)},
 	{"BoldAction", GTK_STOCK_BOLD, N_("_Bold"), "<Control>B", N_("Bold the text"), G_CALLBACK (menuitem_cb)},
 	{"ItalicAction", GTK_STOCK_ITALIC, N_("_Italic"), "<Control>I", N_("Italicize the text"), G_CALLBACK (menuitem_cb)},
+	{"UnderlineAction", GTK_STOCK_UNDERLINE, N_("_Underline"), "<Control>U", N_("Underline the text"), G_CALLBACK (menuitem_cb)},
 	{"StrikethroughAction", GTK_STOCK_STRIKETHROUGH, N_("Stri_ke"), "<Control>K", N_("Strike the text"), G_CALLBACK (menuitem_cb)},
 	{"BiggerAction", NULL, N_("Bi_gger"), NULL, N_("Make the text bigger"), G_CALLBACK (menuitem_cb)},
 	{"SmallerAction", NULL, N_("S_maller"), NULL, N_("Make the text smaller"), G_CALLBACK (menuitem_cb)}
@@ -70,25 +80,15 @@ const gint num_pad_actions = G_N_ELEMENTS (pad_actions);
 
 static GtkToggleActionEntry toggle_pad_actions[] = 
 {
-	{"StickyAction", "xpad-sticky", N_("_Sticky"), NULL, N_("Toggle stickiness"), G_CALLBACK (menuitem_cb), FALSE}
+	{"StickyAction", "xpad-sticky", N_("_Sticky"), NULL, N_("Toggle stickiness"), G_CALLBACK (menuitem_cb), FALSE},
+	{"ShowToolbarAction", NULL, N_("_Toolbar"), NULL, N_("Show toolbar"), G_CALLBACK (menuitem_cb), FALSE},
+	{"ShowScrollbarAction", NULL, N_("_Scrollbar"), NULL, N_("Allow scrollbar"), G_CALLBACK (menuitem_cb), FALSE},
+	{"AutohideToolbarAction", NULL, N_("_Autohide Toolbar"), NULL, N_("Whether toolbar hides when unused"), G_CALLBACK (menuitem_cb), FALSE},
+	{"WindowDecorationsAction", NULL, N_("_Window Decorations"), NULL, N_("Whether pads have window manager decorations"), G_CALLBACK (menuitem_cb), FALSE}
 };
 
 #define SHOW_ACTION_OFFSET		10000
 
-#if 0
-const toolbar_button buttons[] =
-{
-	{"New", "gtk-new", 0, G_CALLBACK (pad_spawn), N_("Open New Pad")},
-	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
-	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
-	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Global Preferences")},
-	{"Properties", "gtk-properties", 0, G_CALLBACK (properties_open), N_("Edit Pad Properties")},
-	{"Quit", "gtk-quit", 0, G_CALLBACK (pads_close_all), N_("Close All Pads")},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Toggle Stickiness")}/*,
-	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}*/
-};
-#endif
 
 /* This function returns 'string' with all instances
    of 'obj' replaced with instances of 'replacement'
@@ -120,15 +120,18 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
     param will be presented afterward */
 void pad_set_decorations (pad_node *pad, gboolean decor)
 {
-	if (!pad->hidden)
-	{
+	gboolean shown = GTK_WIDGET_VISIBLE (GTK_WIDGET (pad->window));
+	
+	if (shown)
 		gtk_widget_hide (GTK_WIDGET (pad->window));
-		
-		gtk_window_set_decorated (pad->window, decor);
-		
+	
+	gtk_window_set_decorated (pad->window, decor);
+	
+	if (shown)
+	{
+		gtk_widget_show (GTK_WIDGET (pad->window));
 		/* we move it so wm's know where to place it */
 		gtk_window_move (pad->window, pad->x, pad->y);
-		gtk_widget_show (GTK_WIDGET (pad->window));
 	}
 }
 
@@ -139,8 +142,6 @@ void pad_clear (pad_node *pad)
 	buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
 	
 	gtk_text_buffer_set_text (buf, "", 0);
-	
-	pad_background_clear (pad);
 }
 
 static gboolean pad_is_empty (pad_node *pad)
@@ -365,7 +366,7 @@ void pad_hide (pad_node *pad)
 	
 	fio_save_pad_info (pad);
 	
-	pad_free_gtk (pad);
+	gtk_widget_hide (GTK_WIDGET (pad->window));
 }
 
 void pad_close (pad_node *pad)
@@ -378,16 +379,13 @@ void pad_close (pad_node *pad)
 
 void pad_show (pad_node *pad)
 {
-	if (pad->hidden)
-	{
-		/* if we are reshowing ourselves from a hide, we have to rebuild the pad */
-		pad_renew (pad, TRUE);
-		gtk_widget_show_all (GTK_WIDGET (pad->window));
-	}
+	gtk_widget_show (GTK_WIDGET (pad->window));
 	
 	pad->hidden = FALSE;
 	pad->closed = FALSE;
 	
+	gtk_window_move (pad->window, pad->x, pad->y);
+	pad_set_sticky (pad, pad->sticky);
 	gtk_window_present (pad->window);
 }
 
@@ -453,8 +451,11 @@ static gboolean pad_fill_with_file (pad_node *pad, const gchar *filename)
 	if (!contentbuf)
 		return FALSE;
 	
+	if (!g_utf8_validate (contentbuf, -1, NULL))
+		return FALSE;
+	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->textview));
-	gtk_text_buffer_set_text (buffer, contentbuf, -1);
+	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), contentbuf);
 	g_free (contentbuf);
 	
 	gtk_text_buffer_get_start_iter (buffer, &iter);
@@ -481,12 +482,12 @@ static void about_dialog (pad_node *pad)
 	GtkWidget *dialog;
 	gchar *text;
 	
-	text = g_strdup_printf (_("You are using xpad %s with GTK+ %i.%i.%i."),
+	text = g_strdup_printf (_("You are using Xpad %s with GTK+ %i.%i.%i."),
 		VERSION, gtk_major_version, gtk_minor_version, gtk_micro_version);
 	
 	dialog = xpad_app_alert_new (pad->window, GTK_STOCK_DIALOG_INFO,
 		text,
-		_("Visit http://xpad.sourceforge.net for more information about xpad."));
+		_("Visit http://xpad.sourceforge.net/ for more information about Xpad."));
 	g_free (text);
 	
 	if (!dialog)
@@ -508,10 +509,10 @@ enter_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	if (xpad_settings_get_has_toolbar (xpad_settings ()) &&
 		event->detail != GDK_NOTIFY_INFERIOR)
 	{
-		/*if (pad->toolbar->timeout)
+		if (pad->toolbar_timeout)
 			toolbar_end_timeout (pad);
 		
-		gtk_widget_show (pad->toolbar);*/
+		toolbar_show (pad);
 	}
 	
 	return FALSE;
@@ -529,7 +530,7 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 			event->detail != GDK_NOTIFY_INFERIOR &&
 			event->mode == GDK_CROSSING_NORMAL)
 		{
-		    /*toolbar_start_timeout (pad);*/
+		    toolbar_start_timeout (pad);
 		}
 	}
 	
@@ -541,8 +542,8 @@ block_toolbar_events (pad_node *pad)
 {
 	if (pad->toolbar)
 	{
-		/*if (pad->toolbar->timeout)
-			toolbar_end_timeout (pad);*/
+		if (pad->toolbar_timeout)
+			toolbar_end_timeout (pad);
 		
 		g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
 		g_signal_handlers_block_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
@@ -574,8 +575,8 @@ disconnect_toolbar_events (pad_node *pad)
 {
 	if (pad->toolbar)
 	{
-		/*if (pad->toolbar->timeout)
-			toolbar_end_timeout (pad);*/
+		if (pad->toolbar_timeout)
+			toolbar_end_timeout (pad);
 		
 		g_signal_handlers_disconnect_by_func (pad->window, (gpointer) G_CALLBACK (leave_handler), pad);
 		g_signal_handlers_disconnect_by_func (pad->window, (gpointer) G_CALLBACK (enter_handler), pad);
@@ -604,8 +605,8 @@ disable_popup_handler (pad_node *pad)
 			rect.width = 1;
 			rect.height = 1;
 			
-			/*if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
-				toolbar_start_timeout (pad);*/
+			if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
+				toolbar_start_timeout (pad);
 		}
 	}
 	
@@ -646,6 +647,8 @@ void pad_toggle_tag (pad_node *pad, gchar *name)
 		gtk_text_buffer_remove_tag (buffer, tag, &start, &end);
 	else
 		gtk_text_buffer_apply_tag (buffer, tag, &start, &end);
+	
+	fio_save_pad_content (pad);
 }
 
 void pad_adjust_tag_scale (pad_node *pad, gboolean bigger)
@@ -744,6 +747,26 @@ menuitem_cb (GtkAction *action, gpointer user_data)
 	else if (g_str_has_prefix (action_name, "ShowNoteAction-")) {
 		pad_show (pad);
 	}
+	else if (strcmp (action_name, "ShowToolbarAction") == 0) {
+		GtkToggleAction *toggle_action = GTK_TOGGLE_ACTION (action);
+		
+		xpad_settings_set_has_toolbar (xpad_settings (), gtk_toggle_action_get_active (toggle_action));
+	}
+	else if (strcmp (action_name, "ShowScrollbarAction") == 0) {
+		GtkToggleAction *toggle_action = GTK_TOGGLE_ACTION (action);
+		
+		xpad_settings_set_has_scrollbar (xpad_settings (), gtk_toggle_action_get_active (toggle_action));
+	}
+	else if (strcmp (action_name, "AutohideToolbarAction") == 0) {
+		GtkToggleAction *toggle_action = GTK_TOGGLE_ACTION (action);
+		
+		xpad_settings_set_autohide_toolbar (xpad_settings (), gtk_toggle_action_get_active (toggle_action));
+	}
+	else if (strcmp (action_name, "WindowDecorationsAction") == 0) {
+		GtkToggleAction *toggle_action = GTK_TOGGLE_ACTION (action);
+		
+		xpad_settings_set_has_decorations (xpad_settings (), gtk_toggle_action_get_active (toggle_action));
+	}
 	else if (strcmp (action_name, "BoldAction") == 0) {
 		pad_toggle_tag (pad, "bold");
 	}
@@ -752,6 +775,9 @@ menuitem_cb (GtkAction *action, gpointer user_data)
 	}
 	else if (strcmp (action_name, "StrikethroughAction") == 0) {
 		pad_toggle_tag (pad, "strikethrough");
+	}
+	else if (strcmp (action_name, "UnderlineAction") == 0) {
+		pad_toggle_tag (pad, "underline");
 	}
 	else if (strcmp (action_name, "BiggerAction") == 0) {
 		pad_adjust_tag_scale (pad, TRUE);
@@ -797,7 +823,8 @@ static gint pad_title_compare (pad_node *a, pad_node *b)
 static void pad_popup_no_highlight (pad_node *pad, GdkEventButton *event)
 {
 	pad_node *p;
-	GtkWidget *tmp;
+	GtkAction *tmp;
+	GtkWidget *widget;
 	gint n = 0;
 	GtkClipboard *clipboard;
 	GList *pads = NULL, *l;
@@ -834,7 +861,7 @@ static void pad_popup_no_highlight (pad_node *pad, GdkEventButton *event)
 		if (n < 10)
 			title = g_strdup_printf ("_%i. %s", n, tmp_title);
 		else
-			title = g_strdup (tmp_title);
+			title = g_strdup_printf ("%i. %s", n, tmp_title);
 		g_free (tmp_title);
 		
 		action_name = g_strdup_printf ("ShowNoteAction-%i", n);
@@ -862,15 +889,28 @@ static void pad_popup_no_highlight (pad_node *pad, GdkEventButton *event)
 	block_toolbar_events (pad);
 	
 	/* set checkboxes */
-	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/PadItem/StickyItem");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (tmp), pad->sticky);
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/PadItem/StickyItem");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (tmp), pad->sticky);
+	
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/ViewItem/ShowToolbarItem");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (tmp), xpad_settings_get_has_toolbar (xpad_settings ()));
+	
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/ViewItem/ShowScrollbarItem");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (tmp), xpad_settings_get_has_scrollbar (xpad_settings ()));
+	
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/ViewItem/AutohideToolbarItem");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (tmp), xpad_settings_get_autohide_toolbar (xpad_settings ()));
+	g_object_set (tmp, "sensitive", xpad_settings_get_has_toolbar (xpad_settings ()));
+	
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/ViewItem/WindowDecorationsItem");
+	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (tmp), xpad_settings_get_has_decorations (xpad_settings ()));
 	
 	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
-	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem/EditItem/PasteItem");
-	gtk_widget_set_sensitive (tmp, gtk_clipboard_wait_is_text_available (clipboard));
+	tmp = gtk_ui_manager_get_action (pad->ui_manager, "/PopupItem/EditItem/PasteItem");
+	g_object_set (tmp, "sensitive", gtk_clipboard_wait_is_text_available (clipboard));
 	
-	tmp = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem");
-	gtk_menu_popup (GTK_MENU (tmp), NULL, NULL, NULL, NULL, event->button, event->time);
+	widget = gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem");
+	gtk_menu_popup (GTK_MENU (widget), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
 static void pad_popup_highlight (pad_node *pad, GdkEventButton *event)
@@ -900,8 +940,6 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		pad_popup_no_highlight (pad, event);
 }
 
-static void pad_background_draw (pad_node *pad, gint x, gint y);
-
 static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
 {
 	if (event == NULL)
@@ -909,39 +947,6 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 	
 	switch (event->type)
 	{
-#if DRAWING_ON
-		case GDK_MOTION_NOTIFY:
-		{
-			GdkEventMotion *event_motion = (GdkEventMotion *) event;
-			gint x, y;
-			GdkModifierType mask;
-			
-			gdk_window_get_pointer (event_motion->window, &x, &y, &mask);
-			
-			if ((mask & GDK_CONTROL_MASK) &&
-				(mask & GDK_SHIFT_MASK) &&
-				(mask & GDK_BUTTON1_MASK))
-			{
-				pad_background_draw (pad, x, y);
-				return TRUE;
-			}
-		}
-		break;
-		
-		case GDK_BUTTON_RELEASE:
-		{
-			GdkEventButton *event_button = (GdkEventButton *) event;
-			
-			switch (event_button->button)
-			{
-				case 1:
-					pad->last_draw_x = pad->last_draw_y = -1;
-					return FALSE;
-			}
-		}
-		break;
-#endif
-		
 		case GDK_BUTTON_PRESS: 
 		{
 			GdkEventButton *event_button = (GdkEventButton *) event;
@@ -951,13 +956,6 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			case 1:
 				/* raise window if clicked on */
 				gtk_window_present (pad->window);
-				
-				if ((event_button->state & GDK_CONTROL_MASK) &&
-					(event_button->state & GDK_SHIFT_MASK))
-				{
-					pad_background_draw (pad, event_button->x, event_button->y);
-					return TRUE;
-				}
 				
 				if ((event_button->state & GDK_CONTROL_MASK) ||
 						(xpad_settings_get_edit_lock (xpad_settings ()) && 
@@ -984,6 +982,36 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 	return FALSE;
 }
 
+static gboolean
+toolbar_hide_timeout (gpointer data)
+{
+	pad_node *pad = (pad_node *) data;
+	
+	if (!pad->toolbar || !pad->toolbar_timeout)
+		return FALSE;
+	
+	if (GTK_WIDGET_VISIBLE (pad->toolbar))
+	{
+		pad->toolbar_timeout = 0;
+		
+		toolbar_hide (pad);
+	}
+	
+	return FALSE;
+}
+
+void
+toolbar_start_timeout (pad_node *pad)
+{
+	if (pad->toolbar && !pad->toolbar_timeout)
+		pad->toolbar_timeout = g_timeout_add (1000, toolbar_hide_timeout, pad);
+}
+
+void
+toolbar_end_timeout (pad_node *pad)
+{
+	pad->toolbar_timeout = 0;
+}
 
 static gboolean window_button_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
 {
@@ -1035,245 +1063,6 @@ pad_toggle_lock (pad_node *pad)
 		pad_unlock_style (pad);
 }
 
-
-#if DRAWING_ON
-static void
-pad_background_refresh (pad_node *pad)
-{
-	GdkWindow *win;
-	GdkRectangle rect = {0, 0, 0, 0};
-	
-	rect.width = pad->width;
-	rect.height = pad->height;
-	
-	win = gtk_text_view_get_window (GTK_TEXT_VIEW (pad->textview), GTK_TEXT_WINDOW_TEXT);
-	
-	gdk_window_invalidate_rect (win, &rect, FALSE);
-}
-#endif
-
-static void
-pad_background_draw (pad_node *pad, gint x, gint y)
-{
-#if DRAWING_ON
-	GdkRectangle brush;
-	GtkWidget *textbox;
-	GdkWindow *textwin;
-	GtkAdjustment *ha, *va;
-	
-	if (!pad->visible_back || !pad->background)
-		return;
-	
-	brush.x = x ;
-	brush.y = y ;
-	brush.width = 1;
-	brush.height = 1;
-	
-	textbox = pad->textview;
-	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
-	
-	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	
-	/* draw brush on both current background and master background */
-	if (pad->last_draw_x > -1 && pad->last_draw_y > -1)
-	{
-		gdk_draw_line (pad->visible_back,
-						textbox->style->text_gc[GTK_STATE_NORMAL],
-						pad->last_draw_x, pad->last_draw_y,
-						brush.x, brush.y);
-		gdk_draw_line (pad->background,
-						textbox->style->text_gc[GTK_STATE_NORMAL],
-						ha->value + pad->last_draw_x, va->value + pad->last_draw_y,
-						ha->value + brush.x, va->value + brush.y);
-	}
-	else
-	{
-		gdk_draw_rectangle (pad->visible_back,
-						textbox->style->text_gc[GTK_STATE_NORMAL],
-						TRUE,
-						brush.x, brush.y, brush.width, brush.height);
-		gdk_draw_rectangle (pad->background,
-						textbox->style->text_gc[GTK_STATE_NORMAL],
-						TRUE,
-						ha->value + brush.x, va->value + brush.y, brush.width, brush.height);
-	}
-	
-	/* now make change visible */
-	pad_background_refresh (pad);
-	
-	pad->last_draw_x = brush.x;
-	pad->last_draw_y = brush.y;
-#endif
-}
-
-#if DRAWING_ON
-static void
-pad_background_update (pad_node *pad)
-{
-	GtkAdjustment *ha, *va;
-	GtkWidget *textbox;
-	GdkWindow *textwin;
-	GdkPixmap *pix;
-	
-	textbox = pad->textview;
-	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
-	
-	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	
-	g_print ("making %i, %i, from %i, %i\n", pad->width, pad->height, (int)ha->upper, (int)va->upper);
-	
-	pix = gdk_pixmap_new (textwin, pad->width, pad->height, -1);
-	
-	gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1,
-		0, 0, pad->width, pad->height);
-	gdk_draw_drawable (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], pad->background,
-		ha->value, va->value, 0, 0, pad->width, pad->height);
-	
-	gdk_window_set_back_pixmap (textwin, pix, FALSE);
-	
-	if (pad->visible_back) gdk_pixmap_unref (pad->visible_back);
-	pad->visible_back = pix;
-}
-#endif
-
-static void
-pad_scrolled (GtkAdjustment *adjustment, pad_node *pad)
-{
-#if DRAWING_ON
-	pad_background_update (pad);
-	
-	pad_background_refresh (pad);
-#endif
-}
-
-static void
-pad_resize_background (pad_node *pad)
-{
-#if DRAWING_ON
-	GtkAdjustment *ha, *va;
-	GtkWidget *textbox;
-	GdkWindow *textwin;
-	GdkPixmap *pix;
-	gint height, width;
-	
-	textbox = pad->textview;
-	textwin = gtk_text_view_get_window (GTK_TEXT_VIEW (textbox), GTK_TEXT_WINDOW_TEXT);
-	
-	ha = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	va = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar));
-	
-	width = ha->upper;
-	height = va->upper;
-	pix = gdk_pixmap_new (textwin, width, height, -1);
-	
-	g_print ("background is %i, %i\n", width, height);
-	
-	if (pad->background)
-	{
-		gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, width, height);
-		gdk_draw_drawable (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], pad->background, 0, 0, 0, 0, -1, -1);
-		
-		gdk_pixmap_unref (pad->background);
-	}
-	else
-	{
-		gdk_draw_rectangle (pix, textbox->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, width, height);
-	}
-	
-	pad->background = pix;
-	
-	pad_background_update (pad);
-#endif
-}
-
-static void
-pad_v_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
-{
-#if DRAWING_ON
-	gint h;
-	gboolean doit = FALSE;
-	
-	/* This is called if an adjustment member other than it's 'value'
-		changed -- here we are concerned about the 'upper' member */
-	
-	/* Here we find out if the upper member was the actual member changed */
-	g_print ("v changed\n");
-	
-	if (!pad->background)
-	{
-		doit = TRUE;
-	}
-	
-	if (!doit)
-	{
-		gdk_drawable_get_size (pad->background, NULL, &h);
-		
-		if (h != adjustment->upper)
-			doit = TRUE;
-	}
-	
-	if (doit)
-	{
-		g_print ("v changed for real\n");
-		if (GTK_WIDGET_REALIZED (pad->textview))
-			pad_resize_background (pad);
-	}
-#endif
-}
-
-static void
-pad_h_scroll_changed (GtkAdjustment *adjustment, pad_node *pad)
-{
-#if DRAWING_ON
-	gint w;
-	gboolean doit = FALSE;
-	
-	/* This is called if an adjustment member other than it's 'value'
-		changed -- here we are concerned about the 'upper' member */
-	
-	/* Here we find out if the upper member was the actual member changed */
-	
-	g_print ("h changed\n");
-	
-	if (!pad->background)
-	{
-		doit = TRUE;
-	}
-	
-	if (!doit)
-	{
-		g_print ("drawable exists\n");
-		gdk_drawable_get_size (pad->background, &w, NULL);
-		
-		if (w != adjustment->upper)
-			doit = TRUE;
-	}
-	
-	if (doit)
-	{
-		g_print ("v changed for real\n");
-		if (GTK_WIDGET_REALIZED (pad->textview))
-			pad_resize_background (pad);
-	}
-#endif
-}
-
-void pad_background_clear (pad_node *pad)
-{
-#if DRAWING_ON
-	gint w, h;
-	
-	gdk_drawable_get_size (pad->background, &w, &h);
-	gdk_draw_rectangle (pad->background, pad->textview->style->bg_gc[GTK_STATE_NORMAL], 1, 0, 0, w, h);
-	
-	pad_background_update (pad);
-	
-	pad_background_refresh (pad);
-#endif
-}
-
 static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, pad_node *pad)
 {
 	pad->x = event->x;
@@ -1290,28 +1079,44 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 static void
 pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 {
-	pad_resize_background (pad);
-	
 	/* show the toolbar now that we are realized */
 	if (xpad_settings_get_has_toolbar (xpad_settings ()) && 
 	    !xpad_settings_get_autohide_toolbar (xpad_settings ()))
-		gtk_widget_show (pad->toolbar);
+		toolbar_show (pad);
 }
-/*
-static gboolean
-grip_press_handler (GtkWidget *widget, GdkEventButton *event, pad_node *pad)
+
+void
+toolbar_show (pad_node *pad)
 {
-	if (event->button == 1)
+	if (pad->toolbar && !GTK_WIDGET_VISIBLE (pad->toolbar))
 	{
-		pad_resize (pad, event);
+		GtkRequisition req;
+		
+		if (GTK_WIDGET (pad->window)->window)
+			gdk_window_freeze_updates (GTK_WIDGET (pad->window)->window);
+		gtk_widget_show (pad->toolbar);
+		gtk_widget_size_request (pad->toolbar, &req);
+		pad->height += req.height;
+		gtk_window_resize (pad->window, pad->width, pad->height);
+		if (GTK_WIDGET (pad->window)->window)
+			gdk_window_thaw_updates (GTK_WIDGET (pad->window)->window);
 	}
-	else
+}
+
+void
+toolbar_hide (pad_node *pad)
+{
+	if (pad->toolbar && GTK_WIDGET_VISIBLE (pad->toolbar))
 	{
-		pad_move (pad, event);
+		if (GTK_WIDGET (pad->window)->window)
+			gdk_window_freeze_updates (GTK_WIDGET (pad->window)->window);
+		pad->height -= pad->toolbar->allocation.height;
+		gtk_widget_hide (pad->toolbar);
+		gtk_window_resize (pad->window, pad->width, pad->height);
+		if (GTK_WIDGET (pad->window)->window)
+			gdk_window_thaw_updates (GTK_WIDGET (pad->window)->window);
 	}
-	
-	return TRUE;
-}*/
+}
 
 void
 pad_remove_toolbar (pad_node *pad)
@@ -1320,7 +1125,7 @@ pad_remove_toolbar (pad_node *pad)
 	{
 		disconnect_toolbar_events (pad);
 		
-		gtk_widget_hide (pad->toolbar);
+		toolbar_hide (pad);
 		gtk_widget_destroy (pad->toolbar);
 		pad->toolbar = NULL;
 	}
@@ -1345,12 +1150,10 @@ pad_add_toolbar (pad_node *pad)
 	g_signal_connect_swapped (pad->toolbar, "activate-quit", G_CALLBACK (pads_close_all), pad);
 	g_signal_connect_swapped (pad->toolbar, "activate-sticky", G_CALLBACK (pad_toggle_sticky), pad);
 	
-	/*g_signal_connect (G_OBJECT (pad->toolbar->grip), "button-press-event", 
-		G_CALLBACK (grip_press_handler), pad);*/
-	
 	connect_toolbar_events (pad);
 	
-	gtk_widget_show (pad->toolbar);
+	if (!xpad_settings_get_autohide_toolbar (xpad_settings ()))
+		toolbar_show (pad);
 }
 
 void pad_set_title (pad_node *pad)
@@ -1428,12 +1231,7 @@ static void
 pad_notify_has_toolbar (pad_node *pad)
 {
 	if (xpad_settings_get_has_toolbar (xpad_settings ()))
-	{
 		pad_add_toolbar (pad);
-		
-		if (!xpad_settings_get_autohide_toolbar (xpad_settings ()))
-			gtk_widget_show (pad->toolbar);
-	}
 	else
 		pad_remove_toolbar (pad);
 }
@@ -1443,14 +1241,14 @@ pad_notify_autohide_toolbar (pad_node *pad)
 {
 	if (xpad_settings_get_autohide_toolbar (xpad_settings ()))
 	{
-		/*toolbar_start_timeout (pad);*/	/* safe, since the cursor is unlikely to be on the pad? */
+		toolbar_start_timeout (pad);	/* safe, since the cursor is unlikely to be on the pad? */
 	}
 	else
 	{
-		/*if (pad->toolbar->timeout)
-			toolbar_end_timeout (pad);*/
+		if (pad->toolbar_timeout)
+			toolbar_end_timeout (pad);
 		
-		gtk_widget_show (pad->toolbar);
+		toolbar_show (pad);
 	}
 }
 
@@ -1481,16 +1279,13 @@ pad_notify_has_scrollbar (pad_node *pad)
 static gboolean
 pad_window_state_event (GtkWidget *widget, GdkEventWindowState *event, pad_node *pad)
 {
-	g_print ("start window state event\n");
 	pad->sticky = (event->new_window_state & GDK_WINDOW_STATE_STICKY) ? TRUE : FALSE;
-	g_print ("sticky is now %i\n", pad->sticky);
 	
 	if (pad->toolbar)
 	{
 		xpad_toolbar_set_sticky_active (XPAD_TOOLBAR (pad->toolbar), pad->sticky);
 	}
 	
-	g_print ("end window state event\n");
 	return FALSE;
 }
 
@@ -1528,11 +1323,9 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_swapped (xpad_settings (), "notify::autohide-toolbar", G_CALLBACK (pad_notify_autohide_toolbar), pad);
 	g_signal_connect_swapped (xpad_settings (), "notify::has-scrollbar", G_CALLBACK (pad_notify_has_scrollbar), pad);
 	
-	g_object_set_data (G_OBJECT (window), "pad", pad);
-	g_object_set_data (G_OBJECT (window), "textbox", textbox);
-	
 	gtk_window_set_role (GTK_WINDOW (window), role);
 	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_UTILITY);
+	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
 	
 	pad->window = GTK_WINDOW (window);
 	pad->box = box;
@@ -1542,6 +1335,7 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	pad->title = NULL;
 	pad->popup_notes_actions = NULL;
 	pad->popup_notes_merge_id = 0;
+	pad->toolbar_timeout = 0;
 	
 	/* set up action group */
 	actions = gtk_action_group_new (PACKAGE);
@@ -1562,9 +1356,8 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_swapped (G_OBJECT (gtk_ui_manager_get_widget (pad->ui_manager, "/PopupItem")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	g_signal_connect_swapped (G_OBJECT (gtk_ui_manager_get_widget (pad->ui_manager, "/HighlightPopupItem")), "deactivate", G_CALLBACK (disable_popup_handler), pad);
 	
-	gtk_window_set_gravity (GTK_WINDOW (window), GDK_GRAVITY_STATIC);
-	
 	pad_notify_has_toolbar (pad);
+	pad_notify_autohide_toolbar (pad);
 	pad_notify_has_decorations (pad);
 	pad_notify_has_scrollbar (pad);
 	
@@ -1572,10 +1365,9 @@ pad_alloc_gtk (pad_node *pad, const gchar *role)
 	g_signal_connect_after (textbox, "realize", G_CALLBACK 
 		(pad_when_textbox_realized), pad);
 	
-	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "value-changed", G_CALLBACK (pad_scrolled), pad);
-	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "value-changed", G_CALLBACK (pad_scrolled), pad);
-	g_signal_connect (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "changed", G_CALLBACK (pad_v_scroll_changed), pad);
-	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar)), "changed", G_CALLBACK (pad_h_scroll_changed), pad);
+	gtk_widget_show_all (box);
+	if (pad->toolbar)
+		gtk_widget_hide (pad->toolbar);
 }
 
 /*
@@ -1588,11 +1380,6 @@ static pad_node *start_pad (void)
 	static gint num = 1;
 	
 	pad->next = NULL;
-#if DRAWING_ON
-	pad->background = NULL;
-	pad->visible_back = NULL;
-	pad->last_draw_x = pad->last_draw_y = -1;
-#endif
 	pad->num = num++;
 	pad->infoname = NULL;
 	pad->contentname = NULL;
@@ -1634,13 +1421,15 @@ pad_node *pad_new (void)
 	pad->sticky = FALSE;
 	pad->width = xpad_settings_get_width (xpad_settings ());
 	pad->height = xpad_settings_get_height (xpad_settings ());
+	pad->x = INT_MIN;
+	pad->y = INT_MIN;
 	pad->hidden = FALSE;
 	
 	pad_renew (pad, FALSE);
 	
 	pad_set_sticky (pad, xpad_settings_get_sticky (xpad_settings ()));
 	
-	gtk_widget_show_all (GTK_WIDGET (pad->window));
+	gtk_widget_show (GTK_WIDGET (pad->window));
 	
 	return pad;
 }
@@ -1657,30 +1446,15 @@ pad_node *pad_new_with_info (pad_info *info)
 	
 	normalize_dimensions (&info->x, &info->y, &info->width, &info->height);
 	
-	pad->sticky = FALSE;
+	pad->sticky = info->sticky;
 	pad->width = info->width;
 	pad->height = info->height;
 	pad->x = info->x;
 	pad->y = info->y;
 	pad->hidden = info->hidden;
+	pad->closed = info->hidden;
 	
-	if (!pad->hidden)
-	{
-		pad_renew (pad, TRUE);
-		pad_set_sticky (pad, info->sticky);
-	}
-	else
-	{
-		/* need to load title */
-		gchar *content = fio_get_file (pad->contentname);
-		gchar *end = g_utf8_strchr (content, -1, '\n');
-		
-		if (end)
-			end[0] = '\0';
-		
-		pad->title = g_strstrip (g_strdup (content));
-		g_free (content);
-	}
+	pad_renew (pad, TRUE);
 	
 	if (info->locked)
 	{
@@ -1690,8 +1464,10 @@ pad_node *pad_new_with_info (pad_info *info)
 		pad_set_fontname (pad, info->fontname);
 	}
 	
+	gtk_window_move (pad->window, pad->x, pad->y);
 	if (!pad->hidden)
-		gtk_widget_show_all (GTK_WIDGET (pad->window));
+		gtk_widget_show (GTK_WIDGET (pad->window));
+	gtk_window_move (pad->window, pad->x, pad->y);
 	
 	gdk_color_free (info->text);
 	gdk_color_free (info->back);
@@ -1715,5 +1491,5 @@ pad_renew (pad_node *pad, gboolean move)
 	
 	pad_set_sticky (pad, pad->sticky);
 	
-	xpad_dashboard_frontend_init_for_pad (pad);
+	/*xpad_dashboard_frontend_init_for_pad (pad);*/
 }

@@ -19,8 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "defines.h"
 #include "eggtrayicon.h"
 #include "pad.h"
 #include "xpad-app.h"
@@ -187,7 +188,7 @@ xpad_tray_popup (GdkEventButton *event)
 		if (n < 10)
 			title = g_strdup_printf ("_%i. %s", n, tmp_title);
 		else
-			title = g_strdup (tmp_title);
+			title = g_strdup_printf ("%i. %s", n, tmp_title);
 		g_free (tmp_title);
 		
 		action_name = g_strdup_printf ("ShowNoteAction-%i", n);

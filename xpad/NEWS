@@ -1,9 +1,15 @@
-Version 1.14
-* Finally the text cursor is always the same color as the text color
+Version 2.0-b1
+* The text cursor is now always the same color as the text color
+* Formatting can now be applied to selected text
 * Pads remember their hidden state
+* Rewritten toolbar, allowing easier adding/removing/moving buttons
+* Simplified preferences dialog; many functions are now accessed from popup menu
+* --new now also loads the old pads, instead of the previous broken behavior
+* Fixed bug with pads over the 9th not having numbers in note lists
 * Fixed bug with inter process communicating causing only first communication to work
 * Fixed bug with pads becoming unstyled after closing and reopening
-* --new now also loads the old pads, instead of the previous broken behavior
+* New Afrikaans translation (Petri Jooste)
+* New French translation (Michel Robitaille)
 
 
 Version 1.13

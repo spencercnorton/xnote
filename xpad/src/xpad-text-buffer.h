@@ -43,9 +43,12 @@ struct XpadTextBufferClass
 	GtkTextBufferClass parent_class;
 };
 
-GType    xpad_text_buffer_get_type (void);
+GType xpad_text_buffer_get_type (void);
 
-GtkTextBuffer *xpad_text_buffer_new      (void);
+GtkTextBuffer *xpad_text_buffer_new (void);
+
+void xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text);
+gchar *xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer);
 
 G_END_DECLS
 
