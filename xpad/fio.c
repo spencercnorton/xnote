@@ -170,12 +170,14 @@ pad_style *get_default_style ()
 {
 	gchar buf[MAX_FILE_SIZE];
 	gchar *item, *value;
-	pad_style *style = (pad_style *) g_malloc (sizeof (pad_style));
+	pad_style *style;
 	
 	if (get_file ("default-style", buf) > 0)
 	{
 		return &DEFAULT_INFO.style;
 	}
+
+	style = (pad_style *) g_malloc (sizeof (pad_style));
 
 	item = strtok (buf, " ");
 	value = strtok (NULL, "\n");
