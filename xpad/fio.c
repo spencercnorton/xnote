@@ -385,7 +385,6 @@ void fio_load_pads ()
 				so, we have to add full path if it isn't there. */
 			fio_fill_filename (info.contentname);
 			pad = pad_new_with_info (&info);
-			fio_save_pad (pad);
 			opened ++;
 		}
 	}

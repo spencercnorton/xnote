@@ -601,6 +601,9 @@ pad_node *start_pad ()
 	
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), decorations);
+	
+	/* make sure that we only save after pad is realized */
+	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);
 
 	return pad;
 }

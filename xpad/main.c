@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <unistd.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
 const gchar *VERSION = "xpad v1.0.1";
@@ -171,13 +172,12 @@ void xpad_init ()
 	sigemptyset (&sa.sa_mask);
 	sa.sa_flags = 0;
 
-	sigaction (SIGINT, &sa, NULL);
-	sigaction (SIGHUP, &sa, NULL);
-	sigaction (SIGKILL, &sa, NULL);
-	sigaction (SIGQUIT, &sa, NULL);
-	sigaction (SIGTERM, &sa, NULL);
-	sigaction (SIGTRAP, &sa, NULL);
-	sigaction (SIGABRT, &sa, NULL);
+	sigaction (SIGHUP, &sa, NULL);  /* 1 hangup */
+	sigaction (SIGINT, &sa, NULL);  /* 2 interrupt */
+	sigaction (SIGQUIT, &sa, NULL); /* 3 quit */
+	sigaction (SIGABRT, &sa, NULL); /* 6 abort */
+	sigaction (SIGKILL, &sa, NULL); /* 9 kill */
+	sigaction (SIGTERM, &sa, NULL); /*15 terminate */
 
 	strcpy (working_dir, getenv("HOME"));
 	strcat (working_dir, "/.xpad/");
@@ -201,8 +201,8 @@ void xpad_init ()
 	reset_sync ();
 	
 	if (verbosity >= 2)
-		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
-			sync_time, verbosity, decorations);
+		printf ("PID is %i.\nSync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",
+			getpid (), sync_time, verbosity, decorations);
 
 	xpad_set_default_icon ();
 			
