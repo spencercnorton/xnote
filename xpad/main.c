@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* static data */
 gchar working_dir[1024];
 const gchar *VERSION = "xpad v0.2.1";
-gint update_time = 60000;
+gint update_time = 60; /* sync time in seconds */
 
 void sigcatch (int signum)
 {
@@ -50,10 +50,17 @@ void handle_args (int *argc, char ***argv)
 			printf ("%s\n", VERSION);
 			gtk_exit (0);
 		}
+		if (strncmp ((*argv)[i], "--sync-time=", 12) == 0)
+		{
+			char *value = (char *) strchr ((*argv)[i], '=');
+			value++;
+			update_time = atoi (value);
+			printf ("update time = %d\n", update_time);
+		}
 	}
 }
 
-/* an every-minute checkup. */
+/* an occasional checkup. */
 int checkup (gpointer data)
 {
 	save_pads ();
@@ -65,8 +72,8 @@ void xpad_init (int *argc, char ***argv)
 
 	handle_args (argc, argv);
 
-	/* save contents every minute */
-	gtk_timeout_add (update_time, checkup, NULL);
+	/* save contents every "update_time" seconds */
+	gtk_timeout_add (update_time * 1000, checkup, NULL);
 
 	/* Initialize sa */
 	sa.sa_handler = sigcatch;
@@ -106,6 +113,7 @@ int main (int argc, char *argv[])
 
 	return 0;
 }
+
 
 
 
