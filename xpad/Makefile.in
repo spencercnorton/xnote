@@ -89,7 +89,7 @@ tar.Z: ../$(VERNAME).tar.Z
 
 tar.bz2: ../$(VERNAME).tar.bz2
 ../$(VERNAME).tar.bz2: distclean
-	(cd ..; tar cf - main | bzip2 -f9 > $(VERNAME).tar.bz2)
+	(cd ..; tar cf - main | bzip2 -f --best > $(VERNAME).tar.bz2)
 
 uuencode: tar.gz
 	uuencode ../$(VERNAME).tar.gz $(VERNAME).tar.gz > ../$(VERNAME).tgz.uu
