@@ -31,6 +31,6 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(mkdir select socket strcspn strstr strtol)
 
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.12.1)
+AM_GNU_GETTEXT_VERSION(0.11.5)
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in])
 AC_OUTPUT
