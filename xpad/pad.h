@@ -33,7 +33,7 @@ typedef struct pad_style_def pad_style;
 struct pad_node_def
 {
 	pad_node *next;
-	FILE *file;
+	//FILE *file;
 	gint x, y, width, height;
 	gchar infoname[MAX_FILENAME_SIZE + 1];
 	gchar contentname[MAX_FILENAME_SIZE + 1];

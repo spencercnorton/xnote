@@ -35,7 +35,6 @@ pad_node *last_pad = NULL;
 /* helper func to get textbox from window */
 GtkTextView *get_text (GtkWindow *window)
 {
-	
 	return  GTK_TEXT_VIEW (
 		 gtk_bin_get_child (GTK_BIN (
 		  gtk_bin_get_child (GTK_BIN (

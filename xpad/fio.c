@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdlib.h>
 #include <stdio.h>
 #include <glob.h>
+#include <unistd.h>
 
 
 /* sets filename to full path of filename (prepends working_dir to it) 
@@ -148,28 +149,31 @@ void fio_open_pad_files (pad_node *pad, gboolean create)
 {
 	if (create)
 	{
+		int fd;
+		
 		strcpy (pad->contentname, working_dir);
 		strcat (pad->contentname, "content-XXXXXX");
-		mkstemp (pad->contentname);
+		fd = g_mkstemp (pad->contentname);
+		
+		if (fd != -1)
+			close (fd);
+		
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->contentname);
 		
 		strcpy (pad->infoname, working_dir);
 		strcat (pad->infoname, "info-XXXXXX");
-		mkstemp (pad->infoname);
+		fd = g_mkstemp (pad->infoname);
+		
+		if (fd != -1)
+			close (fd);
+		
 		if (verbosity >= 2) printf ("Creating file [%s].\n", pad->infoname);
 	}
-	
-	if ( (pad->file = fopen (pad->infoname, "w")) == NULL)
-    {
-        if (verbosity >= 1) printf ("Could not open file [%s] for writing.\n", pad->infoname);
-			return;
-    }
 }
 
 
 void fio_close_pad_files (pad_node *pad)
 {
-	fclose (pad->file);
 }
 
 
@@ -317,9 +321,12 @@ static void fio_save_info_file (pad_node *pad)
 	fio_set_file (pad->contentname, content);
     g_free (content);
 
+/*
 	rewind (pad->file);
 	fputs (info_file, pad->file);
 	fflush(pad->file);
+*/
+	fio_set_file (pad->infoname, info_file);
 
 	g_free (pstyle);
 }
