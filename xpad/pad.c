@@ -1500,6 +1500,10 @@ pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
 	gtk_window_get_position (pad->window, &pad->x, &pad->y);
 	
 	pad_resize_background (pad);
+	
+	/* show the toolbar now that we are realized */
+	if (current_settings.toolbar && !current_settings.auto_hide_toolbar)
+		toolbar_show (pad);
 }
 
 static gboolean

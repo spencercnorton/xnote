@@ -228,7 +228,6 @@ void fio_save_default_settings (void)
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
 	gchar *buf;
-	gint memsize;
 	va_list ap;
 	
 	buf = fio_get_file (filename);
