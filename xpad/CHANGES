@@ -1,3 +1,8 @@
+0.2.3.1
+-------
+fixed nasty bug where, if you didn't have a working ~/.xpad/default-styles
+ file, it would seg-fault.  my bad
+
 0.2.3
 -----
 perfected (?) syncing.  Now will recover cleanly from anything -- including 

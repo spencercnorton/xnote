@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* static data */
 gchar working_dir[MAX_FILENAME_SIZE];
-const gchar *VERSION = "xpad v0.2.3";
+const gchar *VERSION = "xpad v0.2.3.1";
 gint update_time = 60; /* sync time in seconds */
 
 void sigcatch (int signum)

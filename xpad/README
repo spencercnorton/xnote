@@ -1,4 +1,4 @@
-xpad version 0.2.3 README
+xpad version 0.2.3.1 README
 -------------------------
 
 xpad is a virtual sticky pad system for X using GTK+ 2.0.
@@ -58,4 +58,5 @@ LICENSE NOTES
 
 ----------------------------------------------------------------------------
 Copyright (c) 2001 Michael Terry
+
 
