@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "pref.h"
 #include "fio.h"
+#include "help.h"
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <string.h>
@@ -32,15 +33,27 @@ pad_node *last_pad = NULL;
 /* helper func to get textbox from window */
 GtkTextView *get_text (GtkWindow *window)
 {
+	
 	return  GTK_TEXT_VIEW (
 		 gtk_bin_get_child (GTK_BIN (
 		  gtk_bin_get_child (GTK_BIN (
 		   gtk_bin_get_child (GTK_BIN (window))
 		  )))
 		));
+
+	/*return  GTK_TEXT_VIEW (
+		 gtk_bin_get_child (GTK_BIN (
+		  gtk_bin_get_child (GTK_BIN (
+	      
+		  gtk_container_get_children (GTK_CONTAINER (
+		   gtk_bin_get_child (GTK_BIN (window))
+		  ))->data)
+		))));*/
 }
 
-void pads_set_decorations (gboolean decor)
+// since reshowing all pads presents them, caller
+// param will be presented afterward
+void pads_set_decorations (gboolean decor, GtkWidget *caller)
 {
 	pad_node *temp = first_pad;
 
@@ -48,15 +61,20 @@ void pads_set_decorations (gboolean decor)
 	{
 		if (gtk_window_get_decorated (temp->window) != decor)
 		{
-			gint x, y;
-			
-        	gtk_window_get_position (temp->window, &x, &y);
 			gtk_window_set_decorated (temp->window, decor);
-			gtk_window_reshow_with_initial_size (temp->window);
-			gtk_window_move (temp->window, x, y);
+			gtk_widget_hide (GTK_WIDGET (temp->window));
+			gtk_widget_show (GTK_WIDGET (temp->window));
 		}
 		temp = temp->next;
 	}
+	
+	gtk_window_present (GTK_WINDOW (caller));
+}
+
+void pad_set_editable (pad_node *pad, gboolean editable)
+{
+	gtk_text_view_set_editable (get_text (pad->window), editable);
+	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
 }
 
 void pads_set_editable (gboolean editable)
@@ -65,7 +83,7 @@ void pads_set_editable (gboolean editable)
 
 	while (temp)
 	{
-		gtk_text_view_set_editable (get_text (temp->window), editable);
+		pad_set_editable (temp, editable);
 		
 		temp = temp->next;
 	}
@@ -91,6 +109,18 @@ void pad_set_style (pad_node *pad, pad_style *pstyle)
 	gtk_widget_modify_style (GTK_WIDGET (pad->eventbox_outer), style1);
 
 	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
+}
+
+void pads_update_style ()
+{
+	pad_node *temp = first_pad;
+
+	while (temp)
+	{
+		pad_set_style (temp, &current_settings.style);
+		
+		temp = temp->next;
+	}
 }
 
 // returned pad_style must be g_free'd
@@ -282,124 +312,11 @@ void about_dialog (pad_node *pad)
 	display_dialog_with_text (pad, text);
 }
 
-void help_dialog (void)
-{
-	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
-	GtkWidget *edittext, *editlabel;
-	
-	/* Create the widgets */
-	
-	dialog = gtk_dialog_new ();
-	helptext = gtk_label_new ("");
-	helplabel = gtk_label_new ("Introduction");
-	keytext = gtk_label_new ("");
-	keylabel = gtk_label_new ("Keyboard Shortcuts");
-	edittext = gtk_label_new ("");
-	editlabel = gtk_label_new ("Edit Lock");
-	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-	notebook = gtk_notebook_new ();
-	
-	gtk_label_set_markup (GTK_LABEL (helptext), 
-"xpad is a GTK+ 2.0 application that opens small textboxes "
-"on your desktop on which you write notes or messages.\n"
-"xpad was designed with ease of use in mind, but if you "
-"have troubles, here's how to do most things you would "
-"want to:\n\n\n"
-
-"<b>moving</b>: To move a pad, hold down CTRL and drag "
-"with the left mouse button.\n\n"
-
-"<b>resizing</b>: To resize a pad, hold down CTRL and "
-"drag with the right mouse button.  To change the default "
-"size for new pads, right click on a pad and select \"Global "
-"Preferences\".  On the tab \"Default Size\", you can change "
-"the appropriate values.\n\n"
-
-"<b>making new pads</b>: To open a new pad, right click on "
-"an existing pad.  Select \"New Pad\" from the menu.\n\n"
-
-"<b>colors</b>: If black on yellow isn't your thing, change "
-"the default color by right clicking on the pad you want to "
-"change and selecting \"Pad Preferences\" from the menu.  "
-"An options menu will now pop up and you can change the "
-"background color, text color, font, and border.  These "
-"settings only affect the pad you clicked on.\n\n"
-
-"<b>defaults</b>: To change the colors and other options "
-"used when a new pad is created, right click on a pad, "
-"choose \"Global Preferences\" and enjoy.\n\n"
-
-"<b>saving</b>: To save pads, you do nothing.  All pads "
-"are autosaved, by default every 60 seconds, and are saved "
-"when closed (not when destroyed -- if you choose \"Destroy\" "
-"from the right-click menu, all contents are irrevocably lost).\n\n"
-
-"<b>closing pads</b>: To close a pad and <i>keep</i> its "
-"contents, choose \"Close\" from the right-click menu.  "
-"Again, \"Destroy\" is only if you are sure you don't want "
-"the pad contents -- they will be erased.\n\n"
-
-"<b>opening files</b>: xpad allows you to open an arbitrary "
-"file into a pad.  Note that this pad contains only a copy "
-"of the file; destroying the pad does nothing to the original "
-"file.\n");
-
-	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
-	
-	
-	gtk_label_set_markup (GTK_LABEL (keytext),
-"<b>CTRL+n</b>: Creates a new pad.\n\n"
-"<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n"
-"<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n"
-"<b>CTRL+p</b>: Opens the pad preferences window.\n\n"
-"<b>CTRL+g</b>: Opens the global preferences window.\n\n"
-"<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n"
-"<b>CTRL+SHIFT+a</b>: Closes all open pads.\n\n"
-"<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n");
-	
-	gtk_label_set_line_wrap (GTK_LABEL (keytext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), keytext, keylabel);
-	
-	
-	gtk_label_set_markup (GTK_LABEL (edittext),
-"If Edit Lock is enabled, a pad is always in one of two "
-"modes:  Edit Mode or Move Mode.\n\n"
-"<b>Edit Mode</b>: You can edit the text of the pad, select "
-"text, cut and paste, etc.\n\n"
-"<b>Move Mode</b>: In this mode, clicking and dragging on the "
-"pad will move the pad, rather than selecting text.  You cannot "
-"edit the contents of the pad.\n\n"
-"Any pad without focus is in Move Mode.  To enter Edit "
-"Mode for any pad, double click on it with the left mouse "
-"button.  Now this pad will be editable until it loses focus.\n\n"
-"If Edit Lock is disabled, all pads are always in Edit Mode.\n");
-
-	gtk_label_set_line_wrap (GTK_LABEL (edittext), TRUE);
-	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), edittext, editlabel);
-	
-	
-	gtk_window_set_title (GTK_WINDOW (dialog), "xpad help");
-	
-	/* Add the label, and show everything we've added to the dialog. */
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);
-	gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
-	
-	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-	gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
-	
-	gtk_widget_show_all (dialog);
-	
-	gtk_dialog_run (GTK_DIALOG(dialog));
-	
-	gtk_widget_destroy (dialog);
-}
-
 void pad_confirm_destroy (pad_node *pad)
 {
 	if (current_settings.confirm_destroy)
 	{
-		GtkWidget *dialog, *label, *checkbox;
+		GtkWidget *dialog, *label, *checkbox, *align, *vbox;
 		gboolean said_yes = FALSE;
 
 		/* Create the widgets */
@@ -412,13 +329,16 @@ void pad_confirm_destroy (pad_node *pad)
 				GTK_STOCK_NO,
 				GTK_RESPONSE_NO,
 				NULL);
-
+		
+		vbox = gtk_vbox_new (FALSE, 0);
 		label = gtk_label_new ("Are you sure you want\nto destroy this pad?\n\n");
-
-		checkbox = gtk_check_button_new_with_label ("Don't ask this again.");
-
-		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
-		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), checkbox);
+		align = gtk_alignment_new (0.5, 0.5, 0, 0);
+		checkbox = gtk_check_button_new_with_label ("Don't ask this again");
+		
+		gtk_container_add (GTK_CONTAINER (align), label);
+		gtk_box_pack_start (GTK_BOX (vbox), align, FALSE, FALSE, 5);
+		gtk_box_pack_start (GTK_BOX (vbox), checkbox, FALSE, FALSE, 5);
+		gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), vbox);
 		gtk_widget_show_all (dialog);
 
 		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_YES;
@@ -570,8 +490,7 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_close_all;
 	GtkWidget *menu_item_save_as;
 	GtkWidget *menu_item_open;
-	GtkWidget *menu_item_pad_preferences;
-	GtkWidget *menu_item_global_preferences;
+	GtkWidget *menu_item_preferences;
 	GtkWidget *separator2, *separator3, *separator4;
 	GtkWidget *tearoff;
 	
@@ -587,16 +506,14 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
 	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
-	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("_Pad Preferences...");
-	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("_Global Preferences...");
+	menu_item_preferences = gtk_image_menu_item_new_with_mnemonic ("_Preferences...");
 	
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_destroy), gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_help), gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_open), gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_pad_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_global_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_preferences), gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_save_as), gtk_image_new_from_stock (GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_new_pad), gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_about), gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_MENU));
@@ -605,9 +522,8 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_new_pad);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_open);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_save_as);
-        gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_pad_preferences);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_global_preferences);
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator2);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_preferences);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), separator4);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item_close_all);
@@ -621,11 +537,10 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_close_all, "activate", G_CALLBACK (pad_close_all), NULL);
 	g_signal_connect (menu_item_new_pad, "activate", G_CALLBACK (pad_new), NULL);
 	g_signal_connect_swapped (menu_item_about, "activate", G_CALLBACK (about_dialog), pad);	
-	g_signal_connect_swapped (menu_item_help, "activate", G_CALLBACK (help_dialog), NULL);
+	g_signal_connect_swapped (menu_item_help, "activate", G_CALLBACK (show_help), NULL);
 	g_signal_connect_swapped (menu_item_open, "activate", G_CALLBACK (open_file), pad);
 	g_signal_connect_swapped (menu_item_save_as, "activate", G_CALLBACK (save_as_file), pad);
-	g_signal_connect_swapped (menu_item_pad_preferences, "activate", G_CALLBACK (pad_preferences_open), pad);
-	g_signal_connect_swapped (menu_item_global_preferences, "activate", G_CALLBACK (global_preferences_open), pad);
+	g_signal_connect_swapped (menu_item_preferences, "activate", G_CALLBACK (preferences_open), pad);
 	
 	gtk_widget_show_all (menu);
 	
@@ -677,10 +592,10 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			{
 				case 1:
 				// raise window if clicked on
-		///		gtk_window_present (pad->window);
+				gtk_window_present (pad->window);
 				
 				if (current_settings.edit_lock) {
-					gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), TRUE);
+					pad_set_editable (pad, TRUE);
 					return TRUE;
 				}
 			}
@@ -718,10 +633,6 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				}
 				break;
 
-				case GDK_g: // CTRL + g == global preferences
-				global_preferences_open (pad);
-				return TRUE;
-
 		  		case GDK_n: // CTRL + n == new pad
 				pad_new ();
 				return TRUE;
@@ -731,7 +642,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 				return TRUE;
 
 		  		case GDK_p: // CTRL + p == pad preferences
-				pad_preferences_open (pad);
+				preferences_open (pad);
 				return TRUE;
 
 		  		case GDK_s: // CTRL + s == save as
@@ -795,7 +706,9 @@ static gboolean focus_out_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 		return FALSE;
 	
 	if (current_settings.edit_lock)
-		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
+	{
+		pad_set_editable (pad, FALSE);
+	}
 	
 	return TRUE;
 }
@@ -847,8 +760,8 @@ pad_node *start_pad (void)
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
 	/* set editable */
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), current_settings.edit_lock == 0 ? TRUE : FALSE);
-	
+	pad_set_editable (pad, current_settings.edit_lock == 0 ? TRUE : FALSE);
+
 	/* make sure that we only save after pad is realized */
 	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);
 

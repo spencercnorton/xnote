@@ -2,7 +2,8 @@ CC=gcc
 OBJECTS=main.o \
 	fio.o \
 	pref.o \
-	pad.o 
+	pad.o \
+	help.o
 CFLAGS=-Wall -O2 `pkg-config --cflags gtk+-2.0`
 LDFLAGS=`pkg-config --libs gtk+-2.0`
 

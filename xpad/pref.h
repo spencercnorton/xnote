@@ -23,8 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "pad.h"
 
-void pad_preferences_open (pad_node *pad);
-void global_preferences_open (pad_node *pad);
+void preferences_open (pad_node *pad);
 
 #endif /* _PREF_H_ */
 

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad.xpm"
 #include "main.h"
 #include "pad.h"
+#include "help.h"
 #include "fio.h"
 #include <stdlib.h>
 #include <signal.h>
@@ -219,7 +220,7 @@ void xpad_init (void)
 	{
 		// this happens if there isn't a ~/.xpad directory (i.e. first run)
 		fio_save_as_defaults (&current_settings);
-		help_dialog ();
+		show_help ();
 	}
 	
 	/* save contents every "sync_time" seconds */

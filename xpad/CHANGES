@@ -1,3 +1,7 @@
+1.3
+---
+added a padding option
+
 1.2.1
 -----
 fixed segfault on startup if no ~/.xpad directory, plus some related bugs
