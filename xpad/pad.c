@@ -70,8 +70,20 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 
 void pad_set_editable (pad_node *pad, gboolean editable)
 {
+	GdkCursor *cursor;
+	
 	gtk_text_view_set_editable (get_text (pad->window), editable);
 	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
+	
+	if (editable)
+		cursor = gdk_cursor_new (GDK_XTERM);
+	else
+		cursor = gdk_cursor_new (GDK_LEFT_PTR);
+	
+	gdk_window_set_cursor (gtk_text_view_get_window (get_text (
+		pad->window), GTK_TEXT_WINDOW_TEXT), cursor);
+	
+	gdk_cursor_unref (cursor);
 }
 
 gboolean pad_get_editable (pad_node *pad)
@@ -722,6 +734,14 @@ static gboolean pad_save_location (GtkWidget *widget, GdkEventConfigure *event, 
 	return FALSE;
 }
 
+static void pad_when_textbox_realized (GtkWidget *widget, pad_node *pad)
+{	
+	/* set editable */
+	pad_set_editable (pad, current_settings.edit_lock == 0 ? TRUE : FALSE);
+	
+	fio_save_pad (pad);
+}
+
 /*
    creates and returns a pad with an *unshown* window -- to 
    be decorated 
@@ -776,11 +796,9 @@ pad_node *start_pad (void)
 	/* set wm decorations */
 	gtk_window_set_decorated (GTK_WINDOW(window), current_settings.decorations);
 	
-	/* set editable */
-	pad_set_editable (pad, current_settings.edit_lock == 0 ? TRUE : FALSE);
-
 	/* make sure that we save after pad is realized */
-	g_signal_connect_swapped (window, "realize", G_CALLBACK (fio_save_pad), pad);
+	g_signal_connect_after (textbox, "realize", G_CALLBACK 
+		(pad_when_textbox_realized), pad);
 
 	return pad;
 }
