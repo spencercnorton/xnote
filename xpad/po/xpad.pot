@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-01-26 22:42-0500\n"
+"POT-Creation-Date: 2003-02-05 17:39-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:171
+#: src/main.c:181
 msgid ""
 "Usage: xpad [OPTIONS]\n"
 "\n"
@@ -27,7 +27,7 @@ msgid ""
 "  -n, --new             opens a new pad only\n"
 msgstr ""
 
-#: src/main.c:180
+#: src/main.c:190
 msgid ""
 "  --nonew               prevents xpad from making a new pad\n"
 "  -q, --quit            quits all open xpad sessions\n"
@@ -36,21 +36,21 @@ msgid ""
 "  --showall             brings all pads to the foreground\n"
 msgstr ""
 
-#: src/main.c:213
+#: src/main.c:223
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
 msgstr ""
 
-#: src/main.c:275
+#: src/main.c:298
 #, c-format
 msgid "Missing companion argument to %s\n"
 msgstr ""
 
-#: src/main.c:319
+#: src/main.c:342
 #, c-format
 msgid "Didn't understand argument %s.\n"
 msgstr ""
 
-#: src/main.c:376
+#: src/main.c:399
 #, c-format
 msgid "Invalid number: '%s'\n"
 msgstr ""
@@ -65,12 +65,12 @@ msgstr ""
 msgid "Could not read from file %s."
 msgstr ""
 
-#: src/fio.c:408
+#: src/fio.c:410
 #, c-format
 msgid "Could not open xpad directory %s."
 msgstr ""
 
-#: src/fio.c:411
+#: src/fio.c:413
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -362,40 +362,40 @@ msgstr ""
 msgid "All text of this pad will be irrevocably lost."
 msgstr ""
 
-#: src/pad.c:811
+#: src/pad.c:814
 #, c-format
 msgid "You are using xpad %s with GTK+ %i.%i.%i."
 msgstr ""
 
-#: src/pad.c:816
+#: src/pad.c:819
 msgid "Visit http://xpad.sourceforge.net for more information about xpad."
 msgstr ""
 
-#: src/pad.c:854
+#: src/pad.c:860
 msgid "Open which file?"
 msgstr ""
 
-#: src/pad.c:905
+#: src/pad.c:911
 msgid "Save as which file?"
 msgstr ""
 
-#: src/pad.c:1164
+#: src/pad.c:1170
 msgid "/Notes"
 msgstr ""
 
-#: src/pad.c:1205
+#: src/pad.c:1212
 msgid "/Edit/Sticky"
 msgstr ""
 
-#: src/pad.c:1211
+#: src/pad.c:1218
 msgid "/Edit/Cut"
 msgstr ""
 
-#: src/pad.c:1213
+#: src/pad.c:1220
 msgid "/Edit/Copy"
 msgstr ""
 
-#: src/pad.c:1217
+#: src/pad.c:1224
 msgid "/Edit/Paste"
 msgstr ""
 
