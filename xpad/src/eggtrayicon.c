@@ -147,10 +147,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
   Display *xdisplay;
   Atom type;
   int format;
-  union {
-	gulong *prop;
-	guchar *prop_ch;
-  } prop = { NULL };
+  gulong *prop = NULL;
   gulong nitems;
   gulong bytes_after;
   int error, result;
@@ -167,7 +164,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
 			       0, G_MAXLONG, FALSE,
 			       XA_CARDINAL,
 			       &type, &format, &nitems,
-			       &bytes_after, &(prop.prop_ch));
+			       &bytes_after, (guchar **)&prop);
   error = gdk_error_trap_pop ();
 
   if (error || result != Success)
@@ -177,7 +174,7 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
     {
       GtkOrientation orientation;
 
-      orientation = (prop.prop [0] == SYSTEM_TRAY_ORIENTATION_HORZ) ?
+      orientation = (prop[0] == SYSTEM_TRAY_ORIENTATION_HORZ) ?
 					GTK_ORIENTATION_HORIZONTAL :
 					GTK_ORIENTATION_VERTICAL;
 
@@ -189,8 +186,8 @@ egg_tray_icon_get_orientation_property (EggTrayIcon *icon)
 	}
     }
 
-  if (prop.prop)
-    XFree (prop.prop);
+  if (prop)
+    XFree (prop);
 }
 
 static GdkFilterReturn

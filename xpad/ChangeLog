@@ -1,3 +1,8 @@
+2004-09-29  Jeroen T. Vermeulen <jtv@xs4all.nl>
+
+	* src/eggtrayicon.c: Replace union-as-cast trick with cast (fixes
+	garbage values in config file)
+
 2004-03-03  Michael Terry  <mike@mterry.name>
 
 	* po/LINGUAS, po/af.po: New Afrikaans (af) translation by Petri
