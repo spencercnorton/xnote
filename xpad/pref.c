@@ -636,19 +636,24 @@ static GtkWidget *preferences_create (void)
 	gtk_box_pack_end_defaults (GTK_BOX(buttonbox), button_close);
 	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonbox), button_help, TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 6);
-
+	
 	/* vbox_global setup */
 	gtk_box_pack_start (GTK_BOX(vbox_global), notebook, TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX(vbox_global), buttonbox, TRUE, TRUE, 0);
 
 	/* text setup */
-	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
-	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
-	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
-	g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
-
+	{
+		
+		
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
+		gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
+		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
+		g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
+		
+	}
+	
 	/* background setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
@@ -656,7 +661,7 @@ static GtkWidget *preferences_create (void)
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 	g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) window);
-
+	
 	/* border setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
 	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
@@ -666,10 +671,10 @@ static GtkWidget *preferences_create (void)
 	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
 	g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
-
+	
 	if (current_settings.style.border_width == 0)
 		gtk_widget_set_sensitive (color_border, FALSE);
-
+	
 	gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 9);
 	
 	adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);

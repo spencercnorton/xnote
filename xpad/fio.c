@@ -392,6 +392,9 @@ gint fio_load_default_settings (void)
 						NULL ))
 		return 1;
 	
+	if (strcmp (current_settings.style.fontname, "NULL") == 0)
+		current_settings.style.fontname = NULL;
+	
 	current_settings.style.back.red = back_R;
 	current_settings.style.back.green = back_G;
 	current_settings.style.back.blue = back_B;
