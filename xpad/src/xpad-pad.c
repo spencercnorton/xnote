@@ -230,7 +230,6 @@ xpad_pad_init (XpadPad *pad)
 		"decorated", xpad_settings_get_has_decorations (xpad_settings ()),
 		"default-height", xpad_settings_get_height (xpad_settings ()),
 		"default-width", xpad_settings_get_width (xpad_settings ()),
-		"gravity", GDK_GRAVITY_STATIC,
 		"skip-pager-hint", TRUE,
 		"skip-taskbar-hint", TRUE,
 		"type", GTK_WINDOW_TOPLEVEL,

@@ -1,7 +1,9 @@
 Version 2.6
+* Stop pad windows from 'jumping' when dragged via the toolbar
 * Updated Hungarian translation (Németh Csaba)
 * Updated Irish translation (Kevin Patrick Scannell)
 * Updated Vietnamese translation (Clytie Siddall)
+
 
 Version 2.5
 * Stop making all new pads start in top left
