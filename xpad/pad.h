@@ -33,7 +33,6 @@ typedef struct pad_style_def pad_style;
 struct pad_node_def
 {
 	pad_node *next;
-	//FILE *file;
 	gint x, y, width, height;
 	gchar *infoname;
 	gchar *contentname;
@@ -75,7 +74,7 @@ pad_node *pad_new_with_info (pad_info *info);
 pad_node *pad_new (void);
 GtkTextView *get_text (GtkWindow *window);
 void cleanup (void);
-//pad_style *pad_get_style (pad_node *pad);
+
 void pads_set_decorations (gboolean decor, GtkWidget *caller);
 void pads_set_editable (gboolean editable);
 

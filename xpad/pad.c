@@ -43,8 +43,8 @@ GtkTextView *get_text (GtkWindow *window)
 		));
 }
 
-// since reshowing all pads presents them, caller
-// param will be presented afterward
+/* since reshowing all pads presents them, caller
+    param will be presented afterward */
 void pads_set_decorations (gboolean decor, GtkWidget *caller)
 {
 	pad_node *temp = first_pad;
@@ -56,7 +56,7 @@ void pads_set_decorations (gboolean decor, GtkWidget *caller)
 			gtk_window_set_decorated (temp->window, decor);
 			gtk_widget_hide (GTK_WIDGET (temp->window));
 			
-			// we move it so wm's know where to place it
+			/* we move it so wm's know where to place it */
 			gtk_window_move (temp->window, temp->x, temp->y);
 			
 			gtk_widget_show (GTK_WIDGET (temp->window));
@@ -140,7 +140,7 @@ static void pad_update_style (pad_node *pad)
 	gtk_widget_modify_style (GTK_WIDGET (get_text (pad->window)), style);
 	gtk_widget_modify_style (pad->eventbox_outer, style1);
 
-	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); // this is necessary to show the changed border color
+	gtk_widget_queue_draw (GTK_WIDGET (pad->eventbox_outer)); /* this is necessary to show the changed border color */
 }
 
 static void quit_if_no_pads (void)
@@ -149,14 +149,14 @@ static void quit_if_no_pads (void)
 		gtk_main_quit ();
 }
 
-// unlinks pad from linked list of all pads
+/* unlinks pad from linked list of all pads */
 static void pad_remove (pad_node *pad)
 {
 	if (!pad || !pad->window)
 		return;
 
-	// first, find pad in linked list, and remove it 
-	if (first_pad == pad) // first in list 
+	/*  first, find pad in linked list, and remove it  */
+	if (first_pad == pad) /* first in list  */
 		first_pad = first_pad->next;
 	else
 	{
@@ -202,7 +202,7 @@ static void pad_destroy (pad_node *pad)
 	quit_if_no_pads ();
 }
 
-// returns true if pad destroyed
+/* returns true if pad destroyed */
 static gboolean pad_confirm_destroy (pad_node *pad)
 {
 	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
@@ -227,11 +227,15 @@ static gboolean pad_confirm_destroy (pad_node *pad)
 		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
 		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
 
-		current_settings.confirm_destroy = !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox));
-		fio_save_as_defaults (&current_settings);
-
+		/* If it has changed... */
+		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox)))
+		{
+			current_settings.confirm_destroy = FALSE;
+			fio_save_default_settings (); /* to catch the change in confirmation */
+		}
+		
 		gtk_widget_destroy (dialog);
-
+		
 		if (said_yes)
 		{
 			pad_destroy (pad);
@@ -279,15 +283,15 @@ static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad)
 {
 	switch (current_settings.wm_close)
 	{
-	case 0: // close all
+	case 0: /* close all */
 		pad_close_all ();
 		return TRUE;
 		break;
-	case 1: // close this pad
+	case 1: /* close this pad */
 		pad_close (pad);
 		return TRUE;
 		break;
-	case 2: // delete this pad
+	case 2: /* delete this pad */
 		pad_destroy (pad);
 		return TRUE;
 		break;
@@ -305,8 +309,6 @@ static void pad_fill_with_file (pad_node *pad, const gchar *filename)
 	gchar *contentbuf;
 	GtkTextBuffer *buffer;
 	GtkTextView *textbox = get_text (pad->window);
-	
-	printf ("filling with file %s\n", filename);
 	
 	contentbuf = fio_get_file (filename);
 	buffer = gtk_text_view_get_buffer (textbox);
@@ -552,7 +554,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 			switch (event_button->button)
 			{
 				case 1:
-				// raise window if clicked on
+				/* raise window if clicked on */
 				gtk_window_present (pad->window);
 				
 				if ((event_button->state & GDK_CONTROL_MASK) ||
@@ -573,7 +575,7 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		}
 		break;
 
-		// if they double click...
+		/* if they double click... */
 		case GDK_2BUTTON_PRESS:
 		{
 			GdkEventButton *event_button = (GdkEventButton *) event;
@@ -594,36 +596,36 @@ static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_n
 		{
 			GdkEventKey *event_key = (GdkEventKey *) event;
 
-			// Only interested if at least CTRL is pressed...
+			/* Only interested if at least CTRL is pressed... */
 			if (!(event_key->state & GDK_CONTROL_MASK))
 		  		return FALSE;
 		
 			switch (event_key->keyval)
 			{
-		  		case GDK_d: // CTRL + SHIFT + d == destroy pad
+		  		case GDK_d: /* CTRL + SHIFT + d == destroy pad */
 				if (event_key->state & GDK_SHIFT_MASK) {
 					pad_destroy (pad);
 					return TRUE;
 				}
 				break;
 				
-		  		case GDK_q: // CTRL + q == quit
+		  		case GDK_q: /* CTRL + q == quit */
 				pad_close_all ();
 				return TRUE;
 				
-		  		case GDK_n: // CTRL + n == new pad
+		  		case GDK_n: /* CTRL + n == new pad */
 				pad_new ();
 				return TRUE;
 
-		  		case GDK_o: // CTRL + o == open file
+		  		case GDK_o: /* CTRL + o == open file */
 				open_file (pad);
 				return TRUE;
 
-		  		case GDK_p: // CTRL + p == pad preferences
+		  		case GDK_p: /* CTRL + p == pad preferences */
 				preferences_open (pad);
 				return TRUE;
 
-		  		case GDK_s: // CTRL + s == save as
+		  		case GDK_s: /* CTRL + s == save as */
 				save_as_file (pad);
 				return TRUE;
 
@@ -656,7 +658,7 @@ static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_
 			switch (event_button->button)
 			{
 				case 1:
-				// raise window if clicked on
+				/* raise window if clicked on */
 				gtk_window_present (pad->window);
 				
 				pad_move (pad, event);

@@ -106,7 +106,7 @@ gchar *fio_find_free_filename (gchar *pattern)
 	
 	do	{
 		guint32 num = g_random_int ();
-		gchar *numstr = (gchar *) g_malloc (strlen (pattern) + 11); // 10 for size of largest num, 1 for null byte
+		gchar *numstr = (gchar *) g_malloc (strlen (pattern) + 11); /* 10 for size of largest num, 1 for null byte */
 		
 		sprintf (numstr, "%s%u", pattern, num);
 		
@@ -148,7 +148,7 @@ void fio_close_pad_files (pad_node *pad)
 }
 
 
-void fio_save_as_defaults (struct settings *set)
+void fio_save_default_settings (void)
 {
 	gchar buf[MAX_FILE_SIZE + 1];
 	
@@ -157,14 +157,14 @@ void fio_save_as_defaults (struct settings *set)
 		"width %i\nheight %i\nback_red %d\nback_green %d\nback_blue %d\n"
 		"text_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\n"
 		"border_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
-		set->wm_close, set->edit_lock, set->confirm_destroy,
-		set->sync_time, set->decorations,
-		set->width, set->height,
-		set->style.back.red, set->style.back.green, set->style.back.blue,
-		set->style.text.red, set->style.text.green, set->style.text.blue,
-		set->style.border.red, set->style.border.green, set->style.border.blue,
-		set->style.border_width, set->style.padding,
-		set->style.fontname);
+		current_settings.wm_close, current_settings.edit_lock, current_settings.confirm_destroy,
+		current_settings.sync_time, current_settings.decorations,
+		current_settings.width, current_settings.height,
+		current_settings.style.back.red, current_settings.style.back.green, current_settings.style.back.blue,
+		current_settings.style.text.red, current_settings.style.text.green, current_settings.style.text.blue,
+		current_settings.style.border.red, current_settings.style.border.green, current_settings.style.border.blue,
+		current_settings.style.border_width, current_settings.style.padding,
+		current_settings.style.fontname);
 
 	fio_set_file (DEFAULTS_FILENAME, buf);
 }
@@ -224,51 +224,10 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 }
 
 
-gint fio_get_style_from_file (const gchar *filename, pad_style *starter)
-{
-	gint back_R, back_G, back_B,
-	     text_R, text_G, text_B,
-	     bord_R, bord_G, bord_B;
-	gint Result;
-
-	Result = fio_get_values_from_file (filename, 
-								"back_red", &back_R,
-								"back_green", &back_G,
-								"back_blue", &back_B,
-								"text_red", &text_R,
-								"text_green", &text_G,
-								"text_blue", &text_B,
-								"border_red", &bord_R,
-								"border_green", &bord_G,
-								"border_blue", &bord_B,
-								"border_width", &starter->border_width,
-								"padding", &starter->padding,
-								"fontname", &starter->fontname,
-								NULL );
-	if (Result == 0)
-	{
-		starter->back.red = back_R;
-		starter->back.green = back_G;
-		starter->back.blue = back_B;
-	
-		starter->text.red = text_R;
-		starter->text.green = text_G;
-		starter->text.blue = text_B;
-	
-		starter->border.red = bord_R;
-		starter->border.green = bord_G;
-		starter->border.blue = bord_B;
-	}
-
-	return Result;
-}
-
-
 static void fio_save_info_file (pad_node *pad)
 {
 	gchar info_file[MAX_FILE_SIZE + 1];
 	gchar *content;
-	gchar temp[MAX_FILENAME_SIZE + 1];
 	GtkTextIter s, e;
 	GtkTextBuffer *buf;
 
@@ -276,36 +235,20 @@ static void fio_save_info_file (pad_node *pad)
 
 	/* we don't really need to save the style, since we don't use it, but it makes
 	   later running an older version of xpad nice.  At some point this will be removed. */
-    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nback_red %d\nback_green %d\nback_blue %d\ntext_red %d\ntext_green %d\ntext_blue %d\nborder_red %d\nborder_green %d\nborder_blue %d\nborder_width %d\npadding %d\nfontname %s\n",
+    sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\ncontent %s\n",
 		pad->x, pad->y, pad->width, pad->height, 
-		current_settings.style.back.red, 
-		current_settings.style.back.green,
-		current_settings.style.back.blue,
-		
-		current_settings.style.text.red,
-		current_settings.style.text.green,
-		current_settings.style.text.blue,
-		
-		current_settings.style.border.red,
-		current_settings.style.border.green,
-		current_settings.style.border.blue,
-		
-		current_settings.style.border_width,
-		current_settings.style.padding,
-		current_settings.style.fontname);
+		pad->contentname);
+	
+	fio_set_file (pad->infoname, info_file);
 	
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
 	gtk_text_buffer_get_end_iter (buf, &e);
+	
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
-
-	sprintf (temp, "content %s\n", pad->contentname);
-	strcat (info_file, temp);
-
 	fio_set_file (pad->contentname, content);
     g_free (content);
 	
-	fio_set_file (pad->infoname, info_file);
 }
 
 /* save contents and locations of a pad */
@@ -343,15 +286,67 @@ void fio_remove_pad_files (pad_node *pad)
 	fio_remove_file (pad->contentname);
 }
 
+gint fio_load_default_settings (void)
+{
+	/**
+	 * We need to set up int values for all these to take the value from the file.
+	 * These will be assigned back to the appropriate values after load.
+	 */
+	gint back_R = current_settings.style.back.red,
+		 back_G = current_settings.style.back.green,
+		 back_B = current_settings.style.back.blue,
+		 
+	     text_R = current_settings.style.text.red,
+		 text_G = current_settings.style.text.green,
+		 text_B = current_settings.style.text.blue,
+		 
+	     bord_R = current_settings.style.border.red,
+		 bord_G = current_settings.style.border.green,
+		 bord_B = current_settings.style.border.blue;
+	
+	if (fio_get_values_from_file (DEFAULTS_FILENAME, 
+						"decorations", &current_settings.decorations,
+						"sync_time", &current_settings.sync_time,
+						"height", &current_settings.height,
+						"width", &current_settings.width,
+						"confirm_destroy", &current_settings.confirm_destroy,
+						"edit_lock", &current_settings.edit_lock,
+						"wm_close", &current_settings.wm_close,
+						"back_red", &back_R,
+						"back_green", &back_G,
+						"back_blue", &back_B,
+						"text_red", &text_R,
+						"text_green", &text_G,
+						"text_blue", &text_B,
+						"border_red", &bord_R,
+						"border_green", &bord_G,
+						"border_blue", &bord_B,
+						"border_width", &current_settings.style.border_width,
+						"padding", &current_settings.style.padding,
+						"fontname", &current_settings.style.fontname,
+						NULL ))
+		return 1;
+	
+	current_settings.style.back.red = back_R;
+	current_settings.style.back.green = back_G;
+	current_settings.style.back.blue = back_B;
+	
+	current_settings.style.text.red = text_R;
+	current_settings.style.text.green = text_G;
+	current_settings.style.text.blue = text_B;
+	
+	current_settings.style.border.red = bord_R;
+	current_settings.style.border.green = bord_G;
+	current_settings.style.border.blue = bord_B;
+	
+	return 0;
+}
+
 /* filename must be absolute */
 static gint fio_get_info_from_file (const gchar *filename, pad_info *info)
 {
 	if (verbosity >= 2) printf ("Loading [%s].\n", filename);
 
-	/* grab from standard defaults, not from pad's memory of what they were,
-	    because a pad might be closed, default changed, and when we load it up again,
-	    we want all pads to be uniform */
-	fio_get_style_from_file (DEFAULTS_FILENAME, &info->style);
 	fio_get_values_from_file (  filename,
 							"x", &info->x,
 							"y", &info->y,
@@ -391,10 +386,6 @@ void fio_load_pads (void)
 		if (g_pattern_match_string (spec, name) &&
 			!fio_get_info_from_file (name, &info))
 		{
-			/* some older versions of xpad only had relative filename
-				so, we have to add full path if it isn't there. */
-			//info.contentname = fio_fill_filename );
-			
 			/**
 			 * Fill pad from the info struct.  We don't need to free strings
 			 * because the new pad takes over their care.

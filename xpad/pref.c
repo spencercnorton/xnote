@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include <string.h>
 
-// we keep a pointer around so that only one window will be open at a time
+/* we keep a pointer around so that only one window will be open at a time */
 GtkWidget *pref_window = NULL;
 
 static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
@@ -162,7 +162,7 @@ static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 static void pref_close (void)
 {
 	pref_window = NULL;
-	fio_save_as_defaults (&current_settings);
+	fio_save_default_settings ();
 }
 
 static GtkWidget *preferences_create (pad_node *pad)
@@ -233,7 +233,7 @@ static GtkWidget *preferences_create (pad_node *pad)
 	gtk_window_set_title (GTK_WINDOW(window), "xpad Preferences");
 	gtk_container_add (GTK_CONTAINER(window), vbox_global);
 
-	// buttonbox setup
+	/* buttonbox setup */
 	g_signal_connect_swapped (GTK_OBJECT (button_close), "clicked", 
 		G_CALLBACK (gtk_widget_destroy), (gpointer) window);
 	g_signal_connect_swapped (GTK_OBJECT (button_help), "clicked", 
@@ -247,11 +247,11 @@ static GtkWidget *preferences_create (pad_node *pad)
 	gtk_button_box_set_child_secondary (GTK_BUTTON_BOX (buttonbox), button_help, TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (buttonbox), 6);
 
-	// vbox_global setup
+	/* vbox_global setup */
 	gtk_box_pack_start (GTK_BOX(vbox_global), notebook, TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX(vbox_global), buttonbox, TRUE, TRUE, 0);
 
-	// text setup
+	/* text setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 	gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 0);
@@ -259,7 +259,7 @@ static GtkWidget *preferences_create (pad_node *pad)
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
 	g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
 
-	// background setup
+	/* background setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
 	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 0);
@@ -267,7 +267,7 @@ static GtkWidget *preferences_create (pad_node *pad)
 	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
 	g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) window);
 
-	// border setup
+	/* border setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
 	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 0);
@@ -314,18 +314,18 @@ static GtkWidget *preferences_create (pad_node *pad)
 	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
 	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 0);
 
-	// font setup
+	/* font setup */
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
 	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 0);
 	gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), current_settings.style.fontname);
 	
-	// this is a bit hacky, but there is no font-changed signal!
+	/* this is a bit hacky, but there is no font-changed signal! */
 	g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font), (gpointer) window);
-	// key release event does not seem to be sent when I think it should
+	/* key release event does not seem to be sent when I think it should */
 	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
 
-	// misc. setup
+	/* misc. setup */
 	
 	radio_close_all = gtk_radio_button_new_with_label (NULL,
 		"Close and save all pads");
@@ -338,14 +338,14 @@ static GtkWidget *preferences_create (pad_node *pad)
 	
 	switch (current_settings.wm_close)
 	{
-	case 0: // close all
+	case 0: /* close all */
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_all), TRUE);
 		break;
 	default:
-	case 1: // close pad
+	case 1: /* close pad */
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_close_this), TRUE);
 		break;
-	case 2: // delete pad
+	case 2: /* delete pad */
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio_delete_this), TRUE);
 		break;
 	}

@@ -32,9 +32,8 @@ void fio_load_pads (void);
 gchar *fio_get_file (const gchar *name);
 gint fio_set_file (const gchar *name, const gchar *value);
 
-gint fio_get_values_from_file (const gchar *filename, ...);
-gint fio_get_style_from_file (const gchar *filename, pad_style *starter);
-void fio_save_as_defaults (struct settings *);
+gint fio_load_default_settings (void);
+void fio_save_default_settings (void);
 
 void fio_open_pad_files (pad_node *pad, gboolean create);
 void fio_close_pad_files (pad_node *pad);

@@ -272,21 +272,11 @@ static int xpad_init (gpointer data)
 	
 	/* try to make sure directory exists */
 	mkdir (working_dir, 00777);
-
-	fio_get_values_from_file (DEFAULTS_FILENAME, 
-						  "decorations", &current_settings.decorations,
-						  "sync_time", &current_settings.sync_time,
-						  "height", &current_settings.height,
-						  "width", &current_settings.width,
-						  "confirm_destroy", &current_settings.confirm_destroy,
-						  "edit_lock", &current_settings.edit_lock,
-						  "wm_close", &current_settings.wm_close,
-						  NULL);
-
-	if (fio_get_style_from_file (DEFAULTS_FILENAME, &current_settings.style))
+	
+	if (fio_load_default_settings ())
 	{
-		/* this happens if there isn't a ~/.xpad directory (i.e. first run) */
-		fio_save_as_defaults (&current_settings);
+		/* this happens if there isn't a default-style (i.e. first run) */
+		fio_save_default_settings ();
 		show_help ();
 	}
 	
