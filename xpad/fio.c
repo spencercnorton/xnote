@@ -313,13 +313,10 @@ void fio_save_pad (pad_node *pad)
 /* save contents and locations of all pads */
 void fio_save_pads (void)
 {
-	pad_node *current = first_pad;
+	pad_node *current;
 
-	while (current != NULL)
-	{
+	for (current = first_pad; current; current = current->next)
 		fio_save_pad (current);
-		current = current->next;
-	}
 }
 
 void fio_remove_file (const gchar *filename)
@@ -417,15 +414,13 @@ gint fio_load_default_settings (void)
 	{
 		gint i;
 		gchar **button_names;
-		gchar *temp;
 		gchar *dup;
 		
 		button_names = g_strsplit (buttons, ",", 50);
 		
-		i = 0;
-		while ((temp = button_names[i++]))
+		for (i = 0; button_names[i]; ++i)
 		{
-			dup = g_strstrip (temp);
+			dup = g_strstrip (button_names[i]);
 			
 			current_settings.toolbar_buttons = 
 				g_slist_append (current_settings.toolbar_buttons,
