@@ -5,4 +5,7 @@
      ../src/help.c \
      ../src/toolbar.c \
      ../src/tray.c \
-     ../src/eggtrayicon.c
+     ../src/eggtrayicon.c \
+     ../src/properties.c \
+     ../src/settings.c \
+     ../src/sm.c

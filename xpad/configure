@@ -5290,7 +5290,7 @@ fi
 done
 
 
-ALL_LINGUAS=""
+ALL_LINGUAS="ru"
 
         MKINSTALLDIRS=
   if test -n "$ac_aux_dir"; then
