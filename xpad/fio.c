@@ -95,41 +95,20 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 gchar *fio_get_file (const gchar *name)
 {
 	gchar *fullname;
-	gchar *contents;
-	GError *errCode = NULL;
-	const gchar *errortext;
+	gchar *rv;
+	GError *error = NULL;
 	
 	fullname = fio_fill_filename (name);
 	
-	if (!g_file_get_contents (fullname, &contents, NULL, &errCode))
+	if (!g_file_get_contents (fullname, &rv, NULL, &error))
 	{
-		GtkWidget *dialog;
+		xpad_show_error (NULL, error->message, NULL);
 		
-		errortext = errCode ? errCode->message : NULL;
-		if (!errortext) errortext = "Could not read from file '%s'.";
-		
-		fprintf (stderr, errortext);
-		fprintf (stderr, "\n");
-		
-		dialog = xpad_alert_new (NULL, GTK_STOCK_DIALOG_ERROR,
-			errortext,
-			NULL);
-		
-		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
-		
-		gtk_dialog_run (GTK_DIALOG (dialog));
-		
-		gtk_widget_destroy (dialog);
-		
-		g_free (fullname);
-		g_error_free (errCode);
-		return NULL;
+		g_error_free (error);
 	}
-	else
-	{
-		g_free (fullname);
-		return contents;
-	}
+	
+	g_free (fullname);
+	return rv;
 }
 
 
