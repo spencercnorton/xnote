@@ -255,29 +255,42 @@ open_help_callback (gpointer data)
 
 
 
-static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *window)
+static gboolean change_background_color (GtkWidget *colorsel, GtkWidget *checkbutton)
 {
 	pad_node *temp;
+	
+	current_settings.style.use_back = 
+		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)) ? 0 : 1;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
 		&current_settings.style.back);
 	
 	for (temp = first_pad; temp; temp = temp->next)
 	{
+		GtkStyle *style;
+		
 		if (temp->locked) continue;
 		
 		gtk_widget_modify_base (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, &current_settings.style.back);
+			GTK_STATE_NORMAL, current_settings.style.use_back ? 
+			&current_settings.style.back : NULL);
+		
+		style = gtk_widget_get_style (GTK_WIDGET (get_text (temp->window)));
 		gtk_widget_modify_bg (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, &current_settings.style.back);
+			GTK_STATE_NORMAL, &style->base[GTK_STATE_NORMAL]);
 	}
+	
+	gtk_widget_set_sensitive (colorsel, current_settings.style.use_back);
 	
 	return FALSE;
 }
 
-static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
+static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *checkbutton)
 {
 	pad_node *temp;
+	
+	current_settings.style.use_text = 
+		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)) ? 0 : 1;
 	
 	gtk_color_selection_get_current_color (GTK_COLOR_SELECTION (colorsel), 
 		&current_settings.style.text);
@@ -287,8 +300,11 @@ static gboolean change_text_color (GtkWidget *colorsel, GtkWidget *window)
 		if (temp->locked) continue;
 		
 		gtk_widget_modify_text (GTK_WIDGET (get_text (temp->window)),
-			GTK_STATE_NORMAL, &current_settings.style.text);
+			GTK_STATE_NORMAL, current_settings.style.use_text ?
+			&current_settings.style.text : NULL);
 	}
+		
+	gtk_widget_set_sensitive (colorsel, current_settings.style.use_text);
 	
 	return FALSE;
 }
@@ -347,7 +363,7 @@ static gboolean change_border_width (GtkWidget *spinner, GtkWidget *colorsel)
 	return FALSE;
 }
 
-static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
+static gboolean change_font (GtkWidget *fontsel, GtkWidget *checkbutton)
 {
 	pad_node *temp;
 	PangoFontDescription *fontdesc;
@@ -355,9 +371,16 @@ static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	/* free current memory used by fontname */
 	g_free (current_settings.style.fontname);
 	
-	current_settings.style.fontname = gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel));
-	
-	fontdesc = pango_font_description_from_string (current_settings.style.fontname);
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)))
+	{
+		current_settings.style.fontname = NULL;
+		fontdesc = NULL;
+	}
+	else
+	{
+		current_settings.style.fontname = gtk_font_selection_get_font_name (GTK_FONT_SELECTION (fontsel));
+		fontdesc = pango_font_description_from_string (current_settings.style.fontname);
+	}
 	
 	for (temp = first_pad; temp; temp = temp->next)
 	{
@@ -368,7 +391,14 @@ static gboolean change_font (GtkWidget *fontsel, GtkWidget *window)
 	
 	g_free (fontdesc);
 	
+	gtk_widget_set_sensitive (fontsel, current_settings.style.fontname ? TRUE : FALSE);
+	
 	return FALSE;
+}
+
+static gboolean change_font_3_args (GtkWidget *fontsel, gpointer middle, GtkWidget *checkbutton)
+{
+	return change_font (fontsel, checkbutton);
 }
 
 static gboolean change_decorations (GtkWidget *checkbutton, GtkWidget *frame)
@@ -422,6 +452,7 @@ static gboolean change_wm_close (GtkWidget *radiobutton, gint num)
 	
 	return FALSE;
 }
+
 
 static void
 change_toolbar (GtkToggleButton *togglebutton, gpointer user_data)
@@ -643,87 +674,124 @@ static GtkWidget *preferences_create (void)
 
 	/* text setup */
 	{
-		
+		GtkWidget *separator = gtk_hseparator_new ();
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system text color");
 		
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_text, label_text);
 		gtk_box_pack_start (GTK_BOX (hbox_text), vbox_text, FALSE, FALSE, 0);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_text), checkbutton_use, FALSE, FALSE, 9);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), !current_settings.style.use_text);
+		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_text_color), (gpointer) color_text);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_text), separator, FALSE, FALSE, 9);
+		
 		gtk_box_pack_start (GTK_BOX (vbox_text), color_text, FALSE, FALSE, 9);
 		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_text), &current_settings.style.text);
 		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_text), FALSE);
-		g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) window);
+		gtk_widget_set_sensitive (color_text, current_settings.style.use_text);
+		g_signal_connect (GTK_OBJECT (color_text), "color-changed", G_CALLBACK (change_text_color), (gpointer) checkbutton_use);
 		
 	}
 	
 	/* background setup */
-	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
-	gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 9);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
-	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
-	g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) window);
+	{
+		GtkWidget *separator = gtk_hseparator_new ();
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system background color");
+		
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_background, label_back);
+		gtk_box_pack_start (GTK_BOX (hbox_background), vbox_background, FALSE, FALSE, 0);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_background), checkbutton_use, FALSE, FALSE, 9);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), !current_settings.style.use_back);
+		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_background_color), (gpointer) color_back);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_background), separator, FALSE, FALSE, 9);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_background), color_back, FALSE, FALSE, 9);
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_back), &current_settings.style.back);
+		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_back), FALSE);
+		gtk_widget_set_sensitive (color_back, current_settings.style.use_back);
+		g_signal_connect (GTK_OBJECT (color_back), "color-changed", G_CALLBACK (change_background_color), (gpointer) checkbutton_use);
+	}
 	
 	/* border setup */
-	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
-	gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 9);
-	
-	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 1);
-	gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
-	gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
-	g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
-	
-	if (current_settings.style.border_width == 0)
-		gtk_widget_set_sensitive (color_border, FALSE);
-	
-	gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 9);
-	
-	adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);
-	spinner_padding = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_padding), 1.0, 0);
-	gtk_misc_set_alignment (GTK_MISC (label_padding), 0, 0.5);
-	gtk_entry_set_width_chars (GTK_ENTRY (spinner_padding), 3);
-
-	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox_padding), spinner_padding, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) color_border);
-	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
-"The amount of space you want between the border and text.",
-"Choose the number of pixels around the text region.  This space is colored "
-"the same and surrounds it on all sides.");
-
-	adjust_border_width = gtk_adjustment_new (current_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
-	spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
-	gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 0.5);
-	gtk_entry_set_width_chars (GTK_ENTRY (spinner_border_width), 3);
-
-	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox_border_width), spinner_border_width, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
-	g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
-	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
-"The amount of space you want surrounding the pad.", 
-"Choose the number of pixels around the pad.  This space is colored "
-"independently and surrounds it on all sides.");
-
-	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
-	gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
-	gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 9);
+	{
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_border, label_border);
+		gtk_box_pack_start (GTK_BOX (hbox_border), vbox_border, FALSE, FALSE, 0);
+		
+		adjust_padding = gtk_adjustment_new (current_settings.style.padding, 0.0, 100.0, 1.0, 5.0, 5.0);
+		spinner_padding = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_padding), 1.0, 0);
+		gtk_misc_set_alignment (GTK_MISC (label_padding), 0, 0.5);
+		gtk_entry_set_width_chars (GTK_ENTRY (spinner_padding), 3);
+		
+		gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox_padding), spinner_padding, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
+		g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) color_border);
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
+	"The amount of space you want between the border and text.",
+	"Choose the number of pixels around the text region.  This space is colored "
+	"the same and surrounds it on all sides.");
+		
+		adjust_border_width = gtk_adjustment_new (current_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
+		spinner_border_width = gtk_spin_button_new (GTK_ADJUSTMENT(adjust_border_width), 1.0, 0);
+		gtk_misc_set_alignment (GTK_MISC (label_border_width), 0, 0.5);
+		gtk_entry_set_width_chars (GTK_ENTRY (spinner_border_width), 3);
+		
+		gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox_border_width), spinner_border_width, FALSE, FALSE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
+		g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
+		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
+	"The amount of space you want surrounding the pad.", 
+	"Choose the number of pixels around the pad.  This space is colored "
+	"independently and surrounds it on all sides.");
+		
+		gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
+		gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_padding);
+		gtk_box_pack_start (GTK_BOX (vbox_border), hbox_border_entries, FALSE, FALSE, 9);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_border), separator_border, FALSE, FALSE, 9);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_border), color_border, FALSE, FALSE, 9);
+		
+		gtk_color_selection_set_current_color (GTK_COLOR_SELECTION (color_border), &current_settings.style.border);
+		gtk_color_selection_set_has_opacity_control (GTK_COLOR_SELECTION (color_border), FALSE);
+		g_signal_connect (GTK_OBJECT (color_border), "color-changed", G_CALLBACK (change_border_color), (gpointer) window);
+		
+		if (current_settings.style.border_width == 0)
+			gtk_widget_set_sensitive (color_border, FALSE);
+		
+	}
 
 	/* font setup */
-	gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
-	gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
-	
-	if (current_settings.style.fontname)
-		gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), 
-			current_settings.style.fontname);
-	
-	/* this is a bit hacky, but there is no font-changed signal! */
-	g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font), (gpointer) window);
-	/* key release event does not seem to be sent when I think it should */
-	gtk_widget_add_events(font_selection, GDK_KEY_RELEASE_MASK);
-	g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font), (gpointer) window);
-	
+	{
+		GtkWidget *separator = gtk_hseparator_new ();
+		GtkWidget *checkbutton_use = gtk_check_button_new_with_label ("Use system font face");
+		
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook), hbox_font, label_font);
+		gtk_box_pack_start (GTK_BOX (hbox_font), vbox_font, FALSE, FALSE, 0);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_font), checkbutton_use, FALSE, FALSE, 9);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_use), current_settings.style.fontname ? 0 : 1);
+		g_signal_connect_swapped (GTK_OBJECT (checkbutton_use), "toggled", G_CALLBACK (change_font), (gpointer) font_selection);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_font), separator, FALSE, FALSE, 9);
+		
+		gtk_box_pack_start (GTK_BOX (vbox_font), font_selection, FALSE, FALSE, 9);
+		gtk_widget_set_sensitive (font_selection, current_settings.style.fontname ? 1 : 0);
+		
+		if (current_settings.style.fontname)
+			gtk_font_selection_set_font_name (GTK_FONT_SELECTION (font_selection), 
+				current_settings.style.fontname);
+		
+		/* this is a bit hacky, but there is no font-changed signal! */
+		g_signal_connect (GTK_OBJECT (font_selection), "button-release-event", G_CALLBACK (change_font_3_args), (gpointer) checkbutton_use);
+		/* key release event does not seem to be sent when I think it should */
+		gtk_widget_add_events(font_selection, GDK_KEY_RELEASE_MASK);
+		g_signal_connect (GTK_OBJECT (font_selection), "key-release-event", G_CALLBACK (change_font_3_args), (gpointer) checkbutton_use);
+	}
 	
 	/* toolbar  setup */
 	{
