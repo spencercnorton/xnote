@@ -1,8 +1,3 @@
-use automake/autoconf
-stop signal errors on pref screen close (GTK problem)
-fix font selection widget not displaying right font on start (GTK problem)
-remove small outer border (GTK problem?)
 make default buttons for windows (at least, observe it work -- code is there.  GTK problem?)
 make popup appear for border clicks
 make less posix-oriented (i.e. be ready for GTK+ 2 on win32)
-color transparancy (what to do with guint16 from colorsel?)

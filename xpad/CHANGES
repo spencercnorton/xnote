@@ -1,3 +1,11 @@
+1.1
+---
+simplified popup menu (removed GTK+ default cut/copy/paste/input method/insert)
+added keyboard shortcuts (ctrl-N: new note, ctrl-D: destroy note, ctrl-c: close,
+	ctrl-a: close all)
+expanded help dialog to include shortcuts
+allow border left-drags, right-drags, and right clicks
+
 1.0.2
 -----
 stopped pads from losing their place on x shut down

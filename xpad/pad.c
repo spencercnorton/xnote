@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <string.h>
+#include <gdk/gdkkeysyms.h>
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -263,15 +264,19 @@ void about_dialog (pad_node *pad)
 
 void help_dialog ()
 {
-	GtkWidget *dialog, *label, *button;
-  
+	GtkWidget *dialog, *helptext, *helplabel, *button, *notebook, *keytext, *keylabel;
+	
 	/* Create the widgets */
-  
+	
 	dialog = gtk_dialog_new ();
-	label = gtk_label_new ("");
+	helptext = gtk_label_new ("");
+	helplabel = gtk_label_new ("Introduction");
+	keytext = gtk_label_new ("");
+	keylabel = gtk_label_new ("Keyboard Shortcuts");
 	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
-
-	gtk_label_set_markup (GTK_LABEL (label), 
+	notebook = gtk_notebook_new ();
+	
+	gtk_label_set_markup (GTK_LABEL (helptext), 
 "xpad is a GTK+ 2.0 application that opens small textboxes on your desktop on which \
 you write notes or messages.\nxpad was designed with ease of use in mind, but if you \
 have troubles, here's how to do most things you would want to:\n\n\n\
@@ -298,21 +303,36 @@ contents -- they will be erased.\n\n\
 this pad contains only a copy of the file; destroying the pad does nothing to the original \
 file.\n");
 
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-
+	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), helptext, helplabel);
+	
+	gtk_label_set_markup (GTK_LABEL (keytext),
+"<b>CTRL+n</b>: Creates a new pad.\n\n\
+<b>CTRL+s</b>: Saves the contents of a pad to a file.\n\n\
+<b>CTRL+o</b>: Copies the contents of a file into a pad.\n\n\
+<b>CTRL+p</b>: Opens the pad preferences window.\n\n\
+<b>CTRL+g</b>: Opens the global preferences window.\n\n\
+<b>CTRL+SHIFT+c</b>: Closes the currently selected pad.\n\n\
+<b>CTRL+SHIFT+a</b>: Closes all open pads.\n\n\
+<b>CTRL+SHIFT+d</b>: Destroys the currently selected pad.\n
+" );
+	
+	gtk_label_set_line_wrap (GTK_LABEL (keytext), TRUE);
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), keytext, keylabel);
+	
 	gtk_window_set_title (GTK_WINDOW (dialog), "xpad help");
-
+	
 	/* Add the label, and show everything we've added to the dialog. */
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), notebook);
 	gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
-
+	
 	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 	gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
-
+	
 	gtk_widget_show_all (dialog);
-
+	
 	gtk_dialog_run (GTK_DIALOG(dialog));
-
+	
 	gtk_widget_destroy (dialog);
 }
 
@@ -413,10 +433,11 @@ void open_file (pad_node *pad)
 	g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (filedialog)->cancel_button),
                              "clicked",
                              G_CALLBACK (gtk_widget_destroy),
-                             (gpointer) filedialog); 
-   
+                             (gpointer) filedialog);
+	
+   	gtk_window_set_position (GTK_WINDOW (filedialog), GTK_WIN_POS_CENTER);
+	
 	/* Display that dialog */
-   
 	gtk_widget_show (filedialog);
 }
 
@@ -471,9 +492,10 @@ void save_as_file (pad_node *pad)
                              "clicked",
                              G_CALLBACK (gtk_widget_destroy),
                              filedialog); 
-
+	
+	gtk_window_set_position (GTK_WINDOW (filedialog), GTK_WIN_POS_CENTER);
+	
 	/* Display that dialog */
-   
 	gtk_widget_show (filedialog);
 }
 
@@ -491,10 +513,8 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *menu_item_open;
 	GtkWidget *menu_item_pad_preferences;
 	GtkWidget *menu_item_global_preferences;
-	//GtkWidget *menu_item_edit;
 	GtkWidget *separator2, *separator3, *separator4;
 	
-//	separator1 = gtk_separator_menu_item_new ();
 	separator2 = gtk_separator_menu_item_new ();
         separator3 = gtk_separator_menu_item_new ();
 	separator4 = gtk_separator_menu_item_new ();
@@ -506,8 +526,8 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	menu_item_destroy = gtk_image_menu_item_new_with_label ("Destroy");
 	menu_item_close = gtk_image_menu_item_new_with_label ("Close");
 	menu_item_close_all = gtk_image_menu_item_new_with_label ("Close All");
-	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("Pad Preferences");
-	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("Global Preferences");
+	menu_item_pad_preferences = gtk_image_menu_item_new_with_mnemonic ("_Pad Preferences");
+	menu_item_global_preferences = gtk_image_menu_item_new_with_mnemonic ("_Global Preferences");
 	
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close), gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
 	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item_close_all), gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_MENU));
@@ -544,12 +564,121 @@ void pad_popup (pad_node *pad, GdkEventButton *event)
 	g_signal_connect_swapped (menu_item_pad_preferences, "activate", G_CALLBACK (pad_preferences_open), pad);
 	g_signal_connect_swapped (menu_item_global_preferences, "activate", G_CALLBACK (global_preferences_open), pad);
 	
+	//gtk_menu_set_accel_path (GTK_MENU (menu), "<xpad-Pad>/");
+	//gtk_menu_item_set_accel_path (GTK_MENU_ITEM (menu_item_new_pad), "<xpad-Pad>/New Pad");
+	
 	gtk_widget_show_all (menu);
 	
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 }
 
-static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
+static gboolean textbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
+{
+	if (event == NULL)
+		return FALSE;
+	
+	if (event->type == GDK_BUTTON_PRESS)
+	{
+		GdkEventButton *event_button = (GdkEventButton *) event;
+		
+		if (event_button->button == 1)
+		{
+			// raise window if clicked on
+			gtk_window_present (pad->window);
+			
+			if (event_button->state & GDK_CONTROL_MASK) {
+				pad_move (pad, event);
+				return TRUE;
+			}
+		}
+		else if (event_button->button == 3)
+		{
+			if (event_button->state & GDK_CONTROL_MASK)
+				pad_resize (pad, event);
+			else
+				pad_popup (pad, event_button);
+			
+			return TRUE;
+		}
+	}
+	else if (event->type == GDK_KEY_PRESS)
+	{
+		GdkEventKey *event_key = (GdkEventKey *) event;
+		
+		if (event_key->keyval == GDK_a) {
+			
+			// CTRL + SHIFT + a == close all pads
+			if ((event_key->state & GDK_CONTROL_MASK) &&
+			    (event_key->state & GDK_SHIFT_MASK)) {
+				pad_close_all (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_c) {
+			
+			// CTRL + SHIFT + c == close pad
+			if ((event_key->state & GDK_CONTROL_MASK) &&
+			    (event_key->state & GDK_SHIFT_MASK)) {
+				pad_close (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_d) {
+			
+			// CTRL + SHIFT + d == destroy pad
+			if ((event_key->state & GDK_CONTROL_MASK) &&
+			    (event_key->state & GDK_SHIFT_MASK)) {
+				pad_destroy (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_g) {
+			
+			// CTRL + g == global preferences
+			if (event_key->state & GDK_CONTROL_MASK) {
+				global_preferences_open (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_n) {
+			
+			// CTRL + n == new pad
+			if (event_key->state & GDK_CONTROL_MASK) {
+				pad_new ();
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_o) {
+			
+			// CTRL + o == open file
+			if (event_key->state & GDK_CONTROL_MASK) {
+				open_file (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_p) {
+			
+			// CTRL + p == pad preferences
+			if (event_key->state & GDK_CONTROL_MASK) {
+				pad_preferences_open (pad);
+				return TRUE;
+			}
+		}
+		else if (event_key->keyval == GDK_s) {
+			
+			// CTRL + s == save as
+			if (event_key->state & GDK_CONTROL_MASK) {
+				save_as_file (pad);
+				return TRUE;
+			}
+		}
+	}
+	
+	return FALSE;
+}
+
+
+static gboolean eventbox_event_handler (GtkWidget *widget, GdkEvent *event, pad_node *pad)
 {
 	GdkEventButton *event_button;
 
@@ -560,23 +689,21 @@ static gboolean pad_event_handler (GtkWidget *widget, GdkEvent *event, pad_node 
 	{
 		event_button = (GdkEventButton *) event;
 		
-		// raise window if clicked on
 		if (event_button->button == 1)
+		{
+			// raise window if clicked on
 			gtk_window_present (pad->window);
-		
-		if (event_button->button == 1 && (event_button->state & GDK_CONTROL_MASK) )
-		{
+			
 			pad_move (pad, event);
-			return TRUE;
-		}
-		else if (event_button->button == 3 && (event_button->state & GDK_CONTROL_MASK) )
-		{
-			pad_resize (pad, event);
 			return TRUE;
 		}
 		else if (event_button->button == 3)
 		{
-			pad_popup (pad, event_button);
+			if (event_button->state & GDK_CONTROL_MASK)
+				pad_resize (pad, event);
+			else
+				pad_popup (pad, event_button);
+			
 			return TRUE;
 		}
 	}
@@ -604,9 +731,8 @@ pad_node *start_pad ()
 	gtk_container_add (GTK_CONTAINER (eventbox), textbox);
 	gtk_container_add (GTK_CONTAINER (window), eventbox);
 
-	g_signal_connect (textbox, "event", G_CALLBACK (pad_event_handler), pad);
-	g_signal_connect (eventbox, "event", G_CALLBACK (pad_event_handler), pad);
-	//g_signal_connect (textbox, "populate-popup", G_CALLBACK (textbox_populate_popup), pad);
+	g_signal_connect (textbox, "event", G_CALLBACK (textbox_event_handler), pad);
+	g_signal_connect (eventbox, "event", G_CALLBACK (eventbox_event_handler), pad);
 	g_signal_connect (window, "destroy", G_CALLBACK (pad_window_destroyed), pad);
 
 	pad->next = NULL;

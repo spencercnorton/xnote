@@ -26,9 +26,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
+#include <gdk/gdkkeysyms.h>
 
 gchar working_dir[MAX_FILENAME_SIZE];
-const gchar *VERSION = "xpad v1.0.2";
+const gchar *VERSION = "xpad v1.1";
 gint verbosity = 0; /* output level */
 guint autosave_timeout_id = -1;
 
@@ -205,7 +206,9 @@ void xpad_init ()
 			getpid (), sync_time, verbosity, decorations);
 
 	xpad_set_default_icon ();
-			
+	
+	//gtk_accel_map_add_entry ("<xpad-Pad>/New Pad", GDK_n, GDK_CONTROL_MASK);
+	
 	/* load all pads */
 	fio_load_pads();
 }
