@@ -990,9 +990,14 @@ int main (int argc, char *argv[])
 {
 	gpointer args[2];
 	
+#if HAVE_SETLOCALE
 	setlocale (LC_ALL, "");
+#endif
+	
+#if ENABLE_NLS
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+#endif
 	
 	output = stdout;
 	

@@ -178,7 +178,7 @@ _("The font <b>style</b> controls whether the text is bold or italicized.\n\n"
 		
 		gtk_box_pack_start (GTK_BOX (vbox_toolbar), label_toolbar_help, FALSE, FALSE, 0);
 		strcpy (toolbartext,
--("You can control whether pads have a <b>toolbar</b> or not by clicking on the "
+_("You can control whether pads have a <b>toolbar</b> or not by clicking on the "
 "\"Enable toolbars\" option.  This affects all pads immediately.\n\n"));
 		strcat (toolbartext,
 _("If <b>auto-hide</b> is enabled, a pad's toolbar will disappear (after a small delay) when "
@@ -730,8 +730,8 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (hbox_padding), label_padding_unit, FALSE, FALSE, 0);
 		g_signal_connect (GTK_OBJECT (spinner_padding), "value-changed", G_CALLBACK (change_padding), (gpointer) color_border);
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_padding, 
-	_("The amount of space you want between the border and text.",
-	"Choose the number of pixels around the text region.  This space is colored "
+	_("The amount of space you want between the border and text."),
+	_("Choose the number of pixels around the text region.  This space is colored "
 	"the same and surrounds it on all sides."));
 		
 		adjust_border_width = gtk_adjustment_new (current_settings.style.border_width, 0.0, 100.0, 1.0, 5.0, 5.0);
@@ -744,8 +744,8 @@ static GtkWidget *preferences_create (void)
 		gtk_box_pack_start (GTK_BOX (hbox_border_width), label_border_width_unit, FALSE, FALSE, 0);
 		g_signal_connect (GTK_OBJECT (spinner_border_width), "value-changed", G_CALLBACK (change_border_width), (gpointer) color_border);
 		gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips_border), spinner_border_width, 
-	_("The amount of space you want surrounding the pad.", 
-	"Choose the number of pixels around the pad.  This space is colored "
+	_("The amount of space you want surrounding the pad."), 
+	_("Choose the number of pixels around the pad.  This space is colored "
 	"independently and surrounds it on all sides."));
 		
 		gtk_box_pack_start_defaults (GTK_BOX (hbox_border_entries), hbox_border_width);
@@ -919,7 +919,7 @@ static GtkWidget *preferences_create (void)
 			
 			g_object_set_data (G_OBJECT (b), "tb", (void *) tb);
 			
-			gtk_tooltips_set_tip (tt, b, buttons[i].desc, buttons[i].desc);
+			gtk_tooltips_set_tip (tt, b, _(buttons[i].desc), _(buttons[i].desc));
 		}
 		
 		{

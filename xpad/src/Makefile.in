@@ -96,13 +96,16 @@ AM_CFLAGS = -ansi -pedantic -Wall `pkg-config --cflags gtk+-2.0`  -DG_DISABLE_DE
 
 
 xpad_LDFLAGS = `pkg-config --libs gtk+-2.0`
+
+localedir = $(datadir)/locale
+
+INCLUDES = -I. -I$(srcdir) -I.. -I../intl -I$(top_srcdir)/intl
+DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
 mkinstalldirs = $(SHELL) $(top_srcdir)/scripts/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(bin_PROGRAMS)
 
-
-DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@

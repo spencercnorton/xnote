@@ -7,13 +7,34 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-01-24 16:53-0500\n"
+"POT-Creation-Date: 2003-01-24 18:11-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:201
+msgid ""
+"Usage: xpad [OPTIONS]\n"
+"\n"
+"  -V, --version         prints xpad version and exits\n"
+"  -h, --help            prints this usage information and exits\n"
+"  -v N, --verbosity=N   sets level of output\n"
+"                          0=none, 1=moderate, 2=debug\n"
+"                          default is 0\n"
+"  -n, --new             opens a new pad only\n"
+msgstr ""
+
+#: src/main.c:210
+msgid ""
+"  --nonew               prevents xpad from making a new pad\n"
+"  -q, --quit            quits all open xpad sessions\n"
+"  -l, --list            lists the titles of all pads\n"
+"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
+"  --showall             brings all pads to the foreground\n"
+msgstr ""
 
 #: src/main.c:243
 msgid "Illegal verbosity value.  Must be between 0 and 2 inclusive.\n"
@@ -32,4 +53,587 @@ msgstr ""
 #: src/main.c:406
 #, c-format
 msgid "Invalid number: '%s'\n"
+msgstr ""
+
+#: src/fio.c:67
+#, c-format
+msgid "Could not write to file %s."
+msgstr ""
+
+#: src/fio.c:555
+#, c-format
+msgid "Could not open xpad directory %s."
+msgstr ""
+
+#: src/fio.c:558
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+
+#: src/pref.c:51 src/pref.c:595
+msgid "Background Color"
+msgstr ""
+
+#: src/pref.c:52 src/pref.c:596
+msgid "Text Color"
+msgstr ""
+
+#: src/pref.c:53 src/pref.c:597
+msgid "Border"
+msgstr ""
+
+#: src/pref.c:54 src/pref.c:600
+msgid "Font Face"
+msgstr ""
+
+#: src/pref.c:55 src/pref.c:601
+msgid "Options"
+msgstr ""
+
+#: src/pref.c:56 src/pref.c:602
+msgid "Toolbar"
+msgstr ""
+
+#: src/pref.c:90
+msgid "Xpad Preferences Help"
+msgstr ""
+
+#: src/pref.c:112
+msgid ""
+"Select the <b>color</b> you would like the text of pads to be.  Either click "
+"on the color wheel or enter values in the Red, Green, Blue text boxes to "
+"change the color.\n"
+"\n"
+"Changes will take effect immediately.  If you do not see a change, make sure "
+"that there is text visible to be changed and that the pad does not have its "
+"style locked (right click on pad, make sure that \"Lock Style\" is disabled)."
+msgstr ""
+
+#: src/pref.c:125
+msgid ""
+"Select the <b>color</b> you would like the background of pads to be.  Either "
+"click on the color wheel or enter values in the Red, Green, Blue text boxes "
+"to change the color.\n"
+"\n"
+"Changes will take effect immediately.  If you do not see a change, make sure "
+"that the pad does not have its style locked (right click on pad, make sure "
+"that \"Lock Style\" is disabled)."
+msgstr ""
+
+#: src/pref.c:137
+msgid ""
+"Select the <b>color</b> you would like the border of pads to be.  Either "
+"click on the color wheel or enter values in the Red, Green, Blue text boxes "
+"to change the color.  You cannot change the border color if the border width "
+"is zero.\n"
+"\n"
+"You can also change the size of the border and the amount of padding.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:142
+msgid ""
+"The <b>border width</b> controls how many pixels are drawn in an outline "
+"around the pad.  The <b>padding</b> controls how many pixels are drawn "
+"between the border and the text of the pad.\n"
+"\n"
+"Changes will take effect immediately.  If you do not see a change, make sure "
+"that the pad does not have its style locked (right click on pad, make sure "
+"that \"Lock Style\" is disabled)."
+msgstr ""
+
+#: src/pref.c:155
+msgid ""
+"Select the <b>font face</b> you would like the text of pads to use.\n"
+"\n"
+"The font <b>family</b> determines the general look and feel of text.  When "
+"some of the available families are chosen, text will not be visible or will "
+"be garbled.  This means the font family is not installed correctly.  Please "
+"choose another family.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:160
+msgid ""
+"The font <b>style</b> controls whether the text is bold or italicized.\n"
+"\n"
+"The font <b>size</b> controls how large the text is.\n"
+"\n"
+"Changes will take effect immediately.  If you do not see a change, make sure "
+"that there is text visible to be changed and that the pad does not have its "
+"style locked (right click on pad, make sure that \"Lock Style\" is disabled)."
+msgstr ""
+
+#: src/pref.c:181
+msgid ""
+"You can control whether pads have a <b>toolbar</b> or not by clicking on the "
+"\"Enable toolbars\" option.  This affects all pads immediately.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:184
+msgid ""
+"If <b>auto-hide</b> is enabled, a pad's toolbar will disappear (after a "
+"small delay) when your mouse pointer leaves the pad.  It will return when "
+"your mouse does.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:187
+msgid ""
+"If the toolbar is enabled, you can customize which <b>buttons</b> appear by "
+"dragging the button you want from one box to another.  The upper box looks "
+"like a toolbar and contains the buttons that are currently enabled.  The "
+"lower box holds unused buttons.  "
+msgstr ""
+
+#: src/pref.c:191
+msgid ""
+"Dropping a button moves it to the end of the box you dropped it in.\n"
+"\n"
+"If you don't know what a button does, try hovering your mouse over it for a "
+"bit until a box appears, describing the button."
+msgstr ""
+
+#: src/pref.c:205
+msgid ""
+"If <b>edit lock</b> is enabled, pads that are not in focus lose the ability "
+"to be edited.  Rather, clicking and dragging on the surface of the pad will "
+"move it.  To edit a pad that is locked, double click on its surface.  This "
+"will allow you to change its text until the pad loses focus again.  If edit "
+"lock is not enabled, every pad is always editable -- to move it, either drag "
+"on the border or hold down CTRL and left click.  Edit lock is disabled by "
+"default.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:212
+msgid ""
+"If <b>confirm pad deletion</b> is enabled, a confirmation dialog will appear "
+"whenever you delete a non-empty pad.  Deleting a pad loses the pad contents "
+"irrevocably.  Delete confirmation is enabled by default.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:216
+msgid ""
+"If <b>allow scrollbars</b> is enabled, when a pad is smaller than the text "
+"area it contains, scrollbars appear so you can view all the text.  If they "
+"are disabled, the pad resizes to fit the text.\n"
+"\n"
+msgstr ""
+
+#: src/pref.c:220
+msgid ""
+"If <b>window decorations</b> are enabled, your window manager will draw a "
+"border and title bar for each pad.  Window decorations are disabled by "
+"default.\n"
+"\n"
+"If window decorations are enabled, you can choose what happens when you "
+"click on your <b>window manager's close button</b>.  You can close and save "
+"all pads (quitting xpad), close and save the one pad you clicked on, or "
+"delete the pad (no confirmation is offered).  By default, only the one pad "
+"you clicked on is closed and saved."
+msgstr ""
+
+#: src/pref.c:598
+msgid "Border width:"
+msgstr ""
+
+#: src/pref.c:599 src/pref.c:604
+msgid "pixels"
+msgstr ""
+
+#: src/pref.c:603
+msgid "Padding:"
+msgstr ""
+
+#: src/pref.c:610
+msgid "Allow window manager decorations"
+msgstr ""
+
+#: src/pref.c:611
+msgid "Confirm pad deletion"
+msgstr ""
+
+#: src/pref.c:612
+msgid "Edit lock"
+msgstr ""
+
+#: src/pref.c:654
+msgid "Xpad Preferences"
+msgstr ""
+
+#: src/pref.c:678
+msgid "Use system text color"
+msgstr ""
+
+#: src/pref.c:700
+msgid "Use system background color"
+msgstr ""
+
+#: src/pref.c:733
+msgid "The amount of space you want between the border and text."
+msgstr ""
+
+#: src/pref.c:734
+msgid ""
+"Choose the number of pixels around the text region.  This space is colored "
+"the same and surrounds it on all sides."
+msgstr ""
+
+#: src/pref.c:747
+msgid "The amount of space you want surrounding the pad."
+msgstr ""
+
+#: src/pref.c:748
+msgid ""
+"Choose the number of pixels around the pad.  This space is colored "
+"independently and surrounds it on all sides."
+msgstr ""
+
+#: src/pref.c:771
+msgid "Use system font face"
+msgstr ""
+
+#: src/pref.c:807
+msgid "Click and drag a button to move it."
+msgstr ""
+
+#: src/pref.c:813
+msgid "Enable toolbar"
+msgstr ""
+
+#: src/pref.c:814
+msgid "Auto-hide toolbar"
+msgstr ""
+
+#: src/pref.c:824
+msgid "<b>Toolbar Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:825
+msgid "<b>Used Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:826
+msgid "<b>Unused Buttons:</b>"
+msgstr ""
+
+#: src/pref.c:940 src/pref.c:941
+msgid ""
+"If on, a toolbar will appear below each pad when the mouse hovers over it."
+msgstr ""
+
+#: src/pref.c:944 src/pref.c:945
+msgid "If on, the toolbar will disappear when you are not using the pad."
+msgstr ""
+
+#: src/pref.c:957
+msgid "Allow Scrollbars"
+msgstr ""
+
+#: src/pref.c:960
+msgid "Close and save all pads"
+msgstr ""
+
+#: src/pref.c:962
+msgid "Close and save pad"
+msgstr ""
+
+#: src/pref.c:964
+msgid "Delete pad (no confirmation)"
+msgstr ""
+
+#: src/pref.c:969
+msgid "<b>Window Manager Close Action:</b>"
+msgstr ""
+
+#: src/pref.c:1012 src/pref.c:1014
+msgid ""
+"If on, your window manager will add its own decorations to each pad.  For "
+"example, a titlebar and close button."
+msgstr ""
+
+#: src/pref.c:1018 src/pref.c:1019
+msgid "If on, choosing to delete a pad will prompt for conformation."
+msgstr ""
+
+#: src/pref.c:1022 src/pref.c:1024
+msgid ""
+"If on, scrollbars appear when text is larger than the pad.  If off, the pad "
+"resizes to fit the text."
+msgstr ""
+
+#: src/pref.c:1028 src/pref.c:1031
+msgid ""
+"If on, when a pad loses focus, it will become uneditable.  This allows you "
+"to move it by left dragging.  To make it editable again, double-click the "
+"pad.  If off, pads are always editable."
+msgstr ""
+
+#: src/pref.c:1036 src/pref.c:1037
+msgid "All pads will close, saving contents first."
+msgstr ""
+
+#: src/pref.c:1040 src/pref.c:1041
+msgid "The pad you clicked the close button on will close, saving contents."
+msgstr ""
+
+#: src/pref.c:1044 src/pref.c:1046
+msgid ""
+"The pad you clicked the close button on will be deleted, losing contents.  "
+"There will be no confirmation."
+msgstr ""
+
+#: src/pad.c:38
+msgid "/_File"
+msgstr ""
+
+#: src/pad.c:39
+msgid "/File/_New"
+msgstr ""
+
+#: src/pad.c:40
+msgid "/File/_Open..."
+msgstr ""
+
+#: src/pad.c:42
+msgid "/File/Save _As..."
+msgstr ""
+
+#: src/pad.c:44
+msgid "/File/_Close"
+msgstr ""
+
+#: src/pad.c:45
+msgid "/File/_Delete"
+msgstr ""
+
+#: src/pad.c:46
+msgid "/File/_Quit"
+msgstr ""
+
+#: src/pad.c:47
+msgid "/_Edit"
+msgstr ""
+
+#: src/pad.c:48
+msgid "/Edit/C_ut"
+msgstr ""
+
+#: src/pad.c:49
+msgid "/Edit/_Copy"
+msgstr ""
+
+#: src/pad.c:50
+msgid "/Edit/_Paste"
+msgstr ""
+
+#: src/pad.c:51
+msgid "/Edit/Clea_r Pad"
+msgstr ""
+
+#: src/pad.c:53
+msgid "/Edit/_Lock Style"
+msgstr ""
+
+#: src/pad.c:54
+msgid "/Edit/_Sticky"
+msgstr ""
+
+#: src/pad.c:56
+msgid "/Edit/_Preferences..."
+msgstr ""
+
+#: src/pad.c:57
+msgid "/_Windows"
+msgstr ""
+
+#: src/pad.c:58
+msgid "/_Help"
+msgstr ""
+
+#: src/pad.c:59
+msgid "/Help/_Contents"
+msgstr ""
+
+#: src/pad.c:60
+msgid "/Help/_About"
+msgstr ""
+
+#: src/pad.c:67
+msgid "Open New Pad"
+msgstr ""
+
+#: src/pad.c:68
+msgid "Open Copy of File"
+msgstr ""
+
+#: src/pad.c:69
+msgid "Save Pad As File"
+msgstr ""
+
+#: src/pad.c:70
+msgid "Close and Save Pad"
+msgstr ""
+
+#: src/pad.c:71
+msgid "Delete Pad"
+msgstr ""
+
+#: src/pad.c:72
+msgid "Clear Pad Contents"
+msgstr ""
+
+#: src/pad.c:73
+msgid "Lock Style"
+msgstr ""
+
+#: src/pad.c:74
+msgid "Edit Preferences"
+msgstr ""
+
+#: src/pad.c:75
+msgid "Quit"
+msgstr ""
+
+#: src/pad.c:76
+msgid "Show Help"
+msgstr ""
+
+#: src/pad.c:77
+msgid "Sticky"
+msgstr ""
+
+#: src/pad.c:78
+msgid "Minimize Pads to System Tray"
+msgstr ""
+
+#: src/pad.c:480
+msgid "Delete contents of this pad?"
+msgstr ""
+
+#: src/pad.c:481
+msgid "All text of this pad will be irrevocably lost."
+msgstr ""
+
+#: src/pad.c:662
+#, c-format
+msgid "You are using xpad %s with GTK+ %i.%i.%i."
+msgstr ""
+
+#: src/pad.c:667
+msgid "Visit http://xpad.sourceforge.net for more information about xpad."
+msgstr ""
+
+#: src/pad.c:705
+msgid "Open which file?"
+msgstr ""
+
+#: src/pad.c:756
+msgid "Save as which file?"
+msgstr ""
+
+#: src/pad.c:1008
+msgid "/Windows"
+msgstr ""
+
+#: src/pad.c:1026 src/pad.c:1057
+msgid "/Windows/_Show All"
+msgstr ""
+
+#: src/pad.c:1027 src/pad.c:1064
+msgid "/Windows/_Close All"
+msgstr ""
+
+#: src/pad.c:1075
+msgid "/Edit/Lock Style"
+msgstr ""
+
+#: src/pad.c:1077
+msgid "/Edit/Sticky"
+msgstr ""
+
+#: src/help.c:45
+msgid "Introduction"
+msgstr ""
+
+#: src/help.c:47
+msgid "Style Locking"
+msgstr ""
+
+#: src/help.c:51
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically textboxes on your desktop in which you can write memos.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:55
+msgid ""
+"The contents of pads are transparently saved and reloaded when xpad is next "
+"started.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:58
+msgid ""
+"To move a pad, left drag on the toolbar, right drag on the resizer in the "
+"bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:62
+msgid ""
+"To resize a pad, left drag on the resizer or hold down CTRL while right "
+"dragging anywhere on the pad.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:65
+msgid ""
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy.\n"
+"\n"
+msgstr ""
+
+#: src/help.c:69
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr ""
+
+#: src/help.c:81
+msgid ""
+"If a pad's style is locked, any changes made in the preference window to the "
+"text, background, or border color or the font face do not affect that pad.\n"
+"\n"
+"To lock a pad's style, right click on a pad to open the popup menu and "
+"select \"Lock Style\".  By default, pads are not locked."
+msgstr ""
+
+#: src/help.c:95
+msgid "Xpad Help"
+msgstr ""
+
+#: src/tray.c:116
+msgid "Windows"
+msgstr ""
+
+#: src/tray.c:191
+msgid "XPad: right click for more options..."
+msgstr ""
+
+#: src/tray.c:192
+msgid ""
+"Right click this icon for a menu of options pertaining to XPad. Left click "
+"it to toggle whether or not the pads are displayed."
+msgstr ""
+
+#: src/tray.c:221
+msgid "Hide Pads"
+msgstr ""
+
+#: src/tray.c:221
+msgid "Show Pads"
 msgstr ""

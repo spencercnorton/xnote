@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "help.h"
 #include <string.h>
+#include "defines.h"
 
 GtkWidget *help_window = NULL;
 
@@ -49,7 +50,7 @@ static GtkWidget *create_help (gint page)
 	strcpy (helptextbuf, 
 _("Each xpad session consists of one or more open pads.  "
 "These pads are basically textboxes on your desktop in which "
-"you can write memos.\n\n")
+"you can write memos.\n\n"));
 	strcat (helptextbuf, 
 _("The contents of pads are transparently "
 "saved and reloaded when xpad is next started.\n\n"));
@@ -63,7 +64,7 @@ _("To resize a pad, left drag on the resizer or hold down "
 	strcat (helptextbuf, 
 _("Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
-"enjoy.\n\n")
+"enjoy.\n\n"));
 	strcat (helptextbuf,
 _("Please send comments or bug reports to "
 "xpad-devel@lists.sourceforge.net"));

@@ -35,47 +35,47 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget);
 
 static GtkItemFactoryEntry menu_items[] = 
 {
-	{_("/_File"), 				NULL,			0,		0, 	"<Branch>"},
-	{_("/File/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
-	{_("/File/_Open..."),			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
+	{N_("/_File"), 				NULL,			0,		0, 	"<Branch>"},
+	{N_("/File/_New"),			"<control>N",		menuitem_cb, 	1,	"<StockItem>",	GTK_STOCK_NEW},
+	{N_("/File/_Open..."),			"<control>O",		menuitem_cb,	2,	"<StockItem>",	GTK_STOCK_OPEN},
 	{"/File/sep", 				NULL,			0,		0,	"<Separator>"},
-	{_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
+	{N_("/File/Save _As..."),		"<shift><control>S",	menuitem_cb,	3,	"<StockItem>",	GTK_STOCK_SAVE_AS},
 	{"/File/sep2", 				NULL,			0,		0,	"<Separator>"},
-	{_("/File/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
-	{_("/File/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
-	{_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
-	{_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
-	{_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
-	{_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
-	{_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
-	{_("/Edit/Clea_r Pad"),		NULL,			menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
+	{N_("/File/_Close"),			"<control>W",		menuitem_cb,	4,	"<StockItem>",	GTK_STOCK_CLOSE},
+	{N_("/File/_Delete"),			NULL,			menuitem_cb,	5,	"<StockItem>",	GTK_STOCK_DELETE},
+	{N_("/File/_Quit"),			"<control>Q",		menuitem_cb,	6,	"<StockItem>",	GTK_STOCK_QUIT},
+	{N_("/_Edit"),				NULL,			0,		0,	"<Branch>"},
+	{N_("/Edit/C_ut"),			"<control>X",		menuitem_cb,	11,	"<StockItem>",	GTK_STOCK_CUT},
+	{N_("/Edit/_Copy"),			"<control>C",		menuitem_cb,	12,	"<StockItem>",	GTK_STOCK_COPY},
+	{N_("/Edit/_Paste"),			"<control>V",		menuitem_cb,	13,	"<StockItem>",	GTK_STOCK_PASTE},
+	{N_("/Edit/Clea_r Pad"),		NULL,			menuitem_cb,	14,	"<StockItem>",	GTK_STOCK_CLEAR},
 	{"/Edit/sep",				NULL,			0,		0,	"<Separator>"},
-	{_("/Edit/_Lock Style"),		NULL,			menuitem_cb,	15,	"<CheckItem>"},
-	{_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
+	{N_("/Edit/_Lock Style"),		NULL,			menuitem_cb,	15,	"<CheckItem>"},
+	{N_("/Edit/_Sticky"),			NULL,			menuitem_cb,	16,	"<CheckItem>"},
 	{"/Edit/sep2",				NULL,			0,		0,	"<Separator>"},
-	{_("/Edit/_Preferences..."),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
-	{_("/_Windows"),			NULL,			0,		0,	"<Branch>"},
-	{_("/_Help"),				NULL,			0,		0,	"<Branch>"},
-	{_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
-	{_("/Help/_About"),			NULL,			menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
+	{N_("/Edit/_Preferences..."),		NULL,			menuitem_cb,	7,	"<StockItem>",	GTK_STOCK_PREFERENCES},
+	{N_("/_Windows"),			NULL,			0,		0,	"<Branch>"},
+	{N_("/_Help"),				NULL,			0,		0,	"<Branch>"},
+	{N_("/Help/_Contents"),			"F1",			menuitem_cb,	8,	"<StockItem>",	GTK_STOCK_HELP},
+	{N_("/Help/_About"),			NULL,			menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
 };
 
 #define SHOW_ACTION_OFFSET		10000
 
 const toolbar_button buttons[] =
 {
-	{"New", "gtk-new", 0, G_CALLBACK (pad_new), _("Open New Pad")},
-	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), _("Open Copy of File")},
-	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), _("Save Pad As File")},
-	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), _("Close and Save Pad")},
-	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), _("Delete Pad")},
-	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), _("Clear Pad Contents")},
-	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), _("Lock Style")},
-	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), _("Edit Preferences")},
-	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), _("Quit")},
-	{"Help", "gtk-help", 0, G_CALLBACK (show_help), _("Show Help")},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), _("Sticky")},
-	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), _("Minimize Pads to System Tray")}
+	{"New", "gtk-new", 0, G_CALLBACK (pad_new), N_("Open New Pad")},
+	{"Open Copy", "gtk-open", 0, G_CALLBACK (pad_open_file), N_("Open Copy of File")},
+	{"Save As", "gtk-save-as", 0, G_CALLBACK (pad_save_as_file), N_("Save Pad As File")},
+	{"Close", "gtk-close", 0, G_CALLBACK (pad_close), N_("Close and Save Pad")},
+	{"Delete", "gtk-delete", 0, G_CALLBACK (pad_confirm_destroy), N_("Delete Pad")},
+	{"Clear", "gtk-clear", 0, G_CALLBACK (pad_clear), N_("Clear Pad Contents")},
+	{"Lock", "xpad-lock", 1, G_CALLBACK (pad_toggle_lock), N_("Lock Style")},
+	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), N_("Edit Preferences")},
+	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), N_("Quit")},
+	{"Help", "gtk-help", 0, G_CALLBACK (show_help), N_("Show Help")},
+	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), N_("Sticky")},
+	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), N_("Minimize Pads to System Tray")}
 };
 
 const char num_buttons = G_N_ELEMENTS (buttons);
@@ -1005,7 +1005,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	GtkWidget *tmp;
 	gint n = 0, i = SHOW_ACTION_OFFSET;
 	GtkItemFactoryEntry entry;
-	const gchar submenu[12] = _("/Windows");
+	const gchar *submenu = _("/Windows");
 	
 	/**
 	 * Remove old items.

@@ -174,7 +174,7 @@ toolbar_add_button (xpad_toolbar *xt, const toolbar_button *tb)
 	button = toolbar_button_new (tb);
 	
 	gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar_get_box (xt->bar)),
-		button, tb->desc, tb->desc);
+		button, _(tb->desc), _(tb->desc));
 }
 
 static void
