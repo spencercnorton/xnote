@@ -548,7 +548,7 @@ xpad_make_needed_files (void)
 	gchar *defaults;
 	gint rv = 0;
 	
-	defaults = g_build_filename (working_dir, DEFAULTS_FILENAME);
+	defaults = g_build_filename (working_dir, DEFAULTS_FILENAME, NULL);
 	
 	if (!g_file_test (defaults, G_FILE_TEST_EXISTS))
 	{
