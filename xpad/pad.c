@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/file.h>
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
+#include <unistd.h>
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -462,17 +463,21 @@ void save_as_file_callback (GtkWidget *button, pad_node *pad)
 	gchar *content;
 	const gchar *filename;
 	GtkFileSelection *selector;
+	int tempfile;
 
 	selector = GTK_FILE_SELECTION (gtk_widget_get_toplevel (button));
 
 	filename = gtk_file_selection_get_filename (selector);
 
 	/* test if we can write to it. */
-	if (open (filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR) == -1)
+	tempfile = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	if (tempfile == -1)
 	{
 		display_dialog_with_text (pad, "Cannot write to file.");
 		return;
 	}
+
+	close(tempfile);
 
 	buf = gtk_text_view_get_buffer (get_text(GTK_WINDOW(pad->window)));
 	gtk_text_buffer_get_start_iter (buf, &s);
