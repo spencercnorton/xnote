@@ -25,6 +25,7 @@ struct xpad_toolbar_def
 	GtkWidget *grip;
 	guint timeout;
 	gint height;
+	gboolean visible;
 };
 
 

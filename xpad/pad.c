@@ -51,6 +51,8 @@ static GtkItemFactoryEntry menu_items[] =
 	{"/Help/_About",			NULL,					menuitem_cb,	9,	"<StockItem>",	GTK_STOCK_DIALOG_INFO}
 };
 
+#define SHOW_ACTION_OFFSET		10000
+
 static GtkAccelGroup *accel_group = NULL;
 
 const toolbar_button *get_toolbar_button_by_func (GCallback func)
@@ -301,7 +303,7 @@ static void pad_remove (pad_node *pad)
 		for (temp = first_pad; temp->next && (temp->next != pad); temp = temp->next)
 		{
 		}
-
+		
 		if (temp->next)
 		{
 			temp->next = pad->next;
@@ -312,15 +314,27 @@ static void pad_remove (pad_node *pad)
 }
 
 static gboolean pad_window_destroyed (GtkWidget *window, pad_node *pad);
+static void pad_renew (pad_node *pad);
 
-static void pad_free (pad_node *pad)
+static void
+pad_free_gtk (pad_node *pad)
 {
 	g_signal_handlers_destroy (pad->window);
 	pad_remove_toolbar (pad);
 	gtk_widget_destroy (GTK_WIDGET (pad->window));
+	g_free (pad->menu);
+	
+	pad->window = NULL;
+}
+
+static void pad_free (pad_node *pad)
+{
+	/* have we already freed gtk stuff? */
+	if (pad->window)
+		pad_free_gtk (pad);
+	
 	g_free (pad->contentname);
 	g_free (pad->infoname);
-	g_free (pad->menu);
 	pad_style_free (&pad->style);
 	g_free (pad);
 }
@@ -386,12 +400,15 @@ gboolean pad_confirm_destroy (pad_node *pad)
 void pad_close (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
-	
+	/*
 	toolbar_hide (pad);
-	
+	*/
 	fio_save_pad (pad);
 	
-	gtk_widget_hide (GTK_WIDGET (pad->window));
+	pad_free_gtk (pad);
+	
+	/*
+	gtk_widget_hide (GTK_WIDGET (pad->window));*/
 	pad->hidden = TRUE;
 	
 	quit_if_no_pads ();
@@ -399,10 +416,16 @@ void pad_close (pad_node *pad)
 
 void pad_show (pad_node *pad)
 {
+	if (pad->hidden)
+	{
+		/* if we are reshowing ourselves from a hide, we have to rebuild the pad */
+		pad_renew (pad);
+	}
+	
 	pad->hidden = FALSE;
 	
 	/* we move it so wm's know where to place it */
-	gtk_window_move (pad->window, pad->x, pad->y);
+/*	gtk_window_move (pad->window, pad->x, pad->y);*/
 	
 	gtk_window_present (pad->window);
 }
@@ -427,7 +450,11 @@ void pad_close_all (void)
 	
 	while (temp)
 	{
-		fio_save_pad (temp);
+		if (temp->window)
+		{
+			fio_save_pad (temp);
+		}
+		
 		pad_remove (temp);
 		pad_free (temp);
 		
@@ -769,7 +796,7 @@ menuitem_cb (gpointer callback_data, guint callback_action, GtkWidget *widget)
 		break;
 	}
 	
-	if (callback_action >= 10000)
+	if (callback_action >= SHOW_ACTION_OFFSET)
 	{
 		pad_show ((pad_node *) callback_data);
 	}
@@ -779,7 +806,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 {
 	pad_node *p = first_pad;
 	GtkWidget *tmp;
-	gint n = 0, i = 10000;
+	gint n = 0, i = SHOW_ACTION_OFFSET;
 	GtkItemFactoryEntry entry;
 	const gchar submenu[12] = "/Windows";
 	
@@ -810,7 +837,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 	 */
 	while (p)
 	{
-		char result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
+		gchar result [12 + TITLE_CHARS + 23];	/* 1 null, 1 num, 2 quotes, and 7 for possible markup */
 		
 		n++;
 		
@@ -819,7 +846,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		if (p->hidden)
 			strcat (result, "<i>");
 		*/
-		strcat (result, gtk_window_get_title (p->window));
+		strcat (result, p->title);
 		/*
 		if (p->hidden)
 			strcat (result, "</i>");
@@ -835,7 +862,7 @@ static void pad_popup (pad_node *pad, GdkEventButton *event)
 		entry.path = result;
 		entry.accelerator = NULL;
 		entry.callback = menuitem_cb;
-		entry.callback_action = 10000 + n - 1;
+		entry.callback_action = SHOW_ACTION_OFFSET + n - 1;
 		entry.item_type = "<Item>";
 		
 		gtk_item_factory_create_item (pad->menu, &entry, p, 1);
@@ -1363,8 +1390,8 @@ void pad_set_title (pad_node *pad)
 {
 	GtkTextBuffer *buf;
 	GtkTextIter s, e;
-	gchar *content, *stripped, *tmp;
-	gint n, offset;
+	gchar *content, *tmp;
+	gint n;
 	gchar result [TITLE_CHARS + 3];	/* 1 null, 2 quotes, and TITLE_CHARS characters */
 	
 	buf = gtk_text_view_get_buffer (get_text (pad->window));
@@ -1372,11 +1399,8 @@ void pad_set_title (pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 	
-	strcpy (result, "\"");
-	
 	tmp = content;
 	n = 0;
-	offset = 1;
 	
 	/**
 	 * Unfortunately, I had some real problems taking the UTF-8 encoded text from
@@ -1394,11 +1418,11 @@ void pad_set_title (pad_node *pad)
 		{
 			if (g_unichar_isgraph (u))
 			{
-				result[n++ + offset] = (char) u;
+				pad->title[n++] = (char) u;
 			}
 			else if (g_unichar_isspace (u) && n > 0)
 			{
-				result[n++ + offset] = ' ';
+				pad->title[n++] = ' ';
 			}
 			else if (u == '\0')
 			{
@@ -1409,11 +1433,9 @@ void pad_set_title (pad_node *pad)
 		tmp = g_utf8_next_char (tmp);
 	}
 	
-	result[n + offset] = '\0';
+	pad->title[n] = '\0';
 	
-	stripped = g_strchomp (result);
-	
-	strcat (result, "\"");
+	sprintf (result, "\"%s\"", pad->title);
 	
 	gtk_window_set_title (pad->window, result);
 }
@@ -1426,11 +1448,8 @@ gboolean text_changed (GtkTextBuffer *buf, pad_node *pad)
 	return TRUE;
 }
 
-/*
-   creates and returns a pad with an *unshown* window -- to 
-   be decorated 
-*/
-static pad_node *start_pad (void)
+static void
+pad_alloc_gtk (pad_node *pad)
 {
 	GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	GtkWidget *textbox = gtk_text_view_new ();
@@ -1439,13 +1458,11 @@ static pad_node *start_pad (void)
 	GtkWidget *scroll = gtk_scrolled_window_new (NULL, NULL);
 	GtkWidget *box = gtk_vbox_new (FALSE, 0);
 	GtkTextBuffer *textbuf;
-	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
-	static gint num = 1;
-
+	
 	/* set textbox's properties */
 	gtk_text_view_set_editable (GTK_TEXT_VIEW (textbox), TRUE);
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textbox), GTK_WRAP_WORD);
-
+	
 	/* set up scrollbar */
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), 
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -1476,39 +1493,16 @@ static pad_node *start_pad (void)
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
 	
-	pad->next = NULL;
-	pad->window = GTK_WINDOW(window);
+	pad->window = GTK_WINDOW (window);
 	pad->eventbox = eventbox;
 	pad->eventbox_outer = eventbox1;
 	pad->scrollbar = scroll;
 	pad->box = box;
 	pad->toolbar = NULL;
-#if DRAWING_ON
-	pad->background = NULL;
-	pad->visible_back = NULL;
-	pad->last_draw_x = pad->last_draw_y = -1;
-#endif
-	pad->num = num++;
-	pad->hidden = FALSE;
-	pad->sticky = FALSE;
-	
-	/* check if this is first pad made */
-	if (first_pad == NULL)
-	{
-		last_pad = pad;
-		first_pad = pad;
-		
-		accel_group = gtk_accel_group_new ();
-	}
-	else
-	{
-		last_pad->next = pad;
-		last_pad = pad;
-	}
 	
 	gtk_window_add_accel_group (pad->window, accel_group);
 	pad->menu = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
-
+	
 	gtk_item_factory_create_items (pad->menu, G_N_ELEMENTS (menu_items), menu_items, pad);
 	g_object_set_data (G_OBJECT (pad->menu), "pad", pad);
 	g_signal_connect_swapped (G_OBJECT (gtk_item_factory_get_widget (pad->menu, "<main>")),
@@ -1534,6 +1528,42 @@ static pad_node *start_pad (void)
 		, "changed", G_CALLBACK (pad_v_scroll_changed), pad);
 	g_signal_connect (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->scrollbar))
 		, "changed", G_CALLBACK (pad_h_scroll_changed), pad);
+}
+
+/*
+   creates and returns a pad with an *unshown* window -- to 
+   be decorated 
+*/
+static pad_node *start_pad (void)
+{
+	pad_node *pad = (pad_node *) g_malloc(sizeof(pad_node));
+	static gint num = 1;
+	
+	pad->next = NULL;
+#if DRAWING_ON
+	pad->background = NULL;
+	pad->visible_back = NULL;
+	pad->last_draw_x = pad->last_draw_y = -1;
+#endif
+	pad->num = num++;
+	pad->hidden = FALSE;
+	pad->sticky = FALSE;
+	
+	/* check if this is first pad made */
+	if (first_pad == NULL)
+	{
+		last_pad = pad;
+		first_pad = pad;
+		
+		accel_group = gtk_accel_group_new ();
+	}
+	else
+	{
+		last_pad->next = pad;
+		last_pad = pad;
+	}
+	
+	pad_alloc_gtk (pad);
 	
 	return pad;
 }
@@ -1565,7 +1595,7 @@ pad_node *pad_new (void)
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
+/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 	
 	return pad;
 }
@@ -1597,7 +1627,31 @@ pad_node *pad_new_with_info (pad_info *info)
 	gtk_widget_show_all (pad->eventbox_outer);
 	gtk_widget_show (pad->box);
 	gtk_widget_show (GTK_WIDGET(pad->window));
-	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window)));
+/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 	
 	return pad;
+}
+
+static void
+pad_renew (pad_node *pad)
+{
+	if (verbosity >= 2) printf ("Refreshing pad.\n");
+	
+	pad_alloc_gtk (pad);
+	
+	gtk_window_set_default_size (pad->window, pad->width, pad->height);
+	gtk_window_move (pad->window, pad->x, pad->y);
+	
+	pad_fill_with_file (pad, pad->contentname);
+	
+	pad_update_style (pad);
+	
+	pad->locked = 0;
+	
+	pad_set_title (pad);
+	
+	gtk_widget_show_all (pad->eventbox_outer);
+	gtk_widget_show (pad->box);
+	gtk_widget_show (GTK_WIDGET(pad->window));
+/*	gtk_widget_grab_focus (GTK_WIDGET(get_text (pad->window))); */
 }

@@ -27,23 +27,47 @@ toolbar_get_box (GtkWidget *toolbar)
 	return gtk_container_get_children (GTK_CONTAINER (toolbar))->data;
 }
 
+static void
+toolbar_set_visible (xpad_toolbar *xt, gboolean v)
+{
+	xt->visible = v;
+}
+
+gboolean
+toolbar_is_visible (xpad_toolbar *xt)
+{
+	return xt->visible;
+}
+
 void
 toolbar_show (pad_node *pad)
 {
-	if (!GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	printf ("considering whether to show\n");
+	if (!toolbar_is_visible (pad->toolbar))
 	{
+		gint oldh = pad->height;
+		
 		gtk_window_resize (pad->window, pad->width, pad->height + pad->toolbar->height);
 		gtk_widget_show_all (pad->toolbar->bar);
+		printf ("going ahead with show - height: %i -> %i\n", oldh, pad->height);
+		
+		toolbar_set_visible (pad->toolbar, TRUE);
 	}
 }
 
 void
 toolbar_hide (pad_node *pad)
 {
-	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	printf ("considering whether to hide\n");
+	if (toolbar_is_visible (pad->toolbar))
 	{
+		gint oldh = pad->height;
+		
 		gtk_widget_hide (pad->toolbar->bar);
 		gtk_window_resize (pad->window, pad->width, pad->height - pad->toolbar->height);
+		printf ("going ahead with hide - height: %i -> %i\n", oldh, pad->height);
+		
+		toolbar_set_visible (pad->toolbar, FALSE);
 	}
 }
 
@@ -52,7 +76,7 @@ toolbar_hide_timeout (gpointer data)
 {
 	pad_node *pad = (pad_node *) data;
 	
-	if (GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	if (toolbar_is_visible (pad->toolbar))
 	{
 		pad->toolbar->timeout = 0;
 		
@@ -254,6 +278,7 @@ xpad_toolbar *toolbar_new (void)
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 	
+	xt->visible = FALSE;
 	xt->bar = hbox;
 	xt->grip = align;
 	xt->timeout = 0;

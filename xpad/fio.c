@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "pad.h"
 #include "main.h"
+#include "toolbar.h"
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -266,7 +267,7 @@ static void fio_save_info_file (pad_node *pad)
 	if (verbosity >= 2) printf ("Saving pad [%s].\n", pad->infoname);
 	
 	height = pad->height;
-	if (pad->toolbar && GTK_WIDGET_VISIBLE (pad->toolbar->bar))
+	if (pad->toolbar && toolbar_is_visible (pad->toolbar))
 		height -= pad->toolbar->height;
 	
     sprintf (info_file, "x %d\ny %d\nwidth %d\nheight %d\nlocked %d\ncontent %s\n"
@@ -290,7 +291,6 @@ static void fio_save_info_file (pad_node *pad)
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 	fio_set_file (pad->contentname, content);
     g_free (content);
-	
 }
 
 /* save contents and locations of a pad */

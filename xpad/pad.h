@@ -48,27 +48,33 @@ struct pad_style_def
 struct pad_node_def
 {
 	pad_node *next;
+	
+	/* saved values */
 	gint x, y, width, height;
 	gchar *infoname;
 	gchar *contentname;
 	gint locked;
+	pad_style style;
+	
+	/* generated values */
 	gint num;
 	gboolean hidden;
 	gboolean sticky;
-	
-	pad_style style;
-	
+	gchar title [TITLE_CHARS + 1];
 	GtkItemFactory *menu;
 	
+	/* main textbox stuff */
 	GtkWindow *window;
 	GtkWidget *eventbox;
 	GtkWidget *eventbox_outer;
 	GtkWidget *scrollbar;
 	GtkWidget *box;	/* holds textbox stuff and toolbar */
 	
+	/* toolbar stuff */
 	xpad_toolbar *toolbar;
 	
 #if DRAWING_ON
+	/* background image stuff */
 	GdkPixmap *background;
 	GdkPixmap *visible_back;
 	gint last_draw_x, last_draw_y;
