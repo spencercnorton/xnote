@@ -1,3 +1,11 @@
+Version 2.4
+* Create the configuration directory if it doesn't exist
+
+
+Version 2.3
+* Fixed a compile bug with binreloc and threading
+
+
 Version 2.2
 * Bumped GTK+ dependency to 2.6
 * New About dialog (using GtkAboutDialog)

@@ -265,6 +265,28 @@ config_dir_exists (void)
 	return exists;
 }
 
+static void
+make_path (const gchar *path)
+{
+	GSList *dirs = NULL, *i;
+	gchar *dirname;
+	
+	dirname = g_strdup (path);
+	while (!g_file_test (dirname, G_FILE_TEST_EXISTS))
+	{
+		dirs = g_slist_prepend (dirs, dirname);
+		dirname = g_path_get_dirname (dirname);
+	}
+	g_free (dirname);
+	
+	for (i = dirs; i; i = i->next)
+	{
+		g_mkdir ((gchar *) i->data, 0700);
+		g_free (i->data);
+	}
+	g_slist_free (dirs);
+}
+
 /**
  * Creates the directory if it does not exist.
  * Returns newly allocated dir name, NULL if an error occurred.
@@ -273,6 +295,8 @@ static gchar *
 make_config_dir (void)
 {
 	gchar *dir = NULL;
+	
+	make_path (g_get_user_config_dir ());
 	
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	
