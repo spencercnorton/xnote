@@ -202,7 +202,7 @@ print_help (void)
 	fprintf (output,
 			"  --nonew               prevents xpad from making a new pad\n"
 	        "  -q, --quit            quits all open xpad sessions\n"
-			"  -l, --list            lists the titles of all open pads\n"
+			"  -l, --list            lists the titles of all pads\n"
 			"  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
 	        "  --showall             brings all pads to the foreground\n");
 	exit (0);

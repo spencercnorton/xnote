@@ -1,5 +1,5 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.TH XPAD 1 "August 20, 2002"
+.TH XPAD 1 "November 23, 2002"
 .SH NAME
 xpad \- A "post-it" note system for GTK+ 2.0
 .PP
@@ -25,12 +25,18 @@ Change amount of output.  0 is none; 1 is moderate; 2 is debug.  Default is 0.
 Open a new pad.
 .TP
 .B \-\-nonew
-Prevents xpad from making new pads if none exist to load.
+Prevents xpad from making new pads.
 .TP
 .B \-q, \-\-quit
 Quits all xpad sessions.
 .TP
-.B \-s, \-\-showall
+.B \-l, \-\-list
+Lists the titles of all pads.
+.TP
+.B \-s N, \-\-show=N
+Brings the Nth pad (1-based) to the foreground.
+.TP
+.B \-\-showall
 Brings all pads to the foreground.
 .PP
 .SH AUTHOR
