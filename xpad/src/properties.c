@@ -86,8 +86,8 @@ static void set_values (GObject *window)
 	gpointer *p;
 	pad_style style;
 	
-	p = g_object_get_data (window, "use_global");
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (p)))
+	p = g_object_get_data (window, "use_custom");
+	if (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (p)))
 	{
 		style = xpad_settings_get_style ();
 	}
@@ -105,8 +105,7 @@ static void set_values (GObject *window)
 	gtk_widget_set_sensitive (GTK_WIDGET (p), style.use_text ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "use_back");
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), TRUE);
-	/*gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.use_back ? TRUE : FALSE);*/
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (p), style.use_back ? TRUE : FALSE);
 	
 	p = g_object_get_data (window, "back");
 	gtk_color_button_set_color (GTK_COLOR_BUTTON (p), &style.back);
@@ -124,7 +123,7 @@ static void set_values (GObject *window)
 
 static gboolean change_use_global (GtkToggleButton *togglebutton, GtkWidget *widget)
 {
-	gboolean use_global = gtk_toggle_button_get_active (togglebutton);
+	gboolean use_global = !gtk_toggle_button_get_active (togglebutton);
 	pad_node *pad;
 	
 	pad = (pad_node *) g_object_get_data (G_OBJECT (gtk_widget_get_toplevel (GTK_WIDGET (togglebutton))), "pad");
@@ -153,7 +152,7 @@ static GtkWidget *properties_create (pad_node *pad)
 	GtkWidget *buttonbox = gtk_hbutton_box_new ();
 	GtkWidget *button_close = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 	GtkWidget *vbox_global = gtk_vbox_new (FALSE, 12);
-	GtkWidget *checkbutton_locked = gtk_check_button_new_with_mnemonic (_("Use _global settings"));
+	GtkWidget *checkbutton_locked = gtk_check_button_new_with_mnemonic (_("Use custom _appearance"));
 	GtkWidget *vbox_appearance = gtk_vbox_new (FALSE, 6);
 	GtkWidget *hbox_appearance = gtk_hbox_new (FALSE, 0);
 	gchar *title = g_strdup_printf (_("%s Properties"), pad->title);
@@ -172,7 +171,7 @@ static GtkWidget *properties_create (pad_node *pad)
 	GtkWidget *hbox_text = gtk_hbox_new (FALSE, 12);
 	GtkWidget *hbox_back = gtk_hbox_new (FALSE, 12);
 	GtkWidget *hbox_face = gtk_hbox_new (FALSE, 12);
-		
+	
 	gtk_window_set_title (GTK_WINDOW (window), title);
 	g_free (title);
 	gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_DIALOG);
@@ -192,7 +191,7 @@ static GtkWidget *properties_create (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (vbox_global), hbox_appearance, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox_global), buttonbox, FALSE, FALSE, 0);
 	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_locked), !pad->locked);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton_locked), pad->locked);
 	gtk_widget_set_sensitive (hbox_appearance, pad->locked);
 	
 	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (color_button_text), FALSE);
@@ -233,7 +232,7 @@ static GtkWidget *properties_create (pad_node *pad)
 	gtk_box_pack_start (GTK_BOX (vbox_appearance), hbox_face, FALSE, FALSE, 0);
 	
 	g_object_set_data (G_OBJECT (window), "pad", pad);
-	g_object_set_data (G_OBJECT (window), "use_global", checkbutton_locked);
+	g_object_set_data (G_OBJECT (window), "use_custom", checkbutton_locked);
 	
 	set_values (G_OBJECT (window));
 	

@@ -1,4 +1,6 @@
 2003-11-10  Michael Terry  <mikix@users.sourceforge.net>
+	* src/properties.c: Change "use global" to "use custom"
+
 	* configure.ac: Bump version to 1.14, define GETTEXT_PACKAGE,
 	  modify comments, and require GTK+ 2.3 or greater.
 	* Makefile.am: Take out *_DISABLE_DEPRECATED flags for now, until
