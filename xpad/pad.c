@@ -74,10 +74,7 @@ static void pad_set_editable (pad_node *pad, gboolean editable)
 	gtk_text_view_set_editable (get_text (pad->window), editable);
 	gtk_text_view_set_cursor_visible (get_text (pad->window), editable);
 	
-	if (editable)
-		cursor = gdk_cursor_new (GDK_XTERM);
-	else
-		cursor = gdk_cursor_new (GDK_LEFT_PTR);
+	cursor = gdk_cursor_new(editable ? GDK_XTERM : GDK_LEFT_PTR);
 	
 	gdk_window_set_cursor (gtk_text_view_get_window (get_text (
 		pad->window), GTK_TEXT_WINDOW_TEXT), cursor);
@@ -111,7 +108,7 @@ static gboolean pad_is_empty (pad_node *pad)
 	gtk_text_buffer_get_end_iter (buf, &e);
 	content = gtk_text_buffer_get_text (buf, &s, &e, FALSE);
 
-	rv = strcmp (content, "") == 0;
+	rv = !*content;
 	
 	g_free (content);
 	
@@ -239,17 +236,15 @@ static void pad_remove (pad_node *pad)
 	else
 	{
 		pad_node *temp;
-		for (temp = first_pad; temp->next; temp = temp->next)
+		for (temp = first_pad; temp->next && (temp->next != pad); temp = temp->next)
 		{
-			if (temp->next == pad)
-			{
-				temp->next = pad->next;
+		}
 
-				if (pad == last_pad)
-					last_pad = temp;
-
-				break;
-			}
+		if (temp->next)
+		{
+			temp->next = pad->next;
+			if (pad == last_pad)
+				last_pad = temp;
 		}
 	}
 }
@@ -283,10 +278,10 @@ void pad_destroy (pad_node *pad)
 /* returns true if pad destroyed */
 gboolean pad_confirm_destroy (pad_node *pad)
 {
+	gboolean do_destroy;
 	if (!pad_is_empty (pad) && current_settings.confirm_destroy)
 	{
 		GtkWidget *dialog, *checkbox, *align;
-		gboolean said_yes;
 
 		/* Create the widgets */
 		dialog = gtk_message_dialog_new (pad->window,
@@ -303,7 +298,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 		gtk_widget_show_all (align);
 
 		gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-		said_yes = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
+		do_destroy = gtk_dialog_run (GTK_DIALOG(dialog)) == GTK_RESPONSE_OK;
 
 		/* If it has changed... */
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbox)))
@@ -313,20 +308,16 @@ gboolean pad_confirm_destroy (pad_node *pad)
 		}
 		
 		gtk_widget_destroy (dialog);
-		
-		if (said_yes)
-		{
-			pad_destroy (pad);
-			return TRUE;
-		}
-		
-		return FALSE;
 	}
 	else
 	{
-		pad_destroy (pad);
-		return TRUE;
+		do_destroy = TRUE;
 	}
+
+	if (do_destroy)
+		pad_destroy (pad);
+
+	return do_destroy;
 }
 
 void pad_close (pad_node *pad)
@@ -442,13 +433,8 @@ static void open_file_callback (GtkWidget *button, pad_node *pad)
 		}
 	}
 	
-	if (!pad_fill_with_file(pad, filename))
-	{
-	  	if (newPad)
-		{
-			pad_destroy (pad);	/* no need to open a new pad, if no content */
-		}
-	}
+	if (!pad_fill_with_file(pad, filename) && newPad)
+		pad_destroy (pad);	/* no need to open a new pad, if no content */
 }
 
 void pad_open_file (pad_node *pad)
@@ -554,11 +540,11 @@ leave_handler (GtkWidget *widget, GdkEventCrossing *event, pad_node *pad)
 	/**
 	 * Here we remove the toolbar.
 	 */
-	if (event->detail != GDK_NOTIFY_INFERIOR &&
-		event->mode == GDK_CROSSING_NORMAL)
+	if ((event->detail != GDK_NOTIFY_INFERIOR) &&
+	    (event->mode == GDK_CROSSING_NORMAL) &&
+	    !pad->toolbar->timeout)
 	{
-		if (!pad->toolbar->timeout)
-			toolbar_start_timeout (pad);
+	    toolbar_start_timeout (pad);
 	}
 	
 	return FALSE;
@@ -594,9 +580,9 @@ disable_popup_handler (pad_node *pad)
 	rect.width = 1;
 	rect.height = 1;
 	
-	if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL))
+	if (!gtk_widget_intersect (GTK_WIDGET (pad->window), &rect, NULL) &&
+	    !pad->toolbar->timeout)
 	{
-		if (!pad->toolbar->timeout)
 			toolbar_start_timeout (pad);
 	}
 }
