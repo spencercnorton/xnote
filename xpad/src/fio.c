@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -270,8 +271,6 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 			value_string = g_strdup_printf ("%i", va_arg (ap, gboolean));
 			break;
 		case 'h':
-			value_string = g_strdup_printf ("%" G_GUINT16_FORMAT, va_arg (ap, guint16));
-			break;
 		case 'i':
 			value_string = g_strdup_printf ("%i", va_arg (ap, gint));
 			break;
