@@ -1,7 +1,10 @@
+automake
+freedesktop.org stuff (egg tray)
+x session protocol
 arbitrary drawing
 transparency
 applet
-better theme support
+better theme support  (CHECK?)
 undo
 
 Let us know at xpad-devel@lists.sourceforge.net

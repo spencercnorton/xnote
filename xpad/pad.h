@@ -63,6 +63,11 @@ struct pad_node_def
 	gint num;
 	gboolean hidden;
 	gchar title [TITLE_CHARS + 4];	/* make room for ellipses */
+	
+	/* this was added to differentiate between a pad that has been explicitly closed,
+	 * and a pad that has been merely hidden to the system tray */
+	gboolean closed;
+
 	GtkItemFactory *menu;
 	
 	/* main textbox stuff */
@@ -117,9 +122,12 @@ void pad_save_as_file (pad_node *pad);
 void pad_close_all (void);
 gboolean pad_confirm_destroy (pad_node *pad);
 void pad_clear (pad_node *pad);
+void pad_hide (pad_node *pad);
 void pad_toggle_lock (pad_node *pad);
 void pad_style_copy (pad_style *dest, pad_style *source);
 void pad_style_free (pad_style *dest);
+void pads_hide_all (void);
+void pads_unhide_all (void);
 void pad_background_clear (pad_node *pad);
 void pad_toggle_sticky (pad_node *pad);
 void pads_show_all (void);

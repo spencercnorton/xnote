@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pref.h"
 #include "fio.h"
 #include "help.h"
+#include "tray.h"
 
 pad_node *first_pad = NULL;
 pad_node *last_pad = NULL;
@@ -73,7 +74,8 @@ const toolbar_button buttons[] =
 	{"Preferences", "gtk-preferences", 0, G_CALLBACK (preferences_open), "Edit Preferences"},
 	{"Quit", "gtk-quit", 0, G_CALLBACK (gtk_main_quit), "Quit"},
 	{"Help", "gtk-help", 0, G_CALLBACK (show_help), "Show Help"},
-	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"}
+	{"Sticky", "xpad-sticky", 1, G_CALLBACK (pad_toggle_sticky), "Sticky"},
+	{"Minimize to Tray", "gtk-goto-bottom", 1, G_CALLBACK (tray_toggle), "Minimize Pads to System Tray"}
 };
 
 const char num_buttons = G_N_ELEMENTS (buttons);
@@ -491,7 +493,7 @@ gboolean pad_confirm_destroy (pad_node *pad)
 	return do_destroy;
 }
 
-void pad_close (pad_node *pad)
+void pad_hide (pad_node *pad)
 {
 	if (verbosity >= 1) printf ("Closing pad [%s].\n", pad->infoname);
 	
@@ -502,6 +504,12 @@ void pad_close (pad_node *pad)
 	pad_free_gtk (pad);
 	
 	pad->hidden = TRUE;
+}
+
+void pad_close (pad_node *pad)
+{
+	pad_hide (pad);
+	pad->closed = TRUE;
 	
 	quit_if_no_pads ();
 }
@@ -515,6 +523,7 @@ void pad_show (pad_node *pad)
 	}
 	
 	pad->hidden = FALSE;
+	pad->closed = FALSE;
 	
 	gtk_window_present (pad->window);
 }
@@ -530,6 +539,32 @@ void pad_show_by_num (gint n)
 		pad_show (temp);
 	
 	/* else, silently ignore */
+}
+
+void pads_hide_all (void)
+{
+	pad_node *temp = first_pad;
+	
+	while (temp)
+	{
+		if (temp->window)
+			pad_hide (temp);
+		
+		temp = temp->next;
+	}
+}
+
+void pads_unhide_all (void)
+{
+	pad_node *temp = first_pad;
+	
+	while (temp)
+	{
+		if (!temp->closed)
+			pad_show (temp);
+		
+		temp = temp->next;
+	}
 }
 
 void pads_show_all (void)
@@ -1748,6 +1783,7 @@ pad_node *pad_new (void)
 	
 	gtk_window_set_position (pad->window, GTK_WIN_POS_MOUSE);
 	pad->locked = 0;
+	pad->closed = FALSE;
 	pad->sticky = 0;
 	pad->width = current_settings.style.padding + current_settings.style.border_width + current_settings.width;
 	pad->height = current_settings.style.padding + current_settings.style.border_width + current_settings.height;

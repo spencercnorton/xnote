@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "pad.h"
 #include "help.h"
 #include "fio.h"
+#include "tray.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -106,6 +107,7 @@ static gint at_gtk_exit (gpointer data)
 {
 	if (verbosity >= 1) printf ("xpad is shutting down.\n");
 	pref_close ();
+	tray_close ();
 	cleanup ();
 	
 	if (master_name)
@@ -939,6 +941,8 @@ static int xpad_init (gpointer data)
 	
 	/* save contents every "sync_time" seconds */
 	reset_sync ();
+	
+	tray_open ();
 	
 	if (verbosity >= 2)
 		printf ("Sync time is set to %i.\nVerbosity is set to %i.\nDecorations is set to %i\n",

@@ -4,7 +4,10 @@ OBJECTS=main.o \
 	pref.o \
 	pad.o \
 	help.o \
-	toolbar.o
+	toolbar.o \
+	tray.o \
+	eggtrayicon.o
+
 CFLAGS=-ansi -pedantic -Wall -O2 `pkg-config --cflags gtk+-2.0`\
  -fexpensive-optimizations -fomit-frame-pointer -funroll-loops\
  -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED\
