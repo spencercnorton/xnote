@@ -1,0 +1,30 @@
+<ui>
+  <popup name='PopupItem'>
+    <menu name='PadItem' action='PadMenu'>
+      <menuitem name='NewItem' action='NewAction'/>
+      <separator name='sep1'/>
+      <menuitem name='StickyItem' action='StickyAction' />
+      <menuitem name='PropertiesItem' action='PropertiesAction' />
+      <separator name='sep2'/>
+      <menuitem name='CloseItem' action='CloseAction' />
+      <menuitem name='DeleteItem' action='DeleteAction' />
+    </menu>
+    <menu name='EditItem' action='EditMenu'>
+      <menuitem name='CutItem' action='CutAction'/>
+      <menuitem name='CopyItem' action='CopyAction'/>
+      <menuitem name='PasteItem' action='PasteAction'/>
+      <separator name='sep1'/>
+      <menuitem name='PreferencesItem' action='PreferencesAction'/>
+    </menu>
+    <menu name='NotesItem' action='NotesMenu'>
+      <menuitem name='ShowAllItem' action='ShowAllAction'/>
+      <menuitem name='CloseAllItem' action='CloseAllAction'/>
+      <separator name='sep1'/>
+      <placeholder name='NotesListItem'/>
+    </menu>
+    <menu name='HelpItem' action='HelpMenu'>
+      <menuitem name='ContentsItem' action='ContentsAction'/>
+      <menuitem name='AboutItem' action='AboutAction'/>
+    </menu>
+  </popup>
+</ui>
