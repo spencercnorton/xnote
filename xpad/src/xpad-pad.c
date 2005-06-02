@@ -1009,7 +1009,7 @@ load_info (XpadPad *pad)
 		return;
 	
 	pad->priv->location_valid = TRUE;
-	gtk_window_set_default_size (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+	gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
 	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	
 	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_font);

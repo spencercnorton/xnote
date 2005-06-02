@@ -1,7 +1,9 @@
 Version 2.7
 * Stop pads from popping toolbar while the pad is moving/resizing
+* Make sure pads use correct sizes when autohide is off (Sham Chukoury)
 * New Bulgarian translation (Yavor Doganov)
 * New Kinyarwanda translation (Steve Murphy et al)
+
 
 Version 2.6
 * Stop pad windows from 'jumping' when dragged via the toolbar
