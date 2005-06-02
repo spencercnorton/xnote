@@ -1,3 +1,7 @@
+Version 2.7
+* Stop pads from popping toolbar while the pad is moving/resizing
+
+
 Version 2.6
 * Stop pad windows from 'jumping' when dragged via the toolbar
 * Updated Hungarian translation (Németh Csaba)

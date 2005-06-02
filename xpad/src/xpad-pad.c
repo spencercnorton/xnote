@@ -755,6 +755,15 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 	
 	save_info (pad);
 	
+	/* Sometimes when moving, if the toolbar tries to hide itself,
+	   the window manager will not resize it correctly.  So, we make
+	   sure not to end the timeout while moving. */
+	if (pad->priv->toolbar_timeout)
+	{
+		g_source_remove (pad->priv->toolbar_timeout);
+		pad->priv->toolbar_timeout = g_timeout_add (1000, (GSourceFunc) toolbar_timeout, pad);
+	}
+	
 	return FALSE;
 }
 
