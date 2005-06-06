@@ -1,290 +1,287 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Traditional Chinese Messages for xpad
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Wei-Lun Chao <chaoweilun@pcmail.com.tw>, 2005
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-02 17:29-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2005-03-03 20:57-0500\n"
+"PO-Revision-Date: 2005-06-02 17:22+0800\n"
+"Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
+"Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
-msgstr ""
+msgstr "無法寫入檔案 %s。"
 
 #: src/xpad-app.c:125
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr ""
+msgstr "Xpad 是圖形介面程式。請從您的桌面來執行它。"
 
 #: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
-msgstr ""
+msgstr "Xpad"
 
 #: src/xpad-app.c:435
 #, c-format
 msgid "Could not open directory %s."
-msgstr ""
+msgstr "無法開啟字典 %s。"
 
 #: src/xpad-app.c:438
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
-msgstr ""
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgstr "需要此目錄以儲存偏好設定與便條資訊。Xpad 現在將會關閉。"
 
 #: src/xpad-app.c:742
 msgid "Show version number and quit"
-msgstr ""
+msgstr "顯示版本號碼並離開"
 
 #: src/xpad-app.c:743
 msgid "Hide existing pads on startup"
-msgstr ""
+msgstr "啟動時隱藏既有便條"
 
 #: src/xpad-app.c:744
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr ""
+msgstr "如果不存在已有的便條，啟動時就不要建立新的便條"
 
 #: src/xpad-app.c:750
 msgid "Create a new pad on startup even if pads already exist"
-msgstr ""
+msgstr "即使已經存在便條，啟動時也要建立新便條"
 
 #: src/xpad-app.c:751
 msgid "Close all pads"
-msgstr ""
+msgstr "關閉所有便條"
 
 #: src/xpad-app.c:783
 #, c-format
 msgid "Xpad %s"
-msgstr ""
-
-#: src/xpad-pad.c:556
-msgid "Delete this pad?"
-msgstr ""
+msgstr "Xpad %s"
 
 #: src/xpad-pad.c:557
-msgid "All text of this pad will be irrevocably lost."
-msgstr ""
+msgid "Delete this pad?"
+msgstr "刪除該便條"
 
-#: src/xpad-pad.c:588
+#: src/xpad-pad.c:558
+msgid "All text of this pad will be irrevocably lost."
+msgstr "該便條所有文字將會永久消失。"
+
+#: src/xpad-pad.c:589
 #, c-format
 msgid "'%s' Properties"
-msgstr ""
+msgstr "'%s' 的屬性"
 
-#: src/xpad-pad.c:1117
+#: src/xpad-pad.c:1109
 msgid "Sticky notes"
-msgstr ""
+msgstr "自粘性便條"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1136
+#: src/xpad-pad.c:1128
 msgid "translator-credits"
-msgstr ""
+msgstr "趙惟倫 <chaoweilun@pcmail.com.tw>"
 
-#: src/xpad-pad.c:1357
+#: src/xpad-pad.c:1349
 msgid "_Pad"
-msgstr ""
+msgstr "便條(_P)"
 
-#: src/xpad-pad.c:1366
+#: src/xpad-pad.c:1358
 msgid "Show on _All Workspaces"
-msgstr ""
+msgstr "顯示於所有工作區中(_A)"
 
-#: src/xpad-pad.c:1373
+#: src/xpad-pad.c:1365
 msgid "_Edit"
-msgstr ""
+msgstr "編輯(_E)"
+
+#: src/xpad-pad.c:1378
+msgid "_View"
+msgstr "顯示(_V)"
+
+#: src/xpad-pad.c:1385
+msgid "_Toolbar"
+msgstr "工具列(_T)"
 
 #: src/xpad-pad.c:1386
-msgid "_View"
-msgstr ""
-
-#: src/xpad-pad.c:1393
-msgid "_Toolbar"
-msgstr ""
-
-#: src/xpad-pad.c:1394
 msgid "_Autohide Toolbar"
-msgstr ""
+msgstr "自動隱藏工具列(_A)"
 
-#: src/xpad-pad.c:1396
+#: src/xpad-pad.c:1388
 msgid "_Scrollbar"
-msgstr ""
+msgstr "捲動列(_S)"
 
-#: src/xpad-pad.c:1397
+#: src/xpad-pad.c:1389
 msgid "_Window Decorations"
-msgstr ""
+msgstr "視窗裝飾(_W)"
 
-#: src/xpad-pad.c:1400
+#: src/xpad-pad.c:1392
 msgid "_Notes"
-msgstr ""
+msgstr "備忘(_N)"
 
-#: src/xpad-pad.c:1408 src/xpad-tray.c:145
+#: src/xpad-pad.c:1400 src/xpad-tray.c:145
 msgid "_Show All"
-msgstr ""
+msgstr "全部顯示(_S)"
 
-#: src/xpad-pad.c:1409 src/xpad-tray.c:152
+#: src/xpad-pad.c:1401 src/xpad-tray.c:152
 msgid "_Close All"
-msgstr ""
+msgstr "全部關閉(_C)"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1405
 msgid "_Help"
-msgstr ""
+msgstr "求助(_H)"
 
-#: src/xpad-pad.c:1420
+#: src/xpad-pad.c:1412
 msgid "_Contents"
-msgstr ""
+msgstr "內容(_C)"
 
-#: src/xpad-pad.c:1421
+#: src/xpad-pad.c:1413
 msgid "_About"
-msgstr ""
+msgstr "關於(_A)"
 
 #: src/xpad-pad-properties.c:132 src/xpad-preferences.c:122
 msgid "Appearance"
-msgstr ""
+msgstr "外觀"
 
 #: src/xpad-pad-properties.c:160
 msgid "Use font from xpad preferences"
-msgstr ""
+msgstr "使用 xpad 偏好設定中的字型"
 
 #: src/xpad-pad-properties.c:161 src/xpad-preferences.c:150
 msgid "Use this font:"
-msgstr ""
+msgstr "使用此字型:"
 
 #: src/xpad-pad-properties.c:162
 msgid "Use colors from xpad preferences"
-msgstr ""
+msgstr "使用 xpad 偏好設定中的顏色"
 
 #: src/xpad-pad-properties.c:163 src/xpad-preferences.c:152
 msgid "Use these colors:"
-msgstr ""
+msgstr "使用這些色彩:"
 
 #: src/xpad-pad-properties.c:171 src/xpad-preferences.c:160
 msgid "Background:"
-msgstr ""
+msgstr "背景:"
 
 #: src/xpad-pad-properties.c:179 src/xpad-preferences.c:168
 msgid "Foreground:"
-msgstr ""
+msgstr "前景:"
 
 #: src/xpad-pad-properties.c:199 src/xpad-preferences.c:192
 msgid "Set Foreground Color"
-msgstr ""
+msgstr "設定前景顏色"
 
 #: src/xpad-pad-properties.c:200 src/xpad-preferences.c:193
 msgid "Set Background Color"
-msgstr ""
+msgstr "設定背景顏色"
 
 #: src/xpad-pad-properties.c:201 src/xpad-preferences.c:194
 msgid "Set Font"
-msgstr ""
+msgstr "設置字型"
 
 #: src/xpad-preferences.c:149
 msgid "Use font from theme"
-msgstr ""
+msgstr "使用佈景主題的字型"
 
 #: src/xpad-preferences.c:151
 msgid "Use colors from theme"
-msgstr ""
+msgstr "使用佈景主題的色彩"
 
 #: src/xpad-preferences.c:179
 msgid "_Edit lock"
-msgstr ""
+msgstr "編輯上鎖(_E)"
 
 #: src/xpad-preferences.c:180
 msgid "_Pads start on all workspaces"
-msgstr ""
+msgstr "在所有工作區中開啟便條(_P)"
 
 #: src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
-msgstr ""
+msgstr "確認刪除便條(_C)"
 
 #: src/xpad-preferences.c:187
 msgid "Xpad Preferences"
-msgstr ""
+msgstr "Xpad 偏好設定"
 
 #: src/xpad-preferences.c:252
 msgid "Options"
-msgstr ""
+msgstr "選項"
 
 #: src/xpad-toolbar.c:76
 msgid "Clear Pad Contents"
-msgstr ""
+msgstr "清除便條內容"
 
 #: src/xpad-toolbar.c:76
 msgid "Add C_lear to Toolbar"
-msgstr ""
+msgstr "加入清除到工具列(_L)"
 
 #: src/xpad-toolbar.c:77
 msgid "Close and Save Pad"
-msgstr ""
+msgstr "關閉並儲存便條"
 
 #: src/xpad-toolbar.c:77
 msgid "Add _Close to Toolbar"
-msgstr ""
+msgstr "加入關閉到工具列(_C)"
 
 #: src/xpad-toolbar.c:78
 msgid "Delete Pad"
-msgstr ""
+msgstr "刪除便條"
 
 #: src/xpad-toolbar.c:78
 msgid "Add _Delete to Toolbar"
-msgstr ""
+msgstr "加入刪除到工具列(_D)"
 
 #: src/xpad-toolbar.c:79
 msgid "Open New Pad"
-msgstr ""
+msgstr "開啟新的便條"
 
 #: src/xpad-toolbar.c:79
 msgid "Add _New to Toolbar"
-msgstr ""
+msgstr "加入新增到工具列(_N)"
 
 #: src/xpad-toolbar.c:80
 msgid "Edit Preferences"
-msgstr ""
+msgstr "編輯偏好設定"
 
 #: src/xpad-toolbar.c:80
 msgid "Add Pr_eferences to Toolbar"
-msgstr ""
+msgstr "加入偏好設定到工具列(_E)"
 
 #: src/xpad-toolbar.c:81
 msgid "Edit Pad Properties"
-msgstr ""
+msgstr "編輯便條內容"
 
 #: src/xpad-toolbar.c:81
 msgid "Add Proper_ties to Toolbar"
-msgstr ""
+msgstr "加入內容到工具列(_T)"
 
 #: src/xpad-toolbar.c:82
 msgid "Close All Pads"
-msgstr ""
+msgstr "關閉全部便條"
 
 #: src/xpad-toolbar.c:82
 msgid "Add _Quit to Toolbar"
-msgstr ""
+msgstr "加入離開到工具列(_Q)"
 
 #: src/xpad-toolbar.c:83
 msgid "Add a Se_parator to Toolbar"
-msgstr ""
+msgstr "加入分隔線到工具列(_P)"
 
 #: src/xpad-toolbar.c:544
 msgid "_Remove From Toolbar"
-msgstr ""
+msgstr "從工具列中移除(_R)"
 
 #: src/xpad-toolbar.c:554
 msgid "_Move"
-msgstr ""
+msgstr "移動(_M)"
 
 #: xpad.desktop.in.h:1
 msgid "Jot down notes for later"
-msgstr ""
+msgstr "大略記下備註以供之後使用"
 
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr ""
+msgstr "自粘性便條"
