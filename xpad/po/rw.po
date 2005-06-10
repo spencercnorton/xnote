@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-03 20:57-0500\n"
+"POT-Creation-Date: 2005-06-02 17:29-0400\n"
 "PO-Revision-Date: 2005-04-03 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -45,7 +45,9 @@ msgstr "OYA Gufungura bushyinguro"
 
 #: src/xpad-app.c:438
 #, fuzzy
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
 msgstr "bushyinguro ni Kuri Na Ibisobanuro Gufunga NONEAHA"
 
 #: src/xpad-app.c:742
@@ -78,39 +80,39 @@ msgstr "Funga Byose"
 msgid "Xpad %s"
 msgstr ""
 
-#: src/xpad-pad.c:557
+#: src/xpad-pad.c:556
 #, fuzzy
 msgid "Delete this pad?"
 msgstr "iyi"
 
-#: src/xpad-pad.c:558
+#: src/xpad-pad.c:557
 #, fuzzy
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Umwandiko Bya iyi"
 
 # LOCALIZATION NOTE (ObjectProperties):Don't translate "%obj%" it will be replaced with one of above object nouns
-#: src/xpad-pad.c:589
+#: src/xpad-pad.c:588
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "'%s'indangabintu ya %s%obj %s%"
 
-#: src/xpad-pad.c:1109
+#: src/xpad-pad.c:1117
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Ibisobanuro"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1128
+#: src/xpad-pad.c:1136
 #, fuzzy
 msgid "translator-credits"
 msgstr "Umusemuzi"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1357
 msgid "_Pad"
 msgstr ""
 
-#: src/xpad-pad.c:1358
+#: src/xpad-pad.c:1366
 #, fuzzy
 msgid "Show on _All Workspaces"
 msgstr "ku"
@@ -125,7 +127,7 @@ msgstr "ku"
 # basctl/source\basicide\moduldlg.src:RID_TP_MODULS.RID_PB_EDIT.text
 # #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
 # basctl/source\basicide\moduldlg.src:RID_TP_LIBS.RID_PB_EDIT.text
-#: src/xpad-pad.c:1365
+#: src/xpad-pad.c:1373
 #, fuzzy
 msgid "_Edit"
 msgstr "Guhindura"
@@ -134,26 +136,26 @@ msgstr "Guhindura"
 # basctl/source\basicide\basidesh.src:RID_BASICMENU.MN_VIEW.text
 # #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
 # basctl/source\basicide\basidesh.src:RID_BASICPLUGINMENU.MN_PLVIEW.text
-#: src/xpad-pad.c:1378
+#: src/xpad-pad.c:1386
 #, fuzzy
 msgid "_View"
 msgstr "Kureba"
 
-#: src/xpad-pad.c:1385
+#: src/xpad-pad.c:1393
 #, fuzzy
 msgid "_Toolbar"
 msgstr "Umwanyabikoresho"
 
-#: src/xpad-pad.c:1386
+#: src/xpad-pad.c:1394
 msgid "_Autohide Toolbar"
 msgstr ""
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1396
 #, fuzzy
 msgid "_Scrollbar"
 msgstr "Agafashsagenda"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1397
 msgid "_Window Decorations"
 msgstr ""
 
@@ -165,25 +167,25 @@ msgstr ""
 # officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Content.Display.Note.text
 # #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
 # officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Agenda.Elements.Notes.text
-#: src/xpad-pad.c:1392
+#: src/xpad-pad.c:1400
 #, fuzzy
 msgid "_Notes"
 msgstr "Ibisobanuro"
 
 # starmath/sdi\smslots.src:SID_ADJUST.text
-#: src/xpad-pad.c:1400 src/xpad-tray.c:145
+#: src/xpad-pad.c:1408 src/xpad-tray.c:145
 #, fuzzy
 msgid "_Show All"
 msgstr "Kwerekana Byose"
 
 # 955
-#: src/xpad-pad.c:1401 src/xpad-tray.c:152
+#: src/xpad-pad.c:1409 src/xpad-tray.c:152
 #, fuzzy
 msgid "_Close All"
 msgstr "funga byose"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1405
+#: src/xpad-pad.c:1413
 #, fuzzy
 msgid "_Help"
 msgstr "Ifashayobora"
@@ -196,12 +198,12 @@ msgstr "Ifashayobora"
 # sc/source\ui\navipi\navipi.src:RID_SCDLG_NAVIGATOR.TBX_CMD.IID_ZOOMOUT.text
 # #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
 # sc/source\ui\navipi\navipi.src:SCSTR_CONTENT_ROOT.text
-#: src/xpad-pad.c:1412
+#: src/xpad-pad.c:1420
 #, fuzzy
 msgid "_Contents"
 msgstr "Ibigize"
 
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1421
 #, fuzzy
 msgid "_About"
 msgstr "Bigyanye"

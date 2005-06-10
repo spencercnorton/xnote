@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-30 14:20-0500\n"
+"POT-Creation-Date: 2005-06-02 17:29-0400\n"
 "PO-Revision-Date: 2004-09-13 15:44+0200\n"
 "Last-Translator: Ramón Rey Vicente <ramon.rey@hispalinux.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -28,12 +28,12 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:410
+#: src/xpad-app.c:435
 #, c-format
 msgid "Could not open directory %s."
 msgstr "No se puede abrir el directorio %s."
 
-#: src/xpad-app.c:413
+#: src/xpad-app.c:438
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -42,115 +42,115 @@ msgstr ""
 "sobre\n"
 "las notas. Xpad se cerrará ahora."
 
-#: src/xpad-app.c:717
+#: src/xpad-app.c:742
 #, fuzzy
 msgid "Show version number and quit"
 msgstr "Muestra la versión de xpad y termina"
 
-#: src/xpad-app.c:718
+#: src/xpad-app.c:743
 msgid "Hide existing pads on startup"
 msgstr ""
 
-#: src/xpad-app.c:719
+#: src/xpad-app.c:744
 #, fuzzy
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Impide que xpad cree una nota nueva al inicio si no existen notas previas"
 
-#: src/xpad-app.c:725
+#: src/xpad-app.c:750
 #, fuzzy
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
 
-#: src/xpad-app.c:726
+#: src/xpad-app.c:751
 #, fuzzy
 msgid "Close all pads"
 msgstr "Cerrar todas las notas"
 
-#: src/xpad-app.c:758
+#: src/xpad-app.c:783
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s\n"
 
-#: src/xpad-pad.c:530
+#: src/xpad-pad.c:556
 msgid "Delete this pad?"
 msgstr "¿Borrar esta nota?"
 
-#: src/xpad-pad.c:531
+#: src/xpad-pad.c:557
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Todo el texto de esta nota se perderá irrevocablemente."
 
-#: src/xpad-pad.c:562
+#: src/xpad-pad.c:588
 #, c-format
 msgid "'%s' Properties"
 msgstr "%s Propiedades"
 
-#: src/xpad-pad.c:1066
+#: src/xpad-pad.c:1117
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Notas pegajosas"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1085
+#: src/xpad-pad.c:1136
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1306
+#: src/xpad-pad.c:1357
 msgid "_Pad"
 msgstr "_Nota"
 
-#: src/xpad-pad.c:1315
+#: src/xpad-pad.c:1366
 msgid "Show on _All Workspaces"
 msgstr ""
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1373
 msgid "_Edit"
 msgstr "_Editar"
 
-#: src/xpad-pad.c:1335
+#: src/xpad-pad.c:1386
 msgid "_View"
 msgstr "_Ver"
 
-#: src/xpad-pad.c:1342
+#: src/xpad-pad.c:1393
 msgid "_Toolbar"
 msgstr "Barra de _herramientas"
 
-#: src/xpad-pad.c:1343
+#: src/xpad-pad.c:1394
 msgid "_Autohide Toolbar"
 msgstr "_Autoesconder barra de herramientas"
 
-#: src/xpad-pad.c:1345
+#: src/xpad-pad.c:1396
 msgid "_Scrollbar"
 msgstr "Barras de _desplazamiento"
 
-#: src/xpad-pad.c:1346
+#: src/xpad-pad.c:1397
 msgid "_Window Decorations"
 msgstr "_Decoraciones de la ventana"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1400
 msgid "_Notes"
 msgstr "_Notas"
 
-#: src/xpad-pad.c:1357 src/xpad-tray.c:146
+#: src/xpad-pad.c:1408 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "_Mostrar todo"
 
-#: src/xpad-pad.c:1358 src/xpad-tray.c:153
+#: src/xpad-pad.c:1409 src/xpad-tray.c:152
 msgid "_Close All"
 msgstr "Cerrar todas"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1362
+#: src/xpad-pad.c:1413
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: src/xpad-pad.c:1369
+#: src/xpad-pad.c:1420
 msgid "_Contents"
 msgstr "_Contenidos"
 
-#: src/xpad-pad.c:1370
+#: src/xpad-pad.c:1421
 msgid "_About"
 msgstr "_Acerca de"
 
@@ -207,8 +207,8 @@ msgid "_Edit lock"
 msgstr "_Bloquear edición"
 
 #: src/xpad-preferences.c:180
-msgid "_Pads start sticky"
-msgstr "Las notas se inician _pegajosas"
+msgid "_Pads start on all workspaces"
+msgstr ""
 
 #: src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
@@ -297,6 +297,9 @@ msgstr "Anotar más tarde"
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Notas pegajosas"
+
+#~ msgid "_Pads start sticky"
+#~ msgstr "Las notas se inician _pegajosas"
 
 #~ msgid "Orientation"
 #~ msgstr "Orientación"

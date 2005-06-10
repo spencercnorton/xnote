@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-03 20:57-0500\n"
+"POT-Creation-Date: 2005-06-02 17:29-0400\n"
 "PO-Revision-Date: 2005-03-05 14:38+1000\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
@@ -22,7 +22,8 @@ msgstr "Không ghi được vào tập tin %s."
 
 #: src/xpad-app.c:125
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad là một chương trình thuộc đồ họa. Hãy chạy nó từ màn hình nền của bạn."
+msgstr ""
+"Xpad là một chương trình thuộc đồ họa. Hãy chạy nó từ màn hình nền của bạn."
 
 #: src/xpad-app.c:130 xpad.desktop.in.h:3
 msgid "Xpad"
@@ -34,8 +35,12 @@ msgid "Could not open directory %s."
 msgstr "Không mở được thư mục %s"
 
 #: src/xpad-app.c:438
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Cần thư mục này để cất giữ thông tin sở thích và tập giấy đều. Xpad sẽ thoát bây giờ."
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Cần thư mục này để cất giữ thông tin sở thích và tập giấy đều. Xpad sẽ thoát "
+"bây giờ."
 
 #: src/xpad-app.c:742
 msgid "Show version number and quit"
@@ -47,7 +52,8 @@ msgstr "Ẩn các tập giấy tồn tại khi khởi động"
 
 #: src/xpad-app.c:744
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Không tạo một tập giấy mới khi khởi đông, nếu chưa có tập giấy trước nào."
+msgstr ""
+"Không tạo một tập giấy mới khi khởi đông, nếu chưa có tập giấy trước nào."
 
 #: src/xpad-app.c:750
 msgid "Create a new pad on startup even if pads already exist"
@@ -62,83 +68,83 @@ msgstr "Đóng tất cả tập giấy"
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: src/xpad-pad.c:557
+#: src/xpad-pad.c:556
 msgid "Delete this pad?"
 msgstr "Xóa bỏ tập giấy này không?"
 
-#: src/xpad-pad.c:558
+#: src/xpad-pad.c:557
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Tất cả văn bản của tập giấy này sẽ bị mất mãi mãi."
 
-#: src/xpad-pad.c:589
+#: src/xpad-pad.c:588
 #, c-format
 msgid "'%s' Properties"
 msgstr "Tai sản '%s'"
 
-#: src/xpad-pad.c:1109
+#: src/xpad-pad.c:1117
 msgid "Sticky notes"
 msgstr "Ghi chép bám dính"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1128
+#: src/xpad-pad.c:1136
 msgid "translator-credits"
 msgstr "Clytie Siddall <clytie@riverland.net.au>"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1357
 msgid "_Pad"
 msgstr "Tập _giấy"
 
-#: src/xpad-pad.c:1358
+#: src/xpad-pad.c:1366
 msgid "Show on _All Workspaces"
 msgstr "Hiển thị trên tất cả _vùng làm việc"
 
-#: src/xpad-pad.c:1365
+#: src/xpad-pad.c:1373
 msgid "_Edit"
 msgstr "_Hiệu chỉnh"
 
-#: src/xpad-pad.c:1378
+#: src/xpad-pad.c:1386
 msgid "_View"
 msgstr "_Xem"
 
-#: src/xpad-pad.c:1385
+#: src/xpad-pad.c:1393
 msgid "_Toolbar"
 msgstr "Thanh _công cụ"
 
-#: src/xpad-pad.c:1386
+#: src/xpad-pad.c:1394
 msgid "_Autohide Toolbar"
 msgstr "_Tự động ẩn thanh công cụ"
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1396
 msgid "_Scrollbar"
 msgstr "Thanh c_uộn"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1397
 msgid "_Window Decorations"
 msgstr "T_rang trí cửa sổ"
 
-#: src/xpad-pad.c:1392
+#: src/xpad-pad.c:1400
 msgid "_Notes"
 msgstr "_Chú thích"
 
-#: src/xpad-pad.c:1400 src/xpad-tray.c:145
+#: src/xpad-pad.c:1408 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "_Hiển thị tất cả"
 
-#: src/xpad-pad.c:1401 src/xpad-tray.c:152
+#: src/xpad-pad.c:1409 src/xpad-tray.c:152
 msgid "_Close All"
 msgstr "_Đóng tất cả"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1405
+#: src/xpad-pad.c:1413
 msgid "_Help"
 msgstr "Trợ _giúp"
 
-#: src/xpad-pad.c:1412
+#: src/xpad-pad.c:1420
 msgid "_Contents"
 msgstr "_Nội dụng"
 
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1421
 msgid "_About"
 msgstr "_Về trình"
 

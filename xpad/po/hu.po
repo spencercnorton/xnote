@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-03 20:57-0500\n"
+"POT-Creation-Date: 2005-06-02 17:29-0400\n"
 "PO-Revision-Date: 2005-03-12 09:17+1\n"
 "Last-Translator: Németh Csaba <csaba@sopron.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -33,8 +33,12 @@ msgid "Could not open directory %s."
 msgstr "Nem tudom megnyitni a %s könyvtárat."
 
 #: src/xpad-app.c:438
-msgid "This directory is needed to store preference and pad information.  Xpad will close now."
-msgstr "Ennek a könyvtárnak szüksége van arra, hogy eltárolja a tulajdonságokat és a jegyzet információit. Az Xpad most bezáródik."
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Ennek a könyvtárnak szüksége van arra, hogy eltárolja a tulajdonságokat és a "
+"jegyzet információit. Az Xpad most bezáródik."
 
 #: src/xpad-app.c:742
 msgid "Show version number and quit"
@@ -61,83 +65,83 @@ msgstr "Összes jegyzet bezárása"
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: src/xpad-pad.c:557
+#: src/xpad-pad.c:556
 msgid "Delete this pad?"
 msgstr "Töröljem ezt a jegyzetet?"
 
-#: src/xpad-pad.c:558
+#: src/xpad-pad.c:557
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Minden szöveg visszavonhatatlanul elveszik a jegyzetrõl."
 
-#: src/xpad-pad.c:589
+#: src/xpad-pad.c:588
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' Tulajdonságok"
 
-#: src/xpad-pad.c:1109
+#: src/xpad-pad.c:1117
 msgid "Sticky notes"
 msgstr "Ragadós jegyzetek"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1128
+#: src/xpad-pad.c:1136
 msgid "translator-credits"
 msgstr "Németh Csaba <csaba@sopron.hu>"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1357
 msgid "_Pad"
 msgstr "_Jegyzet"
 
-#: src/xpad-pad.c:1358
+#: src/xpad-pad.c:1366
 msgid "Show on _All Workspaces"
 msgstr "Mutassa az _Összes munkaterületen"
 
-#: src/xpad-pad.c:1365
+#: src/xpad-pad.c:1373
 msgid "_Edit"
 msgstr "_Szerkesztés"
 
-#: src/xpad-pad.c:1378
+#: src/xpad-pad.c:1386
 msgid "_View"
 msgstr "_Nézet"
 
-#: src/xpad-pad.c:1385
+#: src/xpad-pad.c:1393
 msgid "_Toolbar"
 msgstr "_Eszköztár"
 
-#: src/xpad-pad.c:1386
+#: src/xpad-pad.c:1394
 msgid "_Autohide Toolbar"
 msgstr "El_rejtõdõ eszköztár"
 
-#: src/xpad-pad.c:1388
+#: src/xpad-pad.c:1396
 msgid "_Scrollbar"
 msgstr "_Görgetõsáv"
 
-#: src/xpad-pad.c:1389
+#: src/xpad-pad.c:1397
 msgid "_Window Decorations"
 msgstr "_Ablak dekoráció"
 
-#: src/xpad-pad.c:1392
+#: src/xpad-pad.c:1400
 msgid "_Notes"
 msgstr "_Jegyzetek"
 
-#: src/xpad-pad.c:1400 src/xpad-tray.c:145
+#: src/xpad-pad.c:1408 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "_Mindet mutat"
 
-#: src/xpad-pad.c:1401 src/xpad-tray.c:152
+#: src/xpad-pad.c:1409 src/xpad-tray.c:152
 msgid "_Close All"
 msgstr "Mindet _bezár"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1405
+#: src/xpad-pad.c:1413
 msgid "_Help"
 msgstr "_Súgó"
 
-#: src/xpad-pad.c:1412
+#: src/xpad-pad.c:1420
 msgid "_Contents"
 msgstr "_Tartalom"
 
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1421
 msgid "_About"
 msgstr "_Névjegy"
 

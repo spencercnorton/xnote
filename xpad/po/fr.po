@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-30 14:20-0500\n"
+"POT-Creation-Date: 2005-06-02 17:29-0400\n"
 "PO-Revision-Date: 2004-01-06 16:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -28,12 +28,12 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:410
+#: src/xpad-app.c:435
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Ne peut ouvrir le répertoire %s."
 
-#: src/xpad-app.c:413
+#: src/xpad-app.c:438
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -41,126 +41,126 @@ msgstr ""
 "Ce répertoire est nécessaire pour stocker les préférences et les information "
 "du pad. Xpad va maintenant fermer."
 
-#: src/xpad-app.c:717
+#: src/xpad-app.c:742
 #, fuzzy
 msgid "Show version number and quit"
 msgstr "Afficher la version de xpad et quitter"
 
-#: src/xpad-app.c:718
+#: src/xpad-app.c:743
 msgid "Hide existing pads on startup"
 msgstr ""
 
-#: src/xpad-app.c:719
+#: src/xpad-app.c:744
 #, fuzzy
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Bloquer la création d'un nouveau pad lors du démarrage si aucun pad n'existe"
 
-#: src/xpad-app.c:725
+#: src/xpad-app.c:750
 #, fuzzy
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Provoque la craétion d'un nouveau pad lors du démarrage si un pad existe déjà"
 
-#: src/xpad-app.c:726
+#: src/xpad-app.c:751
 #, fuzzy
 msgid "Close all pads"
 msgstr "Fermer tous les pads"
 
-#: src/xpad-app.c:758
+#: src/xpad-app.c:783
 #, fuzzy, c-format
 msgid "Xpad %s"
 msgstr "Xpad"
 
-#: src/xpad-pad.c:530
+#: src/xpad-pad.c:556
 msgid "Delete this pad?"
 msgstr "Détruire ce pad?"
 
-#: src/xpad-pad.c:531
+#: src/xpad-pad.c:557
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Tous les texts de ce pad sont irrévocablement perdus."
 
-#: src/xpad-pad.c:562
+#: src/xpad-pad.c:588
 #, fuzzy, c-format
 msgid "'%s' Properties"
 msgstr "Propriétés du pad"
 
-#: src/xpad-pad.c:1066
+#: src/xpad-pad.c:1117
 #, fuzzy
 msgid "Sticky notes"
 msgstr "Notes autocollantes"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1085
+#: src/xpad-pad.c:1136
 msgid "translator-credits"
 msgstr ""
 
-#: src/xpad-pad.c:1306
+#: src/xpad-pad.c:1357
 #, fuzzy
 msgid "_Pad"
 msgstr "/_Pad"
 
-#: src/xpad-pad.c:1315
+#: src/xpad-pad.c:1366
 msgid "Show on _All Workspaces"
 msgstr ""
 
-#: src/xpad-pad.c:1322
+#: src/xpad-pad.c:1373
 #, fuzzy
 msgid "_Edit"
 msgstr "/_Éditer"
 
-#: src/xpad-pad.c:1335
+#: src/xpad-pad.c:1386
 #, fuzzy
 msgid "_View"
 msgstr "/Pad/_Nouveau"
 
-#: src/xpad-pad.c:1342
+#: src/xpad-pad.c:1393
 #, fuzzy
 msgid "_Toolbar"
 msgstr "Barre d'outils"
 
-#: src/xpad-pad.c:1343
+#: src/xpad-pad.c:1394
 #, fuzzy
 msgid "_Autohide Toolbar"
 msgstr "_Auto-cacher la barre d'outils"
 
-#: src/xpad-pad.c:1345
+#: src/xpad-pad.c:1396
 #, fuzzy
 msgid "_Scrollbar"
 msgstr "Permettre les barres de _défilement"
 
-#: src/xpad-pad.c:1346
+#: src/xpad-pad.c:1397
 #, fuzzy
 msgid "_Window Decorations"
 msgstr "Permettre l'utilisation des décorations du gestionnaire de _fenêtres"
 
-#: src/xpad-pad.c:1349
+#: src/xpad-pad.c:1400
 #, fuzzy
 msgid "_Notes"
 msgstr "/_Notes"
 
-#: src/xpad-pad.c:1357 src/xpad-tray.c:146
+#: src/xpad-pad.c:1408 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "_afficher tout"
 
-#: src/xpad-pad.c:1358 src/xpad-tray.c:153
+#: src/xpad-pad.c:1409 src/xpad-tray.c:152
 #, fuzzy
 msgid "_Close All"
 msgstr "Fermer tous les pads"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1362
+#: src/xpad-pad.c:1413
 #, fuzzy
 msgid "_Help"
 msgstr "/_Aide"
 
-#: src/xpad-pad.c:1369
+#: src/xpad-pad.c:1420
 #, fuzzy
 msgid "_Contents"
 msgstr "/Aide/_Contenu"
 
-#: src/xpad-pad.c:1370
+#: src/xpad-pad.c:1421
 #, fuzzy
 msgid "_About"
 msgstr "/Aide/_A propos"
@@ -224,9 +224,8 @@ msgid "_Edit lock"
 msgstr "_Éditer le verrou"
 
 #: src/xpad-preferences.c:180
-#, fuzzy
-msgid "_Pads start sticky"
-msgstr "Pads démarre en mode _collant"
+msgid "_Pads start on all workspaces"
+msgstr ""
 
 #: src/xpad-preferences.c:181
 #, fuzzy
@@ -321,6 +320,10 @@ msgstr "Garder les notes pour plus tard"
 #: xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Notes autocollantes"
+
+#, fuzzy
+#~ msgid "_Pads start sticky"
+#~ msgstr "Pads démarre en mode _collant"
 
 #, fuzzy
 #~ msgid "Virtual sticky notes"
