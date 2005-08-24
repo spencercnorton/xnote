@@ -1,4 +1,6 @@
 Version 2.9
+* Fix pads saving slightly off bad x,y values
+* Fix possible crash from not allocating enough memory (Federico Schwindt)
 * New Malay translation (Sharuzzaman Ahmat Raslan)
 
 

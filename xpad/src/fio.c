@@ -170,6 +170,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	gchar *buf;
 	const gchar *item;
 	va_list ap;
+	size_t len;
 	
 	buf = fio_get_file (filename);
 	
@@ -179,8 +180,9 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	/* because of the way we look for a matching variable name, which is
 		to look for an endline, the variable name, and a space, we insert a
 		newline at the beginning, so that the first variable name is caught. */
-	buf = g_realloc (buf, strlen (buf) + 1);
-	g_memmove (buf + 1, buf, strlen (buf));
+	len = strlen (buf);
+	buf = g_realloc (buf, len + 2);
+	g_memmove (buf + 1, buf, len + 1);
 	buf[0] = '\n';
 	
 	va_start (ap, filename);

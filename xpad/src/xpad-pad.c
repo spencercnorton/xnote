@@ -230,6 +230,7 @@ xpad_pad_init (XpadPad *pad)
 		"decorated", xpad_settings_get_has_decorations (xpad_settings ()),
 		"default-height", xpad_settings_get_height (xpad_settings ()),
 		"default-width", xpad_settings_get_width (xpad_settings ()),
+		"gravity", GDK_GRAVITY_STATIC, /* static gravity makes saving pad x,y work */
 		"skip-pager-hint", TRUE,
 		"skip-taskbar-hint", TRUE,
 		"type", GTK_WINDOW_TOPLEVEL,
@@ -1009,7 +1010,15 @@ load_info (XpadPad *pad)
 		return;
 	
 	pad->priv->location_valid = TRUE;
-	gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+	if (xpad_settings_get_has_toolbar (xpad_settings ()) &&
+	    !xpad_settings_get_autohide_toolbar (xpad_settings ()))
+	{
+		pad->priv->toolbar_height = 0;
+		xpad_pad_hide_toolbar (pad);
+		xpad_pad_show_toolbar (pad); /* these will resize pad at correct height */
+	}
+	else
+		gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
 	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	
 	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_font);
