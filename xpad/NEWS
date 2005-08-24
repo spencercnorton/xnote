@@ -1,5 +1,6 @@
 Version 2.9
 * Fix pads saving slightly off bad x,y values
+* Fix pads saving bad heights when toolbar always on (Sham Chukoury)
 * Fix possible crash from not allocating enough memory (Federico Schwindt)
 * New Malay translation (Sharuzzaman Ahmat Raslan)
 
