@@ -1,3 +1,7 @@
+Version 2.10
+* Fix a possible crash when deleting pads with autohide toolbar
+
+
 Version 2.9
 * Fix pads saving slightly off bad x,y values
 * Fix pads saving bad heights when toolbar always on (Sham Chukoury)

@@ -322,6 +322,12 @@ xpad_pad_dispose (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 	
+	if (pad->priv->toolbar_timeout)
+	{
+		g_source_remove (pad->priv->toolbar_timeout);
+		pad->priv->toolbar_timeout = 0;
+	}
+	
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
 	
