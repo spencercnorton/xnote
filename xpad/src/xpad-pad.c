@@ -53,6 +53,8 @@ struct XpadPadPrivate
 	GtkWidget *toolbar;
 	guint toolbar_timeout;
 	gint toolbar_height;
+	gboolean toolbar_expanded;
+	gboolean toolbar_pad_resized;
 	
 	/* properties window */
 	GtkWidget *properties;
@@ -192,6 +194,8 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->toolbar = NULL;
 	pad->priv->toolbar_timeout = 0;
 	pad->priv->toolbar_height = 0;
+	pad->priv->toolbar_expanded = FALSE;
+	pad->priv->toolbar_pad_resized = TRUE;
 	pad->priv->properties = NULL;
 	pad->priv->group = NULL;
 	
@@ -394,12 +398,33 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	}
 }
 
+static gint
+xpad_pad_text_and_toolbar_height (XpadPad *pad)
+{
+	GdkRectangle rec;
+	gint textx, texty, x, y;
+	GtkTextIter iter;
+	
+	gtk_text_view_get_visible_rect(GTK_TEXT_VIEW(pad->priv->textview), &rec);
+	gtk_text_buffer_get_end_iter(gtk_text_view_get_buffer(GTK_TEXT_VIEW(pad->priv->textview)), &iter);
+	gtk_text_view_get_iter_location(GTK_TEXT_VIEW(pad->priv->textview), &iter, &rec);
+	gtk_text_view_buffer_to_window_coords(GTK_TEXT_VIEW(pad->priv->textview),
+		GTK_TEXT_WINDOW_WIDGET, rec.x + rec.width, rec.y + rec.height,
+		&textx, &texty);
+	gtk_widget_translate_coordinates(pad->priv->textview, GTK_WIDGET(pad), textx, texty, &x, &y);
+
+	return y + pad->priv->toolbar_height + gtk_container_get_border_width(GTK_CONTAINER(pad->priv->textview));
+}
+
 static void
 xpad_pad_show_toolbar (XpadPad *pad)
 {
 	if (!GTK_WIDGET_VISIBLE (pad->priv->toolbar))
 	{
 		GtkRequisition req;
+		GdkRectangle rec;
+		gint textx, texty, x, y;
+		GtkTextIter iter;
 		
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
@@ -409,8 +434,19 @@ xpad_pad_show_toolbar (XpadPad *pad)
 			gtk_widget_size_request (pad->priv->toolbar, &req);
 			pad->priv->toolbar_height = req.height;
 		}
-		pad->priv->height += pad->priv->toolbar_height;
-		gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+
+		/* Do we have room for the toolbar without covering text? */
+		if (xpad_pad_text_and_toolbar_height (pad) > pad->priv->height)
+		{
+			pad->priv->toolbar_expanded = TRUE;
+			pad->priv->height += pad->priv->toolbar_height;
+			gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+		}
+		else
+			pad->priv->toolbar_expanded = FALSE;
+		
+		pad->priv->toolbar_pad_resized = FALSE;
+		
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_thaw_updates (GTK_WIDGET (pad)->window);
 	}
@@ -421,11 +457,21 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 {
 	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar))
 	{
+		GdkRectangle rec;
+		gint textx, texty, x, y;
+		GtkTextIter iter;
+		
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
-		pad->priv->height -= pad->priv->toolbar_height;
 		gtk_widget_hide (pad->priv->toolbar);
-		gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+		
+		if (pad->priv->toolbar_expanded ||
+		    (pad->priv->toolbar_pad_resized && xpad_pad_text_and_toolbar_height (pad) >= pad->priv->height))
+		{
+				pad->priv->height -= pad->priv->toolbar_height;
+				gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+				pad->priv->toolbar_expanded = FALSE;
+		}
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_thaw_updates (GTK_WIDGET (pad)->window);
 	}
@@ -754,6 +800,9 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 static gboolean
 xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 {
+	if (pad->priv->width != event->width || pad->priv->height != event->height)
+		pad->priv->toolbar_pad_resized = TRUE;
+	
 	pad->priv->x = event->x;
 	pad->priv->y = event->y;
 	pad->priv->width = event->width;
@@ -1096,7 +1145,7 @@ save_info (XpadPad *pad)
 	}
 	
 	height = pad->priv->height;
-	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar))
+	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar) && pad->priv->toolbar_expanded)
 		height -= pad->priv->toolbar_height;
 	
 	style = gtk_widget_get_style (pad->priv->textview);
