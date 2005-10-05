@@ -2,6 +2,8 @@ Version 2.10
 * Fix a possible crash when deleting pads with autohide toolbar
 * Make toolbar buttons smaller
 * Make toolbar appear inside pad if there is enough unused space
+* New Slovak translation (Andrej Kacian)
+* New Slovenian translation (Matej Urbančič)
 
 
 Version 2.9
