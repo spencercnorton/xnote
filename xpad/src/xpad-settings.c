@@ -242,7 +242,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->fontname = NULL;
 	settings->priv->has_toolbar = TRUE;
 	settings->priv->autohide_toolbar = TRUE;
-	settings->priv->has_scrollbar = FALSE;
+	settings->priv->has_scrollbar = TRUE;
 	
 	settings->priv->toolbar_buttons = NULL;
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("New"));

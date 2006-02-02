@@ -1,3 +1,12 @@
+Version 2.11
+* If window decorations are turned on, pads will now show up in the taskbar
+* Added -f option to open a file as a note
+* New Chinese (simplified) translation (Meng Jie)
+* New Danish translation (Morten Bo Johansen)
+* New Swedish translation (Daniel Nylander)
+* Updated Chinese (traditional) translation (Wei-Lun Chao)
+
+
 Version 2.10
 * Fix a possible crash when deleting pads with autohide toolbar
 * Make toolbar buttons smaller

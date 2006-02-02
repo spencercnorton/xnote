@@ -141,6 +141,33 @@ xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename)
 	return pad;
 }
 
+GtkWidget *
+xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename)
+{
+	GtkWidget *pad = NULL;
+	gchar *content;
+	
+	content = fio_get_file (filename);
+	
+	if (!content)
+	{
+		gchar *usertext = g_strdup_printf (_("Could not read file %s."), filename);
+		xpad_app_error (NULL, usertext, NULL);
+		g_free (usertext);
+	}
+	else
+	{
+		GtkTextBuffer *buffer;
+		
+		pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, NULL));
+		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (XPAD_PAD (pad)->priv->textview));
+		xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
+		g_free (content);
+	}
+	
+	return pad;
+}
+
 static void
 xpad_pad_class_init (XpadPadClass *klass)
 {
@@ -235,8 +262,8 @@ xpad_pad_init (XpadPad *pad)
 		"default-height", xpad_settings_get_height (xpad_settings ()),
 		"default-width", xpad_settings_get_width (xpad_settings ()),
 		"gravity", GDK_GRAVITY_STATIC, /* static gravity makes saving pad x,y work */
-		"skip-pager-hint", TRUE,
-		"skip-taskbar-hint", TRUE,
+		"skip-pager-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
+		"skip-taskbar-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
 		"type", GTK_WINDOW_TOPLEVEL,
 		"type-hint", GDK_WINDOW_TYPE_HINT_NORMAL,
 		"window-position", GTK_WIN_POS_NONE,
@@ -382,20 +409,21 @@ static void
 xpad_pad_notify_has_decorations (XpadPad *pad)
 {
 	gboolean shown = GTK_WIDGET_VISIBLE (GTK_WIDGET (pad));
+	gboolean decorations = xpad_settings_get_has_decorations (xpad_settings ());
 	
-	if (shown)
-	{
-		gtk_widget_hide (GTK_WIDGET (pad));
-	}
+	/**
+	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
+	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
+	 */
+	gtk_window_set_decorated (GTK_WINDOW (pad), decorations);
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (pad), !decorations);
+	gtk_window_set_skip_pager_hint (GTK_WINDOW (pad), !decorations);
 	
-	gtk_window_set_decorated (GTK_WINDOW (pad), xpad_settings_get_has_decorations (xpad_settings ()));
-	
-	if (shown)
-	{
-		/* We move it so wm's don't lose the window's spot */
-		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
-		gtk_widget_show (GTK_WIDGET (pad));
-	}
+	/* reshow_with_initial_size() seems to set the window back to a never-shown state.
+	   This is good, as some WMs don't like us changing the above parameters mid-run,
+	   even if we do a hide/show cycle. */
+	gtk_window_set_default_size (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+	gtk_window_reshow_with_initial_size (GTK_WINDOW (pad));
 }
 
 static gint
@@ -1179,7 +1207,7 @@ menu_about (XpadPad *pad)
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
 	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", "Jeroen Vermeulen <jtv@xs4all.nl>", NULL};
 	const gchar *comments = _("Sticky notes");
-	const gchar *copyright = "© 2001-2005 Michael Terry";
+	const gchar *copyright = "© 2001-2006 Michael Terry";
 	/* we use g_strdup_printf because C89 has size limits on static strings */
 	gchar *license = g_strdup_printf ("%s\n%s\n%s",
 "This program is free software; you can redistribute it and/or\n"

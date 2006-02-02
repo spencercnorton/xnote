@@ -165,6 +165,9 @@ xpad_session_manager_stop_interact (gboolean stop_shutdown)
 	if (!xpad_session_manager_conn)
 		return;
 	
+	if (!blocking)
+		return;
+	
 	SmcInteractDone (xpad_session_manager_conn, stop_shutdown);
 }
 

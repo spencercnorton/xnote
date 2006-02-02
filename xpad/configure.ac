@@ -36,7 +36,7 @@ AC_SUBST_FILE(XPAD_MARSHAL_RULE)
 GETTEXT_PACKAGE="$PACKAGE"
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext domain])
-ALL_LINGUAS="af bg es fr ga hu it ms nl ro ru rw sk sl vi zh_TW"
+ALL_LINGUAS="af bg da es fr ga hu it ms nl ro ru rw sk sl sv vi zh_CN zh_TW"
 AM_GLIB_GNU_GETTEXT
 
 # Determines if we're debugging.

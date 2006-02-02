@@ -65,6 +65,7 @@ static gboolean option_nonew;
 static gboolean option_new;
 static gboolean option_version;
 static gboolean option_quit;
+static gchar **option_files;
 static gchar *option_smid;
 static gchar *config_dir;
 static gchar *program_path;
@@ -157,13 +158,13 @@ xpad_app_init (int argc, char **argv)
 	register_stock_icons ();
 	gtk_window_set_default_icon_name (PACKAGE);
 	
+	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE);
 	
 	xpad_tray_open ();
 	xpad_session_manager_init ();
 	
 	/* load all pads */
-	pad_group = NULL;
 	if (xpad_app_load_pads () == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
@@ -418,11 +419,6 @@ xpad_app_load_pads (void)
 	gint opened = 0;
 	GDir *dir;
 	G_CONST_RETURN gchar *name;
-	
-	/* First, empty our current pad list. */
-	if (pad_group)
-		g_object_unref (pad_group);
-	pad_group = xpad_pad_group_new ();
 	
 	g_signal_connect (pad_group, "pad-added", G_CALLBACK (xpad_app_pad_added), NULL);
 	
@@ -748,6 +744,7 @@ static GOptionEntry local_options[] =
 static GOptionEntry remote_options[] =
 {
 	{"new", 'n', 0, G_OPTION_ARG_NONE, &option_new, N_("Create a new pad on startup even if pads already exist"), NULL},
+	{"new-from-file", 'f', 0, G_OPTION_ARG_FILENAME_ARRAY, &option_files, N_("Create a new pad with the contents of a file"), N_("FILE")},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_quit, N_("Close all pads"), NULL},
 	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid, NULL, NULL},
 	{NULL}
@@ -804,6 +801,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	GOptionContext *context;
 	
 	option_new = FALSE;
+	option_files = NULL;
 	option_quit = FALSE;
 	option_smid = NULL;
 	
@@ -820,6 +818,17 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 		{
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
+		}
+		
+		if (have_gtk && option_files)
+		{
+			int i;
+			for (i = 0; option_files[i]; i++)
+			{
+				GtkWidget *pad = xpad_pad_new_from_file (pad_group, option_files[i]);
+				if (pad)
+					gtk_widget_show (pad);
+			}
 		}
 		
 		if (option_quit)
@@ -839,5 +848,5 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	
 	g_option_context_free (context);
 	
-	return(option_new || option_quit || option_smid);
+	return(option_new || option_quit || option_smid || option_files);
 }

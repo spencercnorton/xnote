@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-02 17:29-0400\n"
+"POT-Creation-Date: 2005-03-03 20:57-0500\n"
 "PO-Revision-Date: 2005-06-02 17:22+0800\n"
 "Last-Translator: Wei-Lun Chao <chaoweilun@pcmail.com.tw>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -34,9 +34,7 @@ msgid "Could not open directory %s."
 msgstr "無法開啟字典 %s。"
 
 #: src/xpad-app.c:438
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
 msgstr "需要此目錄以儲存偏好設定與便條資訊。Xpad 現在將會關閉。"
 
 #: src/xpad-app.c:742
@@ -64,83 +62,83 @@ msgstr "關閉所有便條"
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: src/xpad-pad.c:556
+#: src/xpad-pad.c:557
 msgid "Delete this pad?"
 msgstr "刪除該便條"
 
-#: src/xpad-pad.c:557
+#: src/xpad-pad.c:558
 msgid "All text of this pad will be irrevocably lost."
 msgstr "該便條所有文字將會永久消失。"
 
-#: src/xpad-pad.c:588
+#: src/xpad-pad.c:589
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' 的屬性"
 
-#: src/xpad-pad.c:1117
+#: src/xpad-pad.c:1109
 msgid "Sticky notes"
 msgstr "自粘性便條"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1136
+#: src/xpad-pad.c:1128
 msgid "translator-credits"
 msgstr "趙惟倫 <chaoweilun@pcmail.com.tw>"
 
-#: src/xpad-pad.c:1357
+#: src/xpad-pad.c:1349
 msgid "_Pad"
 msgstr "便條(_P)"
 
-#: src/xpad-pad.c:1366
+#: src/xpad-pad.c:1358
 msgid "Show on _All Workspaces"
 msgstr "顯示於所有工作區中(_A)"
 
-#: src/xpad-pad.c:1373
+#: src/xpad-pad.c:1365
 msgid "_Edit"
 msgstr "編輯(_E)"
 
-#: src/xpad-pad.c:1386
+#: src/xpad-pad.c:1378
 msgid "_View"
 msgstr "顯示(_V)"
 
-#: src/xpad-pad.c:1393
+#: src/xpad-pad.c:1385
 msgid "_Toolbar"
 msgstr "工具列(_T)"
 
-#: src/xpad-pad.c:1394
+#: src/xpad-pad.c:1386
 msgid "_Autohide Toolbar"
 msgstr "自動隱藏工具列(_A)"
 
-#: src/xpad-pad.c:1396
+#: src/xpad-pad.c:1388
 msgid "_Scrollbar"
 msgstr "捲動列(_S)"
 
-#: src/xpad-pad.c:1397
+#: src/xpad-pad.c:1389
 msgid "_Window Decorations"
 msgstr "視窗裝飾(_W)"
 
-#: src/xpad-pad.c:1400
+#: src/xpad-pad.c:1392
 msgid "_Notes"
 msgstr "備忘(_N)"
 
-#: src/xpad-pad.c:1408 src/xpad-tray.c:145
+#: src/xpad-pad.c:1400 src/xpad-tray.c:145
 msgid "_Show All"
 msgstr "全部顯示(_S)"
 
-#: src/xpad-pad.c:1409 src/xpad-tray.c:152
+#: src/xpad-pad.c:1401 src/xpad-tray.c:152
 msgid "_Close All"
 msgstr "全部關閉(_C)"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1405
 msgid "_Help"
 msgstr "求助(_H)"
 
-#: src/xpad-pad.c:1420
+#: src/xpad-pad.c:1412
 msgid "_Contents"
 msgstr "內容(_C)"
 
-#: src/xpad-pad.c:1421
+#: src/xpad-pad.c:1413
 msgid "_About"
 msgstr "關於(_A)"
 
