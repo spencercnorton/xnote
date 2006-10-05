@@ -1,3 +1,7 @@
+Version 2.12
+* Fix a crash when loading pads with formatting
+
+
 Version 2.11
 * If window decorations are turned on, pads will now show up in the taskbar
 * Added -f option to open a file as a note
