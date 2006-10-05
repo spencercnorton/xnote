@@ -161,8 +161,14 @@ xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename)
 		
 		pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, NULL));
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (XPAD_PAD (pad)->priv->textview));
+		
+		g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
+		
 		xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 		g_free (content);
+		
+		g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+		xpad_pad_text_changed(pad, buffer);
 	}
 	
 	return pad;
@@ -1033,9 +1039,14 @@ load_content (XpadPad *pad)
 	content = fio_get_file (pad->priv->contentname);
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
-	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 	
+	g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
+	
+	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 	g_free (content);
+	
+	g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+	xpad_pad_text_changed(pad, buffer);
 }
 
 static void

@@ -58,6 +58,8 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 	if (!text)
 		return;
 	
+	gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+	
 	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
 	gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
 	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
@@ -95,11 +97,12 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 				if (element)
 				{
 					tags = g_list_delete_link (tags, element);
-					g_free (element->data);
 				}
 			}
 		}
 	}
+	
+	gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
 	
 	g_strfreev (tokens);
 }
