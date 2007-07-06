@@ -17,8 +17,8 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GTK_2_0(2.6.0,,AC_MSG_ERROR([
-  *** GTK+ 2.6 is required to build Xpad; please make sure you have the GTK+
+AM_PATH_GTK_2_0(2.11.0,,AC_MSG_ERROR([
+  *** GTK+ 2.12 is required to build Xpad; please make sure you have the GTK+
   *** development headers installed. The latest version of GTK+ is
   *** always available at http://gtk.org/.]))
 
