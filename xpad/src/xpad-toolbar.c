@@ -204,16 +204,18 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 	
 	toolbar->priv->tooltips = gtk_tooltips_new ();
 	g_object_ref (toolbar->priv->tooltips);
-	gtk_object_sink (GTK_OBJECT (toolbar->priv->tooltips));
+	g_object_ref_sink (GTK_OBJECT (toolbar->priv->tooltips));
 	
 	toolbar->priv->move_motion_handler = 0;
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
 	
-	gtk_toolbar_set_tooltips (GTK_TOOLBAR (toolbar), TRUE);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), FALSE);
-	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_MENU);
+	g_object_set (G_OBJECT (toolbar),
+	              "icon-size", GTK_ICON_SIZE_MENU,
+	              "show-arrow", FALSE,
+	              "tooltips", TRUE,
+	              "toolbar-style", GTK_TOOLBAR_ICONS,
+	              NULL);
 	
 	g_signal_connect_swapped (xpad_settings (), "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
 	

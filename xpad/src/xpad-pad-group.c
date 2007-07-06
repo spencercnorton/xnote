@@ -112,7 +112,7 @@ void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
 	g_object_ref(pad);
-	gtk_object_sink(GTK_OBJECT(pad));
+	g_object_ref_sink(GTK_OBJECT(pad));
 	
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);
