@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../config.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include "eggstatusicon.h"
 #include "fio.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
@@ -30,11 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-preferences.h"
 #include "xpad-tray.h"
 
-static void xpad_tray_activate_cb (EggStatusIcon *icon);
-static void xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size);
-static void xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time);
+static void xpad_tray_activate_cb (GtkStatusIcon *icon);
+static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
 
-static EggStatusIcon  *docklet = NULL;
+static GtkStatusIcon  *docklet = NULL;
 
 void
 xpad_tray_open (void)
@@ -47,13 +45,12 @@ xpad_tray_open (void)
 	if (!gtk_icon_theme_has_icon (theme, PACKAGE))
 		return;
 	
-	docklet = egg_status_icon_new ();
+	docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
 	
 	if (docklet)
 	{
 		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
 		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
-		g_signal_connect (docklet, "size-changed", G_CALLBACK (xpad_tray_size_changed_cb), NULL);
 	}
 }
 
@@ -61,7 +58,7 @@ void
 xpad_tray_close (void)
 {
 	if (docklet) {
-    	g_object_unref (docklet);
+		g_object_unref (docklet);
 		docklet = NULL;
 	}
 }
@@ -70,28 +67,9 @@ gboolean
 xpad_tray_is_open (void)
 {
 	if (docklet)
-		return egg_status_icon_is_visible (docklet);
+		return gtk_status_icon_is_embedded (docklet);
 	else
 		return FALSE;
-}
-
-static void
-xpad_tray_size_changed_cb (EggStatusIcon *icon, gint size)
-{
-	GtkIconTheme *theme;
-	GdkPixbuf *pixbuf;
-	
-	theme = gtk_icon_theme_get_default ();
-	pixbuf = gtk_icon_theme_load_icon (theme,
-	                                   PACKAGE,
-	                                   size,
-	                                   0,
-	                                   NULL);
-	if (pixbuf)
-	{
-		egg_status_icon_set_from_pixbuf (icon, pixbuf);
-		g_object_unref (pixbuf);
-	}
 }
 
 static gint
@@ -124,7 +102,7 @@ menu_spawn (XpadPadGroup *group)
 }
 
 static void
-xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
+xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 {
 	GtkWidget *menu, *item, *imgwidget;
 	GSList *pads, *l;
@@ -202,13 +180,14 @@ xpad_tray_popup_menu_cb (EggStatusIcon *icon, guint button, guint32 time)
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, button, time);
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gtk_status_icon_position_menu, icon, button, time);
 }
 
 static void
-xpad_tray_activate_cb (EggStatusIcon *icon)
+xpad_tray_activate_cb (GtkStatusIcon *icon)
 {
 	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
 	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
 	g_slist_free (pads);
 }
+

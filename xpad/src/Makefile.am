@@ -3,8 +3,6 @@ bin_PROGRAMS = xpad
 xpad_SOURCES = \
 	fio.c fio.h \
 	help.c help.h \
-	eggstatusicon.c eggstatusicon.h \
-	eggtrayicon.c eggtrayicon.h \
 	prefix.c prefix.h \
 	xpad-app.c xpad-app.h \
 	xpad-grip-tool-item.c xpad-grip-tool-item.h \
@@ -30,3 +28,4 @@ localedir = $(datadir)/locale
 
 AM_CFLAGS = @GTK_CFLAGS@ @X_CFLAGS@ @DEBUG_CFLAGS@ -DDATADIR=\"$(datadir)\" -DLOCALEDIR=\"$(localedir)\"
 xpad_LDADD = @X_PRE_LIBS@ @X_LIBS@ @X_EXTRA_LIBS@ @GTK_LIBS@ @INTLLIBS@ @BINRELOC_LIBS@
+
