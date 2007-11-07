@@ -26,12 +26,6 @@ AM_PATH_GTK_2_0(2.12.0,,AC_MSG_ERROR([
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-# Sets up marshaling (copied from Evolution).
-# We use AC_SUBST_FILE because AC_SUBST won't deal with newlines
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
-XPAD_MARSHAL_RULE=$srcdir/marshal.mk
-AC_SUBST_FILE(XPAD_MARSHAL_RULE)
-
 # Sets up gettext.
 GETTEXT_PACKAGE="$PACKAGE"
 AC_SUBST(GETTEXT_PACKAGE)

@@ -15,14 +15,7 @@ xpad_SOURCES = \
 	xpad-text-buffer.c xpad-text-buffer.h \
 	xpad-text-view.c xpad-text-view.h \
 	xpad-toolbar.c xpad-toolbar.h \
-	xpad-tray.c xpad-tray.h \
-	$(MARSHAL_GENERATED)
-
-BUILT_SOURCES = $(MARSHAL_GENERATED)
-EXTRA_DIST = eggmarshalers.list
-
-MARSHAL_GENERATED = eggmarshalers.c eggmarshalers.h
-@XPAD_MARSHAL_RULE@
+	xpad-tray.c xpad-tray.h
 
 localedir = $(datadir)/locale
 
