@@ -37,8 +37,6 @@ enum {
 
 struct XpadToolbarPrivate
 {
-	GtkTooltips *tooltips;
-	
 	GtkToolItem *move_button;
 	gboolean move_removed;
 	guint move_index;
@@ -202,10 +200,6 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 {
 	toolbar->priv = XPAD_TOOLBAR_GET_PRIVATE (toolbar);
 	
-	toolbar->priv->tooltips = gtk_tooltips_new ();
-	g_object_ref (toolbar->priv->tooltips);
-	g_object_ref_sink (GTK_OBJECT (toolbar->priv->tooltips));
-	
 	toolbar->priv->move_motion_handler = 0;
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
@@ -213,7 +207,6 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 	g_object_set (G_OBJECT (toolbar),
 	              "icon-size", GTK_ICON_SIZE_MENU,
 	              "show-arrow", FALSE,
-	              "tooltips", TRUE,
 	              "toolbar-style", GTK_TOOLBAR_ICONS,
 	              NULL);
 	
@@ -226,8 +219,6 @@ static void
 xpad_toolbar_finalize (GObject *object)
 {
 	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
-	
-	g_object_unref (toolbar->priv->tooltips);
 	
 	if (toolbar->priv->move_button)
 		g_object_unref (toolbar->priv->move_button);
@@ -295,7 +286,7 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	g_object_set_data (G_OBJECT (item), "xpad-tb", (gpointer) button);
 	
 	if (button->desc)
-		gtk_tool_item_set_tooltip (item, toolbar->priv->tooltips, _(button->desc), _(button->desc));
+		gtk_tool_item_set_tooltip_text (item, _(button->desc));
 	
 	child = gtk_bin_get_child (GTK_BIN (item));
 	if (child)

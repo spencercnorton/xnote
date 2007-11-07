@@ -168,7 +168,7 @@ xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename)
 		g_free (content);
 		
 		g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
-		xpad_pad_text_changed(pad, buffer);
+		xpad_pad_text_changed(XPAD_PAD(pad), buffer);
 	}
 	
 	return pad;
@@ -414,7 +414,6 @@ xpad_pad_notify_has_scrollbar (XpadPad *pad)
 static void
 xpad_pad_notify_has_decorations (XpadPad *pad)
 {
-	gboolean shown = GTK_WIDGET_VISIBLE (GTK_WIDGET (pad));
 	gboolean decorations = xpad_settings_get_has_decorations (xpad_settings ());
 	
 	/**
@@ -456,9 +455,6 @@ xpad_pad_show_toolbar (XpadPad *pad)
 	if (!GTK_WIDGET_VISIBLE (pad->priv->toolbar))
 	{
 		GtkRequisition req;
-		GdkRectangle rec;
-		gint textx, texty, x, y;
-		GtkTextIter iter;
 		
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
@@ -491,10 +487,6 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 {
 	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar))
 	{
-		GdkRectangle rec;
-		gint textx, texty, x, y;
-		GtkTextIter iter;
-		
 		if (GTK_WIDGET (pad)->window)
 			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
 		gtk_widget_hide (pad->priv->toolbar);

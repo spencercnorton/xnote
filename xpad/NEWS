@@ -1,4 +1,6 @@
 Version 2.13
+* Requires GTK+ 2.12
+* Uses native status icon code in GTK+ 
 * New Chinese (simplified) translation (Meng Jie)
 * New English (British) translation (David Lodge)
 * New Finnish translation (Jorma Karvonen)

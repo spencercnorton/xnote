@@ -17,7 +17,7 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GTK_2_0(2.11.0,,AC_MSG_ERROR([
+AM_PATH_GTK_2_0(2.12.0,,AC_MSG_ERROR([
   *** GTK+ 2.12 is required to build Xpad; please make sure you have the GTK+
   *** development headers installed. The latest version of GTK+ is
   *** always available at http://gtk.org/.]))
@@ -53,3 +53,4 @@ AC_SUBST(DEBUG_CFLAGS)
 # Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/Makefile autopackage/default.apspec])
 AC_OUTPUT
+
