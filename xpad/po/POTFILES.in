@@ -2,8 +2,8 @@
 # Copyright (C) 2003-2004 Michael Terry
 
 # Package source files
-src/eggtrayicon.c
 src/fio.c
+src/help.c
 src/xpad-app.c
 src/xpad-grip-tool-item.c
 src/xpad-pad.c
@@ -17,3 +17,4 @@ src/xpad-text-view.c
 src/xpad-toolbar.c
 src/xpad-tray.c
 xpad.desktop.in
+

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-02 17:29-0400\n"
+"POT-Creation-Date: 2004-09-11 22:05-0400\n"
 "PO-Revision-Date: 2004-09-13 15:44+0200\n"
 "Last-Translator: Ramón Rey Vicente <ramon.rey@hispalinux.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -15,146 +15,162 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/eggtrayicon.c:118
+msgid "Orientation"
+msgstr "Orientación"
+
+#: src/eggtrayicon.c:119
+msgid "The orientation of the tray."
+msgstr "Orientación de la bandeja"
+
 #: src/fio.c:134
 #, c-format
 msgid "Could not write to file %s."
 msgstr "No se puede escribir al fichero %s."
 
-#: src/xpad-app.c:125
-msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr ""
-
-#: src/xpad-app.c:130 xpad.desktop.in.h:3
+#: src/xpad-app.c:110 xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: src/xpad-app.c:435
+#: src/xpad-app.c:427
 #, c-format
 msgid "Could not open directory %s."
 msgstr "No se puede abrir el directorio %s."
 
-#: src/xpad-app.c:438
-msgid ""
-"This directory is needed to store preference and pad information.  Xpad will "
-"close now."
+#: src/xpad-app.c:430
+msgid "This directory is needed to store preference and pad information.  Xpad will close now."
 msgstr ""
-"Este directorio se necesita para almacenar las preferencias e información "
-"sobre\n"
+"Este directorio se necesita para almacenar las preferencias e información sobre\n"
 "las notas. Xpad se cerrará ahora."
 
-#: src/xpad-app.c:742
-#, fuzzy
-msgid "Show version number and quit"
+#: src/xpad-app.c:830
+msgid "Prints usage information and exits"
+msgstr "Muestra información de uso y termina"
+
+#: src/xpad-app.c:831
+msgid "Prints xpad version and exits"
 msgstr "Muestra la versión de xpad y termina"
 
-#: src/xpad-app.c:743
-msgid "Hide existing pads on startup"
-msgstr ""
+#: src/xpad-app.c:832
+msgid "Prevents xpad from creating a new pad on startup if no previous pads exist"
+msgstr "Impide que xpad cree una nota nueva al inicio si no existen notas previas"
 
-#: src/xpad-app.c:744
-#, fuzzy
-msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr ""
-"Impide que xpad cree una nota nueva al inicio si no existen notas previas"
+#: src/xpad-app.c:838
+msgid "Causes xpad to create a new pad on startup even if pads already exist"
+msgstr "Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
 
-#: src/xpad-app.c:750
-#, fuzzy
-msgid "Create a new pad on startup even if pads already exist"
-msgstr ""
-"Hace que xpad cree una nueva nota al inicio incluso si ya existen notas"
+#: src/xpad-app.c:839
+msgid "Causes all running xpad instances to close"
+msgstr "Hace que todas las instancias de xpad se cierren"
 
-#: src/xpad-app.c:751
-#, fuzzy
-msgid "Close all pads"
-msgstr "Cerrar todas las notas"
-
-#: src/xpad-app.c:783
-#, fuzzy, c-format
-msgid "Xpad %s"
+#: src/xpad-app.c:855
+#, c-format
+msgid "Xpad %s\n"
 msgstr "Xpad %s\n"
 
-#: src/xpad-pad.c:556
+#: src/xpad-app.c:899
+#, c-format
+msgid ""
+"Usage: %s [OPTIONS]\n"
+"\n"
+msgstr ""
+"Uso: %s [OPCIONES]\n"
+"\n"
+
+#: src/xpad-app.c:937
+#, c-format
+msgid "Missing companion argument to %s\n"
+msgstr "Falta el argumento que acompaña a %s\n"
+
+#: src/xpad-app.c:981
+#, c-format
+msgid "Didn't understand argument '%s'\n"
+msgstr "No se comprendió el argumento '%s'\n"
+
+#: src/xpad-app.c:1030
+#, c-format
+msgid "Invalid number: '%s'\n"
+msgstr "Número inválido: '%s'\n"
+
+#: src/xpad-pad.c:518
 msgid "Delete this pad?"
 msgstr "¿Borrar esta nota?"
 
-#: src/xpad-pad.c:557
+#: src/xpad-pad.c:519
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Todo el texto de esta nota se perderá irrevocablemente."
 
-#: src/xpad-pad.c:588
+#: src/xpad-pad.c:550
 #, c-format
 msgid "'%s' Properties"
 msgstr "%s Propiedades"
 
-#: src/xpad-pad.c:1117
-#, fuzzy
-msgid "Sticky notes"
-msgstr "Notas pegajosas"
+#: src/xpad-pad.c:1070
+#, c-format
+msgid "You are using xpad %s with GTK+ %i.%i.%i."
+msgstr "Está usando xpad %s con GTK+ %i.%i.%i."
 
-#. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
-#: src/xpad-pad.c:1136
-msgid "translator-credits"
-msgstr ""
+#: src/xpad-pad.c:1075
+msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
+msgstr "Visite http://xpad.sourceforge.net/ para más información acerca de xpad."
 
-#: src/xpad-pad.c:1357
+#: src/xpad-pad.c:1291
 msgid "_Pad"
 msgstr "_Nota"
 
-#: src/xpad-pad.c:1366
-msgid "Show on _All Workspaces"
-msgstr ""
+#: src/xpad-pad.c:1300
+msgid "_Sticky"
+msgstr "_Pegajosa"
 
-#: src/xpad-pad.c:1373
+#: src/xpad-pad.c:1307
 msgid "_Edit"
 msgstr "_Editar"
 
-#: src/xpad-pad.c:1386
+#: src/xpad-pad.c:1320
 msgid "_View"
 msgstr "_Ver"
 
-#: src/xpad-pad.c:1393
+#: src/xpad-pad.c:1327
 msgid "_Toolbar"
 msgstr "Barra de _herramientas"
 
-#: src/xpad-pad.c:1394
+#: src/xpad-pad.c:1328
 msgid "_Autohide Toolbar"
 msgstr "_Autoesconder barra de herramientas"
 
-#: src/xpad-pad.c:1396
+#: src/xpad-pad.c:1330
 msgid "_Scrollbar"
 msgstr "Barras de _desplazamiento"
 
-#: src/xpad-pad.c:1397
+#: src/xpad-pad.c:1331
 msgid "_Window Decorations"
 msgstr "_Decoraciones de la ventana"
 
-#: src/xpad-pad.c:1400
+#: src/xpad-pad.c:1334
 msgid "_Notes"
 msgstr "_Notas"
 
-#: src/xpad-pad.c:1408 src/xpad-tray.c:145
+#: src/xpad-pad.c:1341 src/xpad-tray.c:148
 msgid "_Show All"
 msgstr "_Mostrar todo"
 
-#: src/xpad-pad.c:1409 src/xpad-tray.c:152
+#: src/xpad-pad.c:1342 src/xpad-tray.c:153
 msgid "_Close All"
 msgstr "Cerrar todas"
 
-#. The rest of the notes menu will get set up in the prep function below
-#: src/xpad-pad.c:1413
+#: src/xpad-pad.c:1381
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: src/xpad-pad.c:1420
+#: src/xpad-pad.c:1388
 msgid "_Contents"
 msgstr "_Contenidos"
 
-#: src/xpad-pad.c:1421
+#: src/xpad-pad.c:1389
 msgid "_About"
 msgstr "_Acerca de"
 
-#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:122
+#: src/xpad-pad-properties.c:132 src/xpad-preferences.c:121
 msgid "Appearance"
 msgstr "Apariencia"
 
@@ -162,7 +178,7 @@ msgstr "Apariencia"
 msgid "Use font from xpad preferences"
 msgstr "Usar tipografía de las preferencias de xpad"
 
-#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:150
+#: src/xpad-pad-properties.c:161 src/xpad-preferences.c:149
 msgid "Use this font:"
 msgstr "Usar esta tipografía:"
 
@@ -170,123 +186,131 @@ msgstr "Usar esta tipografía:"
 msgid "Use colors from xpad preferences"
 msgstr "Usar colores de las preferencias de xpad"
 
-#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:152
+#: src/xpad-pad-properties.c:163 src/xpad-preferences.c:151
 msgid "Use these colors:"
 msgstr "_Usar estos colores"
 
-#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:160
+#: src/xpad-pad-properties.c:171 src/xpad-preferences.c:159
 msgid "Background:"
 msgstr "Fondo:"
 
-#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:168
+#: src/xpad-pad-properties.c:179 src/xpad-preferences.c:167
 msgid "Foreground:"
 msgstr "Primer plano"
 
-#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:192
+#: src/xpad-pad-properties.c:199 src/xpad-preferences.c:191
 msgid "Set Foreground Color"
 msgstr "Configurar color de primer plano"
 
-#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:193
+#: src/xpad-pad-properties.c:200 src/xpad-preferences.c:192
 msgid "Set Background Color"
 msgstr "Configurar color del fondo"
 
-#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:194
+#: src/xpad-pad-properties.c:201 src/xpad-preferences.c:193
 msgid "Set Font"
 msgstr "Configurar tipografía"
 
-#: src/xpad-preferences.c:149
+#: src/xpad-preferences.c:148
 msgid "Use font from theme"
 msgstr "Usar tipografia del tema"
 
-#: src/xpad-preferences.c:151
+#: src/xpad-preferences.c:150
 msgid "Use colors from theme"
 msgstr "Usar colores del tema"
 
-#: src/xpad-preferences.c:179
+#: src/xpad-preferences.c:178
 msgid "_Edit lock"
 msgstr "_Bloquear edición"
 
-#: src/xpad-preferences.c:180
-msgid "_Pads start on all workspaces"
-msgstr ""
+#: src/xpad-preferences.c:179
+msgid "_Pads start sticky"
+msgstr "Las notas se inician _pegajosas"
 
-#: src/xpad-preferences.c:181
+#: src/xpad-preferences.c:180
 msgid "_Confirm pad deletion"
 msgstr "_Confirmar borrado de nota"
 
-#: src/xpad-preferences.c:187
+#: src/xpad-preferences.c:186
 msgid "Xpad Preferences"
 msgstr "Preferencias de Xpad"
 
-#: src/xpad-preferences.c:252
+#: src/xpad-preferences.c:251
 msgid "Options"
 msgstr "Opciones"
 
-#: src/xpad-toolbar.c:76
+#: src/xpad-toolbar.c:84
 msgid "Clear Pad Contents"
 msgstr "Limpiar contenido de nota"
 
-#: src/xpad-toolbar.c:76
+#: src/xpad-toolbar.c:84
 msgid "Add C_lear to Toolbar"
 msgstr "Añadir _Limpiar a la barra de herramientas"
 
-#: src/xpad-toolbar.c:77
+#: src/xpad-toolbar.c:85
 msgid "Close and Save Pad"
 msgstr "Cerrar y salvar nota"
 
-#: src/xpad-toolbar.c:77
+#: src/xpad-toolbar.c:85
 msgid "Add _Close to Toolbar"
 msgstr "Añadir _Cerrar a la barra de herramientas"
 
-#: src/xpad-toolbar.c:78
+#: src/xpad-toolbar.c:86
 msgid "Delete Pad"
 msgstr "Borrar nota"
 
-#: src/xpad-toolbar.c:78
+#: src/xpad-toolbar.c:86
 msgid "Add _Delete to Toolbar"
 msgstr "Añadir _Borrar a la barra de herramientas"
 
-#: src/xpad-toolbar.c:79
+#: src/xpad-toolbar.c:87
 msgid "Open New Pad"
 msgstr "Abrir nueva nota"
 
-#: src/xpad-toolbar.c:79
+#: src/xpad-toolbar.c:87
 msgid "Add _New to Toolbar"
 msgstr "Añadir _Nueva a la barra de herramientas"
 
-#: src/xpad-toolbar.c:80
+#: src/xpad-toolbar.c:88
 msgid "Edit Preferences"
 msgstr "Editar preferencias"
 
-#: src/xpad-toolbar.c:80
+#: src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Añadir _Preferencias a la barra de herramientas"
 
-#: src/xpad-toolbar.c:81
+#: src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr "Editar propiedades de nota"
 
-#: src/xpad-toolbar.c:81
+#: src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr "Añadir _Propiedades a la barra de herramientas"
 
-#: src/xpad-toolbar.c:82
+#: src/xpad-toolbar.c:90
 msgid "Close All Pads"
 msgstr "Cerrar todas las notas"
 
-#: src/xpad-toolbar.c:82
+#: src/xpad-toolbar.c:90
 msgid "Add _Quit to Toolbar"
 msgstr "Añadir _Salir a la barra de herramientas"
 
-#: src/xpad-toolbar.c:83
+#: src/xpad-toolbar.c:91
+msgid "Toggle Stickiness"
+msgstr "Cambiar modo pegajoso"
+
+#: src/xpad-toolbar.c:91
+msgid "Add _Sticky to Toolbar"
+msgstr "Añadir _Pegajoso a la barra de herramientas"
+
+#: src/xpad-toolbar.c:92
 msgid "Add a Se_parator to Toolbar"
 msgstr "Añadir un _Separador a la barra de herramientas"
 
-#: src/xpad-toolbar.c:544
+#: src/xpad-toolbar.c:575
 msgid "_Remove From Toolbar"
 msgstr "_Quitar de la barra de herramientas"
 
-#: src/xpad-toolbar.c:554
+#: src/xpad-toolbar.c:585
 msgid "_Move"
 msgstr "_Mover"
 
@@ -298,74 +322,18 @@ msgstr "Anotar más tarde"
 msgid "Sticky Notes"
 msgstr "Notas pegajosas"
 
-#~ msgid "_Pads start sticky"
-#~ msgstr "Las notas se inician _pegajosas"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientación"
-
-#~ msgid "The orientation of the tray."
-#~ msgstr "Orientación de la bandeja"
-
-#, fuzzy
-#~ msgid "Virtual sticky notes"
-#~ msgstr "Notas pegajosas"
-
-#~ msgid "_Sticky"
-#~ msgstr "_Pegajosa"
-
-#~ msgid "Toggle Stickiness"
-#~ msgstr "Cambiar modo pegajoso"
-
-#~ msgid "Add _Sticky to Toolbar"
-#~ msgstr "Añadir _Pegajoso a la barra de herramientas"
-
-#~ msgid "Prints usage information and exits"
-#~ msgstr "Muestra información de uso y termina"
-
-#~ msgid "Causes all running xpad instances to close"
-#~ msgstr "Hace que todas las instancias de xpad se cierren"
-
-#~ msgid ""
-#~ "Usage: %s [OPTIONS]\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Uso: %s [OPCIONES]\n"
-#~ "\n"
-
-#~ msgid "Missing companion argument to %s\n"
-#~ msgstr "Falta el argumento que acompaña a %s\n"
-
-#~ msgid "Didn't understand argument '%s'\n"
-#~ msgstr "No se comprendió el argumento '%s'\n"
-
-#~ msgid "Invalid number: '%s'\n"
-#~ msgstr "Número inválido: '%s'\n"
-
-#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
-#~ msgstr "Está usando xpad %s con GTK+ %i.%i.%i."
-
-#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-#~ msgstr ""
-#~ "Visite http://xpad.sourceforge.net/ para más información acerca de xpad."
-
 #~ msgid "Illegal \"--verbosity\" value.  Must be either 0, 1, or 2.\n"
 #~ msgstr "Valor pasado a \"--verbosity\" ilegal. Debe ser 0, 1 ó 2.\n"
 
 #~ msgid "Sets the amount of debugging ouput (can be 0, 1, or 2; default is 0)"
-#~ msgstr ""
-#~ "Configura la cantidad de información de depuración que muestra (puede ser "
-#~ "0, 1 ó 2; por defecto es 0)"
+#~ msgstr "Configura la cantidad de información de depuración que muestra (puede ser 0, 1 ó 2; por defecto es 0)"
 
 #~ msgid "Lists the titles of all open pads"
 #~ msgstr "Lista los títulos de todas las notas abiertas"
 
-#~ msgid ""
-#~ "Causes the Nth pad (1-based) to present itself to the user; pad numbers "
-#~ "can be seen by using \"--list\""
+#~ msgid "Causes the Nth pad (1-based) to present itself to the user; pad numbers can be seen by using \"--list\""
 #~ msgstr ""
-#~ "Hace que la nota n-ésima (desde 1) se presente a sí misma al usuario; los "
-#~ "números\n"
+#~ "Hace que la nota n-ésima (desde 1) se presente a sí misma al usuario; los números\n"
 #~ "de nota pueden verse usando \"--list\""
 
 #~ msgid "Causes all pads to present themselves to the user"
@@ -398,20 +366,15 @@ msgstr "Notas pegajosas"
 #~ msgid "The amount of space you want between the border and text."
 #~ msgstr "La cantidad de espacio que se desea entre el borde y el texto."
 
-#~ msgid ""
-#~ "Choose the number of pixels around the text region.  This space is "
-#~ "colored the same and surrounds it on all sides."
+#~ msgid "Choose the number of pixels around the text region.  This space is colored the same and surrounds it on all sides."
 #~ msgstr ""
-#~ "Elija el número de píxeles alrededor de una región de texto. Este "
-#~ "espacio\n"
+#~ "Elija el número de píxeles alrededor de una región de texto. Este espacio\n"
 #~ "se colorea igual y la rodea por todas partes."
 
 #~ msgid "The amount of space you want surrounding the pad."
 #~ msgstr "La cantidad de espacio deseado rodeando la nota."
 
-#~ msgid ""
-#~ "Choose the number of pixels around the pad.  This space is colored "
-#~ "independently and surrounds it on all sides."
+#~ msgid "Choose the number of pixels around the pad.  This space is colored independently and surrounds it on all sides."
 #~ msgstr ""
 #~ "Elija el número de píxeles alrededor de la nota. Este espacio se colorea\n"
 #~ "independientemente y la rodea por todas partes."
@@ -431,16 +394,11 @@ msgstr "Notas pegajosas"
 #~ msgid "<b>Unused Buttons:</b>"
 #~ msgstr "<b>Botones sin usar:</b>"
 
-#~ msgid ""
-#~ "If on, a toolbar will appear below each pad when the mouse hovers over it."
-#~ msgstr ""
-#~ "Si se activa, aparecerá una barra de herramientas bajo cada nota cuando "
-#~ "el ratón pase sobre ella."
+#~ msgid "If on, a toolbar will appear below each pad when the mouse hovers over it."
+#~ msgstr "Si se activa, aparecerá una barra de herramientas bajo cada nota cuando el ratón pase sobre ella."
 
 #~ msgid "If on, the toolbar will disappear when you are not using the pad."
-#~ msgstr ""
-#~ "Si se activa, la barra de herramientas desapacerá cuando no se use la "
-#~ "nota."
+#~ msgstr "Si se activa, la barra de herramientas desapacerá cuando no se use la nota."
 
 #~ msgid "Close and save _all pads"
 #~ msgstr "_Cerrar y salvar todas las notas"
@@ -454,9 +412,7 @@ msgstr "Notas pegajosas"
 #~ msgid "<b>Window Manager Close Action:</b>"
 #~ msgstr "<b>Acción del gestor de ventanas para cerrar:</b>"
 
-#~ msgid ""
-#~ "If on, your window manager will add its own decorations to each pad.  For "
-#~ "example, a titlebar and close button."
+#~ msgid "If on, your window manager will add its own decorations to each pad.  For example, a titlebar and close button."
 #~ msgstr ""
 #~ "Si se activa, el gestor de ventanas añadirá sus propias decoraciones a\n"
 #~ "cada nota. Por ejemplo, una barra de título y un botón para cerrar."
@@ -467,18 +423,13 @@ msgstr "Notas pegajosas"
 #~ msgid "If on, new pads are sticky by default."
 #~ msgstr "Si se activa, las nuevas notas serán pegajosas por defecto."
 
-#~ msgid ""
-#~ "If on, scrollbars appear when text is larger than the pad.  If off, the "
-#~ "pad resizes to fit the text."
+#~ msgid "If on, scrollbars appear when text is larger than the pad.  If off, the pad resizes to fit the text."
 #~ msgstr ""
 #~ "Si se activa, las barras de desplazamiento aparecen cuando el\n"
 #~ "texto sea más grande que la nota. Si se desactiva, la nota se\n"
 #~ "redimensiona para acomodar el texto."
 
-#~ msgid ""
-#~ "If on, when a pad loses focus, it will become uneditable.  This allows "
-#~ "you to move it by left dragging.  To make it editable again, double-click "
-#~ "the pad.  If off, pads are always editable."
+#~ msgid "If on, when a pad loses focus, it will become uneditable.  This allows you to move it by left dragging.  To make it editable again, double-click the pad.  If off, pads are always editable."
 #~ msgstr ""
 #~ "Si se activa, cuando una nota pierde el foco, se vuelve\n"
 #~ "ineditable. Esto permite moverla arrastrándola con el botón\n"
@@ -493,9 +444,7 @@ msgstr "Notas pegajosas"
 #~ "La nota en la que se ha presionado el botón \"cerrar\" se cerrará,\n"
 #~ "salvando sus contenidos."
 
-#~ msgid ""
-#~ "The pad you clicked the close button on will be destroyed, losing "
-#~ "contents.  There will be no confirmation."
+#~ msgid "The pad you clicked the close button on will be destroyed, losing contents.  There will be no confirmation."
 #~ msgstr ""
 #~ "La nota en la que se ha presionado el botón \"cerrar\" será\n"
 #~ "destruida, perdiendo sus contenidos. No se pedirá confirmación."
@@ -561,19 +510,15 @@ msgstr "Notas pegajosas"
 #~ msgstr "/Nota/Pegajosa"
 
 #~ msgid ""
-#~ "Each xpad session consists of one or more open pads.  These pads are "
-#~ "basically sticky notes on your desktop in which you can write memos.\n"
+#~ "Each xpad session consists of one or more open pads.  These pads are basically sticky notes on your desktop in which you can write memos.\n"
 #~ "\n"
 #~ msgstr ""
-#~ "Cada sesión de xpad consiste en una o más notas abiertas. Estas notas "
-#~ "son\n"
+#~ "Cada sesión de xpad consiste en una o más notas abiertas. Estas notas son\n"
 #~ "básicamente notas pegajosas en el escritorio en las que se puede\n"
 #~ "escribir recordatorios.\n"
 
 #~ msgid ""
-#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer "
-#~ "in the bottom right, or hold down CTRL while left dragging anywhere on "
-#~ "the pad.\n"
+#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in the bottom right, or hold down CTRL while left dragging anywhere on the pad.\n"
 #~ "\n"
 #~ msgstr ""
 #~ "<b>Para mover una nota</b>, arrastre con el botón izquierdo sobre la\n"
@@ -582,8 +527,7 @@ msgstr "Notas pegajosas"
 #~ "botón izquierdo en cualquier parte de la nota.\n"
 
 #~ msgid ""
-#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-#~ "right dragging anywhere on the pad.\n"
+#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while right dragging anywhere on the pad.\n"
 #~ "\n"
 #~ msgstr ""
 #~ "<b>Para redimensionar la nota</b>, arrastre con el botón izquierdo en\n"
@@ -592,8 +536,7 @@ msgstr "Notas pegajosas"
 #~ "\n"
 
 #~ msgid ""
-#~ "<b>To change color settings</b>, right click on a pad and choose Edit-"
-#~ ">Preferences.\n"
+#~ "<b>To change color settings</b>, right click on a pad and choose Edit->Preferences.\n"
 #~ "\n"
 #~ msgstr ""
 #~ "<b>Para cambiar la configuración de color</b>, haga click con el botón\n"
@@ -601,19 +544,15 @@ msgstr "Notas pegajosas"
 #~ "\n"
 
 #~ msgid ""
-#~ "Most actions are available throught the popup menu that appears when you "
-#~ "right click on a pad.  Try it out and enjoy.\n"
+#~ "Most actions are available throught the popup menu that appears when you right click on a pad.  Try it out and enjoy.\n"
 #~ "\n"
 #~ msgstr ""
 #~ "La mayoría de las acciones están disponibles mediante el menú\n"
 #~ "emergente que aparece cuando haga click con el botón derecho sobre la\n"
 #~ "nota. Pruebe y disfrute.\n"
 
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Por favor, envíe comentarios o informes de error a xpad-devel@lists."
-#~ "sourceforge.net"
+#~ msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+#~ msgstr "Por favor, envíe comentarios o informes de error a xpad-devel@lists.sourceforge.net"
 
 #~ msgid "Help"
 #~ msgstr "Ayuda"
@@ -627,9 +566,7 @@ msgstr "Notas pegajosas"
 #~ msgid "xpad: right click for more options..."
 #~ msgstr "xpad: haga click con el botón derecho para más opciones..."
 
-#~ msgid ""
-#~ "Right click this icon for a menu of options pertaining to XPad. Left "
-#~ "click it to toggle whether or not the pads are displayed."
+#~ msgid "Right click this icon for a menu of options pertaining to XPad. Left click it to toggle whether or not the pads are displayed."
 #~ msgstr ""
 #~ "Click con el botón derecho sobre este icono para un menú de opciones\n"
 #~ "pertenecientes a XPad. Click con el botón izquierdo para cambiar la\n"

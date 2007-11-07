@@ -1,3 +1,13 @@
+Version 2.13
+* New Chinese (simplified) translation (Meng Jie)
+* New English (British) translation (David Lodge)
+* New Finnish translation (Jorma Karvonen)
+* New Korean translation (KwangSub Lee)
+* Updated Dutch translation (Benno Schulenberg)
+* Updated Slovak translation (Andrej Kacian)
+* Fixed Danish, Swedish translations
+
+
 Version 2.12
 * Fix a crash when loading pads with formatting
 
