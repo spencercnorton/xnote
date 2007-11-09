@@ -108,7 +108,6 @@ static void xpad_pad_show_toolbar (XpadPad *pad);
 static void xpad_pad_popup (XpadPad *pad, GdkEventButton *event);
 static void xpad_pad_spawn (XpadPad *pad);
 static void xpad_pad_clear (XpadPad *pad);
-static void xpad_pad_close (XpadPad *pad);
 static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences (XpadPad *pad);
@@ -588,7 +587,7 @@ xpad_pad_clear (XpadPad *pad)
 	gtk_text_buffer_set_text (buffer, "", -1);
 }
 
-static void
+void
 xpad_pad_close (XpadPad *pad)
 {
 	gtk_widget_hide (GTK_WIDGET (pad));
@@ -1294,6 +1293,24 @@ menu_show_all (XpadPad *pad)
 }
 
 static void
+menu_close_all (XpadPad *pad)
+{
+	GSList *pads, *i;
+	
+	if (!pad->priv->group)
+		return;
+	
+	pads = xpad_pad_group_get_pads (pad->priv->group);
+	
+	for (i = pads; i; i = i->next)
+	{
+		xpad_pad_close (XPAD_PAD (i->data));
+	}
+	
+	g_slist_free (pads);
+}
+
+static void
 menu_show (XpadPad *pad)
 {
 	gtk_window_present (GTK_WINDOW (pad));
@@ -1501,7 +1518,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
 	
 	MENU_ADD (_("_Show All"), NULL, 0, 0, menu_show_all);
-	MENU_ADD (_("_Close All"), GTK_STOCK_QUIT, GDK_q, GDK_CONTROL_MASK, xpad_pad_quit);
+	MENU_ADD (_("_Close All"), NULL, 0, 0, menu_close_all);
 	
 	/* The rest of the notes menu will get set up in the prep function below */
 	
