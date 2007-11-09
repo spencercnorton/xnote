@@ -825,6 +825,9 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 static gboolean
 xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 {
+	if (!GTK_WIDGET_VISIBLE (pad))
+		return FALSE;
+	
 	if (pad->priv->width != event->width || pad->priv->height != event->height)
 		pad->priv->toolbar_pad_resized = TRUE;
 	
