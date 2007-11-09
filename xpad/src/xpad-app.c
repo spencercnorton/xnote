@@ -82,7 +82,7 @@ static gboolean  config_dir_exists          (void);
 static gchar    *make_config_dir            (void);
 static void      register_stock_icons       (void);
 static gint      xpad_app_load_pads         (void);
-static void      xpad_app_quit_if_no_pads   (XpadPadGroup *group);
+static gboolean  xpad_app_quit_if_no_pads   (XpadPadGroup *group);
 static gboolean  xpad_app_pass_args         (void);
 static gboolean  xpad_app_open_proc_file    (void);
 
@@ -172,7 +172,7 @@ xpad_app_init (int argc, char **argv)
 		}
 	}
 	
-	xpad_app_quit_if_no_pads (pad_group);
+	g_idle_add ((GSourceFunc)xpad_app_quit_if_no_pads, pad_group);
 	
 	if (first_time)
 		show_help ();
@@ -381,7 +381,7 @@ register_stock_icons (void)
 }
 
 
-static void
+static gboolean
 xpad_app_quit_if_no_pads (XpadPadGroup *group)
 {
 	if (!xpad_tray_is_open ())
@@ -402,6 +402,8 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 		}
 		g_slist_free (list);
 	}
+	
+	return FALSE;
 }
 
 static void
@@ -443,8 +445,9 @@ xpad_app_load_pads (void)
 		if (!strncmp (name, "info-", 5) &&
 		    name[strlen (name) - 1] != '~')
 		{
-			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name);
-			if (!option_hide_old)
+			gboolean show = TRUE;
+			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name, &show);
+			if (show && !option_hide_old)
 				gtk_widget_show (pad);
 			
 			opened ++;

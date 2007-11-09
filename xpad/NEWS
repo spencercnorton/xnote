@@ -1,6 +1,7 @@
 Version 2.13
 * Requires GTK+ 2.12
 * Fix pads possibly not remembering location after close
+* Fix pad-closed state not being remembered
 * Uses native status icon code in GTK+ 
 * New Chinese (simplified) translation (Meng Jie)
 * New English (British) translation (David Lodge)

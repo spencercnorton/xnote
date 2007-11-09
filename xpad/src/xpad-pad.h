@@ -54,7 +54,7 @@ struct XpadPadClass
 GType xpad_pad_get_type (void);
 
 GtkWidget *xpad_pad_new (XpadPadGroup *group);
-GtkWidget *xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename);
+GtkWidget *xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolean *show);
 GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename);
 void xpad_pad_close (XpadPad *pad);
 

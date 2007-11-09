@@ -79,7 +79,7 @@ enum
   LAST_PROP
 };
 
-static void load_info (XpadPad *pad);
+static void load_info (XpadPad *pad, gboolean *show);
 static void save_info (XpadPad *pad);
 static void load_content (XpadPad *pad);
 static void save_content (XpadPad *pad);
@@ -129,12 +129,12 @@ xpad_pad_new (XpadPadGroup *group)
 }
 
 GtkWidget *
-xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename)
+xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolean *show)
 {
 	GtkWidget *pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, NULL));
 	
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
-	load_info (XPAD_PAD (pad));
+	load_info (XPAD_PAD (pad), show);
 	load_content (XPAD_PAD (pad));
 	
 	return pad;
@@ -1066,7 +1066,7 @@ save_content (XpadPad *pad)
 }
 
 static void
-load_info (XpadPad *pad)
+load_info (XpadPad *pad, gboolean *show)
 {
 	gboolean locked = FALSE, follow_font = TRUE, follow_color = TRUE;
 	gboolean hidden = FALSE;
@@ -1151,8 +1151,8 @@ load_info (XpadPad *pad)
 	}
 	g_free (oldcontentprefix);
 	
-	if (hidden)
-		gtk_widget_hide (GTK_WIDGET (pad));
+	if (show)
+		*show = !hidden;
 }
 
 static void
@@ -1192,7 +1192,7 @@ save_info (XpadPad *pad)
 		"b|follow_font", xpad_text_view_get_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"b|follow_color", xpad_text_view_get_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"b|sticky", pad->priv->sticky,
-		"b|hidden", GTK_WIDGET_VISIBLE (pad),
+		"b|hidden", !GTK_WIDGET_VISIBLE (pad),
 		"h|back_red", style->base[GTK_STATE_NORMAL].red,
 		"h|back_green", style->base[GTK_STATE_NORMAL].green,
 		"h|back_blue", style->base[GTK_STATE_NORMAL].blue,
