@@ -112,6 +112,7 @@ static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences (XpadPad *pad);
 static void xpad_pad_quit (XpadPad *pad);
+static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
@@ -305,7 +306,7 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-delete", G_CALLBACK (xpad_pad_delete), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-properties", G_CALLBACK (xpad_pad_open_properties), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-preferences", G_CALLBACK (xpad_pad_open_preferences), pad);
-	g_signal_connect_swapped (pad->priv->toolbar, "activate-quit", G_CALLBACK (xpad_pad_quit), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "activate-quit", G_CALLBACK (xpad_pad_close_all), pad);
 	
 	g_signal_connect (pad->priv->toolbar, "popup", G_CALLBACK (xpad_pad_toolbar_popup), pad);
 	g_signal_connect (pad->priv->toolbar, "popdown", G_CALLBACK (xpad_pad_toolbar_popdown), pad);
@@ -1306,7 +1307,7 @@ menu_show_all (XpadPad *pad)
 }
 
 static void
-menu_close_all (XpadPad *pad)
+xpad_pad_close_all (XpadPad *pad)
 {
 	if (!pad->priv->group)
 		return;
@@ -1531,7 +1532,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
 	
 	MENU_ADD (_("_Show All"), NULL, 0, 0, menu_show_all);
-	MENU_ADD (_("_Close All"), NULL, 0, 0, menu_close_all);
+	MENU_ADD (_("_Close All"), NULL, 0, 0, xpad_pad_close_all);
 	
 	/* The rest of the notes menu will get set up in the prep function below */
 	
