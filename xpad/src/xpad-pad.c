@@ -592,6 +592,16 @@ xpad_pad_close (XpadPad *pad)
 {
 	gtk_widget_hide (GTK_WIDGET (pad));
 	
+	/* If no tray and this is the last pad, we don't want to record this
+	   pad as closed, we want to start with just this pad next open.  So
+	   quit before we record. */
+	if (!xpad_tray_is_open () &&
+	    xpad_pad_group_num_visible_pads (pad->priv->group) == 0)
+	{
+		xpad_pad_quit (pad);
+		return;
+	}
+	
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
 	
@@ -1298,19 +1308,19 @@ menu_show_all (XpadPad *pad)
 static void
 menu_close_all (XpadPad *pad)
 {
-	GSList *pads, *i;
-	
 	if (!pad->priv->group)
 		return;
 	
-	pads = xpad_pad_group_get_pads (pad->priv->group);
-	
-	for (i = pads; i; i = i->next)
-	{
-		xpad_pad_close (XPAD_PAD (i->data));
-	}
-	
-	g_slist_free (pads);
+	/**
+	 * The logic is different here depending on whether the tray is open.
+	 * If it is open, we just close each pad individually.  If it isn't
+	 * open, we do a quit.  This way, when xpad is run again, only the
+	 * pads open during the last 'close all' will open again.
+	 */
+	if (xpad_tray_is_open ())
+		xpad_pad_group_close_all (pad->priv->group);
+	else
+		xpad_pad_quit (pad);
 }
 
 static void

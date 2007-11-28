@@ -141,3 +141,37 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 	g_slist_free (group->priv->pads);
 	group->priv->pads = NULL;
 }
+
+
+gint
+xpad_pad_group_num_visible_pads (XpadPadGroup *group)
+{
+	gint num = 0;
+	if (group)
+	{
+		GSList *i;
+		for (i = group->priv->pads; i; i = i->next)
+		{
+			if (GTK_WIDGET_VISIBLE(GTK_WIDGET(i->data)))
+				num ++;
+		}
+	}
+	return num;
+}
+
+
+void
+xpad_pad_group_close_all (XpadPadGroup *group)
+{
+	if (group)
+		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_close, NULL);
+}
+
+
+void
+xpad_pad_group_show_all (XpadPadGroup *group)
+{
+	if (group)
+		g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_show, NULL);
+}
+

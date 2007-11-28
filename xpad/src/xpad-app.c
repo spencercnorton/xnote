@@ -74,6 +74,7 @@ static gint server_fd;
 static FILE *output;
 static gboolean xpad_translucent = FALSE;
 static XpadPadGroup *pad_group;
+static gint pads_loaded_on_start = 0;
 
 static gboolean  process_local_args         (gint *argc, gchar **argv[]);
 static gboolean  process_remote_args        (gint *argc, gchar **argv[], gboolean have_gtk);
@@ -83,6 +84,7 @@ static gchar    *make_config_dir            (void);
 static void      register_stock_icons       (void);
 static gint      xpad_app_load_pads         (void);
 static gboolean  xpad_app_quit_if_no_pads   (XpadPadGroup *group);
+static gboolean  xpad_app_first_idle_check  (XpadPadGroup *group);
 static gboolean  xpad_app_pass_args         (void);
 static gboolean  xpad_app_open_proc_file    (void);
 
@@ -165,14 +167,15 @@ xpad_app_init (int argc, char **argv)
 	xpad_session_manager_init ();
 	
 	/* load all pads */
-	if (xpad_app_load_pads () == 0 && !option_new) {
+	pads_loaded_on_start = xpad_app_load_pads ();
+	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
 		}
 	}
 	
-	g_idle_add ((GSourceFunc)xpad_app_quit_if_no_pads, pad_group);
+	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
 	
 	if (first_time)
 		show_help ();
@@ -386,25 +389,40 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 {
 	if (!xpad_tray_is_open ())
 	{
-		GSList *list, *i;
-		list = xpad_pad_group_get_pads (group);
-		for (i = list; i; i = i->next)
-		{
-			if (GTK_WIDGET_VISIBLE(GTK_WIDGET(i->data)))
-				break;
-		}
-		if (!i)
+		gint num_pads = xpad_pad_group_num_visible_pads (group);
+		if (num_pads == 0)
 		{
 			if (gtk_main_level () > 0)
 				gtk_main_quit ();
 			else
 				exit (0);
 		}
-		g_slist_free (list);
 	}
 	
 	return FALSE;
 }
+
+static gboolean
+xpad_app_first_idle_check (XpadPadGroup *group)
+{
+	/* We do this check at the first idle rather than immediately during
+	   start because we want to give the tray time to become embedded. */
+	if (!xpad_tray_is_open () && pads_loaded_on_start > 0 &&
+	    xpad_pad_group_num_visible_pads (group) == 0)
+	{
+		/* So we loaded xpad, there's no tray, and there's only hidden
+		   pads...  Probably previously had tray open but we failed
+		   this time.  Show all pads as a last resort.  This shouldn't
+		   happen in normal operation. */
+		xpad_pad_group_show_all (group);
+	}
+	
+	/* All future idle checks should be just for zero visible pads */
+	g_idle_add ((GSourceFunc)xpad_app_quit_if_no_pads, group);
+	
+	return TRUE;
+}
+
 
 static void
 xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)

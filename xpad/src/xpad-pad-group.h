@@ -58,10 +58,11 @@ XpadPadGroup *xpad_pad_group_new      (void);
 void     xpad_pad_group_add      (XpadPadGroup *group, GtkWidget *pad);
 void     xpad_pad_group_remove   (XpadPadGroup *group, GtkWidget *pad);
 
-void     xpad_pad_group_hide_all    (XpadPadGroup *group);
-void     xpad_pad_group_unhide_all  (XpadPadGroup *group);
-void     xpad_pad_group_toggle_hide (XpadPadGroup *group);
-GSList * xpad_pad_group_get_pads    (XpadPadGroup *group);
+void     xpad_pad_group_close_all        (XpadPadGroup *group);
+void     xpad_pad_group_show_all         (XpadPadGroup *group);
+void     xpad_pad_group_toggle_hide      (XpadPadGroup *group);
+GSList * xpad_pad_group_get_pads         (XpadPadGroup *group);
+gint     xpad_pad_group_num_visible_pads (XpadPadGroup *group);
 
 G_END_DECLS
 
