@@ -1,7 +1,7 @@
 /*
 
 Copyright (c) 2002 Jamis Buck
-Copyright (c) 2003-2004 Michael Terry
+Copyright (c) 2003-2007 Michael Terry
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
