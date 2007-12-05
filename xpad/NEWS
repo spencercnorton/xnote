@@ -3,6 +3,7 @@ Version 2.13
 * Fix pads possibly not remembering location after close
 * Fix pad-closed state not being remembered
 * Uses native status icon code in GTK+ 
+* Maybe, possibly fix some 'pad on all workspaces' problems
 * New Chinese (simplified) translation (Meng Jie)
 * New English (British) translation (David Lodge)
 * New Finnish translation (Jorma Karvonen)
