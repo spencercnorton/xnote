@@ -137,6 +137,7 @@ xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolea
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
 	load_info (XPAD_PAD (pad), show);
 	load_content (XPAD_PAD (pad));
+	gtk_window_set_role (GTK_WINDOW (pad), XPAD_PAD (pad)->priv->infoname);
 	
 	return pad;
 }
@@ -221,7 +222,7 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->height = xpad_settings_get_height (xpad_settings ());
 	pad->priv->infoname = NULL;
 	pad->priv->contentname = NULL;
-	pad->priv->sticky = FALSE;
+	pad->priv->sticky = xpad_settings_get_sticky (xpad_settings ());
 	pad->priv->textview = NULL;
 	pad->priv->scrollbar = NULL;
 	pad->priv->toolbar = NULL;
@@ -254,6 +255,9 @@ xpad_pad_init (XpadPad *pad)
 	g_object_unref (G_OBJECT (accel_group));
 	pad->priv->menu = menu_get_popup_no_highlight (pad, accel_group);
 	pad->priv->highlight_menu = menu_get_popup_highlight (pad, accel_group);
+	gtk_accel_group_connect (accel_group, GDK_Q, GDK_CONTROL_MASK, 0,
+	                         g_cclosure_new_swap (G_CALLBACK (xpad_pad_quit), pad, NULL));
+
 	
 	vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
 		"homogeneous", FALSE,
@@ -272,7 +276,7 @@ xpad_pad_init (XpadPad *pad)
 		"skip-taskbar-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
 		"type", GTK_WINDOW_TOPLEVEL,
 		"type-hint", GDK_WINDOW_TYPE_HINT_NORMAL,
-		"window-position", GTK_WIN_POS_NONE,
+		"window-position", GTK_WIN_POS_MOUSE,
 		"child", vbox,
 		NULL);
 	
@@ -314,7 +318,7 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect (pad->priv->menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
 	g_signal_connect (pad->priv->highlight_menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
 	
-	if (xpad_settings_get_sticky (xpad_settings ()))
+	if (pad->priv->sticky)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
@@ -344,14 +348,14 @@ xpad_pad_show (XpadPad *pad)
 		"gravity", GDK_GRAVITY_STATIC,
 		"skip-pager-hint", TRUE,
 		"skip-taskbar-hint", TRUE,
-		NULL);
+		NULL);*/
 	
-	if (xpad_settings_get_sticky (xpad_settings ()))
+	if (pad->priv->sticky)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
 	
-	xpad_pad_sync_title (pad);*/
+/*	xpad_pad_sync_title (pad);*/
 }
 
 static void
@@ -865,10 +869,13 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 static gboolean
 xpad_pad_window_state_event (XpadPad *pad, GdkEventWindowState *event)
 {
-	pad->priv->sticky = (event->new_window_state & GDK_WINDOW_STATE_STICKY) ? TRUE : FALSE;
-	
-	if (event->changed_mask & GDK_WINDOW_STATE_STICKY)
-		save_info (pad);
+	if (event->changed_mask & GDK_WINDOW_STATE_STICKY) {
+		if (GTK_WIDGET_VISIBLE (pad))
+		{
+			pad->priv->sticky = (event->new_window_state & GDK_WINDOW_STATE_STICKY) ? TRUE : FALSE;
+			save_info (pad);
+		}
+	}
 	
 	return FALSE;
 }
@@ -1179,6 +1186,7 @@ save_info (XpadPad *pad)
 		pad->priv->infoname = fio_unique_name ("info-");
 		if (!pad->priv->infoname)
 			return;
+		gtk_window_set_role (GTK_WINDOW (pad), pad->priv->infoname);
 	}
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
@@ -1490,6 +1498,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_STOCK (GTK_STOCK_NEW, xpad_pad_spawn);
 	MENU_ADD_SEP ();
 	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
+	g_object_set_data (G_OBJECT (uppermenu), "sticky", item);
 	MENU_ADD_STOCK (GTK_STOCK_PROPERTIES, xpad_pad_open_properties);
 	MENU_ADD_SEP ();
 	MENU_ADD_STOCK (GTK_STOCK_CLOSE, xpad_pad_close);
@@ -1560,6 +1569,13 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 	item = g_object_get_data (G_OBJECT (uppermenu), "paste");
 	if (item)
 		gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
+	
+	item = g_object_get_data (G_OBJECT (uppermenu), "sticky");
+	if (item) {
+		g_signal_handlers_block_by_func (item, menu_sticky, current_pad);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), current_pad->priv->sticky);
+		g_signal_handlers_unblock_by_func (item, menu_sticky, current_pad);
+	}
 	
 	menu = g_object_get_data (G_OBJECT (uppermenu), "notes-menu");
 	if (menu)
