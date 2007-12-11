@@ -402,25 +402,31 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 	return FALSE;
 }
 
+
 static gboolean
 xpad_app_first_idle_check (XpadPadGroup *group)
 {
 	/* We do this check at the first idle rather than immediately during
 	   start because we want to give the tray time to become embedded. */
-	if (!xpad_tray_is_open () && pads_loaded_on_start > 0 &&
+	if (!xpad_tray_is_open () &&
 	    xpad_pad_group_num_visible_pads (group) == 0)
 	{
-		/* So we loaded xpad, there's no tray, and there's only hidden
-		   pads...  Probably previously had tray open but we failed
-		   this time.  Show all pads as a last resort.  This shouldn't
-		   happen in normal operation. */
-		xpad_pad_group_show_all (group);
+		if (pads_loaded_on_start > 0)
+			/* So we loaded xpad, there's no tray, and there's only hidden
+			   pads...  Probably previously had tray open but we failed
+			   this time.  Show all pads as a last resort.  This shouldn't
+			   happen in normal operation. */
+			xpad_pad_group_show_all (group);
+		else
+		{
+			if (gtk_main_level () > 0)
+				gtk_main_quit ();
+			else
+				exit (0);
+		}
 	}
 	
-	/* All future idle checks should be just for zero visible pads */
-	g_idle_add ((GSourceFunc)xpad_app_quit_if_no_pads, group);
-	
-	return TRUE;
+	return FALSE;
 }
 
 

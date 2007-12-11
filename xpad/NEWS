@@ -1,3 +1,7 @@
+Version 2.14
+* Fix 100% CPU bug
+
+
 Version 2.13
 * Requires GTK+ 2.12
 * Fix pads possibly not remembering location after close
