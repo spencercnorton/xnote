@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-text-buffer.h"
 #include "xpad-text-view.h"
 #include "xpad-toolbar.h"
+#include "xpad-tray.h"
 
 G_DEFINE_TYPE(XpadPad, xpad_pad, GTK_TYPE_WINDOW)
 #define XPAD_PAD_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PAD, XpadPadPrivate))

@@ -104,7 +104,7 @@ menu_spawn (XpadPadGroup *group)
 static void
 xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 {
-	GtkWidget *menu, *item, *imgwidget;
+	GtkWidget *menu, *item;
 	GSList *pads, *l;
 	gint n;
 	
