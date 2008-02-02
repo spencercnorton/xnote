@@ -81,7 +81,6 @@ enum
 };
 
 static void load_info (XpadPad *pad, gboolean *show);
-static void save_info (XpadPad *pad);
 static void load_content (XpadPad *pad);
 static void save_content (XpadPad *pad);
 static GtkWidget *menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
@@ -611,7 +610,7 @@ xpad_pad_close (XpadPad *pad)
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 	
 	g_signal_emit (pad, signals[CLOSED], 0);
 }
@@ -712,7 +711,7 @@ prop_notify_follow_font (XpadPad *pad)
 			pango_font_description_free (fontdesc);
 	}
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 }
 
 static void
@@ -728,7 +727,7 @@ prop_notify_follow_color (XpadPad *pad)
 		gtk_widget_modify_text (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_text_color (prop));
 	}
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 }
 
 static void
@@ -738,7 +737,7 @@ prop_notify_text (XpadPad *pad)
 	
 	gtk_widget_modify_text (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_text_color (prop));
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 }
 
 static void
@@ -748,7 +747,7 @@ prop_notify_back (XpadPad *pad)
 	
 	gtk_widget_modify_base (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_back_color (prop));
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 }
 
 static void
@@ -764,7 +763,7 @@ prop_notify_font (XpadPad *pad)
 	if (fontdesc)
 		pango_font_description_free (fontdesc);
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 }
 
 static void
@@ -853,7 +852,7 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 	pad->priv->height = event->height;
 	pad->priv->location_valid = TRUE;
 	
-	save_info (pad);
+	xpad_pad_save_info (pad);
 	
 	/* Sometimes when moving, if the toolbar tries to hide itself,
 	   the window manager will not resize it correctly.  So, we make
@@ -874,7 +873,7 @@ xpad_pad_window_state_event (XpadPad *pad, GdkEventWindowState *event)
 		if (GTK_WIDGET_VISIBLE (pad))
 		{
 			pad->priv->sticky = (event->new_window_state & GDK_WINDOW_STATE_STICKY) ? TRUE : FALSE;
-			save_info (pad);
+			xpad_pad_save_info (pad);
 		}
 	}
 	
@@ -1174,8 +1173,8 @@ load_info (XpadPad *pad, gboolean *show)
 		*show = !hidden;
 }
 
-static void
-save_info (XpadPad *pad)
+void
+xpad_pad_save_info (XpadPad *pad)
 {
 	gint height;
 	GtkStyle *style;

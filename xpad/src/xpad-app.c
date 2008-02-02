@@ -60,9 +60,10 @@
 
 static gint xpad_argc;
 static gchar **xpad_argv;
-static gboolean option_hide_old;
 static gboolean option_nonew;
 static gboolean option_new;
+static gboolean option_hide;
+static gboolean option_show;
 static gboolean option_version;
 static gboolean option_quit;
 static gchar **option_files;
@@ -471,8 +472,10 @@ xpad_app_load_pads (void)
 		{
 			gboolean show = TRUE;
 			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name, &show);
-			if (show && !option_hide_old)
+			if ((show || option_show) && !option_hide)
 				gtk_widget_show (pad);
+		  else if (show) /* pad thought it would show, we should save that it didn't */
+		    xpad_pad_save_info (XPAD_PAD (pad));
 			
 			opened ++;
 		}
@@ -763,7 +766,6 @@ done:
 static GOptionEntry local_options[] =
 {
 	{"version", 'v', 0, G_OPTION_ARG_NONE, &option_version, N_("Show version number and quit"), NULL},
-	{"hide-old", 'H', 0, G_OPTION_ARG_NONE, &option_hide_old, N_("Hide existing pads on startup"), NULL},
 	{"no-new", 'N', 0, G_OPTION_ARG_NONE, &option_nonew, N_("Don't create a new pad on startup if no previous pads exist"), NULL},
 	{NULL}
 };
@@ -771,6 +773,8 @@ static GOptionEntry local_options[] =
 static GOptionEntry remote_options[] =
 {
 	{"new", 'n', 0, G_OPTION_ARG_NONE, &option_new, N_("Create a new pad on startup even if pads already exist"), NULL},
+	{"hide", 'h', 0, G_OPTION_ARG_NONE, &option_hide, N_("Hide all pads"), NULL},
+	{"show", 's', 0, G_OPTION_ARG_NONE, &option_show, N_("Show all pads"), NULL},
 	{"new-from-file", 'f', 0, G_OPTION_ARG_FILENAME_ARRAY, &option_files, N_("Create a new pad with the contents of a file"), N_("FILE")},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_quit, N_("Close all pads"), NULL},
 	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid, NULL, NULL},
@@ -787,7 +791,6 @@ process_local_args (gint *argc, gchar **argv[])
 	
 	option_version = FALSE;
 	option_nonew = FALSE;
-	option_hide_old = FALSE;
 	
 	/* We make copies of argc and argv because we actually don't want the 
 	   behavior of g_option_context_parse() that removes entries from the
@@ -818,7 +821,7 @@ process_local_args (gint *argc, gchar **argv[])
 	g_option_context_free (context);
 	g_strfreev(argv_copy);
 	
-	return(option_version || option_nonew || option_hide_old);
+	return(option_version || option_nonew);
 }
 
 static gboolean
@@ -831,6 +834,8 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	option_files = NULL;
 	option_quit = FALSE;
 	option_smid = NULL;
+	option_hide = FALSE;
+	option_show = FALSE;
 	
 	context = g_option_context_new (NULL);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
@@ -846,6 +851,12 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
 		}
+
+		if (have_gtk && option_show)
+		  xpad_pad_group_show_all (pad_group);
+		
+		if (have_gtk && option_hide)
+		  xpad_pad_group_close_all (pad_group);
 		
 		if (have_gtk && option_files)
 		{
@@ -875,5 +886,6 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	
 	g_option_context_free (context);
 	
-	return(option_new || option_quit || option_smid || option_files);
+	return(option_new || option_quit || option_smid || option_files ||
+	       option_hide || option_show);
 }
