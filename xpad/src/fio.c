@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../config.h"
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
+#include <gio/gio.h>
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,18 +30,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "xpad-app.h"
 
-/* sets filename to full path of filename (prepends xpad_app_get_config_dir () to it) 
-   returns 0 if filename was full path, 1 if we added to it.
-   
-   returned name must be g_free'd
-*/
-static gchar *
+/* Sets filename to full path of filename (prepends xpad_app_get_config_dir ()
+   to it).  Returns a GFile representing the file. */
+static GFile *
 fio_fill_filename (const gchar *filename)
 {
 	if (g_path_is_absolute (filename))
-		return g_strdup (filename);
-	
-	return g_build_filename (xpad_app_get_config_dir (), filename, NULL);
+		return g_file_new_for_path (filename);
+	else {
+		gchar *full_path;
+		GFile *file;
+		
+		full_path = g_build_filename (xpad_app_get_config_dir (), filename, NULL);
+		file = g_file_new_for_path (full_path);
+		
+		g_free (full_path);
+		return file;
+	}
 }
 
 /* This function returns 'string' with all instances
@@ -75,7 +81,7 @@ fio_unique_name (const gchar *prefix)
 	gchar *name, *base, *pattern;
 	
 	pattern = g_strconcat (prefix, "XXXXXX", NULL);
-	name = fio_fill_filename (pattern);
+	name = g_build_filename (xpad_app_get_config_dir (), pattern, NULL);
 	g_free (pattern);
 	fd = g_mkstemp (name);
 	if (fd == -1)
@@ -96,49 +102,37 @@ fio_unique_name (const gchar *prefix)
    our private .xpad directory anyway */
 gboolean fio_set_file (const gchar *name, const gchar *value)
 {
-	FILE *file = NULL;
-	gchar *fullpath, *backup;
+	GFile *file;
+	GFileOutputStream *stream;
+	GError *error = NULL;
 	gboolean error = FALSE, moved = TRUE;
 	
-	fullpath = fio_fill_filename (name);
-	backup = g_strconcat (fullpath, "~", NULL);
+	file = fio_fill_filename (name);
 	
-	/* we first move the file away so that if the write doesn't succeed, we don't lose data */
-	if (g_file_test (fullpath, G_FILE_TEST_EXISTS) && g_rename (fullpath, backup))
-	{
-		printf ("errno is %i - from %s to %s\n", errno, fullpath, backup);
-		error = TRUE;
-		moved = FALSE;
-	}
+	stream = g_file_replace (file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, &error);
 	
-	if (!error && (file = g_fopen (fullpath, "w")) == NULL)
+	if (stream)
 	{
-		error = TRUE;
-	}
-	
-	if (!error && fputs (value, file) == EOF)
-	{
-		error = TRUE;
+		g_output_stream_write_all (stream, value, strlen (value), NULL, NULL, &error);
+		g_object_unref (stream);
 	}
 	
 	if (error)
 	{
 		gchar *usertext;
+		gchar *parse_name;
 		
-		/* move the file back */
-		if (moved)
-		{
-			g_rename (backup, fullpath);
-		}
+		parse_name = g_file_get_parse_name (file);
+		usertext = g_strdup_printf (_("Could not write to file %s: %s"), parse_name, error->message);
 		
-		usertext = g_strdup_printf (_("Could not write to file %s."), fullpath);
 		xpad_app_error (NULL, usertext, NULL);
+		
+		g_error_free (error);
 		g_free (usertext);
+		g_free (parse_name);
 	}
 	
-	g_free (fullpath);
-	g_free (backup);
-	if (file) fclose (file);
+	g_object_unref (file);
 	return !error;
 }
 
@@ -148,15 +142,14 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
  */
 gchar *fio_get_file (const gchar *name)
 {
-	gchar *fullname;
-	gchar *rv = NULL;
+	GFile *file;
+	gchar *contents = NULL;
 	
-	fullname = fio_fill_filename (name);
+	file = fio_fill_filename (name);
+	g_file_load_contents (file, NULL, &contents, NULL, NULL, NULL);
+	g_object_unref (file);
 	
-	g_file_get_contents (fullname, &rv, NULL, NULL);
-	
-	g_free (fullname);
-	return rv;
+	return contents;
 }
 
 
@@ -315,15 +308,9 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 
 void fio_remove_file (const gchar *filename)
 {
-	gchar *temp;
-	gchar *backup;
-	
-	temp = fio_fill_filename (filename);
-	backup = g_strconcat (temp, "~", NULL);
-	
-	g_unlink (temp);
-	g_unlink (backup);
-	
-	g_free (temp);
-	g_free (backup);
+	GFile *file;
+	file = fio_fill_filename (filename);
+	g_file_delete (file, NULL, NULL);
+	g_object_unref (file);
 }
+
