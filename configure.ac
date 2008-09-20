@@ -31,6 +31,15 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext domain])
 AM_GLIB_GNU_GETTEXT
 
+# Sets up a few prefix-relative directories
+if test "x${prefix}" = "xNONE"; then
+  PREFIX="${ac_default_prefix}"
+else
+  PREFIX="${prefix}"
+fi
+AC_DEFINE_UNQUOTED(LOCALE_DIR, "${PREFIX}/${DATADIRNAME}/locale",[Locale directory])
+AC_DEFINE_UNQUOTED(THEME_DIR, "${PREFIX}/${DATADIRNAME}/icons",[Icon directory])
+
 # Determines if we're debugging.
 AC_ARG_ENABLE(debug,
   AC_HELP_STRING([--enable-debug=[no/yes]],[turn on debugging [default=no]]),
