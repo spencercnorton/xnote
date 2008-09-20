@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Sets up autoconf.
-AC_INIT([Xpad],[2.14],[xpad-devel@lists.sourceforge.net])
+AC_INIT([Xpad],[2.15],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
@@ -17,10 +17,9 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-AM_PATH_GTK_2_0(2.12.0,,AC_MSG_ERROR([
-  *** GTK+ 2.12 is required to build Xpad; please make sure you have the GTK+
-  *** development headers installed. The latest version of GTK+ is
-  *** always available at http://gtk.org/.]))
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12 gio-2.0,,exit)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
