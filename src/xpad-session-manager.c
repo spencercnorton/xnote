@@ -50,8 +50,6 @@ static void xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data);
 static void xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data);
 static void xpad_session_manager_save_complete (SmcConn smc_conn, SmPointer client_data);
 
-static void xpad_session_manager_block ();
-
 #define RETURN_IF_BAD_CONN(conn)	{if (xpad_session_manager_conn != conn) {return;}}
 #define RETURN_IF_NOT_SAVING()		{if (!xpad_saving) {return;}}
 

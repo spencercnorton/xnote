@@ -112,7 +112,8 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	
 	if (stream)
 	{
-		g_output_stream_write_all (stream, value, strlen (value), NULL, NULL, &error);
+		g_output_stream_write_all (G_OUTPUT_STREAM (stream), value, strlen (value),
+		                           NULL, NULL, &error);
 		g_object_unref (stream);
 	}
 	
