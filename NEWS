@@ -5,6 +5,7 @@ Version 2.15
   on startup or can be used on an already running xpad instance.  Patch by
   Jan Losinski.
 * Update icon to be less aliased
+* Relicense as GPL v3+
 
 
 Version 2.14
