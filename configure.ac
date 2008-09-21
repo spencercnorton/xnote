@@ -1,12 +1,12 @@
 # Process this file with autoconf to produce a configure script.
 
 # Sets up autoconf.
-AC_INIT([Xpad],[3.0],[xpad-devel@lists.sourceforge.net])
+AC_INIT([Xpad],[4.0],[xpad-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
 # Sets up automake.
-AM_INIT_AUTOMAKE([gnits dist-bzip2])
+AM_INIT_AUTOMAKE([1.9 gnu no-dist-gzip dist-bzip2])
 AM_BINRELOC
 
 # Checks for programs.
@@ -17,7 +17,7 @@ AC_PROG_INTLTOOL([0.31], [no-xml])
 
 # Checks for libraries.
 AC_PATH_XTRA
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12 gio-2.0,,exit)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12 gio-2.0)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
