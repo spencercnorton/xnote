@@ -1,4 +1,9 @@
-Version 2.15
+Version 3.1
+* Updated Danish, French, Russian, Spanish, and Swedish translations
+* New Czech, Japanese, and Latvian translations
+
+
+Version 3.0
 * Don't wake up every 20 milliseconds to check session management messages.
   Rather, wait for an event.
 * Add --hide/--show, removed --hide-old.  --hide and --show affect all pads

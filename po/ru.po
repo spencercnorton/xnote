@@ -1,0 +1,645 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Michael Terry
+# This file is distributed under the same license as the PACKAGE package.
+# AVL <avl@altlinux.ru>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xpad 1.10.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-20 20:16-0400\n"
+"PO-Revision-Date: 2008-11-25 21:03+0000\n"
+"Last-Translator: Rion <rion4ik@gmail.com>\n"
+"Language-Team: RU <RU@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-01-11 15:44+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: ../src/fio.c:126
+#, c-format
+msgid "Could not write to file %s: %s"
+msgstr "Не удается произвести запись в файл %s: %s"
+
+#: ../src/help.c:49
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically sticky notes on your desktop in which you can write memos."
+msgstr ""
+"Каждый сеанс xpad содержит один или больше стикеров. Эти стикеры являются "
+"простыми липкими записками на вашем рабочем столе, на которых вы можете "
+"писать заметки"
+
+#: ../src/help.c:52
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
+msgstr ""
+"<b>Чтобы переместить панель<b>, перетаскивайте за панель инструментов, или "
+"за ресайзер правой кнопкой справа внизу или перетаскивайте за что угодно, "
+"удерживая CTRL"
+
+#: ../src/help.c:55
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad."
+msgstr ""
+"<b>Для изменения размера</b>, используйте ресайзер или удерживайте CTRL и "
+"тащите за что угодно правой кнопкой"
+
+#: ../src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit-"
+">Preferences."
+msgstr ""
+"<b>Для изменения цветовой гаммы</b>, правый клик на панели и затем Правка-"
+">Настройки"
+
+#: ../src/help.c:59
+msgid ""
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy."
+msgstr ""
+"Большинство действий доступно из контекстного меню по правому щелчку на "
+"панели. Пробуйте и наслаждайтесь."
+
+#: ../src/help.c:62
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr ""
+"Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge.net"
+
+#: ../src/help.c:73
+msgid "Help"
+msgstr "Помощь"
+
+#: ../src/xpad-app.c:129
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr ""
+"Xpad - это графическая программа. Пожалуйста, запускайте её с вашего "
+"рабочего стола."
+
+#: ../src/xpad-app.c:134 ../xpad.desktop.in.h:3
+msgid "Xpad"
+msgstr ""
+
+#: ../src/xpad-app.c:455
+#, c-format
+msgid "Could not open directory %s."
+msgstr "Не удалось открыть каталог %s"
+
+#: ../src/xpad-app.c:458
+msgid ""
+"This directory is needed to store preference and pad information.  Xpad will "
+"close now."
+msgstr ""
+"Эта директория необходима для сохранения настроек и содержимого стикеров.  А "
+"сейчас Xpad будет закрыт."
+
+#: ../src/xpad-app.c:765
+msgid "Show version number and quit"
+msgstr "Показать версию и выйти"
+
+#: ../src/xpad-app.c:766
+msgid "Don't create a new pad on startup if no previous pads exist"
+msgstr "Не создавать новый стикер на старте если их ещё нет"
+
+#: ../src/xpad-app.c:772
+msgid "Create a new pad on startup even if pads already exist"
+msgstr "Создать новый стикер на старте, даже если уже есть."
+
+#: ../src/xpad-app.c:773
+msgid "Hide all pads"
+msgstr "Скрыть все стикеры"
+
+#: ../src/xpad-app.c:774
+msgid "Show all pads"
+msgstr "Показать все стикеры"
+
+#: ../src/xpad-app.c:775
+msgid "Create a new pad with the contents of a file"
+msgstr "Создать новый стикер с содержимым из файла"
+
+#: ../src/xpad-app.c:775
+msgid "FILE"
+msgstr "ФАЙЛ"
+
+#: ../src/xpad-app.c:776
+msgid "Close all pads"
+msgstr "Закрыть все стикеры"
+
+#: ../src/xpad-app.c:807
+#, c-format
+msgid "Xpad %s"
+msgstr ""
+
+#: ../src/xpad-pad.c:155
+#, c-format
+msgid "Could not read file %s."
+msgstr "Не удалось прочитать файл %s"
+
+#: ../src/xpad-pad.c:649
+msgid "Delete this pad?"
+msgstr "Удалить этот стикер?"
+
+#: ../src/xpad-pad.c:650
+msgid "All text of this pad will be irrevocably lost."
+msgstr "Все содержимое стикера будет безвозвратно потеряно"
+
+#: ../src/xpad-pad.c:681
+#, c-format
+msgid "'%s' Properties"
+msgstr "Свойства '%s'"
+
+#: ../src/xpad-pad.c:1233
+msgid "Sticky notes"
+msgstr "Липкие записки"
+
+#. Translators: please translate this as your own name and optionally email
+#. like so: "Your Name <your@email.com>"
+#: ../src/xpad-pad.c:1252
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  AVL https://launchpad.net/~avl-altlinux\n"
+"  Rion https://launchpad.net/~rion4ik"
+
+#: ../src/xpad-pad.c:1491
+msgid "_Pad"
+msgstr "_Стикер"
+
+#: ../src/xpad-pad.c:1500
+msgid "Show on _All Workspaces"
+msgstr "Показать на _всех рабочих столах"
+
+#: ../src/xpad-pad.c:1508
+msgid "_Edit"
+msgstr "_Правка"
+
+#: ../src/xpad-pad.c:1521
+msgid "_View"
+msgstr "_Вид"
+
+#: ../src/xpad-pad.c:1528
+msgid "_Toolbar"
+msgstr "_Панель инструментов"
+
+#: ../src/xpad-pad.c:1529
+msgid "_Autohide Toolbar"
+msgstr "Автоскрытие панели инструментов"
+
+#: ../src/xpad-pad.c:1531
+msgid "_Scrollbar"
+msgstr "Полоса прокрутки"
+
+#: ../src/xpad-pad.c:1532
+msgid "_Window Decorations"
+msgstr "Рамка окна"
+
+#: ../src/xpad-pad.c:1535
+msgid "_Notes"
+msgstr "_Заметки"
+
+#: ../src/xpad-pad.c:1543 ../src/xpad-tray.c:123
+msgid "_Show All"
+msgstr "Показать все"
+
+#: ../src/xpad-pad.c:1544 ../src/xpad-tray.c:130
+msgid "_Close All"
+msgstr "_Закрыть все"
+
+#. The rest of the notes menu will get set up in the prep function below
+#: ../src/xpad-pad.c:1548
+msgid "_Help"
+msgstr "_Справка"
+
+#: ../src/xpad-pad.c:1555
+msgid "_Contents"
+msgstr "_Содержание"
+
+#: ../src/xpad-pad.c:1556
+msgid "_About"
+msgstr "_О программе"
+
+#: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
+msgid "Appearance"
+msgstr "Оформление"
+
+#: ../src/xpad-pad-properties.c:160
+msgid "Use font from xpad preferences"
+msgstr "Использовать общие настройки шрифта"
+
+#: ../src/xpad-pad-properties.c:161 ../src/xpad-preferences.c:150
+msgid "Use this font:"
+msgstr "Другой шрифт"
+
+#: ../src/xpad-pad-properties.c:162
+msgid "Use colors from xpad preferences"
+msgstr "Использовать общие настройки цвета"
+
+#: ../src/xpad-pad-properties.c:163 ../src/xpad-preferences.c:152
+msgid "Use these colors:"
+msgstr "Другие цвета"
+
+#: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:160
+msgid "Background:"
+msgstr "Фон:"
+
+#: ../src/xpad-pad-properties.c:179 ../src/xpad-preferences.c:168
+msgid "Foreground:"
+msgstr "Текст:"
+
+#: ../src/xpad-pad-properties.c:199 ../src/xpad-preferences.c:192
+msgid "Set Foreground Color"
+msgstr "Установить цвет текста"
+
+#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:193
+msgid "Set Background Color"
+msgstr "Установить цвет фона"
+
+#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:194
+msgid "Set Font"
+msgstr "Установить шрифт"
+
+#: ../src/xpad-preferences.c:149
+msgid "Use font from theme"
+msgstr "Использовать шрифт темы"
+
+#: ../src/xpad-preferences.c:151
+msgid "Use colors from theme"
+msgstr "Использоватать цвета темы"
+
+#: ../src/xpad-preferences.c:179
+msgid "_Edit lock"
+msgstr "Защита от редактирования"
+
+#: ../src/xpad-preferences.c:180
+msgid "_Pads start on all workspaces"
+msgstr "_Стикеры на всех рабочих столах"
+
+#: ../src/xpad-preferences.c:181
+msgid "_Confirm pad deletion"
+msgstr "Подтверждать удаление панели"
+
+#: ../src/xpad-preferences.c:187
+msgid "Xpad Preferences"
+msgstr "Общие настройки Xpad"
+
+#: ../src/xpad-preferences.c:252
+msgid "Options"
+msgstr "Настройки"
+
+#: ../src/xpad-toolbar.c:74
+msgid "Clear Pad Contents"
+msgstr "Очистить содержимое стикера"
+
+#: ../src/xpad-toolbar.c:74
+msgid "Add C_lear to Toolbar"
+msgstr "Добавить кнопку _Очистить"
+
+#: ../src/xpad-toolbar.c:75
+msgid "Close and Save Pad"
+msgstr "Сохранить и закрыть стикер"
+
+#: ../src/xpad-toolbar.c:75
+msgid "Add _Close to Toolbar"
+msgstr "Добавить кнопку _Закрыть"
+
+#: ../src/xpad-toolbar.c:76
+msgid "Delete Pad"
+msgstr "Удалить стикер"
+
+#: ../src/xpad-toolbar.c:76
+msgid "Add _Delete to Toolbar"
+msgstr "Добавиьт кнопку _Удалить"
+
+#: ../src/xpad-toolbar.c:77
+msgid "Open New Pad"
+msgstr "Новый стикер"
+
+#: ../src/xpad-toolbar.c:77
+msgid "Add _New to Toolbar"
+msgstr "Добавить кнопку _Новый стикер"
+
+#: ../src/xpad-toolbar.c:78
+msgid "Edit Preferences"
+msgstr "Изменить настройки"
+
+#: ../src/xpad-toolbar.c:78
+msgid "Add Pr_eferences to Toolbar"
+msgstr "Добавить кнопку _Настройки"
+
+#: ../src/xpad-toolbar.c:79
+msgid "Edit Pad Properties"
+msgstr "Правка настроек стикера"
+
+#: ../src/xpad-toolbar.c:79
+msgid "Add Proper_ties to Toolbar"
+msgstr "Добавить кнопку _Свойства"
+
+#: ../src/xpad-toolbar.c:80
+msgid "Close All Pads"
+msgstr "Закрыть все стикеры"
+
+#: ../src/xpad-toolbar.c:80
+msgid "Add Close _All to Toolbar"
+msgstr "Добавить кнопку Закрыть _все"
+
+#: ../src/xpad-toolbar.c:81
+msgid "Add a Se_parator to Toolbar"
+msgstr "Добавить разделитель"
+
+#: ../src/xpad-toolbar.c:538
+msgid "_Remove From Toolbar"
+msgstr "_Удалить с панели"
+
+#: ../src/xpad-toolbar.c:548
+msgid "_Move"
+msgstr "Переместить"
+
+#: ../xpad.desktop.in.h:1
+msgid "Jot down notes for later"
+msgstr "Заметки/стикеры на вашем рабочем столе"
+
+#: ../xpad.desktop.in.h:2
+msgid "Sticky Notes"
+msgstr "Cтикеры"
+
+#~ msgid "Could not write to file %s."
+#~ msgstr "Не могу писать в файл %s."
+
+#~ msgid "Missing companion argument to %s\n"
+#~ msgstr "Пропущен дополнительный аргумент к %s\n"
+
+#~ msgid "Invalid number: '%s'\n"
+#~ msgstr "Неправильный номер: '%s'\n"
+
+#~ msgid "Toggle Stickiness"
+#~ msgstr "Приколоть/Отколоть"
+
+#~ msgid "Could not read from file %s."
+#~ msgstr "Не могу читать из файла %s."
+
+#~ msgid "Text Color"
+#~ msgstr "Цвет текста"
+
+#~ msgid "Border"
+#~ msgstr "Рамка"
+
+#~ msgid "Border _width:"
+#~ msgstr "Толщина рамки"
+
+#~ msgid "pixels"
+#~ msgstr "пикселей"
+
+#~ msgid "Font Face"
+#~ msgstr "Шрифт"
+
+#~ msgid "_Padding:"
+#~ msgstr "Отступ:"
+
+#~ msgid "The amount of space you want between the border and text."
+#~ msgstr "Отступ текста от рамки."
+
+#~ msgid ""
+#~ "Choose the number of pixels around the text region.  This space is colored "
+#~ "the same and surrounds it on all sides."
+#~ msgstr ""
+#~ "Установите отступ в пикселях вокруг текста. Это место закрашивается одним и "
+#~ "тем же цветом  и окружает текст со всех сторон."
+
+#~ msgid "The amount of space you want surrounding the pad."
+#~ msgstr "Толщина рамки вокруг записки."
+
+#~ msgid ""
+#~ "Choose the number of pixels around the pad.  This space is colored "
+#~ "independently and surrounds it on all sides."
+#~ msgstr ""
+#~ "Установите отступ в пикселях вокруг записки. Это место закрашивается "
+#~ "независимо от остального и окружает записку со всех сторон."
+
+#~ msgid "Click and drag a button to move it."
+#~ msgstr "Перетаскивайте кнопки по своему усмотрению."
+
+#~ msgid "<b>Toolbar Buttons:</b>"
+#~ msgstr "<b>Кнопки панели:</b>"
+
+#~ msgid "<b>Used Buttons:</b>"
+#~ msgstr "<b>Используемые:</b>"
+
+#~ msgid "<b>Unused Buttons:</b>"
+#~ msgstr "<b>Неиспользуемые:</b>"
+
+#~ msgid ""
+#~ "If on, a toolbar will appear below each pad when the mouse hovers over it."
+#~ msgstr ""
+#~ "Если включено, панель инструментов будет появляться в каждом стикере, когда "
+#~ "указатель мыши окажется над ним."
+
+#~ msgid "If on, the toolbar will disappear when you are not using the pad."
+#~ msgstr ""
+#~ "Если включено, панель инструментов будет убираться когда вы не используете "
+#~ "стикер."
+
+#~ msgid "Close and save _all pads"
+#~ msgstr "Закрыть и сохранить все стикеры"
+
+#~ msgid "Close and save _pad"
+#~ msgstr "Закрыть и сохранить стикер"
+
+#~ msgid "_Destroy pad (no confirmation)"
+#~ msgstr "Уничтожить стикер (без подтверждения)"
+
+#~ msgid "<b>Window Manager Close Action:</b>"
+#~ msgstr "<b>Действие 'закрыть' Оконного менеджера :</b>"
+
+#~ msgid ""
+#~ "If on, your window manager will add its own decorations to each pad.  For "
+#~ "example, a titlebar and close button."
+#~ msgstr ""
+#~ "Если включено, ваш оконный менеджер будет добавлять элементы декорации окна "
+#~ "ко всем стикерам. К примеру,  заголовок окна, и кнопку 'закрыть'"
+
+#~ msgid "If on, choosing to destroy a pad will prompt for conformation."
+#~ msgstr ""
+#~ "Если включено, при уничтожении стикера будет выдаваться запрос на "
+#~ "подтверждение этого действия."
+
+#~ msgid ""
+#~ "If on, scrollbars appear when text is larger than the pad.  If off, the pad "
+#~ "resizes to fit the text."
+#~ msgstr ""
+#~ "Если включено, полосы прокрутки будут появляться, когда текст не помещается "
+#~ "в стикер целиком. Если выключено, размер стикера будет автоматически "
+#~ "подбираться по размеру текста."
+
+#~ msgid ""
+#~ "If on, when a pad loses focus, it will become uneditable.  This allows you "
+#~ "to move it by left dragging.  To make it editable again, double-click the "
+#~ "pad.  If off, pads are always editable."
+#~ msgstr ""
+#~ "Если включено, то когда стикер теряет фокус, он становится нередактируемым. "
+#~ "Эта особенность позволит вам перемещать стикер левой кнопкой.  Чтобы снова "
+#~ "редактировать стикер, используйте на двойной щелчок. Если выключено, стикер "
+#~ "всегда будет редактируемым."
+
+#~ msgid "All pads will close, saving contents first."
+#~ msgstr "Все стикеры будут закрыты, сначала сохраните содержимое."
+
+#~ msgid "The pad you clicked the close button on will close, saving contents."
+#~ msgstr ""
+#~ "Стикер при щелчке по кнопке 'закрыть', автоматически сохранит свое "
+#~ "содержимое."
+
+#~ msgid ""
+#~ "The pad you clicked the close button on will be destroyed, losing contents.  "
+#~ "There will be no confirmation."
+#~ msgstr ""
+#~ "Когда вы щелкаете по кнопке 'закрыть', стикер уничтожается с потерей своего "
+#~ "содержимого. Запроса на подтверждение не будет."
+
+#~ msgid "/Pad/sep1"
+#~ msgstr "/Стикер/Закрыть"
+
+#~ msgid "/Pad/sep2"
+#~ msgstr "/Стикер/Закрыть"
+
+#~ msgid "/Edit/C_ut"
+#~ msgstr "/Правка/Вырезать"
+
+#~ msgid "/Edit/sep"
+#~ msgstr "/Правка/Вставить"
+
+#~ msgid "/Notes/_Show All"
+#~ msgstr "/Заметки/Показать Все"
+
+#~ msgid "/Notes/_Close All"
+#~ msgstr "/Заметки/Закрыть все"
+
+#~ msgid "/Notes/sep"
+#~ msgstr "/Заметки/Вставить"
+
+#~ msgid "Minimize Pads to System Tray"
+#~ msgstr "Убрать стикеры в системный лоток"
+
+#~ msgid "/Edit/Cut"
+#~ msgstr "/Правка/Вырезать"
+
+#~ msgid "/Edit/Copy"
+#~ msgstr "/Правка/Копировать"
+
+#~ msgid "/Edit/Paste"
+#~ msgstr "/Правка/Вставить"
+
+#~ msgid "/Notes"
+#~ msgstr "/Заметки"
+
+#~ msgid "/Pad/Sticky"
+#~ msgstr "/Стикер/Приколоть"
+
+#~ msgid ""
+#~ "Each xpad session consists of one or more open pads.  These pads are "
+#~ "basically sticky notes on your desktop in which you can write memos.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Каждый сеанс xpad включает в себя один или несколько стикеров. Стикеры "
+#~ "предназначены для организации заметок прямо на рабочем столе. Стикеры, это "
+#~ "простой способ ведения рабочих записей в наиболее удобной для вас форме.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+#~ "the bottom right, or hold down CTRL while left dragging anywhere on the "
+#~ "pad.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "<b>Для перемешения записки</b>, тащите ее левой кнопкой за панель "
+#~ "инструментов, правой кнопкой за  значок изменения размеров в правом нижнем "
+#~ "углу, или удерживая CTRL перетаскивайте левой кнопкой за любое место "
+#~ "записки.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+#~ "right dragging anywhere on the pad.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "<b>Для изменения размеров</b>, тащите левой кнопкой за значок ресайзинга "
+#~ "(правый нижний угол) на панели инструментов, или удерживая клавишу CTRL "
+#~ "перетаскивайте правой кнопкой мыши за любое место записки.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "<b>To change color settings</b>, right click on a pad and choose Edit-"
+#~ ">Preferences.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "<b>Для изменения цвета</b>, щелчок правой кнопкой на записке и выбрать "
+#~ "Правка->Свойства.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Most actions are available throught the popup menu that appears when you "
+#~ "right click on a pad.  Try it out and enjoy.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Многие действия доступны через всплывающие меню, которые появляются, когда "
+#~ "вы щелкаете правой кнопкой на записке.  Попробуйте эту возможность.\n"
+#~ "\n"
+
+#~ msgid "No_tes"
+#~ msgstr "Заметки"
+
+#~ msgid "_Hide All"
+#~ msgstr "Скрыть все"
+
+#~ msgid "xpad: right click for more options..."
+#~ msgstr "xpad: щелкните правой кнопкой для дополнительных опций..."
+
+#~ msgid ""
+#~ "Right click this icon for a menu of options pertaining to XPad. Left click "
+#~ "it to toggle whether or not the pads are displayed."
+#~ msgstr ""
+#~ "Щелчок правой кнопкой на этом значке откроет меню опций XPad. Щелчок левой "
+#~ "кнопкой показывает или скрывает на экране все записки."
+
+#~ msgid ""
+#~ "Usage: xpad [OPTIONS]\n"
+#~ "\n"
+#~ "  -V, --version         prints xpad version; exits\n"
+#~ "  -h, --help            prints this usage information; exits\n"
+#~ "  -v N, --verbosity=N   sets level of output\n"
+#~ "                          0=none, 1=moderate, 2=debug\n"
+#~ "                          default is 0\n"
+#~ "  -n, --new             opens a new pad only\n"
+#~ msgstr ""
+#~ "Использование: xpad [OPTIONS]\n"
+#~ "\n"
+#~ "  -V, --version         вывод версии и завершение работы\n"
+#~ "  -h, --help            вывод этой информации об использовании xpad и "
+#~ "завершение работы\n"
+#~ "  -v N, --verbosity=N   установка уровня детализации вывода отладочной "
+#~ "информации\n"
+#~ "                          0=молча, 1=ограничено, 2=отладка\n"
+#~ "                          по умолчанию стоит 0\n"
+#~ "  -n, --new             просто открыть новый стикер\n"
+
+#~ msgid ""
+#~ "  --nonew               prevents xpad from making a new pad\n"
+#~ "  -q, --quit            quits all open xpad sessions\n"
+#~ "  -l, --list            lists the titles of all pads\n"
+#~ "  -s N, --show=N        brings the Nth pad (1-based) to the foreground\n"
+#~ "  --showall             brings all pads to the foreground\n"
+#~ msgstr ""
+#~ "  --nonew               отменяет создание нового стикера при запуске\n"
+#~ "  -q, --quit            завершает все открытые сеансы xpad\n"
+#~ "  -l, --list            показывает список заголовков всех стикеров\n"
+#~ "  -s N, --show=N        выводит  N-ый стикер (считая с 1) на передний план\n"
+#~ "  --showall             выводит все стикеры на передний план\n"
+
+#~ msgid "Open which file?"
+#~ msgstr "Открыть which файл?"
+
+#~ msgid "Save as which file?"
+#~ msgstr "Сохранить как which файл?"
