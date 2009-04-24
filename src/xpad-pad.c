@@ -615,6 +615,18 @@ xpad_pad_close (XpadPad *pad)
 	g_signal_emit (pad, signals[CLOSED], 0);
 }
 
+void
+xpad_pad_toggle(XpadPad *pad)
+{
+    gboolean show = TRUE;
+    load_info (pad, &show);
+    if (show) 
+        xpad_pad_close (pad);
+    else
+        gtk_widget_show (GTK_WIDGET (pad));
+    xpad_pad_save_info (pad);
+}
+
 static gboolean
 should_confirm_delete (XpadPad *pad)
 {

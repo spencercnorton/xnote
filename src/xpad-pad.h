@@ -57,6 +57,7 @@ GtkWidget *xpad_pad_new (XpadPadGroup *group);
 GtkWidget *xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolean *show);
 GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename);
 void xpad_pad_close (XpadPad *pad);
+void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);
 
 G_END_DECLS

@@ -1,3 +1,5 @@
+* Added --toggle (between --hide and --show). Patch by Paul Ivanov.
+
 Version 3.1
 * Updated Danish, French, Russian, Spanish, and Swedish translations
 * New Czech, Japanese, and Latvian translations

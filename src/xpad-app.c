@@ -64,6 +64,7 @@ static gboolean option_nonew;
 static gboolean option_new;
 static gboolean option_hide;
 static gboolean option_show;
+static gboolean option_toggle;
 static gboolean option_version;
 static gboolean option_quit;
 static gchar **option_files;
@@ -772,6 +773,7 @@ static GOptionEntry remote_options[] =
 	{"new", 'n', 0, G_OPTION_ARG_NONE, &option_new, N_("Create a new pad on startup even if pads already exist"), NULL},
 	{"hide", 'h', 0, G_OPTION_ARG_NONE, &option_hide, N_("Hide all pads"), NULL},
 	{"show", 's', 0, G_OPTION_ARG_NONE, &option_show, N_("Show all pads"), NULL},
+	{"toggle", 't', 0, G_OPTION_ARG_NONE, &option_toggle, N_("Toggle between show and hide all pads"), NULL},
 	{"new-from-file", 'f', 0, G_OPTION_ARG_FILENAME_ARRAY, &option_files, N_("Create a new pad with the contents of a file"), N_("FILE")},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_quit, N_("Close all pads"), NULL},
 	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid, NULL, NULL},
@@ -833,6 +835,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	option_smid = NULL;
 	option_hide = FALSE;
 	option_show = FALSE;
+	option_toggle = FALSE;
 	
 	context = g_option_context_new (NULL);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
@@ -855,6 +858,9 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 		if (have_gtk && option_hide)
 		  xpad_pad_group_close_all (pad_group);
 		
+		if (have_gtk && option_toggle)
+          xpad_pad_group_toggle_hide (pad_group);
+
 		if (have_gtk && option_files)
 		{
 			int i;
@@ -884,5 +890,5 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 	g_option_context_free (context);
 	
 	return(option_new || option_quit || option_smid || option_files ||
-	       option_hide || option_show);
+	       option_hide || option_show || option_toggle);
 }

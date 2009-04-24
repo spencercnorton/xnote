@@ -175,3 +175,11 @@ xpad_pad_group_show_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_show, NULL);
 }
 
+
+void
+xpad_pad_group_toggle_hide(XpadPadGroup *group)
+{
+	if (group)
+		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_toggle, NULL);
+}
+
