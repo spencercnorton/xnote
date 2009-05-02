@@ -859,7 +859,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 		  xpad_pad_group_close_all (pad_group);
 		
 		if (have_gtk && option_toggle)
-          xpad_pad_group_toggle_hide (pad_group);
+		  xpad_pad_group_toggle_hide (pad_group);
 
 		if (have_gtk && option_files)
 		{
