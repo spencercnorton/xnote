@@ -618,13 +618,10 @@ xpad_pad_close (XpadPad *pad)
 void
 xpad_pad_toggle(XpadPad *pad)
 {
-    gboolean show = TRUE;
-    load_info (pad, &show);
-    if (show) 
+    if (GTK_WIDGET_VISIBLE (pad)) 
         xpad_pad_close (pad);
     else
         gtk_widget_show (GTK_WIDGET (pad));
-    xpad_pad_save_info (pad);
 }
 
 static gboolean
