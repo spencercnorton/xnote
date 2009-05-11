@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2009 Paul Ivanov
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1238,7 +1239,7 @@ static void
 menu_about (XpadPad *pad)
 {
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
-	const gchar *authors[] = {"Michael Terry <mike@mterry.name>", "Jeroen Vermeulen <jtv@xs4all.nl>", NULL};
+	const gchar *authors[] = {"Jeroen Vermeulen <jtv@xs4all.nl>", "Michael Terry <mike@mterry.name>", "Paul Ivanov <pivanov@berkeley.edu>", NULL};
 	const gchar *comments = _("Sticky notes");
 	const gchar *copyright = "© 2001-2007 Michael Terry";
 	/* we use g_strdup_printf because C89 has size limits on static strings */
