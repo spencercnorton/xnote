@@ -7,15 +7,107 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-09-20 20:16-0400\n"
-"PO-Revision-Date: 2008-10-02 16:03+0000\n"
+"POT-Creation-Date: 2009-01-11 11:35-0500\n"
+"PO-Revision-Date: 2009-01-11 17:23+0000\n"
 "Last-Translator: jogijs <e.blumbergs@gmail.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-11 15:44+0000\n"
+"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../src/help.c:73
+msgid "Help"
+msgstr "_Palīdzība"
+
+#: ../src/xpad-app.c:129
+msgid "Xpad is a graphical program.  Please run it from your desktop."
+msgstr "Xpad paredzēts grafiskai videi. Palaidiet to no darba virsmas."
+
+#: ../src/xpad-app.c:134 ../xpad.desktop.in.h:3
+msgid "Xpad"
+msgstr "Xpad"
+
+#: ../src/xpad-app.c:775
+msgid "FILE"
+msgstr "FAILS"
+
+#. Translators: please translate this as your own name and optionally email
+#. like so: "Your Name <your@email.com>"
+#: ../src/xpad-pad.c:1252
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  jogijs https://launchpad.net/~e-blumbergs\n"
+"\n"
+"Launchpad Contributions:\n"
+"  jogijs https://launchpad.net/~e-blumbergs"
+
+#: ../src/xpad-pad.c:1508
+msgid "_Edit"
+msgstr "_Labot"
+
+#: ../src/xpad-pad.c:1521
+msgid "_View"
+msgstr "_Skats"
+
+#: ../src/xpad-pad.c:1528
+msgid "_Toolbar"
+msgstr "_Rīkjosla"
+
+#: ../src/xpad-pad.c:1544 ../src/xpad-tray.c:130
+msgid "_Close All"
+msgstr "_Aizvērt visus"
+
+#. The rest of the notes menu will get set up in the prep function below
+#: ../src/xpad-pad.c:1548
+msgid "_Help"
+msgstr "_Palīdzība"
+
+#: ../src/xpad-pad.c:1555
+msgid "_Contents"
+msgstr "_Saturs"
+
+#: ../src/xpad-pad.c:1556
+msgid "_About"
+msgstr "_Par"
+
+#: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
+msgid "Appearance"
+msgstr "Izskats"
+
+#: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:160
+msgid "Background:"
+msgstr "Fona krāsa:"
+
+#: ../src/xpad-pad-properties.c:179 ../src/xpad-preferences.c:168
+msgid "Foreground:"
+msgstr "Priekšplāns:"
+
+#: ../src/xpad-pad-properties.c:199 ../src/xpad-preferences.c:192
+msgid "Set Foreground Color"
+msgstr "Uzstādīt priekšplāna krāsu"
+
+#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:193
+msgid "Set Background Color"
+msgstr "Uzstādīt fona Krāsu"
+
+#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:194
+msgid "Set Font"
+msgstr "Uzstādīt Fontu"
+
+#: ../src/xpad-preferences.c:252
+msgid "Options"
+msgstr "Iestatījumi"
+
+#: ../src/xpad-toolbar.c:548
+msgid "_Move"
+msgstr "_Pārvietot"
+
+#: ../xpad.desktop.in.h:2
+msgid "Sticky Notes"
+msgstr "Līmlapiņas"
 
 #: ../src/fio.c:126
 #, c-format
@@ -57,18 +149,6 @@ msgid ""
 "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 
-#: ../src/help.c:73
-msgid "Help"
-msgstr "_Palīdzība"
-
-#: ../src/xpad-app.c:129
-msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad paredzēts grafiskai videi. Palaidiet to no darba virsmas."
-
-#: ../src/xpad-app.c:134 ../xpad.desktop.in.h:3
-msgid "Xpad"
-msgstr "Xpad"
-
 #: ../src/xpad-app.c:455
 #, c-format
 msgid "Could not open directory %s."
@@ -104,10 +184,6 @@ msgstr ""
 msgid "Create a new pad with the contents of a file"
 msgstr ""
 
-#: ../src/xpad-app.c:775
-msgid "FILE"
-msgstr "FAILS"
-
 #: ../src/xpad-app.c:776
 msgid "Close all pads"
 msgstr ""
@@ -139,14 +215,6 @@ msgstr ""
 msgid "Sticky notes"
 msgstr ""
 
-#. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1252
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  jogijs https://launchpad.net/~e-blumbergs"
-
 #: ../src/xpad-pad.c:1491
 msgid "_Pad"
 msgstr ""
@@ -154,18 +222,6 @@ msgstr ""
 #: ../src/xpad-pad.c:1500
 msgid "Show on _All Workspaces"
 msgstr ""
-
-#: ../src/xpad-pad.c:1508
-msgid "_Edit"
-msgstr "_Labot"
-
-#: ../src/xpad-pad.c:1521
-msgid "_View"
-msgstr "_Skats"
-
-#: ../src/xpad-pad.c:1528
-msgid "_Toolbar"
-msgstr "_Rīkjosla"
 
 #: ../src/xpad-pad.c:1529
 msgid "_Autohide Toolbar"
@@ -187,27 +243,6 @@ msgstr ""
 msgid "_Show All"
 msgstr ""
 
-#: ../src/xpad-pad.c:1544 ../src/xpad-tray.c:130
-msgid "_Close All"
-msgstr "_Aizvērt visus"
-
-#. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1548
-msgid "_Help"
-msgstr "_Palīdzība"
-
-#: ../src/xpad-pad.c:1555
-msgid "_Contents"
-msgstr "_Saturs"
-
-#: ../src/xpad-pad.c:1556
-msgid "_About"
-msgstr "_Par"
-
-#: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
-msgid "Appearance"
-msgstr "Izskats"
-
 #: ../src/xpad-pad-properties.c:160
 msgid "Use font from xpad preferences"
 msgstr ""
@@ -223,26 +258,6 @@ msgstr ""
 #: ../src/xpad-pad-properties.c:163 ../src/xpad-preferences.c:152
 msgid "Use these colors:"
 msgstr ""
-
-#: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:160
-msgid "Background:"
-msgstr "Fona krāsa:"
-
-#: ../src/xpad-pad-properties.c:179 ../src/xpad-preferences.c:168
-msgid "Foreground:"
-msgstr "Priekšplāns:"
-
-#: ../src/xpad-pad-properties.c:199 ../src/xpad-preferences.c:192
-msgid "Set Foreground Color"
-msgstr "Uzstādīt priekšplāna krāsu"
-
-#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:193
-msgid "Set Background Color"
-msgstr "Uzstādīt fona Krāsu"
-
-#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:194
-msgid "Set Font"
-msgstr "Uzstādīt Fontu"
 
 #: ../src/xpad-preferences.c:149
 msgid "Use font from theme"
@@ -267,10 +282,6 @@ msgstr ""
 #: ../src/xpad-preferences.c:187
 msgid "Xpad Preferences"
 msgstr ""
-
-#: ../src/xpad-preferences.c:252
-msgid "Options"
-msgstr "Iestatījumi"
 
 #: ../src/xpad-toolbar.c:74
 msgid "Clear Pad Contents"
@@ -336,14 +347,6 @@ msgstr ""
 msgid "_Remove From Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:548
-msgid "_Move"
-msgstr "_Pārvietot"
-
 #: ../xpad.desktop.in.h:1
 msgid "Jot down notes for later"
 msgstr ""
-
-#: ../xpad.desktop.in.h:2
-msgid "Sticky Notes"
-msgstr "Līmlapiņas"

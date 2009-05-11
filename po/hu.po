@@ -6,59 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 20:16-0400\n"
-"PO-Revision-Date: 2008-10-25 16:05+0000\n"
+"POT-Creation-Date: 2009-01-11 11:35-0500\n"
+"PO-Revision-Date: 2009-01-11 17:24+0000\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-11 15:44+0000\n"
+"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#: ../src/fio.c:126
-#, c-format
-msgid "Could not write to file %s: %s"
-msgstr ""
-
-#: ../src/help.c:49
-msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos."
-msgstr ""
-
-#: ../src/help.c:52
-msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:55
-msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:57
-msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences."
-msgstr ""
-
-#: ../src/help.c:59
-msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy."
-msgstr ""
-
-#: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
-
-#: ../src/help.c:73
-msgid "Help"
-msgstr ""
 
 #: ../src/xpad-app.c:129
 msgid "Xpad is a graphical program.  Please run it from your desktop."
@@ -93,14 +49,6 @@ msgstr ""
 #: ../src/xpad-app.c:772
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Indításkor hozzon létre új jegyzetet, akkor is, ha már van"
-
-#: ../src/xpad-app.c:773
-msgid "Hide all pads"
-msgstr ""
-
-#: ../src/xpad-app.c:774
-msgid "Show all pads"
-msgstr ""
 
 #: ../src/xpad-app.c:775
 msgid "Create a new pad with the contents of a file"
@@ -147,6 +95,10 @@ msgstr "Ragadós jegyzetek"
 msgid "translator-credits"
 msgstr ""
 "Németh Csaba <csaba@sopron.hu>\n"
+"\n"
+"Launchpad Contributions:\n"
+"  1soproni https://launchpad.net/~csaba\n"
+"  Gabor Kelemen https://launchpad.net/~kelemeng\n"
 "\n"
 "Launchpad Contributions:\n"
 "  1soproni https://launchpad.net/~csaba\n"
@@ -329,10 +281,6 @@ msgstr "Tulajdonságok hozzáadása az eszköztárhoz"
 msgid "Close All Pads"
 msgstr "Összes jegyzet bezárása"
 
-#: ../src/xpad-toolbar.c:80
-msgid "Add Close _All to Toolbar"
-msgstr ""
-
 #: ../src/xpad-toolbar.c:81
 msgid "Add a Se_parator to Toolbar"
 msgstr "Elválasztó hozzáadása az eszköztárhoz"
@@ -353,14 +301,58 @@ msgstr "Jegyzetek felvitele késõbbi használatra"
 msgid "Sticky Notes"
 msgstr "Ragadós jegyzetek"
 
-#~ msgid "Could not write to file %s."
-#~ msgstr "Nem tudok írni a %s fájlba."
+#: ../src/fio.c:126
+#, c-format
+msgid "Could not write to file %s: %s"
+msgstr ""
 
-#~ msgid "Hide existing pads on startup"
-#~ msgstr "A meglévõ jegyzetek elrejtése indításkor"
+#: ../src/help.c:49
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically sticky notes on your desktop in which you can write memos."
+msgstr ""
 
-#~ msgid "Add _Quit to Toolbar"
-#~ msgstr "Kilépés hozzáadása az eszköztárhoz"
+#: ../src/help.c:52
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
+msgstr ""
 
-#~ msgid "_Pads start sticky"
-#~ msgstr "_Jegyzetek ragadósan indulnak"
+#: ../src/help.c:55
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad."
+msgstr ""
+
+#: ../src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit-"
+">Preferences."
+msgstr ""
+
+#: ../src/help.c:59
+msgid ""
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy."
+msgstr ""
+
+#: ../src/help.c:62
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr ""
+
+#: ../src/help.c:73
+msgid "Help"
+msgstr ""
+
+#: ../src/xpad-app.c:773
+msgid "Hide all pads"
+msgstr ""
+
+#: ../src/xpad-app.c:774
+msgid "Show all pads"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:80
+msgid "Add Close _All to Toolbar"
+msgstr ""

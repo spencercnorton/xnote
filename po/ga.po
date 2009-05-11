@@ -7,59 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-20 20:16-0400\n"
-"PO-Revision-Date: 2008-09-23 19:41+0000\n"
-"Last-Translator: Kevin Patrick Scannell <Unknown>\n"
+"POT-Creation-Date: 2009-01-11 11:35-0500\n"
+"PO-Revision-Date: 2009-01-11 17:24+0000\n"
+"Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-01-11 15:44+0000\n"
+"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#: ../src/fio.c:126
-#, c-format
-msgid "Could not write to file %s: %s"
-msgstr ""
-
-#: ../src/help.c:49
-msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos."
-msgstr ""
-
-#: ../src/help.c:52
-msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:55
-msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:57
-msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences."
-msgstr ""
-
-#: ../src/help.c:59
-msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy."
-msgstr ""
-
-#: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
-
-#: ../src/help.c:73
-msgid "Help"
-msgstr ""
 
 #: ../src/xpad-app.c:129
 msgid "Xpad is a graphical program.  Please run it from your desktop."
@@ -94,14 +50,6 @@ msgstr ""
 #: ../src/xpad-app.c:772
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Cruthaigh ceap nua ag am tosaithe fiú má tá ceapa ann cheana féin"
-
-#: ../src/xpad-app.c:773
-msgid "Hide all pads"
-msgstr ""
-
-#: ../src/xpad-app.c:774
-msgid "Show all pads"
-msgstr ""
 
 #: ../src/xpad-app.c:775
 msgid "Create a new pad with the contents of a file"
@@ -150,7 +98,11 @@ msgstr ""
 "Kevin Scannell <scannell@slu.edu>\n"
 "\n"
 "Launchpad Contributions:\n"
-"  Kevin Patrick Scannell https://launchpad.net/~scannell"
+"  Kevin Patrick Scannell https://launchpad.net/~scannell\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Kevin Patrick Scannell https://launchpad.net/~scannell\n"
+"  Michael Terry https://launchpad.net/~mterry"
 
 #: ../src/xpad-pad.c:1491
 msgid "_Pad"
@@ -330,10 +282,6 @@ msgstr "Cuir _Airíonna leis an Bharra Uirlisí"
 msgid "Close All Pads"
 msgstr "Dún Gach Uile Cheap Nótaí"
 
-#: ../src/xpad-toolbar.c:80
-msgid "Add Close _All to Toolbar"
-msgstr ""
-
 #: ../src/xpad-toolbar.c:81
 msgid "Add a Se_parator to Toolbar"
 msgstr "Cuir _deighilteoir leis an Bharra Uirlisí"
@@ -354,63 +302,58 @@ msgstr "Breac nótaí le léamh ar ball"
 msgid "Sticky Notes"
 msgstr "Nótaí Greamaitheacha"
 
-#~ msgid "Could not write to file %s."
-#~ msgstr "Níorbh fhéidir aon rud a scríobh chuig an chomhad %s."
+#: ../src/fio.c:126
+#, c-format
+msgid "Could not write to file %s: %s"
+msgstr ""
 
-#~ msgid "Hide existing pads on startup"
-#~ msgstr "Folaigh ceapa atá ann ag am tosaithe"
+#: ../src/help.c:49
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically sticky notes on your desktop in which you can write memos."
+msgstr ""
 
-#~ msgid "Add _Quit to Toolbar"
-#~ msgstr "Cuir _Scoir leis an Bharra Uirlisí"
+#: ../src/help.c:52
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
+msgstr ""
 
-#~ msgid "Orientation"
-#~ msgstr "Treoshuíomh"
+#: ../src/help.c:55
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad."
+msgstr ""
 
-#~ msgid "The orientation of the tray."
-#~ msgstr "Treoshuíomh an tráidire."
+#: ../src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit-"
+">Preferences."
+msgstr ""
 
-#~ msgid "Prints usage information and exits"
-#~ msgstr "Taispeáin eolas faoin úsáid agus scoir"
+#: ../src/help.c:59
+msgid ""
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy."
+msgstr ""
 
-#~ msgid "Prints xpad version and exits"
-#~ msgstr "Taispeáin an leagan xpad agus scoir"
+#: ../src/help.c:62
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr ""
 
-#~ msgid "Causes all running xpad instances to close"
-#~ msgstr "Dúnfaidh gach próiseas xpad atá beo faoi láthair"
+#: ../src/help.c:73
+msgid "Help"
+msgstr ""
 
-#~ msgid ""
-#~ "Usage: %s [OPTIONS]\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Úsáid: %s [ROGHANNA]\n"
-#~ "\n"
+#: ../src/xpad-app.c:773
+msgid "Hide all pads"
+msgstr ""
 
-#~ msgid "Missing companion argument to %s\n"
-#~ msgstr "Ní foláir argóint don rogha %s\n"
+#: ../src/xpad-app.c:774
+msgid "Show all pads"
+msgstr ""
 
-#~ msgid "Didn't understand argument '%s'\n"
-#~ msgstr "Argóint anaithnid %s.\n"
-
-#~ msgid "Invalid number: '%s'\n"
-#~ msgstr "Uimhir neamhbhailí: '%s'\n"
-
-#~ msgid "You are using xpad %s with GTK+ %i.%i.%i."
-#~ msgstr "Tá tú ag baint úsáid as xpad %s le GTK+ %i.%i.%i."
-
-#~ msgid "Visit http://xpad.sourceforge.net/ for more information about xpad."
-#~ msgstr ""
-#~ "Féach ar http://xpad.sourceforge.net/ chun tuilleadh eolais faoi xpad a "
-#~ "fháil."
-
-#~ msgid "_Sticky"
-#~ msgstr "_Greamaitheach"
-
-#~ msgid "_Pads start sticky"
-#~ msgstr "Tá na ceapa g_reamaitheacha ar dtús"
-
-# verb in OLT -KPS
-#~ msgid "Toggle Stickiness"
-#~ msgstr "Scoránaigh an Ghreamaitheacht"
-
-#~ msgid "Add _Sticky to Toolbar"
-#~ msgstr "Cuir _Greamaitheach leis an Bharra Uirlisí"
+#: ../src/xpad-toolbar.c:80
+msgid "Add Close _All to Toolbar"
+msgstr ""
