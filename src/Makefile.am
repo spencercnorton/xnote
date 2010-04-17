@@ -15,7 +15,8 @@ xpad_SOURCES = \
 	xpad-text-buffer.c xpad-text-buffer.h \
 	xpad-text-view.c xpad-text-view.h \
 	xpad-toolbar.c xpad-toolbar.h \
-	xpad-tray.c xpad-tray.h
+	xpad-tray.c xpad-tray.h \
+	xpad-undo.c xpad-undo.h
 
 AM_CFLAGS = @GTK_CFLAGS@ @X_CFLAGS@ @DEBUG_CFLAGS@ -DDATADIR=\"$(datadir)\"
 xpad_LDADD = @X_PRE_LIBS@ @X_LIBS@ @X_EXTRA_LIBS@ @GTK_LIBS@ @INTLLIBS@ @BINRELOC_LIBS@

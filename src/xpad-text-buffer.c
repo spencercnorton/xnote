@@ -17,8 +17,16 @@
  */
 
 #include "xpad-text-buffer.h"
+#include "xpad-undo.h"
 
 G_DEFINE_TYPE(XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
+#define XPAD_TEXT_BUFFER_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_TEXT_BUFFER, XpadTextBufferPrivate))
+
+struct XpadTextBufferPrivate 
+{
+	/* undo */
+	XpadUndo *undo;
+};
 
 /* Unicode chars in the Private Use Area. */
 static gunichar TAG_CHAR = 0xe000;
@@ -37,13 +45,31 @@ xpad_text_buffer_new (void)
 }
 
 static void
+xpad_text_buffer_finalize (GObject *object)
+{
+	XpadTextBuffer *text_buffer = XPAD_TEXT_BUFFER (object);
+	
+	g_free (text_buffer->priv->undo);
+	
+	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->finalize (object);
+}
+
+static void
 xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 {
+	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+	
+	gobject_class->finalize = xpad_text_buffer_finalize;
+	
+	g_type_class_add_private (gobject_class, sizeof (XpadTextBufferPrivate));
 }
 
 static void
 xpad_text_buffer_init (XpadTextBuffer *buffer)
 {
+	buffer->priv = XPAD_TEXT_BUFFER_GET_PRIVATE (buffer);
+
+	buffer->priv->undo = xpad_undo_new (buffer);
 }
 
 void
@@ -164,6 +190,33 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 	return text;
 }
 
+void
+xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar *text, gint len)
+{
+    GtkTextBuffer *parent = (GtkTextBuffer*) buffer;
+	GtkTextIter iter;
+	gtk_text_buffer_get_iter_at_offset (parent, &iter, pos);
+	gtk_text_buffer_insert (parent, &iter, text, len);
+}
+
+void
+xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end)
+{
+    GtkTextBuffer *parent = (GtkTextBuffer*) buffer;
+
+	GtkTextIter start_iter;
+	GtkTextIter end_iter;
+
+	gtk_text_buffer_get_iter_at_offset (parent, &start_iter, start);
+
+	if (end < 0)
+		gtk_text_buffer_get_end_iter (parent, &end_iter);
+	else
+		gtk_text_buffer_get_iter_at_offset (parent, &end_iter, end);
+
+	gtk_text_buffer_delete (parent, &start_iter, &end_iter);
+}
+
 static GtkTextTagTable *
 create_tag_table (void)
 {
@@ -218,3 +271,26 @@ create_tag_table (void)
 	
 	return table;
 }
+
+void
+xpad_text_buffer_undo (XpadTextBuffer *buffer)
+{
+	xpad_undo_exec_undo (buffer->priv->undo);
+}
+
+void
+xpad_text_buffer_redo (XpadTextBuffer *buffer)
+{
+	xpad_undo_exec_redo (buffer->priv->undo);
+}
+
+void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer)
+{
+	xpad_undo_freeze (buffer->priv->undo);
+}
+
+void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer)
+{
+	xpad_undo_thaw (buffer->priv->undo);
+}
+

@@ -163,13 +163,16 @@ xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename)
 		
 		pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, NULL));
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (XPAD_PAD (pad)->priv->textview));
-		
+
+		xpad_text_buffer_freeze_undo (XPAD_TEXT_BUFFER (buffer));
 		g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
 		
 		xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 		g_free (content);
 		
 		g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+		xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
+
 		xpad_pad_text_changed(XPAD_PAD(pad), buffer);
 	}
 	
@@ -1062,12 +1065,15 @@ load_content (XpadPad *pad)
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
 	
+	xpad_text_buffer_freeze_undo (XPAD_TEXT_BUFFER (buffer));
 	g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
 	
 	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
 	g_free (content);
 	
 	g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+	xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
+
 	xpad_pad_text_changed(pad, buffer);
 }
 
@@ -1305,6 +1311,26 @@ menu_paste (XpadPad *pad)
 }
 
 static void
+menu_undo (XpadPad *pad)
+{
+	g_return_if_fail (pad->priv->textview);
+	XpadTextBuffer *buffer = NULL;
+	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	g_return_if_fail (buffer);
+	xpad_text_buffer_undo (buffer);
+}
+
+static void
+menu_redo (XpadPad *pad)
+{
+	g_return_if_fail (pad->priv->textview);
+	XpadTextBuffer *buffer = NULL;
+	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	g_return_if_fail (buffer);
+	xpad_text_buffer_redo (buffer);
+}
+
+static void
 menu_show_all (XpadPad *pad)
 {
 	GSList *pads, *i;
@@ -1476,6 +1502,15 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	gtk_widget_show (item);\
 	}
 
+#define MENU_ADD_STOCK_WITH_ACCEL(stock, callback, key, mask) {\
+	item = gtk_image_menu_item_new_from_stock (stock, accel_group);\
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
+	if (key)\
+		gtk_widget_add_accelerator(item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
+	gtk_container_add (GTK_CONTAINER (menu), item);\
+	gtk_widget_show (item);\
+	}
+
 #define MENU_ADD_CHECK(mnemonic, active, callback) {\
 	item = gtk_check_menu_item_new_with_mnemonic (mnemonic);\
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), active);\
@@ -1521,10 +1556,20 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+    
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDO, menu_undo, GDK_Z, GDK_CONTROL_MASK);
+	g_object_set_data (G_OBJECT (uppermenu), "undo", item);
+    
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_REDO, menu_redo, GDK_R, GDK_CONTROL_MASK);
+	g_object_set_data (G_OBJECT (uppermenu), "redo", item);
+
+	MENU_ADD_SEP();
 	
 	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
+
 	MENU_ADD_SEP ();
+
 	MENU_ADD_STOCK (GTK_STOCK_PREFERENCES, xpad_pad_open_preferences);
 	
 	

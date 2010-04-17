@@ -31,11 +31,15 @@ G_BEGIN_DECLS
 #define XPAD_TEXT_BUFFER_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), XPAD_TYPE_TEXT_BUFFER, XpadTextBufferClass))
 
 typedef struct XpadTextBufferClass XpadTextBufferClass;
+typedef struct XpadTextBufferPrivate XpadTextBufferPrivate;
 typedef struct XpadTextBuffer XpadTextBuffer;
 
 struct XpadTextBuffer
 {
 	GtkTextBuffer parent;
+
+	/* private */
+	XpadTextBufferPrivate *priv;
 };
 
 struct XpadTextBufferClass
@@ -49,6 +53,14 @@ GtkTextBuffer *xpad_text_buffer_new (void);
 
 void xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text);
 gchar *xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer);
+
+void xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar *text, gint len);
+void xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end);
+
+void xpad_text_buffer_undo (XpadTextBuffer *buffer);
+void xpad_text_buffer_redo (XpadTextBuffer *buffer);
+void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer);
+void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer);
 
 G_END_DECLS
 
