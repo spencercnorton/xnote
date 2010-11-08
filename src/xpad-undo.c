@@ -312,8 +312,8 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 						g_free (prev_action->text);
 						prev_action->text = joined_str;
 						prev_action->len_in_bytes += len;
-						prev_action->end += prev_action->len_in_bytes;
-						prev_action->n_utf8_chars = prev_action->n_utf8_chars + n_utf8_chars;
+						prev_action->end += len;
+						prev_action->n_utf8_chars += n_utf8_chars;
 						prev_action->merged = TRUE;
 						return;
 					}

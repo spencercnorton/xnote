@@ -197,6 +197,7 @@ xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar *tex
 	GtkTextIter iter;
 	gtk_text_buffer_get_iter_at_offset (parent, &iter, pos);
 	gtk_text_buffer_insert (parent, &iter, text, len);
+	gtk_text_buffer_place_cursor (parent, &iter);
 }
 
 void
@@ -214,6 +215,7 @@ xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end)
 	else
 		gtk_text_buffer_get_iter_at_offset (parent, &end_iter, end);
 
+	gtk_text_buffer_place_cursor (parent, &start_iter);
 	gtk_text_buffer_delete (parent, &start_iter, &end_iter);
 }
 
