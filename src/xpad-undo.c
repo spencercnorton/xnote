@@ -300,7 +300,9 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 			if (prev_action->action_type == USER_ACTION_INSERT_TEXT)
 			{
 				/* series of 1-letter insertions */
-				if ((n_utf8_chars == 1 && prev_action->n_utf8_chars == 1) || (n_utf8_chars == 1 && prev_action->merged))
+				if (n_utf8_chars == 1 // this is a 1-letter insertion
+					&& pos == prev_action->end // placed right after the previous text
+					&& (prev_action->n_utf8_chars == 1 || prev_action->merged)) // with which we should merge
 				{
 					/* if there was a space stop merging unless that was a series of spaces */
 					if ((!g_unichar_isspace (prev_action->text[0]) && !g_ascii_isspace (text[0])) ||
