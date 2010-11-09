@@ -1706,9 +1706,9 @@ menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
 	g_object_set_data (G_OBJECT (menu), "paste", item);
 	MENU_ADD_SEP ();
-	MENU_ADD_STOCK (GTK_STOCK_BOLD, menu_bold);
-	MENU_ADD_STOCK (GTK_STOCK_ITALIC, menu_italic);
-	MENU_ADD_STOCK (GTK_STOCK_UNDERLINE, menu_underline);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_BOLD, menu_bold, GDK_b, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_ITALIC, menu_italic, GDK_i, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDERLINE, menu_underline, GDK_u, GDK_CONTROL_MASK);
 	MENU_ADD_STOCK (GTK_STOCK_STRIKETHROUGH, menu_strikethrough);
 	
 	return menu;
