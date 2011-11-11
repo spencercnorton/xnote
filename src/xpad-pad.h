@@ -61,6 +61,9 @@ void xpad_pad_close (XpadPad *pad);
 void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);
 
+void xpad_load_content (XpadPad *pad);
+void xpad_save_content (XpadPad *pad);
+
 G_END_DECLS
 
 #endif /* __XPAD_PAD_H__ */

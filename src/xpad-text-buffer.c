@@ -219,6 +219,45 @@ xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end)
 	gtk_text_buffer_delete (parent, &start_iter, &end_iter);
 }
 
+void
+xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name, XpadPad *pad)
+{
+	GtkTextTagTable *table;
+	GtkTextTag *tag;
+	GtkTextIter start, end, i;
+	gboolean all_tagged;
+	
+	table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (buffer));
+	tag = gtk_text_tag_table_lookup (table, name);
+	gtk_text_buffer_get_selection_bounds ( GTK_TEXT_BUFFER (buffer), &start, &end);
+	
+	if (!tag)
+	{
+		g_print ("Tag not found in table %p\n", (void *) table);
+		return;
+	}
+	
+	for (all_tagged = TRUE, i = start; !gtk_text_iter_equal (&i, &end); gtk_text_iter_forward_char (&i))
+	{
+		if (!gtk_text_iter_has_tag (&i, tag))
+		{
+			all_tagged = FALSE;
+			break;
+		}
+	}
+	
+	if (all_tagged)
+	{
+		gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
+		xpad_undo_remove_tag (buffer->priv->undo, name, &start, &end, pad);
+	}
+	else
+	{
+		gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
+		xpad_undo_apply_tag (buffer->priv->undo, name, &start, &end, pad);
+	}
+}
+
 static GtkTextTagTable *
 create_tag_table (void)
 {

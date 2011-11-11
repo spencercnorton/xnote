@@ -39,7 +39,9 @@ static void xpad_undo_get_property (GObject *object, guint prop_id, GValue *valu
 enum UserActionType
 {
 	USER_ACTION_INSERT_TEXT,
-	USER_ACTION_DELETE_RANGE
+	USER_ACTION_DELETE_RANGE,
+	USER_ACTION_APPLY_TAG,
+	USER_ACTION_REMOVE_TAG
 };
 
 typedef struct
@@ -48,9 +50,14 @@ typedef struct
 	gint start;
 	gint end;
 	gchar *text;
-	gint len_in_bytes;
-	gint n_utf8_chars;
-	gboolean merged;
+   union {
+      XpadPad *pad; // this is for USER_ACTION_APPLY_TAG, USER_ACTION_REMOVE_TAG
+      struct { // this is for USER_ACTION_INSERT_TEXT, USER_ACTION_DELETE_RANGE
+	      gint len_in_bytes;
+   	   gint n_utf8_chars;
+      	gboolean merged;
+      };
+   };
 } UserAction;
 
 static GList* xpad_undo_remove_action_elem (GList *curr);
@@ -342,31 +349,73 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 static void
 xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo)
 {
-	if (undo->priv->frozen)
-		return;
+   if (undo->priv->frozen)
+      return;
 
-	if (undo->priv->user_action)
-	{
-		xpad_undo_clear_redo_history (undo);
+   if (undo->priv->user_action)
+   {
+      xpad_undo_clear_redo_history (undo);
 
-		gchar *text = gtk_text_iter_get_text (start, end);
-		gint start_offset = gtk_text_iter_get_offset (start);
-		gint end_offset = gtk_text_iter_get_offset (end);
-		gint len = abs (end_offset - start_offset);
-		gint n_utf8_chars = g_utf8_strlen (text, len);
+      gchar *text = gtk_text_iter_get_text (start, end);
+      gint start_offset = gtk_text_iter_get_offset (start);
+      gint end_offset = gtk_text_iter_get_offset (end);
+      gint len = abs (end_offset - start_offset);
+      gint n_utf8_chars = g_utf8_strlen (text, len);
 
-		UserAction *action = g_new (UserAction, 1);
-		action->action_type = USER_ACTION_DELETE_RANGE;
-		action->text = g_strdup (text);
-		action->start = start_offset;
-		action->end = end_offset;
-		action->len_in_bytes = len;
-		action->n_utf8_chars = n_utf8_chars;
-		action->merged = FALSE;
+      UserAction *action = g_new (UserAction, 1);
+      action->action_type = USER_ACTION_DELETE_RANGE;
+      action->text = g_strdup (text);
+      action->start = start_offset;
+      action->end = end_offset;
+      action->len_in_bytes = len;
+      action->n_utf8_chars = n_utf8_chars;
+      action->merged = FALSE;
 
-		GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
-		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
-	}
+      GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+      undo->priv->history_curr = g_list_next (undo->priv->history_curr);
+   }
+}
+
+void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
+{
+   if (undo->priv->frozen)
+      return;
+
+   xpad_undo_clear_redo_history (undo);
+
+   gint start_offset = gtk_text_iter_get_offset (start);
+   gint end_offset = gtk_text_iter_get_offset (end);
+
+   UserAction *action = g_new (UserAction, 1);
+   action->action_type = USER_ACTION_APPLY_TAG;
+   action->text = g_strdup (name);
+   action->start = start_offset;
+   action->end = end_offset;   
+   action->pad = pad;
+
+   GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+   undo->priv->history_curr = g_list_next (undo->priv->history_curr);
+}
+
+void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
+{
+   if (undo->priv->frozen)
+      return;
+
+   xpad_undo_clear_redo_history (undo);
+
+   gint start_offset = gtk_text_iter_get_offset (start);
+   gint end_offset = gtk_text_iter_get_offset (end);
+
+   UserAction *action = g_new (UserAction, 1);
+   action->action_type = USER_ACTION_REMOVE_TAG;
+   action->text = g_strdup (name);
+   action->start = start_offset;
+   action->end = end_offset;
+   action->pad = pad;
+
+   GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+   undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 }
 
 void xpad_undo_exec_undo (XpadUndo *undo)
@@ -383,18 +432,53 @@ void xpad_undo_exec_undo (XpadUndo *undo)
 	{
 		UserAction *action = undo->priv->history_curr->data;
 
+		GtkTextIter start;
+		GtkTextIter end;
+
+		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+				&start, action->start);
+
+		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+				&end, action->end);
+
+		GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
+
 		switch (action->action_type)
 		{
 		case USER_ACTION_INSERT_TEXT:
-			xpad_text_buffer_delete_range (undo->priv->buffer,
-				action->start,
-				action->end);
+			{
+				xpad_text_buffer_delete_range (undo->priv->buffer,
+					action->start,
+					action->end);
+			}
 			break;
 		case USER_ACTION_DELETE_RANGE:
-			xpad_text_buffer_insert_text (undo->priv->buffer,
-				action->start,
-				action->text,
-				action->len_in_bytes);
+			{
+				xpad_text_buffer_insert_text (undo->priv->buffer,
+					action->start,
+					action->text,
+					action->len_in_bytes);
+			}
+			break;
+		case USER_ACTION_APPLY_TAG:
+			{
+				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+				gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+					tag,
+					&start,
+					&end);
+            xpad_save_content(action->pad);
+			}
+			break;
+		case USER_ACTION_REMOVE_TAG:
+			{
+				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+				gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+					tag,
+					&start,
+					&end);
+            xpad_save_content(action->pad);
+			}
 			break;
 		}
 
@@ -416,18 +500,53 @@ void xpad_undo_exec_redo (XpadUndo *undo)
 	{
 		UserAction *action = undo->priv->history_curr->next->data;
 
+		GtkTextIter start;
+		GtkTextIter end;
+
+		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+				&start, action->start);
+
+		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+				&end, action->end);
+
+		GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
+
 		switch (action->action_type)
 		{
 		case USER_ACTION_DELETE_RANGE:
-			xpad_text_buffer_delete_range (undo->priv->buffer,
-				action->start,
-				action->end);
+			{
+				xpad_text_buffer_delete_range (undo->priv->buffer,
+					action->start,
+					action->end);
+			}
 			break;
 		case USER_ACTION_INSERT_TEXT:
-			xpad_text_buffer_insert_text (undo->priv->buffer,
-				action->start,
-				action->text,
-				action->len_in_bytes);
+			{
+				xpad_text_buffer_insert_text (undo->priv->buffer,
+					action->start,
+					action->text,
+					action->len_in_bytes);
+			}
+         break;
+		case USER_ACTION_APPLY_TAG:
+			{
+				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+				gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+						tag,
+						&start,
+						&end);
+            xpad_save_content(action->pad);
+			}
+			break;
+		case USER_ACTION_REMOVE_TAG:
+			{
+				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+				gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+						tag,
+						&start,
+						&end);
+            xpad_save_content(action->pad);
+			}
 			break;
 		}
 

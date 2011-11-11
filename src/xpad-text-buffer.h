@@ -20,6 +20,7 @@
 #define __XPAD_TEXT_BUFFER_H__
 
 #include <gtk/gtk.h>
+#include "xpad-pad.h"
 
 G_BEGIN_DECLS
 
@@ -56,6 +57,7 @@ gchar *xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer);
 
 void xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar *text, gint len);
 void xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end);
+void xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name, XpadPad *pad);
 
 void xpad_text_buffer_undo (XpadTextBuffer *buffer);
 void xpad_text_buffer_redo (XpadTextBuffer *buffer);

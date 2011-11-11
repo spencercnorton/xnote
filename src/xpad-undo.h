@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <gtk/gtk.h>
 #include "xpad-text-buffer.h"
+#include "xpad-pad.h"
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,9 @@ void xpad_undo_exec_undo (XpadUndo *undo);
 void xpad_undo_exec_redo (XpadUndo *undo);
 void xpad_undo_freeze (XpadUndo *undo);
 void xpad_undo_thaw (XpadUndo *undo);
+
+void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad);
+void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad);
 
 G_END_DECLS
 

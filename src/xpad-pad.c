@@ -82,8 +82,6 @@ enum
 };
 
 static void load_info (XpadPad *pad, gboolean *show);
-static void load_content (XpadPad *pad);
-static void save_content (XpadPad *pad);
 static GtkWidget *menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
 static GtkWidget *menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group);
 static void xpad_pad_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
@@ -137,7 +135,7 @@ xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolea
 	
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
 	load_info (XPAD_PAD (pad), show);
-	load_content (XPAD_PAD (pad));
+	xpad_load_content (XPAD_PAD (pad));
 	gtk_window_set_role (GTK_WINDOW (pad), XPAD_PAD (pad)->priv->infoname);
 	
 	return pad;
@@ -278,7 +276,7 @@ xpad_pad_init (XpadPad *pad)
 		"gravity", GDK_GRAVITY_STATIC, /* static gravity makes saving pad x,y work */
 		"skip-pager-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
 		"skip-taskbar-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
-		"type", GTK_WINDOW_TOPLEVEL,
+		//"type", GTK_WINDOW_TOPLEVEL,
 		"type-hint", GDK_WINDOW_TYPE_HINT_NORMAL,
 		"window-position", GTK_WIN_POS_MOUSE,
 		"child", vbox,
@@ -840,7 +838,7 @@ xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 	xpad_pad_sync_title (pad);
 	
 	/* record change */
-	save_content (pad);
+	xpad_save_content (pad);
 }
 
 static gboolean
@@ -1052,8 +1050,8 @@ xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec
 	}
 }
 
-static void
-load_content (XpadPad *pad)
+void
+xpad_load_content (XpadPad *pad)
 {
 	gchar *content;
 	GtkTextBuffer *buffer;
@@ -1077,8 +1075,8 @@ load_content (XpadPad *pad)
 	xpad_pad_text_changed(pad, buffer);
 }
 
-static void
-save_content (XpadPad *pad)
+void
+xpad_save_content (XpadPad *pad)
 {
 	gchar *content;
 	GtkTextBuffer *buffer;
@@ -1377,38 +1375,11 @@ menu_show (XpadPad *pad)
 static void
 menu_toggle_tag (XpadPad *pad, const gchar *name)
 {
-	GtkTextBuffer *buffer;
-	GtkTextTagTable *table;
-	GtkTextTag *tag;
-	GtkTextIter start, end, i;
-	gboolean all_tagged;
-	
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
-	table = gtk_text_buffer_get_tag_table (buffer);
-	tag = gtk_text_tag_table_lookup (table, name);
-	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
-	
-	if (!tag)
-	{
-		g_print ("Tag not found in table %p\n", (void *) table);
-		return;
-	}
-	
-	for (all_tagged = TRUE, i = start; !gtk_text_iter_equal (&i, &end); gtk_text_iter_forward_char (&i))
-	{
-		if (!gtk_text_iter_has_tag (&i, tag))
-		{
-			all_tagged = FALSE;
-			break;
-		}
-	}
-	
-	if (all_tagged)
-		gtk_text_buffer_remove_tag (buffer, tag, &start, &end);
-	else
-		gtk_text_buffer_apply_tag (buffer, tag, &start, &end);
-	
-	save_content (pad);
+	g_return_if_fail (pad->priv->textview);
+	XpadTextBuffer *buffer = NULL;
+	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	xpad_text_buffer_toggle_tag (buffer, name, pad);
+	xpad_save_content (pad);
 }
 
 static void
