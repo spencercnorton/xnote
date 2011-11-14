@@ -40,16 +40,16 @@ typedef struct XpadPad XpadPad;
 
 struct XpadPad
 {
-	/* private */
-	GtkWindow parent;
-	XpadPadPrivate *priv;
+   /* private */
+   GtkWindow parent;
+   XpadPadPrivate *priv;
 };
 
 struct XpadPadClass
 {
-	GtkWindowClass parent_class;
-	
-	void (*closed) (XpadPad *pad);
+   GtkWindowClass parent_class;
+   
+   void (*closed) (XpadPad *pad);
 };
 
 GType xpad_pad_get_type (void);
