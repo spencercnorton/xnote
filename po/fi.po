@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-11 11:35-0500\n"
+"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2011-11-14 11:41-0500\n"
 "PO-Revision-Date: 2009-01-11 17:24+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,20 +20,63 @@ msgstr ""
 "X-Poedit-Country: FINLAND\n"
 "X-Poedit-Language: Finnish\n"
 
-#: ../src/xpad-app.c:129
+#: ../src/fio.c:128
+#, c-format
+msgid "Could not write to file %s: %s"
+msgstr ""
+
+#: ../src/help.c:49
+msgid ""
+"Each xpad session consists of one or more open pads.  These pads are "
+"basically sticky notes on your desktop in which you can write memos."
+msgstr ""
+
+#: ../src/help.c:52
+msgid ""
+"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
+msgstr ""
+
+#: ../src/help.c:55
+msgid ""
+"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+"right dragging anywhere on the pad."
+msgstr ""
+
+#: ../src/help.c:57
+msgid ""
+"<b>To change color settings</b>, right click on a pad and choose Edit-"
+">Preferences."
+msgstr ""
+
+#: ../src/help.c:59
+msgid ""
+"Most actions are available throught the popup menu that appears when you "
+"right click on a pad.  Try it out and enjoy."
+msgstr ""
+
+#: ../src/help.c:62
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr ""
+
+#: ../src/help.c:73
+msgid "Help"
+msgstr ""
+
+#: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad on graafinen ohjelma. Aja sitä työpöydältä."
 
-#: ../src/xpad-app.c:134 ../xpad.desktop.in.h:3
+#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:455
+#: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Ei voitu avata hakemistoa %s."
 
-#: ../src/xpad-app.c:458
+#: ../src/xpad-app.c:460
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -40,63 +84,75 @@ msgstr ""
 "Tämä hakemisto tarvitaan tallentamaan ensisijaisuus- ja lapputietoja. Xpad "
 "sulkeutuu nyt."
 
-#: ../src/xpad-app.c:765
+#: ../src/xpad-app.c:767
 msgid "Show version number and quit"
 msgstr "Näytä versionumero ja poistu"
 
-#: ../src/xpad-app.c:766
+#: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Älä luo uutta lappua käynnistyksen yhteydessä, jos aikaisempi lappu on jo "
 "olemassa"
 
-#: ../src/xpad-app.c:772
+#: ../src/xpad-app.c:774
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Luo uusi lappu käynnistyksen yhteydessä myös silloin kun lappu on jo olemassa"
 
 #: ../src/xpad-app.c:775
+msgid "Hide all pads"
+msgstr ""
+
+#: ../src/xpad-app.c:776
+msgid "Show all pads"
+msgstr ""
+
+#: ../src/xpad-app.c:777
+msgid "Toggle between show and hide all pads"
+msgstr ""
+
+#: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
 msgstr "Luo uusi lappu tiedoston sisällöstä"
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:778
 msgid "FILE"
 msgstr "TIEDOSTO"
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:779
 msgid "Close all pads"
 msgstr "Sulje kaikki laput"
 
-#: ../src/xpad-app.c:807
+#: ../src/xpad-app.c:810
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:155
+#: ../src/xpad-pad.c:154
 #, c-format
 msgid "Could not read file %s."
 msgstr "Ei voitu lukea tiedostoa %s."
 
-#: ../src/xpad-pad.c:649
+#: ../src/xpad-pad.c:653
 msgid "Delete this pad?"
 msgstr "Poistetaanko tämä lappu?"
 
-#: ../src/xpad-pad.c:650
+#: ../src/xpad-pad.c:654
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Kaikki tämän lapun teksti menetetään peruuttomasti."
 
-#: ../src/xpad-pad.c:681
+#: ../src/xpad-pad.c:685
 #, c-format
 msgid "'%s' Properties"
 msgstr "”%s” Ominaisuudet"
 
-#: ../src/xpad-pad.c:1233
+#: ../src/xpad-pad.c:1240
 msgid "Sticky notes"
 msgstr "Liimalappumuistiinpanot"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1252
+#: ../src/xpad-pad.c:1259
 msgid "translator-credits"
 msgstr ""
 "Jorma Karvonen <karvjorm@users.sf.net>\n"
@@ -108,60 +164,60 @@ msgstr ""
 "  Jorma Karvonen https://launchpad.net/~karvjorm-users\n"
 "  Michael Terry https://launchpad.net/~mterry"
 
-#: ../src/xpad-pad.c:1491
+#: ../src/xpad-pad.c:1500
 msgid "_Pad"
 msgstr "_Lappu"
 
-#: ../src/xpad-pad.c:1500
+#: ../src/xpad-pad.c:1509
 msgid "Show on _All Workspaces"
 msgstr "Näytä k_aikissa työtiloissa"
 
-#: ../src/xpad-pad.c:1508
+#: ../src/xpad-pad.c:1517
 msgid "_Edit"
 msgstr "M_uokkaa"
 
-#: ../src/xpad-pad.c:1521
+#: ../src/xpad-pad.c:1540
 msgid "_View"
 msgstr "_Näkymä"
 
-#: ../src/xpad-pad.c:1528
+#: ../src/xpad-pad.c:1547
 msgid "_Toolbar"
 msgstr "_Työkalupalkki"
 
-#: ../src/xpad-pad.c:1529
+#: ../src/xpad-pad.c:1548
 msgid "_Autohide Toolbar"
 msgstr "Piil_ota automaattisesti työkalupalkki"
 
-#: ../src/xpad-pad.c:1531
+#: ../src/xpad-pad.c:1550
 msgid "_Scrollbar"
 msgstr "Vi_erityspalkki"
 
-#: ../src/xpad-pad.c:1532
+#: ../src/xpad-pad.c:1551
 msgid "_Window Decorations"
 msgstr "_Yläotsakkeet"
 
-#: ../src/xpad-pad.c:1535
+#: ../src/xpad-pad.c:1554
 msgid "_Notes"
 msgstr "_Muistiot"
 
-#: ../src/xpad-pad.c:1543 ../src/xpad-tray.c:123
+#: ../src/xpad-pad.c:1562 ../src/xpad-tray.c:123
 msgid "_Show All"
 msgstr "_Näytä kaikki"
 
-#: ../src/xpad-pad.c:1544 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1563 ../src/xpad-tray.c:130
 msgid "_Close All"
 msgstr "_Sulje kaikki"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1548
+#: ../src/xpad-pad.c:1567
 msgid "_Help"
 msgstr "O_paste"
 
-#: ../src/xpad-pad.c:1555
+#: ../src/xpad-pad.c:1574
 msgid "_Contents"
 msgstr "S_isältö"
 
-#: ../src/xpad-pad.c:1556
+#: ../src/xpad-pad.c:1575
 msgid "_About"
 msgstr "Oh_jelmasta"
 
@@ -285,6 +341,10 @@ msgstr "Lisää _ominaisuudet työkalupalkkiin"
 msgid "Close All Pads"
 msgstr "Sulje kaikki laput"
 
+#: ../src/xpad-toolbar.c:80
+msgid "Add Close _All to Toolbar"
+msgstr ""
+
 #: ../src/xpad-toolbar.c:81
 msgid "Add a Se_parator to Toolbar"
 msgstr "Lisää _erotin työkalupalkkiin"
@@ -304,59 +364,3 @@ msgstr "Raapusta muistiin myöhempää käyttöä varten"
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Liimalappumuistiinpanot"
-
-#: ../src/fio.c:126
-#, c-format
-msgid "Could not write to file %s: %s"
-msgstr ""
-
-#: ../src/help.c:49
-msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos."
-msgstr ""
-
-#: ../src/help.c:52
-msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:55
-msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad."
-msgstr ""
-
-#: ../src/help.c:57
-msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences."
-msgstr ""
-
-#: ../src/help.c:59
-msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy."
-msgstr ""
-
-#: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
-
-#: ../src/help.c:73
-msgid "Help"
-msgstr ""
-
-#: ../src/xpad-app.c:773
-msgid "Hide all pads"
-msgstr ""
-
-#: ../src/xpad-app.c:774
-msgid "Show all pads"
-msgstr ""
-
-#: ../src/xpad-toolbar.c:80
-msgid "Add Close _All to Toolbar"
-msgstr ""

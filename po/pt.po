@@ -6,18 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-11 11:35-0500\n"
+"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2011-11-14 11:41-0500\n"
 "PO-Revision-Date: 2009-04-28 14:03+0000\n"
 "Last-Translator: Luis Rascão <luis.rascao@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../src/fio.c:126
+#: ../src/fio.c:128
 #, c-format
 msgid "Could not write to file %s: %s"
 msgstr "Nao foi possivel escrever no ficheiro %s: %s"
@@ -67,30 +68,29 @@ msgstr ""
 "se."
 
 #: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Por favor envie comentários or relatórios de defeitos para xpad-"
-"devel@lists.sourceforge.net"
+"Por favor envie comentários or relatórios de defeitos para xpad-devel@lists."
+"sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
 msgstr "Ajuda"
 
-#: ../src/xpad-app.c:129
+#: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad é um programa gráfico. Por favor execute-o do seu desktop."
 
-#: ../src/xpad-app.c:134 ../xpad.desktop.in.h:3
+#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:3
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:455
+#: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Não foi possivel abrir a directoria %s"
 
-#: ../src/xpad-app.c:458
+#: ../src/xpad-app.c:460
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -98,120 +98,132 @@ msgstr ""
 "Esta directoria é necessária para armazenar preferências e informação de "
 "painel. Xpad irá fechar agora."
 
-#: ../src/xpad-app.c:765
+#: ../src/xpad-app.c:767
 msgid "Show version number and quit"
 msgstr "Mostrar numero da versão e sair."
 
-#: ../src/xpad-app.c:766
+#: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Não criar um novo painel no arranque se não existia nenhum painel anteior."
 
-#: ../src/xpad-app.c:772
+#: ../src/xpad-app.c:774
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Criar um novo painel no arranque mesmo se já existiam paineis."
 
-#: ../src/xpad-app.c:773
+#: ../src/xpad-app.c:775
 msgid "Hide all pads"
 msgstr "Esconder todos os paineis."
 
-#: ../src/xpad-app.c:774
+#: ../src/xpad-app.c:776
 msgid "Show all pads"
 msgstr "Mostrar todos os paineis."
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:777
+msgid "Toggle between show and hide all pads"
+msgstr ""
+
+#: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
 msgstr "Criar um novo painel com o conteudo de um ficheiro."
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:778
 msgid "FILE"
 msgstr "FICHEIRO"
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:779
 msgid "Close all pads"
 msgstr "Fechar todos os paineis."
 
-#: ../src/xpad-app.c:807
+#: ../src/xpad-app.c:810
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:155
+#: ../src/xpad-pad.c:154
 #, c-format
 msgid "Could not read file %s."
 msgstr "Não foi possivel ler o ficheiro %s"
 
-#: ../src/xpad-pad.c:649
+#: ../src/xpad-pad.c:653
 msgid "Delete this pad?"
 msgstr "Apagar este painel?"
 
-#: ../src/xpad-pad.c:650
+#: ../src/xpad-pad.c:654
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Todo o texto neste painel será perdido irrevogavelmente."
 
-#: ../src/xpad-pad.c:681
+#: ../src/xpad-pad.c:685
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' Propriedades"
 
-#: ../src/xpad-pad.c:1233
+#: ../src/xpad-pad.c:1240
 msgid "Sticky notes"
 msgstr "Notas colantes"
 
-#: ../src/xpad-pad.c:1491
+#. Translators: please translate this as your own name and optionally email
+#. like so: "Your Name <your@email.com>"
+#: ../src/xpad-pad.c:1259
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Luis Rascão https://launchpad.net/~lrascao"
+
+#: ../src/xpad-pad.c:1500
 msgid "_Pad"
 msgstr "_Painel"
 
-#: ../src/xpad-pad.c:1500
+#: ../src/xpad-pad.c:1509
 msgid "Show on _All Workspaces"
 msgstr "Mostrar em _Todas as áreas de trabalho"
 
-#: ../src/xpad-pad.c:1508
+#: ../src/xpad-pad.c:1517
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/xpad-pad.c:1521
+#: ../src/xpad-pad.c:1540
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/xpad-pad.c:1528
+#: ../src/xpad-pad.c:1547
 msgid "_Toolbar"
 msgstr "_Barra de Ferramentas"
 
-#: ../src/xpad-pad.c:1529
+#: ../src/xpad-pad.c:1548
 msgid "_Autohide Toolbar"
 msgstr "_Esconder automaticamente barra de ferramentas"
 
-#: ../src/xpad-pad.c:1531
+#: ../src/xpad-pad.c:1550
 msgid "_Scrollbar"
 msgstr "_Barra de scroll"
 
-#: ../src/xpad-pad.c:1532
+#: ../src/xpad-pad.c:1551
 msgid "_Window Decorations"
 msgstr "_Decorações de janela"
 
-#: ../src/xpad-pad.c:1535
+#: ../src/xpad-pad.c:1554
 msgid "_Notes"
 msgstr "_Notas"
 
-#: ../src/xpad-pad.c:1543 ../src/xpad-tray.c:123
+#: ../src/xpad-pad.c:1562 ../src/xpad-tray.c:123
 msgid "_Show All"
 msgstr "_Mostrar Tudo"
 
-#: ../src/xpad-pad.c:1544 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1563 ../src/xpad-tray.c:130
 msgid "_Close All"
 msgstr "_Fechar Todos"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1548
+#: ../src/xpad-pad.c:1567
 msgid "_Help"
 msgstr "_Ajuda"
 
-#: ../src/xpad-pad.c:1555
+#: ../src/xpad-pad.c:1574
 msgid "_Contents"
 msgstr "_Conteúdo"
 
-#: ../src/xpad-pad.c:1556
+#: ../src/xpad-pad.c:1575
 msgid "_About"
 msgstr "_Sobre"
 
@@ -358,11 +370,3 @@ msgstr "Anotar para mais tarde"
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "Sticky Notes"
-
-#. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1252
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Luis Rascão https://launchpad.net/~lrascao"
