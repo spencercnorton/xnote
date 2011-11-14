@@ -1588,13 +1588,22 @@ static void
 menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 {
 	GtkWidget *menu, *item;
-	GtkClipboard *clipboard;
-	
-	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+	GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+	XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (current_pad->priv->textview)));
 	
 	item = g_object_get_data (G_OBJECT (uppermenu), "paste");
 	if (item)
 		gtk_widget_set_sensitive (item, gtk_clipboard_wait_is_text_available (clipboard));
+
+	item = g_object_get_data (G_OBJECT (uppermenu), "undo");
+	if (item)
+      gtk_widget_set_sensitive (item, xpad_text_buffer_undo_available (buffer));
+
+	item = g_object_get_data (G_OBJECT (uppermenu), "redo");
+	if (item)
+      gtk_widget_set_sensitive (item, xpad_text_buffer_redo_available (buffer));
 	
 	item = g_object_get_data (G_OBJECT (uppermenu), "sticky");
 	if (item) {

@@ -313,6 +313,18 @@ create_tag_table (void)
 	return table;
 }
 
+gboolean
+xpad_text_buffer_undo_available (XpadTextBuffer *buffer)
+{
+	return xpad_undo_undo_available (buffer->priv->undo);
+}
+
+gboolean
+xpad_text_buffer_redo_available (XpadTextBuffer *buffer)
+{
+	return xpad_undo_redo_available (buffer->priv->undo);
+}
+
 void
 xpad_text_buffer_undo (XpadTextBuffer *buffer)
 {

@@ -278,7 +278,8 @@ xpad_undo_clear_redo_history (XpadUndo *undo)
 		xpad_undo_remove_action_elem (undo->priv->history_curr->next);
 }
 	
-static void xpad_undo_clear_history (XpadUndo *undo)
+static void
+xpad_undo_clear_history (XpadUndo *undo)
 {
 	while (undo->priv->history_start->next)
 		xpad_undo_remove_action_elem (undo->priv->history_start->next);
@@ -376,7 +377,8 @@ xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *
    }
 }
 
-void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
+void
+xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
 {
    if (undo->priv->frozen)
       return;
@@ -397,7 +399,8 @@ void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start,
    undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 }
 
-void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
+void
+xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad)
 {
    if (undo->priv->frozen)
       return;
@@ -418,148 +421,168 @@ void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start
    undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 }
 
-void xpad_undo_exec_undo (XpadUndo *undo)
+gboolean
+xpad_undo_undo_available (XpadUndo *undo)
 {
 	if (undo->priv->frozen)
-		return;
+		return FALSE;
 
 	/* No undo without buffer */
 	if (undo->priv->buffer == NULL || !G_IS_OBJECT (undo->priv->buffer))
-		return;
+		return FALSE;
 
-	/* Undo current element if it is not a start of the list */
 	if (undo->priv->history_curr->data)
-	{
-		UserAction *action = undo->priv->history_curr->data;
-
-		GtkTextIter start;
-		GtkTextIter end;
-
-		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-				&start, action->start);
-
-		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-				&end, action->end);
-
-		GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
-
-		switch (action->action_type)
-		{
-		case USER_ACTION_INSERT_TEXT:
-			{
-				xpad_text_buffer_delete_range (undo->priv->buffer,
-					action->start,
-					action->end);
-			}
-			break;
-		case USER_ACTION_DELETE_RANGE:
-			{
-				xpad_text_buffer_insert_text (undo->priv->buffer,
-					action->start,
-					action->text,
-					action->len_in_bytes);
-			}
-			break;
-		case USER_ACTION_APPLY_TAG:
-			{
-				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
-				gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
-					tag,
-					&start,
-					&end);
-            xpad_save_content(action->pad);
-			}
-			break;
-		case USER_ACTION_REMOVE_TAG:
-			{
-				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
-				gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
-					tag,
-					&start,
-					&end);
-            xpad_save_content(action->pad);
-			}
-			break;
-		}
-
-		undo->priv->history_curr = g_list_previous (undo->priv->history_curr);
-	}
+      return TRUE;
+   else
+      return FALSE;
 }
 
-void xpad_undo_exec_redo (XpadUndo *undo)
+gboolean
+xpad_undo_redo_available (XpadUndo *undo)
 {
 	if (undo->priv->frozen)
-		return;
+		return FALSE;
 
-	/* No undo without buffer */
+	/* No redo without buffer */
 	if (undo->priv->buffer == NULL || !G_IS_OBJECT (undo->priv->buffer))
-		return;
+		return FALSE;
 
-	/* Redo next element if there is any */
-	if (undo->priv->history_curr->next)
-	{
-		UserAction *action = undo->priv->history_curr->next->data;
-
-		GtkTextIter start;
-		GtkTextIter end;
-
-		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-				&start, action->start);
-
-		gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-				&end, action->end);
-
-		GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
-
-		switch (action->action_type)
-		{
-		case USER_ACTION_DELETE_RANGE:
-			{
-				xpad_text_buffer_delete_range (undo->priv->buffer,
-					action->start,
-					action->end);
-			}
-			break;
-		case USER_ACTION_INSERT_TEXT:
-			{
-				xpad_text_buffer_insert_text (undo->priv->buffer,
-					action->start,
-					action->text,
-					action->len_in_bytes);
-			}
-         break;
-		case USER_ACTION_APPLY_TAG:
-			{
-				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
-				gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
-						tag,
-						&start,
-						&end);
-            xpad_save_content(action->pad);
-			}
-			break;
-		case USER_ACTION_REMOVE_TAG:
-			{
-				GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
-				gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
-						tag,
-						&start,
-						&end);
-            xpad_save_content(action->pad);
-			}
-			break;
-		}
-
-		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
-	}
+	if (undo->priv->history_curr->next && undo->priv->history_curr->next->data)
+      return TRUE;
+   else
+      return FALSE;
 }
 
-void xpad_undo_freeze (XpadUndo *undo)
+static void
+xpad_undo_get_start_end_iter (XpadUndo *undo, UserAction *action, GtkTextIter *start, GtkTextIter *end)
+{
+   gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+         start, action->start);
+
+   gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
+         end, action->end);
+}
+
+void
+xpad_undo_exec_undo (XpadUndo *undo)
+{
+   if (!xpad_undo_undo_available (undo))
+      return;
+
+   UserAction *action = undo->priv->history_curr->data;
+
+   GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
+
+   GtkTextIter start;
+   GtkTextIter end;
+   xpad_undo_get_start_end_iter (undo, action, &start, &end);
+
+   switch (action->action_type)
+   {
+      case USER_ACTION_INSERT_TEXT:
+         {
+            xpad_text_buffer_delete_range (undo->priv->buffer,
+                  action->start,
+                  action->end);
+         }
+         break;
+      case USER_ACTION_DELETE_RANGE:
+         {
+            xpad_text_buffer_insert_text (undo->priv->buffer,
+                  action->start,
+                  action->text,
+                  action->len_in_bytes);
+         }
+         break;
+      case USER_ACTION_APPLY_TAG:
+         {
+            GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+            gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+                  tag,
+                  &start,
+                  &end);
+            xpad_save_content(action->pad);
+         }
+         break;
+      case USER_ACTION_REMOVE_TAG:
+         {
+            GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+            gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+                  tag,
+                  &start,
+                  &end);
+            xpad_save_content(action->pad);
+         }
+         break;
+   }
+
+   undo->priv->history_curr = g_list_previous (undo->priv->history_curr);
+}
+
+void
+xpad_undo_exec_redo (XpadUndo *undo)
+{
+   if (!xpad_undo_redo_available (undo))
+      return;
+
+   UserAction *action = undo->priv->history_curr->next->data;
+
+   GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
+
+   GtkTextIter start;
+   GtkTextIter end;
+   xpad_undo_get_start_end_iter (undo, action, &start, &end);
+
+   switch (action->action_type)
+   {
+      case USER_ACTION_DELETE_RANGE:
+         {
+            xpad_text_buffer_delete_range (undo->priv->buffer,
+                  action->start,
+                  action->end);
+         }
+         break;
+      case USER_ACTION_INSERT_TEXT:
+         {
+            xpad_text_buffer_insert_text (undo->priv->buffer,
+                  action->start,
+                  action->text,
+                  action->len_in_bytes);
+         }
+         break;
+      case USER_ACTION_APPLY_TAG:
+         {
+            GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+            gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+                  tag,
+                  &start,
+                  &end);
+            xpad_save_content(action->pad);
+         }
+         break;
+      case USER_ACTION_REMOVE_TAG:
+         {
+            GtkTextTag *tag = gtk_text_tag_table_lookup (table, action->text);
+            gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (undo->priv->buffer),
+                  tag,
+                  &start,
+                  &end);
+            xpad_save_content(action->pad);
+         }
+         break;
+   }
+
+   undo->priv->history_curr = g_list_next (undo->priv->history_curr);
+}
+
+void
+xpad_undo_freeze (XpadUndo *undo)
 {
 	undo->priv->frozen = TRUE;
 }
 
-void xpad_undo_thaw (XpadUndo *undo)
+void
+xpad_undo_thaw (XpadUndo *undo)
 {
 	undo->priv->frozen = FALSE;
 }

@@ -59,6 +59,8 @@ void xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar
 void xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end);
 void xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name, XpadPad *pad);
 
+gboolean xpad_text_buffer_undo_available (XpadTextBuffer *buffer);
+gboolean xpad_text_buffer_redo_available (XpadTextBuffer *buffer);
 void xpad_text_buffer_undo (XpadTextBuffer *buffer);
 void xpad_text_buffer_redo (XpadTextBuffer *buffer);
 void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer);
