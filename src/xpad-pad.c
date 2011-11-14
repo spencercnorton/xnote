@@ -269,16 +269,15 @@ xpad_pad_init (XpadPad *pad)
 		NULL));
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
 	
+	gtk_window_set_decorated (GTK_WINDOW(pad), xpad_settings_get_has_decorations (xpad_settings ()));
+	gtk_window_set_default_size (GTK_WINDOW(pad), xpad_settings_get_width (xpad_settings ()), xpad_settings_get_height (xpad_settings ()));
+	gtk_window_set_gravity (GTK_WINDOW(pad),  GDK_GRAVITY_STATIC); /* static gravity makes saving pad x,y work */
+	gtk_window_set_skip_pager_hint (GTK_WINDOW(pad),xpad_settings_get_has_decorations (xpad_settings ()));
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW(pad), !xpad_settings_get_has_decorations (xpad_settings ()));
+	gtk_window_set_type_hint (GTK_WINDOW(pad), GDK_WINDOW_TYPE_HINT_NORMAL);
+	gtk_window_set_position (GTK_WINDOW(pad), GTK_WIN_POS_MOUSE);
+
 	g_object_set (G_OBJECT (pad),
-		"decorated", xpad_settings_get_has_decorations (xpad_settings ()),
-		"default-height", xpad_settings_get_height (xpad_settings ()),
-		"default-width", xpad_settings_get_width (xpad_settings ()),
-		"gravity", GDK_GRAVITY_STATIC, /* static gravity makes saving pad x,y work */
-		"skip-pager-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
-		"skip-taskbar-hint", !xpad_settings_get_has_decorations (xpad_settings ()),
-		//"type", GTK_WINDOW_TOPLEVEL,
-		"type-hint", GDK_WINDOW_TYPE_HINT_NORMAL,
-		"window-position", GTK_WIN_POS_MOUSE,
 		"child", vbox,
 		NULL);
 	
@@ -345,13 +344,7 @@ xpad_pad_show (XpadPad *pad)
 	   place, I guess. */
 	if (pad->priv->location_valid)
 		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
-	
-/*	g_object_set (G_OBJECT (pad),
-		"gravity", GDK_GRAVITY_STATIC,
-		"skip-pager-hint", TRUE,
-		"skip-taskbar-hint", TRUE,
-		NULL);*/
-	
+		
 	if (pad->priv->sticky)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
