@@ -1,5 +1,9 @@
 Version 4.1
-* Undo/Redo for xpad and bug-fixes
+* Undo/Redo for xpad and bug-fixes. Feature by Sergei Riaguzov
+* Bug #490445: crash when right-clicking on tray icon to display list of notes. Patch by David Hull
+* Bug #360142: Add keyboard shortcuts for formatting. Patch by Dennis Hilmar
+* Bug #591978: xpad critical start. Patch by OBATA Akio
+
 
 Version 4.0
 * Added --toggle (between --hide and --show). Patch by Paul Ivanov.
