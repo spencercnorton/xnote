@@ -1,3 +1,6 @@
+Version 4.1
+* Undo/Redo for xpad and bug-fixes
+
 Version 4.0
 * Added --toggle (between --hide and --show). Patch by Paul Ivanov.
 * Updated French, Japanese, Russian, Spanish, and Swedish translations
