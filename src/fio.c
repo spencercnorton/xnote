@@ -63,7 +63,9 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 	p = *string;
 	while ((p = strchr (p, obj)))
 	{
+		gint offset = p - *string;
 		*string = g_realloc (*string, strlen (*string) + diff + 1);
+		p = *string + offset;
 		g_memmove (p + rsize, p + osize, strlen (p + osize) + 1);
 		
 		memcpy (p, replacement, rsize);
