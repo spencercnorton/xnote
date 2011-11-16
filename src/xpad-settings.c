@@ -453,6 +453,12 @@ gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button,
 	return TRUE;
 }
 
+static void xpad_settings_remove_toolbar_list_element (XpadSettings *settings, GSList *element)
+{
+	g_free (element->data);
+	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
+}
+
 gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint button)
 {
 	GSList *element;
@@ -462,8 +468,45 @@ gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint butto
 	if (!element)
 		return FALSE;
 	
-	g_free (element->data);
-	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
+	xpad_settings_remove_toolbar_list_element (settings, element);
+	
+	save_to_file (settings, DEFAULTS_FILENAME);
+	
+	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
+	
+	return TRUE;
+}
+
+gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings)
+{
+	if (settings->priv->toolbar_buttons == NULL)
+		return FALSE;
+
+	while (settings->priv->toolbar_buttons)
+	{
+		g_free (settings->priv->toolbar_buttons->data);
+		settings->priv->toolbar_buttons = 
+			g_slist_delete_link (settings->priv->toolbar_buttons,
+					settings->priv->toolbar_buttons);
+	}
+
+	settings->priv->toolbar_buttons = NULL;
+
+	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
+
+	return TRUE;
+}
+
+gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings)
+{
+	GSList *element;
+	
+	element = g_slist_last (settings->priv->toolbar_buttons);
+	
+	if (!element)
+		return FALSE;
+	
+	xpad_settings_remove_toolbar_list_element (settings, element);
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
 	

@@ -78,24 +78,23 @@ enum
 
 static const XpadToolbarButton buttons[] =
 {
-	{"Clear", "gtk-clear", ACTIVATE_CLEAR, XPAD_BUTTON_TYPE_BUTTON, N_("Clear Pad Contents"), N_("Add C_lear to Toolbar")},
-	{"Close", "gtk-close", ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
-	{"Copy", "gtk-copy", ACTIVATE_COPY, XPAD_BUTTON_TYPE_BUTTON, N_("Copy to Clipboard"), N_("Add C_opy to Toolbar")},
-	{"Cut", "gtk-cut", ACTIVATE_CUT, XPAD_BUTTON_TYPE_BUTTON, N_("Cut to Clipboard"), N_("Add C_ut to Toolbar")},
-	{"Delete", "gtk-delete", ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
-	{"New", "gtk-new", ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
-	{"Paste", "gtk-paste", ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
-	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
-	{"Properties", "gtk-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
-	{"Redo", "gtk-redo", ACTIVATE_REDO, XPAD_BUTTON_TYPE_BUTTON, N_("Redo"), N_("Add _Redo to Toolbar")},
-	{"Quit", "gtk-quit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
-	{"Undo", "gtk-undo", ACTIVATE_UNDO, XPAD_BUTTON_TYPE_BUTTON, N_("Undo"), N_("Add _Undo to Toolbar")},
+	{"Clear", GTK_STOCK_CLEAR, ACTIVATE_CLEAR, XPAD_BUTTON_TYPE_BUTTON, N_("Clear Pad Contents"), N_("Add C_lear to Toolbar")},
+	{"Close", GTK_STOCK_CLOSE, ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
+	{"Copy", GTK_STOCK_COPY, ACTIVATE_COPY, XPAD_BUTTON_TYPE_BUTTON, N_("Copy to Clipboard"), N_("Add C_opy to Toolbar")},
+	{"Cut", GTK_STOCK_CUT, ACTIVATE_CUT, XPAD_BUTTON_TYPE_BUTTON, N_("Cut to Clipboard"), N_("Add C_ut to Toolbar")},
+	{"Delete", GTK_STOCK_DELETE, ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
+	{"New", GTK_STOCK_NEW, ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
+	{"Paste", GTK_STOCK_PASTE, ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
+	{"Preferences", GTK_STOCK_PREFERENCES, ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
+	{"Properties", GTK_STOCK_PROPERTIES, ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
+	{"Redo", GTK_STOCK_REDO, ACTIVATE_REDO, XPAD_BUTTON_TYPE_BUTTON, N_("Redo"), N_("Add _Redo to Toolbar")},
+	{"Quit", GTK_STOCK_QUIT, ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
+	{"Undo", GTK_STOCK_UNDO, ACTIVATE_UNDO, XPAD_BUTTON_TYPE_BUTTON, N_("Undo"), N_("Add _Undo to Toolbar")},
 	{"sep", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add a Se_parator to Toolbar")} /* Separator */
 	/*{"Minimize to Tray", "gtk-goto-bottom", 1, N_("Minimize Pads to System Tray")}*/
 };
 
 
-/*static void xpad_toolbar_popup_context_menu (XpadToolbar *toolbar, gint x, gint y, gint button);*/
 static G_CONST_RETURN XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
 static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button);
 static void xpad_toolbar_button_activated (GtkToolButton *button);
@@ -103,6 +102,8 @@ static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
 static void xpad_toolbar_finalize (GObject *object);
 static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_toolbar_remove_all_buttons ();
+static void xpad_toolbar_remove_last_button ();
 static void xpad_toolbar_add_button (const gchar *button_name);
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
@@ -404,13 +405,18 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	
 	if (button->desc)
 		gtk_tool_item_set_tooltip_text (item, _(button->desc));
-	
+
+	// This won't work anymore because we make some buttons insensitive
+	// so we cannot handle right clicks on them anymore. That's why we just add "Remove all butons"
+	// and "Remove last button" to toolbar context menu
+	/*
 	child = gtk_bin_get_child (GTK_BIN (item));
 	if (child)
 	{
 		g_signal_connect_swapped (child, "button-press-event", G_CALLBACK (xpad_toolbar_button_press_event), item);
 	}
-	
+	*/
+
 	return item;
 }
 
@@ -483,6 +489,18 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 		xpad_pad_notify_has_selection (toolbar->priv->pad);
 		xpad_pad_notify_clipboard_owner_changed (toolbar->priv->pad);
 	}
+}
+
+static void
+xpad_toolbar_remove_all_buttons ()
+{
+	xpad_settings_remove_all_toolbar_buttons (xpad_settings ());
+}
+
+static void
+xpad_toolbar_remove_last_button ()
+{
+	xpad_settings_remove_last_toolbar_button (xpad_settings ());
 }
 
 static void
@@ -696,6 +714,8 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	menu = gtk_menu_new ();
 	
 	current_buttons = xpad_settings_get_toolbar_buttons (xpad_settings ());
+
+	gboolean is_button = FALSE;
 	
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 	{
@@ -709,7 +729,10 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 					break;
 			
 			if (j)
+			{
+				is_button = TRUE;
 				continue;
+			}
 		}
 		else
 		{
@@ -723,6 +746,33 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 		
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_add_button), (gpointer) buttons[i].name);
+		
+		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
+		gtk_widget_show (item);
+	}
+
+	if (is_button)
+	{
+		GtkWidget *item, *image;
+
+		item = gtk_image_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
+		
+		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), NULL);
+		
+		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
+		gtk_widget_show (item);
+
+		i++;
+		
+		item = gtk_image_menu_item_new_with_mnemonic (N_("Remove _Last _Button"));
+		
+		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
+		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), NULL);
 		
 		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
@@ -743,7 +793,7 @@ xpad_toolbar_enable_button (XpadToolbar *toolbar, const XpadToolbarButton *butto
 	g_return_if_fail (button);
 	GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
 	if (item)
-		gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
+		gtk_widget_set_sensitive (GTK_WIDGET (item), enable);
 }
 
 void
