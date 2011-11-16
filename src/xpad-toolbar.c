@@ -767,7 +767,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 		i++;
 		
-		item = gtk_image_menu_item_new_with_mnemonic (N_("Remove _Last _Button"));
+		item = gtk_image_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
 		
 		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
 		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
