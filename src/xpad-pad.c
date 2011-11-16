@@ -110,6 +110,8 @@ static void xpad_pad_show_toolbar (XpadPad *pad);
 static void xpad_pad_popup (XpadPad *pad, GdkEventButton *event);
 static void xpad_pad_spawn (XpadPad *pad);
 static void xpad_pad_clear (XpadPad *pad);
+static void xpad_pad_undo (XpadPad *pad);
+static void xpad_pad_redo (XpadPad *pad);
 static void xpad_pad_cut (XpadPad *pad);
 static void xpad_pad_copy (XpadPad *pad);
 static void xpad_pad_paste (XpadPad *pad);
@@ -141,7 +143,7 @@ xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolea
 	
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
 	load_info (XPAD_PAD (pad), show);
-	xpad_load_content (XPAD_PAD (pad));
+	xpad_pad_load_content (XPAD_PAD (pad));
 	gtk_window_set_role (GTK_WINDOW (pad), XPAD_PAD (pad)->priv->infoname);
 	
 	return pad;
@@ -241,11 +243,15 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->toolbar_pad_resized = TRUE;
 	pad->priv->properties = NULL;
 	pad->priv->group = NULL;
-	
-	pad->priv->textview = GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW,
+
+	XpadTextView *text_view = g_object_new (XPAD_TYPE_TEXT_VIEW,
 		"follow-font-style", TRUE,
 		"follow-color-style", TRUE,
-		NULL));
+		NULL);
+	
+	xpad_text_view_set_pad (text_view, pad);
+
+	pad->priv->textview = GTK_WIDGET (text_view);
 	
 	pad->priv->scrollbar = GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 		"hadjustment", NULL,
@@ -290,6 +296,7 @@ xpad_pad_init (XpadPad *pad)
 	xpad_pad_notify_has_scrollbar (pad);
 	xpad_pad_notify_has_selection (pad);
 	xpad_pad_notify_clipboard_owner_changed (pad);
+	xpad_pad_notify_undo_redo_changed (pad);
 
  	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 	
@@ -320,6 +327,8 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-new", G_CALLBACK (xpad_pad_spawn), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-clear", G_CALLBACK (xpad_pad_clear), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-close", G_CALLBACK (xpad_pad_close), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "activate-undo", G_CALLBACK (xpad_pad_undo), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "activate-redo", G_CALLBACK (xpad_pad_redo), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-cut", G_CALLBACK (xpad_pad_cut), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-copy", G_CALLBACK (xpad_pad_copy), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-paste", G_CALLBACK (xpad_pad_paste), pad);
@@ -561,6 +570,8 @@ xpad_pad_notify_autohide_toolbar (XpadPad *pad)
 void
 xpad_pad_notify_has_selection (XpadPad *pad)
 {
+	g_return_if_fail (pad);
+
 	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
 	gboolean has_selection = gtk_text_buffer_get_has_selection (buffer);
 
@@ -575,12 +586,31 @@ xpad_pad_notify_has_selection (XpadPad *pad)
 void
 xpad_pad_notify_clipboard_owner_changed (XpadPad *pad)
 {
+	g_return_if_fail (pad);
+
 	XpadToolbar *toolbar = NULL;
 	toolbar = XPAD_TOOLBAR (pad->priv->toolbar);
 	g_return_if_fail (toolbar);
 
 	GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 	xpad_toolbar_enable_paste_button (toolbar, gtk_clipboard_wait_is_text_available (clipboard));
+}
+
+void
+xpad_pad_notify_undo_redo_changed (XpadPad *pad)
+{
+	g_return_if_fail (pad);
+
+	XpadTextBuffer *buffer = NULL;
+	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	g_return_if_fail (buffer);
+
+	XpadToolbar *toolbar = NULL;
+	toolbar = XPAD_TOOLBAR (pad->priv->toolbar);
+	g_return_if_fail (toolbar);
+
+	xpad_toolbar_enable_undo_button (toolbar, xpad_text_buffer_undo_available (buffer));
+	xpad_toolbar_enable_redo_button (toolbar, xpad_text_buffer_redo_available (buffer));
 }
 
 static gboolean
@@ -871,7 +901,7 @@ xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 	xpad_pad_sync_title (pad);
 	
 	/* record change */
-	xpad_save_content (pad);
+	xpad_pad_save_content (pad);
 }
 
 static gboolean
@@ -1084,8 +1114,10 @@ xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec
 }
 
 void
-xpad_load_content (XpadPad *pad)
+xpad_pad_load_content (XpadPad *pad)
 {
+	g_return_if_fail (pad);
+
 	gchar *content;
 	GtkTextBuffer *buffer;
 	
@@ -1109,8 +1141,10 @@ xpad_load_content (XpadPad *pad)
 }
 
 void
-xpad_save_content (XpadPad *pad)
+xpad_pad_save_content (XpadPad *pad)
 {
+	g_return_if_fail (pad);
+
 	gchar *content;
 	GtkTextBuffer *buffer;
 	
@@ -1359,8 +1393,8 @@ menu_paste (XpadPad *pad)
 	xpad_pad_paste (pad);
 }
 
-static void
-menu_undo (XpadPad *pad)
+void
+xpad_pad_undo (XpadPad *pad)
 {
 	g_return_if_fail (pad->priv->textview);
 	XpadTextBuffer *buffer = NULL;
@@ -1370,13 +1404,25 @@ menu_undo (XpadPad *pad)
 }
 
 static void
-menu_redo (XpadPad *pad)
+menu_undo (XpadPad *pad)
+{
+	xpad_pad_undo (pad);
+}
+
+void
+xpad_pad_redo (XpadPad *pad)
 {
 	g_return_if_fail (pad->priv->textview);
 	XpadTextBuffer *buffer = NULL;
 	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	g_return_if_fail (buffer);
 	xpad_text_buffer_redo (buffer);
+}
+
+static void
+menu_redo (XpadPad *pad)
+{
+	xpad_pad_redo (pad);
 }
 
 static void
@@ -1429,8 +1475,8 @@ menu_toggle_tag (XpadPad *pad, const gchar *name)
 	g_return_if_fail (pad->priv->textview);
 	XpadTextBuffer *buffer = NULL;
 	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
-	xpad_text_buffer_toggle_tag (buffer, name, pad);
-	xpad_save_content (pad);
+	xpad_text_buffer_toggle_tag (buffer, name);
+	xpad_pad_save_content (pad);
 }
 
 static void

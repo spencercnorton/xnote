@@ -55,6 +55,7 @@ struct XpadUndoClass
 GType xpad_undo_get_type (void);
 
 XpadUndo* xpad_undo_new (XpadTextBuffer *buffer);
+
 gboolean xpad_undo_undo_available (XpadUndo *undo);
 gboolean xpad_undo_redo_available (XpadUndo *undo);
 void xpad_undo_exec_undo (XpadUndo *undo);
@@ -62,8 +63,8 @@ void xpad_undo_exec_redo (XpadUndo *undo);
 void xpad_undo_freeze (XpadUndo *undo);
 void xpad_undo_thaw (XpadUndo *undo);
 
-void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad);
-void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end, XpadPad *pad);
+void xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end);
+void xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkTextIter *end);
 
 G_END_DECLS
 

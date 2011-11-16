@@ -62,11 +62,12 @@ void xpad_pad_close (XpadPad *pad);
 void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);
 
-void xpad_load_content (XpadPad *pad);
-void xpad_save_content (XpadPad *pad);
+void xpad_pad_load_content (XpadPad *pad);
+void xpad_pad_save_content (XpadPad *pad);
 
 void xpad_pad_notify_has_selection (XpadPad *pad);
 void xpad_pad_notify_clipboard_owner_changed (XpadPad *pad);
+void xpad_pad_notify_undo_redo_changed (XpadPad *pad);
 
 G_END_DECLS
 

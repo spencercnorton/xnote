@@ -19,14 +19,15 @@
 
 #include "xpad-text-buffer.h"
 #include "xpad-undo.h"
+#include "xpad-pad.h"
 
 G_DEFINE_TYPE(XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
 #define XPAD_TEXT_BUFFER_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_TEXT_BUFFER, XpadTextBufferPrivate))
 
 struct XpadTextBufferPrivate 
 {
-	/* undo */
 	XpadUndo *undo;
+	XpadPad *pad;
 };
 
 /* Unicode chars in the Private Use Area. */
@@ -36,21 +37,79 @@ static GtkTextTagTable *create_tag_table (void);
 
 static GtkTextTagTable *global_text_tag_table = NULL;
 
-GtkTextBuffer *
-xpad_text_buffer_new (void)
+enum
+{
+	PROP_0,
+	PROP_PAD,
+	LAST_PROP
+};
+
+XpadTextBuffer *
+xpad_text_buffer_new (XpadPad *pad)
 {
 	if (!global_text_tag_table)
 		global_text_tag_table = create_tag_table (); /* FIXME: never freed */
 	
-	return GTK_TEXT_BUFFER (g_object_new (XPAD_TYPE_TEXT_BUFFER, "tag_table", global_text_tag_table, NULL));
+	return XPAD_TEXT_BUFFER (g_object_new (XPAD_TYPE_TEXT_BUFFER, "tag_table", global_text_tag_table, "pad", pad, NULL));
 }
+
+static void
+xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+	XpadTextBuffer *text_buffer = XPAD_TEXT_BUFFER (object);
+
+	switch (prop_id)
+	{
+	case PROP_PAD:
+		if (text_buffer->priv->pad && G_IS_OBJECT (text_buffer->priv->pad))
+			g_object_unref (text_buffer->priv->pad);
+		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
+		{
+			text_buffer->priv->pad = g_value_get_pointer (value);
+			g_object_ref (text_buffer->priv->pad);
+		}
+		break;
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	 }
+}
+
+static void
+xpad_text_buffer_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+{
+	XpadTextBuffer *text_buffer = XPAD_TEXT_BUFFER (object);
+
+	switch (prop_id)
+	{
+	case PROP_PAD:
+		g_value_set_pointer (value, text_buffer->priv->pad);
+		break;
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
+}
+
 
 static void
 xpad_text_buffer_finalize (GObject *object)
 {
 	XpadTextBuffer *text_buffer = XPAD_TEXT_BUFFER (object);
+
+	if (text_buffer->priv->pad)
+	{
+		g_object_unref (text_buffer->priv->pad);
+		text_buffer->priv->pad = NULL;
+	}
 	
-	g_free (text_buffer->priv->undo);
+	if (text_buffer->priv->undo)
+	{
+		g_free (text_buffer->priv->undo);
+		text_buffer->priv->undo = NULL;
+	}
 	
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->finalize (object);
 }
@@ -61,6 +120,15 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	
 	gobject_class->finalize = xpad_text_buffer_finalize;
+	gobject_class->set_property = xpad_text_buffer_set_property;
+	gobject_class->get_property = xpad_text_buffer_get_property;
+
+	g_object_class_install_property (gobject_class,
+					 PROP_PAD,
+					 g_param_spec_pointer ("pad",
+									"Pad",
+									"Pad connected to this buffer",
+									G_PARAM_READWRITE));
 	
 	g_type_class_add_private (gobject_class, sizeof (XpadTextBufferPrivate));
 }
@@ -221,7 +289,7 @@ xpad_text_buffer_delete_range (XpadTextBuffer *buffer, gint start, gint end)
 }
 
 void
-xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name, XpadPad *pad)
+xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 {
 	GtkTextTagTable *table;
 	GtkTextTag *tag;
@@ -250,12 +318,12 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name, XpadPad 
 	if (all_tagged)
 	{
 		gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
-		xpad_undo_remove_tag (buffer->priv->undo, name, &start, &end, pad);
+		xpad_undo_remove_tag (buffer->priv->undo, name, &start, &end);
 	}
 	else
 	{
 		gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
-		xpad_undo_apply_tag (buffer->priv->undo, name, &start, &end, pad);
+		xpad_undo_apply_tag (buffer->priv->undo, name, &start, &end);
 	}
 }
 
@@ -346,5 +414,22 @@ void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer)
 void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer)
 {
 	xpad_undo_thaw (buffer->priv->undo);
+}
+
+XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer)
+{
+	if (buffer == NULL)
+		return NULL;
+
+	XpadPad *pad = NULL;
+	g_object_get (G_OBJECT (buffer), "pad", &pad, NULL);
+	return pad;
+}
+
+void xpad_text_buffer_set_pad (XpadTextBuffer *buffer, XpadPad *pad)
+{
+	g_return_if_fail (buffer);
+
+	g_object_set (G_OBJECT (buffer), "pad", pad, NULL);
 }
 

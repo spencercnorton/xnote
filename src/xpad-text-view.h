@@ -20,6 +20,7 @@
 #define __XPAD_TEXT_VIEW_H__
 
 #include <gtk/gtk.h>
+#include "xpad-pad.h"
 
 G_BEGIN_DECLS
 
@@ -55,6 +56,9 @@ void xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow);
 gboolean xpad_text_view_get_follow_font_style (XpadTextView *view);
 void xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow);
 gboolean xpad_text_view_get_follow_color_style (XpadTextView *view);
+
+XpadPad *xpad_text_view_get_pad (XpadTextView *view);
+void xpad_text_view_set_pad (XpadTextView *view, XpadPad *pad);
 
 G_END_DECLS
 

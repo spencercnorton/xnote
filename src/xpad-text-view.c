@@ -30,6 +30,7 @@ struct XpadTextViewPrivate
 	gulong notify_text_handler;
 	gulong notify_back_handler;
 	gulong notify_font_handler;
+	XpadTextBuffer *buffer;
 };
 
 static void xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
@@ -93,16 +94,14 @@ static void
 xpad_text_view_init (XpadTextView *view)
 {
 	gchar *name;
-	GtkTextBuffer *buffer;
 	
 	view->priv = XPAD_TEXT_VIEW_GET_PRIVATE (view);
 	
 	view->priv->follow_font_style = TRUE;
 	view->priv->follow_color_style = TRUE;
 	
-	buffer = xpad_text_buffer_new ();
-	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), buffer);
-	g_object_unref (buffer);
+	view->priv->buffer = xpad_text_buffer_new (NULL);
+	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
 	gtk_container_set_border_width (GTK_CONTAINER (view), 5);
@@ -130,6 +129,12 @@ static void
 xpad_text_view_finalize (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
+
+	if (view->priv->buffer)
+	{
+		g_object_unref (view->priv->buffer);
+		view->priv->buffer = NULL;
+	}
 	
 	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
 	
@@ -350,4 +355,14 @@ xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GPar
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
 	}
+}
+
+XpadPad *xpad_text_view_get_pad (XpadTextView *view)
+{
+	return xpad_text_buffer_get_pad (view->priv->buffer);
+}
+
+void xpad_text_view_set_pad (XpadTextView *view, XpadPad *pad)
+{
+	xpad_text_buffer_set_pad (view->priv->buffer, pad);
 }

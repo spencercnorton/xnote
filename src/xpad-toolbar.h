@@ -51,6 +51,8 @@ struct XpadToolbarClass
 	
 	void (*activate_clear) (XpadToolbar *toolbar);
 	void (*activate_close) (XpadToolbar *toolbar);
+	void (*activate_undo) (XpadToolbar *toolbar);
+	void (*activate_redo) (XpadToolbar *toolbar);
 	void (*activate_cut) (XpadToolbar *toolbar);
 	void (*activate_copy) (XpadToolbar *toolbar);
 	void (*activate_paste) (XpadToolbar *toolbar);
@@ -67,6 +69,8 @@ GType xpad_toolbar_get_type (void);
 
 GtkWidget *xpad_toolbar_new (XpadPad *pad);
 
+void xpad_toolbar_enable_undo_button (XpadToolbar *toolbar, gboolean enable);
+void xpad_toolbar_enable_redo_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_cut_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_copy_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable);

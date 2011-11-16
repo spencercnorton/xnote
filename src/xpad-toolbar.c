@@ -61,6 +61,8 @@ enum
 {
 	ACTIVATE_NEW,
 	ACTIVATE_CLOSE,
+	ACTIVATE_UNDO,
+	ACTIVATE_REDO,
 	ACTIVATE_CUT,
 	ACTIVATE_COPY,
 	ACTIVATE_PASTE,
@@ -85,7 +87,9 @@ static const XpadToolbarButton buttons[] =
 	{"Paste", "gtk-paste", ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
 	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
 	{"Properties", "gtk-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
+	{"Redo", "gtk-redo", ACTIVATE_REDO, XPAD_BUTTON_TYPE_BUTTON, N_("Redo"), N_("Add _Redo to Toolbar")},
 	{"Quit", "gtk-quit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
+	{"Undo", "gtk-undo", ACTIVATE_UNDO, XPAD_BUTTON_TYPE_BUTTON, N_("Undo"), N_("Add _Undo to Toolbar")},
 	{"sep", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add a Se_parator to Toolbar")} /* Separator */
 	/*{"Minimize to Tray", "gtk-goto-bottom", 1, N_("Minimize Pads to System Tray")}*/
 };
@@ -150,6 +154,22 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_OBJECT_CLASS_TYPE (gobject_class),
 		              G_SIGNAL_RUN_LAST,
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_close),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	signals[ACTIVATE_UNDO] = 
+		g_signal_new ("activate-undo",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, activate_undo),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	signals[ACTIVATE_REDO] = 
+		g_signal_new ("activate-redo",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, activate_redo),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
@@ -717,39 +737,47 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	return TRUE;
 }
 
+static void
+xpad_toolbar_enable_button (XpadToolbar *toolbar, const XpadToolbarButton *button, gboolean enable)
+{
+	g_return_if_fail (button);
+	GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
+	if (item)
+		gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
+}
+
+void
+xpad_toolbar_enable_undo_button (XpadToolbar *toolbar, gboolean enable)
+{
+	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Undo");
+	xpad_toolbar_enable_button (toolbar, button, enable);
+}
+
+void
+xpad_toolbar_enable_redo_button (XpadToolbar *toolbar, gboolean enable)
+{
+	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Redo");
+	xpad_toolbar_enable_button (toolbar, button, enable);
+}
+
 void
 xpad_toolbar_enable_cut_button (XpadToolbar *toolbar, gboolean enable)
 {
 	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Cut");
-	if (button)
-	{
-		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
-		if (item)
-			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
-	}
+	xpad_toolbar_enable_button (toolbar, button, enable);
 }
 
 void
 xpad_toolbar_enable_copy_button (XpadToolbar *toolbar, gboolean enable)
 {
 	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Copy");
-	if (button)
-	{
-		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
-		if (item)
-			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
-	}
+	xpad_toolbar_enable_button (toolbar, button, enable);
 }
 
 void
 xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable)
 {
 	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Paste");
-	if (button)
-	{
-		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
-		if (item)
-			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
-	}
+	xpad_toolbar_enable_button (toolbar, button, enable);
 }
 
