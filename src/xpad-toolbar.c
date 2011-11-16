@@ -43,6 +43,8 @@ struct XpadToolbarPrivate
 	guint move_motion_handler;
 	guint move_button_release_handler;
 	guint move_key_press_handler;
+	GtkToolItem *tool_items;
+	XpadPad *pad;
 };
 
 typedef struct
@@ -59,6 +61,9 @@ enum
 {
 	ACTIVATE_NEW,
 	ACTIVATE_CLOSE,
+	ACTIVATE_CUT,
+	ACTIVATE_COPY,
+	ACTIVATE_PASTE,
 	ACTIVATE_DELETE,
 	ACTIVATE_CLEAR,
 	ACTIVATE_PREFERENCES,
@@ -73,8 +78,11 @@ static const XpadToolbarButton buttons[] =
 {
 	{"Clear", "gtk-clear", ACTIVATE_CLEAR, XPAD_BUTTON_TYPE_BUTTON, N_("Clear Pad Contents"), N_("Add C_lear to Toolbar")},
 	{"Close", "gtk-close", ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
+	{"Copy", "gtk-copy", ACTIVATE_COPY, XPAD_BUTTON_TYPE_BUTTON, N_("Copy to Clipboard"), N_("Add C_opy to Toolbar")},
+	{"Cut", "gtk-cut", ACTIVATE_CUT, XPAD_BUTTON_TYPE_BUTTON, N_("Cut to Clipboard"), N_("Add C_ut to Toolbar")},
 	{"Delete", "gtk-delete", ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
 	{"New", "gtk-new", ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
+	{"Paste", "gtk-paste", ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
 	{"Preferences", "gtk-preferences", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
 	{"Properties", "gtk-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
 	{"Quit", "gtk-quit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
@@ -89,6 +97,8 @@ static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const Xpa
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
 static void xpad_toolbar_finalize (GObject *object);
+static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
+static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_toolbar_add_button (const gchar *button_name);
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
@@ -100,13 +110,19 @@ static gboolean xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMot
 static gboolean xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event);
 static gboolean xpad_toolbar_move_button_end (XpadToolbar *toolbar);
 
-
 static guint signals[LAST_SIGNAL] = { 0 };
 
-GtkWidget *
-xpad_toolbar_new (void)
+enum
 {
-	return GTK_WIDGET (g_object_new (XPAD_TYPE_TOOLBAR, NULL));
+	PROP_0,
+	PROP_PAD,
+	LAST_PROP
+};
+
+GtkWidget *
+xpad_toolbar_new (XpadPad *pad)
+{
+	return GTK_WIDGET (g_object_new (XPAD_TYPE_TOOLBAR, "pad", pad, NULL));
 }
 
 static void
@@ -116,10 +132,11 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 	GtkToolbarClass *gtktoolbar_class = GTK_TOOLBAR_CLASS (klass);
 	
 	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
+	gobject_class->set_property = xpad_toolbar_set_property;
+	gobject_class->get_property = xpad_toolbar_get_property;
 	gobject_class->finalize = xpad_toolbar_finalize;
 	
 	/* Signals */
-	
 	signals[ACTIVATE_NEW] = 
 		g_signal_new ("activate-new",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -133,6 +150,30 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_OBJECT_CLASS_TYPE (gobject_class),
 		              G_SIGNAL_RUN_LAST,
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_close),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	signals[ACTIVATE_CUT] = 
+		g_signal_new ("activate-cut",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, activate_cut),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	signals[ACTIVATE_COPY] = 
+		g_signal_new ("activate-copy",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, activate_copy),
+		              NULL, NULL,
+		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+
+	signals[ACTIVATE_PASTE] = 
+		g_signal_new ("activate-paste",
+		              G_OBJECT_CLASS_TYPE (gobject_class),
+		              G_SIGNAL_RUN_LAST,
+		              G_STRUCT_OFFSET (XpadToolbarClass, activate_paste),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	
@@ -191,6 +232,13 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, popdown),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GTK_TYPE_MENU);
+
+	g_object_class_install_property (gobject_class,
+					 PROP_PAD,
+					 g_param_spec_pointer ("pad",
+									"Pad ",
+									"Pad associated with this toolbar",
+									G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	
 	g_type_class_add_private (gobject_class, sizeof (XpadToolbarPrivate));
 }
@@ -199,7 +247,8 @@ static void
 xpad_toolbar_init (XpadToolbar *toolbar)
 {
 	toolbar->priv = XPAD_TOOLBAR_GET_PRIVATE (toolbar);
-	
+
+	toolbar->priv->pad = NULL;	
 	toolbar->priv->move_motion_handler = 0;
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
@@ -222,10 +271,52 @@ xpad_toolbar_finalize (GObject *object)
 	
 	if (toolbar->priv->move_button)
 		g_object_unref (toolbar->priv->move_button);
+	if (toolbar->priv->pad)
+		g_object_unref (toolbar->priv->pad);
 	
 	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, toolbar);
 	
 	G_OBJECT_CLASS (xpad_toolbar_parent_class)->finalize (object);
+}
+
+void
+xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
+
+	switch (prop_id)
+	{
+	case PROP_PAD:
+		if (toolbar->priv->pad && G_IS_OBJECT (toolbar->priv->pad))
+			g_object_unref (toolbar->priv->pad);
+		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
+		{
+			toolbar->priv->pad = g_value_get_pointer (value);
+			g_object_ref (toolbar->priv->pad);
+		}
+		break;
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	 }
+}
+
+void
+xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
+{
+	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
+
+	switch (prop_id)
+	{
+	case PROP_PAD:
+		g_value_set_pointer (value, toolbar->priv->pad);
+		break;
+
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		break;
+	}
 }
 
 static gboolean
@@ -264,7 +355,11 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 {
 	GtkToolItem *item;
 	GtkWidget *child;
-	
+
+	item = GTK_TOOL_ITEM (g_object_get_data (G_OBJECT (toolbar), button->name));
+	if (item)
+		return item;
+
 	switch (button->type)
 	{
 	case XPAD_BUTTON_TYPE_BUTTON:
@@ -284,6 +379,8 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	
 	g_object_set_data (G_OBJECT (item), "xpad-toolbar", toolbar);
 	g_object_set_data (G_OBJECT (item), "xpad-tb", (gpointer) button);
+
+	g_object_set_data (G_OBJECT (toolbar), button->name, item);
 	
 	if (button->desc)
 		gtk_tool_item_set_tooltip_text (item, _(button->desc));
@@ -314,7 +411,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 {
 	GList *list, *temp;
 	const GSList *slist, *stemp;
-	gint i = 0;
+	gint i = 0, j;
 	GtkToolItem *item;
 	
 	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
@@ -323,6 +420,9 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 		gtk_widget_destroy (temp->data);
 	
 	g_list_free (list);
+
+	for (j = 0; j < G_N_ELEMENTS (buttons); j++)
+		g_object_set_data (G_OBJECT (toolbar), buttons[j].name, NULL);
 	
 	slist = xpad_settings_get_toolbar_buttons (xpad_settings ());
 	for (stemp = slist; stemp; stemp = stemp->next)
@@ -357,6 +457,12 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 	gtk_widget_show_all (GTK_WIDGET (item));
 	i++;
+
+	if (toolbar->priv->pad)
+	{
+		xpad_pad_notify_has_selection (toolbar->priv->pad);
+		xpad_pad_notify_clipboard_owner_changed (toolbar->priv->pad);
+	}
 }
 
 static void
@@ -610,3 +716,40 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	
 	return TRUE;
 }
+
+void
+xpad_toolbar_enable_cut_button (XpadToolbar *toolbar, gboolean enable)
+{
+	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Cut");
+	if (button)
+	{
+		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
+		if (item)
+			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
+	}
+}
+
+void
+xpad_toolbar_enable_copy_button (XpadToolbar *toolbar, gboolean enable)
+{
+	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Copy");
+	if (button)
+	{
+		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
+		if (item)
+			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
+	}
+}
+
+void
+xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable)
+{
+	const XpadToolbarButton *button = xpad_toolbar_button_lookup (toolbar, "Paste");
+	if (button)
+	{
+		GtkToolItem *item = xpad_toolbar_button_to_item (toolbar, button);
+		if (item)
+			gtk_widget_set_sensitive ( GTK_WIDGET (item), enable);
+	}
+}
+

@@ -65,6 +65,9 @@ void xpad_pad_save_info (XpadPad *pad);
 void xpad_load_content (XpadPad *pad);
 void xpad_save_content (XpadPad *pad);
 
+void xpad_pad_notify_has_selection (XpadPad *pad);
+void xpad_pad_notify_clipboard_owner_changed (XpadPad *pad);
+
 G_END_DECLS
 
 #endif /* __XPAD_PAD_H__ */

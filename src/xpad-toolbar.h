@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_TOOLBAR_H__
 
 #include <gtk/gtk.h>
+#include "xpad-pad.h"
 
 G_BEGIN_DECLS
 
@@ -50,6 +51,9 @@ struct XpadToolbarClass
 	
 	void (*activate_clear) (XpadToolbar *toolbar);
 	void (*activate_close) (XpadToolbar *toolbar);
+	void (*activate_cut) (XpadToolbar *toolbar);
+	void (*activate_copy) (XpadToolbar *toolbar);
+	void (*activate_paste) (XpadToolbar *toolbar);
 	void (*activate_delete) (XpadToolbar *toolbar);
 	void (*activate_new) (XpadToolbar *toolbar);
 	void (*activate_preferences) (XpadToolbar *toolbar);
@@ -61,7 +65,11 @@ struct XpadToolbarClass
 
 GType xpad_toolbar_get_type (void);
 
-GtkWidget *xpad_toolbar_new (void);
+GtkWidget *xpad_toolbar_new (XpadPad *pad);
+
+void xpad_toolbar_enable_cut_button (XpadToolbar *toolbar, gboolean enable);
+void xpad_toolbar_enable_copy_button (XpadToolbar *toolbar, gboolean enable);
+void xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable);
 
 G_END_DECLS
 
