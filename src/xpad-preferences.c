@@ -39,7 +39,7 @@ struct XpadPreferencesPrivate
 	GtkWidget *editcheck;
 	GtkWidget *stickycheck;
 	GtkWidget *confirmcheck;
-    GtkWidget *trayconfigbox;
+	GtkWidget *trayconfigbox;
 	
 	GtkWidget *textbutton;
 	GtkWidget *backbutton;
