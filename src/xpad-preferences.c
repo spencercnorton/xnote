@@ -39,6 +39,7 @@ struct XpadPreferencesPrivate
 	GtkWidget *editcheck;
 	GtkWidget *stickycheck;
 	GtkWidget *confirmcheck;
+    GtkWidget *trayconfigbox;
 	
 	GtkWidget *textbutton;
 	GtkWidget *backbutton;
@@ -50,6 +51,7 @@ struct XpadPreferencesPrivate
 	guint notify_font_handler;
 	guint notify_back_handler;
 	guint notify_text_handler;
+	guint notify_tray_handler;
 	guint font_handler;
 	guint back_handler;
 	guint text_handler;
@@ -58,6 +60,7 @@ struct XpadPreferencesPrivate
 	guint editcheck_handler;
 	guint stickycheck_handler;
 	guint confirmcheck_handler;
+	guint trayclick_handler;
 };
 
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
@@ -68,12 +71,14 @@ static void change_font_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_text_color (GtkColorButton *button, XpadPreferences *pref);
 static void change_back_color (GtkColorButton *button, XpadPreferences *pref);
 static void change_font_face (GtkFontButton *button, XpadPreferences *pref);
+static void change_tray_click_configuration(GtkComboBox *box, XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_sticky (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
 static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
 static void notify_back_color (XpadPreferences *pref);
+static void notify_tray_click (XpadPreferences *pref);
 static void xpad_preferences_finalize (GObject *object);
 static void xpad_preferences_response (GtkDialog *dialog, gint response);
 
@@ -112,7 +117,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	const gchar *fontname;
 	GtkStyle *style;
 	GtkWidget *label, *appearance_frame, *alignment, *appearance_vbox;
-	GtkWidget *options_frame, *options_vbox, *global_vbox;
+	GtkWidget *options_frame, *options_vbox, *global_vbox, *tray_config_vbox;
 	gchar *text;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	GtkRequisition req;
@@ -272,10 +277,27 @@ xpad_preferences_init (XpadPreferences *pref)
 		"child", alignment,
 		NULL));
 	
-	
+	tray_config_vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
+		"homogeneous", FALSE,
+		"spacing", 6,
+		NULL));
+
+	pref->priv->trayconfigbox = gtk_combo_box_new_text();
+	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Do Nothing" );
+	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Toggle Show All" );
+	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "New Note" );
+	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), xpad_settings_get_tray_click_handler(xpad_settings()));
+
+	hbox = gtk_hbox_new(FALSE, 12);
+	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
+	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->trayconfigbox, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(tray_config_vbox), hbox, TRUE, TRUE, 0);
+
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->editcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->stickycheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);	
+	g_object_set (GTK_WIDGET(options_vbox), "child", tray_config_vbox, NULL);
 	
 	global_vbox = g_object_new (GTK_TYPE_VBOX,
 		"border-width", 6,
@@ -295,12 +317,14 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->text_handler = g_signal_connect (pref->priv->textbutton, "color-set", G_CALLBACK (change_text_color), pref);
 	pref->priv->back_handler = g_signal_connect (pref->priv->backbutton, "color-set", G_CALLBACK (change_back_color), pref);
 	pref->priv->font_handler = g_signal_connect (pref->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), pref);
+	pref->priv->trayclick_handler = g_signal_connect(pref->priv->trayconfigbox, "changed", G_CALLBACK(change_tray_click_configuration), pref);
 	pref->priv->notify_font_handler = g_signal_connect_swapped (xpad_settings (), "notify::fontname", G_CALLBACK (notify_fontname), pref);
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_settings (), "notify::text-color", G_CALLBACK (notify_text_color), pref);
 	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_settings (), "notify::back-color", G_CALLBACK (notify_back_color), pref);
 	pref->priv->notify_sticky_handler = g_signal_connect_swapped (xpad_settings (), "notify::sticky", G_CALLBACK (notify_sticky), pref);
 	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_settings (), "notify::edit-lock", G_CALLBACK (notify_edit), pref);
 	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_settings (), "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
+	pref->priv->notify_tray_handler = g_signal_connect_swapped (xpad_settings (), "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
 	
@@ -391,6 +415,14 @@ change_confirm_check (GtkToggleButton *button, XpadPreferences *pref)
 	g_signal_handler_block (xpad_settings (), pref->priv->notify_confirm_handler);
 	xpad_settings_set_confirm_destroy (xpad_settings (), gtk_toggle_button_get_active (button));
 	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_confirm_handler);
+}
+
+static void
+change_tray_click_configuration(GtkComboBox *box, XpadPreferences *pref)
+{
+	g_signal_handler_block(xpad_settings(), pref->priv->notify_tray_handler);
+	xpad_settings_set_tray_click_handler(xpad_settings(), gtk_combo_box_get_active(box));
+	g_signal_handler_unblock(xpad_settings(), pref->priv->notify_tray_handler);
 }
 
 static void
@@ -516,3 +548,12 @@ notify_confirm (XpadPreferences *pref)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_settings ()));
 	g_signal_handler_unblock (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
 }
+
+static void 
+notify_tray_click(XpadPreferences *pref)
+{
+	g_signal_handler_block(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->trayconfigbox), xpad_settings_get_tray_click_handler(xpad_settings()));
+	g_signal_handler_unblock(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
+}
+

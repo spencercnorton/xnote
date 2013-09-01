@@ -29,8 +29,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-preferences.h"
 #include "xpad-tray.h"
 
+enum
+{
+	DO_NOTHING,
+	TOGGLE_SHOW_ALL,
+	NEW_NOTE
+};
+
 static void xpad_tray_activate_cb (GtkStatusIcon *icon);
 static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
+static void xpad_tray_show_hide_all (void);
 
 static GtkStatusIcon  *docklet = NULL;
 
@@ -91,6 +99,25 @@ menu_show_all (XpadPadGroup *group)
 {
 	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
 	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
+	g_slist_free (pads);
+}
+
+static void 
+xpad_tray_show_hide_all (void)
+{
+	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	// find if any pad is visible
+	gboolean open = FALSE;
+	GSList *i;
+	for(i = pads; i != NULL; i = i->next)
+	{
+		if (gtk_widget_get_visible(GTK_WIDGET(i->data)))
+		{
+			open = TRUE;
+			break;
+		}
+	}
+	g_slist_foreach(pads, (GFunc) (open ? gtk_widget_hide : gtk_widget_show), NULL);
 	g_slist_free (pads);
 }
 
@@ -191,8 +218,14 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 static void
 xpad_tray_activate_cb (GtkStatusIcon *icon)
 {
-	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
-	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
-	g_slist_free (pads);
+	switch (xpad_settings_get_tray_click_handler(xpad_settings()))
+	{
+		case TOGGLE_SHOW_ALL:
+			xpad_tray_show_hide_all();
+			break;
+		case NEW_NOTE:
+			menu_spawn(xpad_app_get_pad_group());
+			break;
+	}
 }
 
