@@ -748,12 +748,10 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		gdk_color_free (settings->priv->text);
 		settings->priv->text = gdk_color_copy (&text);
 	}
-	
+
+	gdk_color_free (settings->priv->back);
 	if (use_back)
-	{
-		gdk_color_free (settings->priv->back);
 		settings->priv->back = gdk_color_copy (&back);
-	}
 	else
 		settings->priv->back = NULL;
 
