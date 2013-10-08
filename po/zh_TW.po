@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-11-14 11:41-0500\n"
+"POT-Creation-Date: 2013-10-08 14:17-0500\n"
 "PO-Revision-Date: 2009-01-11 17:24+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../src/fio.c:128
+#: ../src/fio.c:129
 #, c-format
 msgid "Could not write to file %s: %s"
 msgstr ""
@@ -64,7 +64,7 @@ msgstr ""
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad 是圖形介面程式。請從您的桌面來執行它。"
 
-#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:3
+#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
@@ -120,31 +120,31 @@ msgstr "關閉所有便條"
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:154
+#: ../src/xpad-pad.c:162
 #, c-format
 msgid "Could not read file %s."
 msgstr "無法讀取檔案 %s。"
 
-#: ../src/xpad-pad.c:653
+#: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
 msgstr "刪除該便條"
 
-#: ../src/xpad-pad.c:654
+#: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
 msgstr "該便條所有文字將會永久消失。"
 
-#: ../src/xpad-pad.c:685
+#: ../src/xpad-pad.c:755
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' 的屬性"
 
-#: ../src/xpad-pad.c:1240
+#: ../src/xpad-pad.c:1314
 msgid "Sticky notes"
 msgstr "自粘性便條"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1259
+#: ../src/xpad-pad.c:1333
 msgid "translator-credits"
 msgstr ""
 "趙惟倫 <chaoweilun@pcmail.com.tw>\n"
@@ -156,60 +156,60 @@ msgstr ""
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  Wei-Lun Chao https://launchpad.net/~chaoweilun-pcmail"
 
-#: ../src/xpad-pad.c:1500
+#: ../src/xpad-pad.c:1604
 msgid "_Pad"
 msgstr "便條(_P)"
 
-#: ../src/xpad-pad.c:1509
+#: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
 msgstr "顯示於所有工作區中(_A)"
 
-#: ../src/xpad-pad.c:1517
+#: ../src/xpad-pad.c:1621
 msgid "_Edit"
 msgstr "編輯(_E)"
 
-#: ../src/xpad-pad.c:1540
+#: ../src/xpad-pad.c:1644
 msgid "_View"
 msgstr "顯示(_V)"
 
-#: ../src/xpad-pad.c:1547
+#: ../src/xpad-pad.c:1651
 msgid "_Toolbar"
 msgstr "工具列(_T)"
 
-#: ../src/xpad-pad.c:1548
+#: ../src/xpad-pad.c:1652
 msgid "_Autohide Toolbar"
 msgstr "自動隱藏工具列(_A)"
 
-#: ../src/xpad-pad.c:1550
+#: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
 msgstr "捲動列(_S)"
 
-#: ../src/xpad-pad.c:1551
+#: ../src/xpad-pad.c:1655
 msgid "_Window Decorations"
 msgstr "視窗裝飾(_W)"
 
-#: ../src/xpad-pad.c:1554
+#: ../src/xpad-pad.c:1658
 msgid "_Notes"
 msgstr "備忘(_N)"
 
-#: ../src/xpad-pad.c:1562 ../src/xpad-tray.c:123
+#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
 msgid "_Show All"
 msgstr "全部顯示(_S)"
 
-#: ../src/xpad-pad.c:1563 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
 msgid "_Close All"
 msgstr "全部關閉(_C)"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1567
+#: ../src/xpad-pad.c:1671
 msgid "_Help"
 msgstr "求助(_H)"
 
-#: ../src/xpad-pad.c:1574
+#: ../src/xpad-pad.c:1678
 msgid "_Contents"
 msgstr "內容(_C)"
 
-#: ../src/xpad-pad.c:1575
+#: ../src/xpad-pad.c:1679
 msgid "_About"
 msgstr "關於(_A)"
 
@@ -281,78 +281,131 @@ msgstr "Xpad 偏好設定"
 msgid "Options"
 msgstr "選項"
 
-#: ../src/xpad-toolbar.c:74
+#: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
 msgstr "清除便條內容"
 
-#: ../src/xpad-toolbar.c:74
+#: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
 msgstr "加入清除到工具列(_L)"
 
-#: ../src/xpad-toolbar.c:75
+#: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
 msgstr "關閉並儲存便條"
 
-#: ../src/xpad-toolbar.c:75
+#: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
 msgstr "加入關閉到工具列(_C)"
 
-#: ../src/xpad-toolbar.c:76
+#: ../src/xpad-toolbar.c:83
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:83
+#, fuzzy
+msgid "Add C_opy to Toolbar"
+msgstr "加入清除到工具列(_L)"
+
+#: ../src/xpad-toolbar.c:84
+msgid "Cut to Clipboard"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:84
+#, fuzzy
+msgid "Add C_ut to Toolbar"
+msgstr "加入清除到工具列(_L)"
+
+#: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
 msgstr "刪除便條"
 
-#: ../src/xpad-toolbar.c:76
+#: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
 msgstr "加入刪除到工具列(_D)"
 
-#: ../src/xpad-toolbar.c:77
+#: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
 msgstr "開啟新的便條"
 
-#: ../src/xpad-toolbar.c:77
+#: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
 msgstr "加入新增到工具列(_N)"
 
-#: ../src/xpad-toolbar.c:78
+#: ../src/xpad-toolbar.c:87
+msgid "Paste from Clipboard"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:87
+#, fuzzy
+msgid "Add Pa_ste to Toolbar"
+msgstr "加入關閉到工具列(_C)"
+
+#: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
 msgstr "編輯偏好設定"
 
-#: ../src/xpad-toolbar.c:78
+#: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr "加入偏好設定到工具列(_E)"
 
-#: ../src/xpad-toolbar.c:79
+#: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr "編輯便條內容"
 
-#: ../src/xpad-toolbar.c:79
+#: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr "加入內容到工具列(_T)"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-toolbar.c:90
+msgid "Redo"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:90
+#, fuzzy
+msgid "Add _Redo to Toolbar"
+msgstr "加入新增到工具列(_N)"
+
+#: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
 msgstr "關閉全部便條"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:92
+msgid "Undo"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:92
+#, fuzzy
+msgid "Add _Undo to Toolbar"
+msgstr "加入關閉到工具列(_C)"
+
+#: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
 msgstr "加入分隔線到工具列(_P)"
 
-#: ../src/xpad-toolbar.c:538
+#: ../src/xpad-toolbar.c:682
 msgid "_Remove From Toolbar"
 msgstr "從工具列中移除(_R)"
 
-#: ../src/xpad-toolbar.c:548
+#: ../src/xpad-toolbar.c:692
 msgid "_Move"
 msgstr "移動(_M)"
 
-#: ../xpad.desktop.in.h:1
-msgid "Jot down notes for later"
-msgstr "大略記下備註以供之後使用"
+#: ../src/xpad-toolbar.c:758
+msgid "Remove All _Buttons"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:770
+msgid "Remo_ve Last Button"
+msgstr ""
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
 msgstr "自粘性便條"
+
+#: ../xpad.desktop.in.h:3
+msgid "Jot down notes for later"
+msgstr "大略記下備註以供之後使用"
