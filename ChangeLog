@@ -1,3 +1,16 @@
+Changes in v4.2
+
+- New: Undo functionality such as CTRL-Z (#1121740)
+- New: Tray click behaviour can now be configured (#345278, #304331, #890335)
+- New: Tray icon can be hidden (#890334)
+- New: Theme builders can now use seperate tray icon by adding xpad-panel.xvg (#907705)
+- Fix: Theme color stays after application restart (#307669)
+- Fix: Translation French typo (#1216388)
+- Fix: Translation Russian typo which prevented the Help from working (#973825)
+- Fix: added missing configure script (#890492)
+- Fix: performance improvement by reducing the amount of harddisk writes (#1072698, #782320)
+- Fix: can now compile against glib-2.34.1 (#974011)
+
 2004-09-29  Jeroen T. Vermeulen <jtv@xs4all.nl>
 
 	* src/eggtrayicon.c: Replace union-as-cast trick with cast (fixes
