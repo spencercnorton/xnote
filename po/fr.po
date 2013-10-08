@@ -229,7 +229,7 @@ msgstr "Utiliser la police de caractère des préférence de xpad"
 
 #: ../src/xpad-pad-properties.c:161 ../src/xpad-preferences.c:150
 msgid "Use this font:"
-msgstr "Utiliser cette poilce de caractère :"
+msgstr "Utiliser cette police de caractère :"
 
 #: ../src/xpad-pad-properties.c:162
 msgid "Use colors from xpad preferences"
