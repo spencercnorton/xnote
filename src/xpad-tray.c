@@ -45,7 +45,14 @@ xpad_tray_open (void)
 	if (!gtk_icon_theme_has_icon (theme, PACKAGE))
 		return;
 	
-	docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
+	if (gtk_icon_theme_has_icon (theme, "xpad-panel"))
+    {
+	    docklet = gtk_status_icon_new_from_icon_name ("xpad-panel");
+    }
+    else
+    {
+	    docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
+    }
 	
 	if (docklet)
 	{
