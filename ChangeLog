@@ -9,7 +9,7 @@ Changes in v4.2  - Arthur Borsboom <arthurborsboom@gmail.com>
 - Fix: Translation - French typo (#1216388)
 - Fix: Translation - Russian typo which prevented the Help from working (#973825)
 - Fix: added missing configure script (#890492)
-- Fix: performance improvement by reducing the amount of harddisk writes (#1072698, #782320)
+- Fix: performance improvement by reducing the amount of harddisk writes (#1072698, #1207564, #782320)
 - Fix: can now compile against glib-2.34.1 (#974011)
 
 2004-09-29  Jeroen T. Vermeulen <jtv@xs4all.nl>
