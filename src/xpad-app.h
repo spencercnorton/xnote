@@ -31,6 +31,7 @@ G_CONST_RETURN gchar *xpad_app_get_config_dir (void);
 G_CONST_RETURN gchar *xpad_app_get_program_path (void);
 XpadPadGroup         *xpad_app_get_pad_group (void);
 gboolean              xpad_app_get_translucent (void);
+void                  xpad_app_quit (void);
 
 G_END_DECLS
 

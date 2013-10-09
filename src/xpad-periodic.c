@@ -1,0 +1,268 @@
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include "xpad-periodic.h"
+
+#ifdef SHOW_DEBUG
+#   define G_PRINT_DBG g_print
+#else
+#   define G_PRINT_DBG gprint_ignore
+#endif
+
+#define TIMEOUT_SECONDS     4
+
+struct sigref_ {
+    const char *        signame;
+    XpadPeriodicFunc    func_ptr;
+    gpointer            data;
+};
+
+typedef struct sigref_ Xpadsigref;
+
+typedef struct {
+    /************************
+    count = a clock tick count
+    after_id = the timeout id
+    ************************/
+    int                 count;
+    int                 after_id;
+
+    /************************
+    template = a list of signal names and function pointers
+    template_len = the length of 'template'
+    sigs = a list of signal names, function pointers and data
+    sigs_len = the length of 'sigs'
+    ************************/
+    Xpadsigref *        template;
+    int                 template_len;
+    Xpadsigref *        sigs;
+    int                 sigs_len;
+} XpadPeriodic;
+
+
+/* prototypes */
+static gint xppd_intercept (gpointer);
+static gint gprint_ignore(const char *, ...);
+
+static void xpad_sigref_dump2 (gint);
+static gboolean str_equal (const char *, const char *);
+
+/* global variables */
+static XpadPeriodic xpptr [1];
+
+/* Functions start here */
+
+gboolean Xpad_periodic_init (void)
+{
+    memset(xpptr, 0, sizeof(*xpptr));
+    xpptr->after_id =
+    g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
+
+    /* Allocate space for the signal references. */
+    int tlen = xpptr->template_len = 5;
+    int slen = xpptr->sigs_len = 20;
+    xpptr->template = g_malloc0(tlen * sizeof(Xpadsigref));
+    xpptr->sigs = g_malloc0(slen * sizeof(Xpadsigref));
+
+    return TRUE;
+}
+
+void    Xpad_periodic_close (void)
+{
+    if (xpptr->after_id) { g_source_remove(xpptr->after_id); }
+    /* Free the signal references memory. */
+    g_free(xpptr->template);
+    g_free(xpptr->sigs);
+    /* Signal that this structure is now cleared. */
+    memset(xpptr, 0, sizeof(*xpptr));
+}
+
+/************************
+xppd_intercept - intercepts a timer tick
+
+    This function intercepts a timer tick and iterates
+    over the signal references. Any signal references that
+    are fully stocked with signal names, function pointers
+    and data pointers are invoked.
+
+    IOW (In other words), the function pointer is called with the
+    right data pointer.
+************************/
+gint xppd_intercept (gpointer cdata)
+{
+    int cnt=0;
+    XpadPeriodicFunc fnptr=0;
+    xpptr->count++; /* increment tick count */
+
+    G_PRINT_DBG("xppd tick: %4d\n", xpptr->count);
+
+    for (cnt = 0; cnt < xpptr->sigs_len; ++cnt) {
+        Xpadsigref * sig_item = xpptr->sigs + cnt;
+        if (sig_item->signame && sig_item->func_ptr && sig_item->data) {
+            fnptr = sig_item->func_ptr;
+            (*fnptr)(sig_item->data);
+            G_PRINT_DBG("invoked %s : %p : %p\n", sig_item->signame,
+                sig_item->func_ptr, sig_item->data);
+            memset(sig_item, 0, sizeof(*sig_item));
+        }
+    }
+
+    return TRUE;
+}
+
+/************************
+    Xpad_periodic_set_callback():
+    This function prepares a callback function to be invoked
+    for an event name such as "save-content" or "save-info".
+
+    cbname :        event name (or callback function name)
+    func :          function address
+
+    Returns true if a callback was registered.
+************************/
+gboolean    Xpad_periodic_set_callback (
+    const char * cbname,
+    XpadPeriodicFunc func)
+{
+    int index = 0;
+    gboolean isdone=FALSE;
+    if (0 == func) { return FALSE; }
+    if (0 == cbname || 0==*cbname) { return FALSE; }
+
+    /* Find an open slot for signal (callback) references and
+    insert this one. */
+    for (index = 0; index < xpptr->template_len; ++index) {
+        /* Store a pointer to the current signal item. */
+        Xpadsigref * sig_item = xpptr->template + index;
+
+        /* If it's empty, set it. */
+        if (0 == sig_item->signame) {
+            sig_item->signame = cbname;
+            sig_item->func_ptr = func;
+            isdone = TRUE;
+            break;
+        }
+    }
+
+    if (! isdone) {
+        printf("Failed to install signal callback: %s\n", cbname);
+        exit(1);
+    }
+
+    return isdone;
+}
+
+void Xpad_periodic_save_info_delayed (void * xpad_pad)
+{
+    Xpad_periodic_signal("save-info", xpad_pad);
+}
+
+void Xpad_periodic_save_content_delayed (void * xpad_pad)
+{
+    Xpad_periodic_signal("save-content", xpad_pad);
+}
+
+void Xpad_periodic_signal (const char * cbname, void * xpad_pad)
+{
+    int isdone = 0;
+    int tnx=0, snx=0;
+    XpadPeriodicFunc func_ptr = 0;
+    Xpadsigref * sig_item = 0;
+
+    if (0 == cbname || 0==*cbname) { return; }
+    if (0 == xpad_pad) { return; }
+
+    /* Get the callback function address */
+    for (tnx = 0; tnx < xpptr->template_len; ++tnx) {
+        if (str_equal(xpptr->template[tnx].signame, cbname)) {
+            func_ptr = xpptr->template[tnx].func_ptr;
+            break;
+        }
+    }
+
+    /* If there is no callback address, we can't continue. */
+    if (! func_ptr) {
+        Xpad_periodic_error_exit("Can't find signal function address: %s\n", cbname);
+    }
+
+    /* Check that this event is not already present. 
+    If it is present, don't do anything more. */
+    for (snx = 0; snx < xpptr->sigs_len; ++snx) {
+        sig_item = xpptr->sigs + snx;
+        if (str_equal(sig_item->signame,cbname) &&
+            (xpad_pad == sig_item->data)) {
+            G_PRINT_DBG("Already got signal: %s\n", cbname);
+            return;
+        }
+    }
+
+    /* Find a suitable slot for the signal reference and set it. */
+    for (snx = 0; snx < xpptr->sigs_len; ++snx) {
+        gint doadd = 0;
+        sig_item = xpptr->sigs + snx;
+
+        doadd += (str_equal(sig_item->signame, cbname));
+        doadd += (0 == sig_item->signame);
+
+        if (doadd) {
+            sig_item->signame = cbname;
+            sig_item->func_ptr = func_ptr;
+            sig_item->data = xpad_pad;
+            isdone = TRUE;
+            break;
+        }
+    }
+
+    if (! isdone) {
+        Xpad_periodic_error_exit("Could not schedule event: %s\n", cbname);
+    }
+}
+
+gboolean str_equal (const char * s1, const char * s2) {
+    if (0 == s1 || 0==s2) { return FALSE; }
+    if (s1 == s2) { return TRUE; }
+    return (0 == strcmp(s1, s2));
+}
+
+gint gprint_ignore (const char * fmt, ...)
+{
+    return 0;
+}
+
+void xpad_sigref_dump2 (gint twhich)
+{
+    int tlen = 0, cnt = 0;
+    Xpadsigref * xlist = 0;
+    if (0 == twhich) { xlist = xpptr->template; }
+    if (1 == twhich) { xlist = xpptr->sigs; }
+    if (0 == twhich) { tlen = xpptr->template_len; }
+    if (1 == twhich) { tlen = xpptr->sigs_len; }
+
+    for (cnt = 0; cnt < tlen; ++cnt) {
+        Xpadsigref * xitem = xlist + cnt;
+        if (0 == xitem->signame) { continue; }
+        printf("%3d: %s : %p : %p\n", cnt, xitem->signame,
+            xitem->func_ptr, xitem->data);
+    }
+}
+
+void Xpad_periodic_error_exit (const char * fmt, ...)
+{
+    va_list app;
+    va_start(app, fmt);
+    vprintf(fmt, app);
+    va_end(app);
+    exit(1);
+}
+
+void Xpad_periodic_test (void)
+{
+    puts("Template:");
+    xpad_sigref_dump2(0);
+    exit(0);
+}
+
+
+/* vim: set ts=4 sw=4 :vim */

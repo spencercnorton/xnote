@@ -40,6 +40,7 @@
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
+#include "xpad-periodic.h"
 #include "xpad-session-manager.h"
 #include "xpad-tray.h"
 
@@ -168,6 +169,11 @@ xpad_app_init (int argc, char **argv)
 	
 	xpad_tray_open ();
 	xpad_session_manager_init ();
+
+	/* Initialize Xpad-periodic module */
+	Xpad_periodic_init();
+	Xpad_periodic_set_callback("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+	Xpad_periodic_set_callback("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 	
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
@@ -242,6 +248,13 @@ XpadPadGroup *
 xpad_app_get_pad_group (void)
 {
 	return pad_group;
+}
+
+void
+xpad_app_quit (void)
+{
+	xpad_pad_group_save_unsaved_all(xpad_app_get_pad_group());
+	gtk_main_quit();
 }
 
 gboolean
@@ -393,7 +406,7 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 		if (num_pads == 0)
 		{
 			if (gtk_main_level () > 0)
-				gtk_main_quit ();
+				xpad_app_quit ();
 			else
 				exit (0);
 		}
@@ -420,7 +433,7 @@ xpad_app_first_idle_check (XpadPadGroup *group)
 		else
 		{
 			if (gtk_main_level () > 0)
-				gtk_main_quit ();
+				xpad_app_quit ();
 			else
 				exit (0);
 		}
@@ -876,7 +889,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 		if (option_quit)
 		{
 			if (have_gtk && gtk_main_level () > 0)
-				gtk_main_quit ();
+				xpad_app_quit ();
 			else
 				exit (0);
 		}
