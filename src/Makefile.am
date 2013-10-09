@@ -9,6 +9,7 @@ xpad_SOURCES = \
 	xpad-pad.c xpad-pad.h \
 	xpad-pad-group.c xpad-pad-group.h \
 	xpad-pad-properties.c xpad-pad-properties.h \
+	xpad-periodic.c xpad-periodic.h \
 	xpad-preferences.c xpad-preferences.h \
 	xpad-session-manager.c xpad-session-manager.h \
 	xpad-settings.c xpad-settings.h \
