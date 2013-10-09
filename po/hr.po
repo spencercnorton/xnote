@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-02-15 18:41+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Stevo-88 <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: hr\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -67,10 +67,11 @@ msgstr ""
 "kliknete na blok desnom tipkom. Iskušajte i uživajte!"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Molimo Vas da komentare ili prijave grešaka šaljete na xpad-devel@lists."
-"sourceforge.net."
+"Molimo Vas da komentare ili prijave grešaka šaljete na xpad-"
+"devel@lists.sourceforge.net."
 
 #: ../src/help.c:73
 msgid "Help"
@@ -88,17 +89,19 @@ msgstr "Xpad"
 #: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
-msgstr ""
+msgstr "Nije moguće otvoriti direktorij %s."
 
 #: ../src/xpad-app.c:460
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
+"Ovaj je direktorij potreban za spremanje postavki i informacijam o "
+"blokovima. Xpad će se sada zatvoriti."
 
 #: ../src/xpad-app.c:767
 msgid "Show version number and quit"
-msgstr ""
+msgstr "Prikaži broj inačice i izađi."
 
 #: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
@@ -119,7 +122,7 @@ msgstr "Prikaži sve blokove"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "Prebacuj između prikazivanja i skrivanja svih blokova."
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
@@ -136,7 +139,7 @@ msgstr "Zatvori sve blokove"
 #: ../src/xpad-app.c:810
 #, c-format
 msgid "Xpad %s"
-msgstr ""
+msgstr "Xpad %s"
 
 #: ../src/xpad-pad.c:162
 #, c-format
@@ -145,7 +148,7 @@ msgstr "Nije moguće čitati iz datoteke %s."
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
-msgstr ""
+msgstr "Obrisati ovaj blok?"
 
 #: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
@@ -154,7 +157,7 @@ msgstr "Sav će tekst ovog bloka biti nepovratno izgubljen."
 #: ../src/xpad-pad.c:755
 #, c-format
 msgid "'%s' Properties"
-msgstr ""
+msgstr "Svojstva '%s'"
 
 #: ../src/xpad-pad.c:1314
 msgid "Sticky notes"
@@ -170,11 +173,11 @@ msgstr ""
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
-msgstr ""
+msgstr "_Blok"
 
 #: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
-msgstr ""
+msgstr "Prikaži na _Svim Radnim Površinama"
 
 #: ../src/xpad-pad.c:1621
 msgid "_Edit"
@@ -194,7 +197,7 @@ msgstr "Automatski _sakrij alatnu traku"
 
 #: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
-msgstr ""
+msgstr "_Klizač"
 
 #: ../src/xpad-pad.c:1655
 msgid "_Window Decorations"
@@ -202,7 +205,7 @@ msgstr "_Rubovi prozora"
 
 #: ../src/xpad-pad.c:1658
 msgid "_Notes"
-msgstr ""
+msgstr "_Zabilješke"
 
 #: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
 msgid "_Show All"
@@ -279,7 +282,7 @@ msgstr "_Zabrani uređivanje"
 
 #: ../src/xpad-preferences.c:180
 msgid "_Pads start on all workspaces"
-msgstr ""
+msgstr "_Blokovi se prikazuju na svim radnim površinama"
 
 #: ../src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
@@ -314,18 +317,16 @@ msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "Dodaj \"_Briši tekst\" u alatnu traku"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "Dodaj \"_Briši tekst\" u alatnu traku"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -348,9 +349,8 @@ msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "Dodaj \"Zatvori\" alatnoj traci"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -373,9 +373,8 @@ msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "Dodaj \"Novi\" alatnoj traci"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -390,9 +389,8 @@ msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "Dodaj \"Zatvori\" alatnoj traci"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
@@ -420,4 +418,4 @@ msgstr "Post-it papirići"
 
 #: ../xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr ""
+msgstr "Zapiši bilješku za poslije"

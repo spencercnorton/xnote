@@ -9,62 +9,78 @@ msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-01-11 17:24+0000\n"
-"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"PO-Revision-Date: 2013-10-08 22:09+0000\n"
+"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: nl\n"
 
 #: ../src/fio.c:129
 #, c-format
 msgid "Could not write to file %s: %s"
-msgstr ""
+msgstr "Kon niet naar bestand %s schrijven: %s"
 
 #: ../src/help.c:49
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
 msgstr ""
+"Elke xpad-sessie bestaat uit één of meer memoblaadjes.  Dit zijn in wezen "
+"plakvelletjes op uw bureaublad waar u memo's op kunt schrijven."
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
 msgstr ""
+"<b>Om een blaadje te verplaatsen</b> versleept u het aan de bovenbalk met de "
+"linkermuisknop, aan de rechteronderpunt met de rechtermuisknop, of met CTRL "
+"en de linkermuisknop ingedrukt op een willekeurige plek op het blaadje."
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
 msgstr ""
+"<b>Om de grootte aan te passen</b> pakt u het verstelhoekje met de "
+"linkermuisknop, of sleept u met de rechtermuisknop waar dan ook op het "
+"blaadje met de CTRL-toets ingedrukt."
 
 #: ../src/help.c:57
 msgid ""
 "<b>To change color settings</b>, right click on a pad and choose Edit-"
 ">Preferences."
 msgstr ""
+"<b>Om kleurinstellingen aan te passen</b> klikt u met de rechtermuisknop op "
+"een blaadje en kiest u Bewerken->Voorkeuren."
 
 #: ../src/help.c:59
 msgid ""
 "Most actions are available throught the popup menu that appears when you "
 "right click on a pad.  Try it out and enjoy."
 msgstr ""
+"De meeste handelingen zijn uit te voeren vanuit het opduikmenu dat "
+"verschijnt wanneer u met de rechtermuisknop op een memoblaadje klikt.  "
+"Probeert u het maar eens!"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
+"Stuur opmerkingen of problemen a.u.b. naar xpad-devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
-msgstr ""
+msgstr "Help"
 
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad is een grafisch programma; draai het in een grafische omgeving."
+msgstr ""
+"Xpad is een grafisch programma; draai het a.u.b. in een grafische omgeving."
 
 #: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -73,7 +89,7 @@ msgstr "Xpad"
 #: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
-msgstr "Kan map %s niet openen."
+msgstr "Kon map %s niet openen."
 
 #: ../src/xpad-app.c:460
 msgid ""
@@ -98,21 +114,19 @@ msgstr "Bij starten altijd een nieuw blaadje aanmaken"
 
 #: ../src/xpad-app.c:775
 msgid "Hide all pads"
-msgstr ""
+msgstr "Alle memo's verbergen"
 
 #: ../src/xpad-app.c:776
 msgid "Show all pads"
-msgstr ""
+msgstr "Alle memo's tonen"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "Schakelen tussen alle memo's tonen/verbergen"
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
-msgstr ""
-"Een nieuw memo aanmaken met de inhoud van\n"
-"                                    dit bestand"
+msgstr "Nieuw memo maken van de inhoud van een bestand"
 
 #: ../src/xpad-app.c:778
 msgid "FILE"
@@ -120,7 +134,7 @@ msgstr "BESTAND"
 
 #: ../src/xpad-app.c:779
 msgid "Close all pads"
-msgstr "Alle memo's opslaan en Xpad afsluiten"
+msgstr "Alle memo's afsluiten"
 
 #: ../src/xpad-app.c:810
 #, c-format
@@ -130,7 +144,7 @@ msgstr "Xpad %s"
 #: ../src/xpad-pad.c:162
 #, c-format
 msgid "Could not read file %s."
-msgstr "Kan bestand %s niet lezen."
+msgstr "Kon bestand %s niet lezen."
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
@@ -157,10 +171,9 @@ msgstr ""
 "Benno Schulenberg <benno@vertaalt.nl>\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
 "  Benno Schulenberg https://launchpad.net/~bennoschulenberg\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Benno Schulenberg https://launchpad.net/~bennoschulenberg"
+"  Jeroen T. Vermeulen https://launchpad.net/~jtv"
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
@@ -168,7 +181,7 @@ msgstr "_Memo"
 
 #: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
-msgstr "_Op alle werkbladen"
+msgstr "_Op alle werkbladen tonen"
 
 #: ../src/xpad-pad.c:1621
 msgid "_Edit"
@@ -184,7 +197,7 @@ msgstr "_Werkbalk"
 
 #: ../src/xpad-pad.c:1652
 msgid "_Autohide Toolbar"
-msgstr "Werkbalk _auto-verbergen"
+msgstr "Werkbalk _automatisch verbergen"
 
 #: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
@@ -217,11 +230,11 @@ msgstr "_Inhoud"
 
 #: ../src/xpad-pad.c:1679
 msgid "_About"
-msgstr "In_fo"
+msgstr "O_ver"
 
 #: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
 msgid "Appearance"
-msgstr "Weergave"
+msgstr "Uiterlijk"
 
 #: ../src/xpad-pad-properties.c:160
 msgid "Use font from xpad preferences"
@@ -305,21 +318,19 @@ msgstr "Sl_uiten toevoegen aan werkbalk"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Naar klembord kopiëren"
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "_Wissen toevoegen aan werkbalk"
+msgstr "Voeg kopie toe aan werkbalk"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
-msgstr ""
+msgstr "Knippen"
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "_Wissen toevoegen aan werkbalk"
+msgstr "Knip van werkbalk"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -339,12 +350,11 @@ msgstr "_Nieuw toevoegen aan werkbalk"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
-msgstr ""
+msgstr "Plakken vanaf klembord"
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "Sl_uiten toevoegen aan werkbalk"
+msgstr "Plak op werkbalk"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -364,29 +374,27 @@ msgstr "_Eigenschappen toevoegen aan werkbalk"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
-msgstr ""
+msgstr "Opnieuw"
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "_Nieuw toevoegen aan werkbalk"
+msgstr "Herhaal op werkbalk"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
-msgstr "Alle memo's opslaan en Xpad afsluiten"
+msgstr "Alle memo's afsluiten"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
-msgstr ""
+msgstr "_Afsluit-optie aan werkbalk toevoegen"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Undo"
-msgstr ""
+msgstr "Ongedaan maken"
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "Sl_uiten toevoegen aan werkbalk"
+msgstr "Voeg herhaal toe aan werkbalk"
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
@@ -402,11 +410,11 @@ msgstr "Ver_plaatsen"
 
 #: ../src/xpad-toolbar.c:758
 msgid "Remove All _Buttons"
-msgstr ""
+msgstr "Verwijder alle knoppen"
 
 #: ../src/xpad-toolbar.c:770
 msgid "Remo_ve Last Button"
-msgstr ""
+msgstr "Verwijder de laatste knop"
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"

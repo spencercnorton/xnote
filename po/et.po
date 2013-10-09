@@ -8,54 +8,70 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-05-01 18:14+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Eraser <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: et\n"
 
 #: ../src/fio.c:129
 #, c-format
 msgid "Could not write to file %s: %s"
-msgstr ""
+msgstr "Ei suudetud kirjutada faili %s: %s"
 
 #: ../src/help.c:49
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
 msgstr ""
+"Iga Xpad seansi jooksul võib töölaual olla üks või mitu avatud märkepaberit, "
+"kuhu saab teha memosid."
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
 msgstr ""
+"<b>Märkmepaberi liigutamiseks</b> hoiad all vasakut hiirenuppu "
+"tööriistaribal või hoiad all CTRL klahvi ja vasakut hiirenuppu ükskõik kus "
+"kohas märkmepaberil, liigutades märkmepaberit töölaual. Hoiad all paremat "
+"hiirenuppu alumises paremas nurgas saad lohistades muuta märkmepaberi "
+"suurust."
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
 msgstr ""
+"<b>Märkmepaberi suuruse muutmiseks</b> tuleb vasaku hiirenupuga lohistada "
+"alumisest paremast nurgast või hoiad all CTRL klahvi ja paremat hiirenuppu, "
+"ükskõik kus kohas märkmepaberil, saad lohistades muuta suurust."
 
 #: ../src/help.c:57
 msgid ""
 "<b>To change color settings</b>, right click on a pad and choose Edit-"
 ">Preferences."
 msgstr ""
+"<b>Värvi seadete muutmiseks</b> tuleb teha paremklõps märkmepaberil ja "
+"valida Muuda -> Eelistused."
 
 #: ../src/help.c:59
 msgid ""
 "Most actions are available throught the popup menu that appears when you "
 "right click on a pad.  Try it out and enjoy."
 msgstr ""
+"Enamik toiminguid on kättesaadavad läbi hüpikmenüü, mis kuvatakse "
+"paremklõpsuga märkmepaberil.  Proovi seda ja naudi."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
+"Kommentaarid või veateated saatke palun xpad-devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
@@ -63,7 +79,7 @@ msgstr "Abiinfo"
 
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr ""
+msgstr "Xpad on graafiline programm.  Palun käivita see oma töölaual."
 
 #: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -72,41 +88,46 @@ msgstr "Xpad"
 #: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
-msgstr "Kausta %s avamine ebaõnnestu."
+msgstr "Kausta %s avamine ebaõnnestus."
 
 #: ../src/xpad-app.c:460
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
+"Märkmepaberi info ja eelistuste salvestamiseks on antud kataloog vajalik. "
+"Xpad sulgub"
 
 #: ../src/xpad-app.c:767
 msgid "Show version number and quit"
-msgstr ""
+msgstr "Näita versiooninumbrit ja välju"
 
 #: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
+"Ära loo uusi märkmepabereid käivitumisel, kui eelnevad märkmepaberid "
+"puuduvad."
 
 #: ../src/xpad-app.c:774
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
+"Loo uus märkmepaber käivitumisel, isegi siis kui märkmepaberid on juba olemas"
 
 #: ../src/xpad-app.c:775
 msgid "Hide all pads"
-msgstr ""
+msgstr "Peida kõik märkmepaberid"
 
 #: ../src/xpad-app.c:776
 msgid "Show all pads"
-msgstr ""
+msgstr "Näita kõiki märkmepabereid"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "Lülita kõigi märkmepaberite näitamise ja peitmise vahel"
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
-msgstr ""
+msgstr "Uue märkmepaberi loomine faili sisuga"
 
 #: ../src/xpad-app.c:778
 msgid "FILE"
@@ -114,7 +135,7 @@ msgstr "FAIL"
 
 #: ../src/xpad-app.c:779
 msgid "Close all pads"
-msgstr ""
+msgstr "Sulgeb kõik märkmepaberid"
 
 #: ../src/xpad-app.c:810
 #, c-format
@@ -128,11 +149,11 @@ msgstr "Faili %s lugemine ebaõnnestus."
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
-msgstr ""
+msgstr "Kas kustutada see märkmepaber?"
 
 #: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
-msgstr ""
+msgstr "Kogu selle märkmepaberi tekst kaob pöördumatult."
 
 #: ../src/xpad-pad.c:755
 #, c-format
@@ -141,7 +162,7 @@ msgstr "'%s' omadused"
 
 #: ../src/xpad-pad.c:1314
 msgid "Sticky notes"
-msgstr ""
+msgstr "Märkmepaberid"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
@@ -153,19 +174,19 @@ msgstr ""
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
-msgstr ""
+msgstr "_Lipik"
 
 #: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
-msgstr ""
+msgstr "Näita _kõikidel töölaudadel"
 
 #: ../src/xpad-pad.c:1621
 msgid "_Edit"
-msgstr "_Muuda"
+msgstr "_Redaktor"
 
 #: ../src/xpad-pad.c:1644
 msgid "_View"
-msgstr "_Vaata"
+msgstr "_Vaade"
 
 #: ../src/xpad-pad.c:1651
 msgid "_Toolbar"
@@ -173,7 +194,7 @@ msgstr "_Tööriistariba"
 
 #: ../src/xpad-pad.c:1652
 msgid "_Autohide Toolbar"
-msgstr ""
+msgstr "_Peida tööriistariba automaatselt"
 
 #: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
@@ -181,11 +202,11 @@ msgstr "_Kerimisriba"
 
 #: ../src/xpad-pad.c:1655
 msgid "_Window Decorations"
-msgstr ""
+msgstr "_Aknaehised"
 
 #: ../src/xpad-pad.c:1658
 msgid "_Notes"
-msgstr ""
+msgstr "_Märkmed"
 
 #: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
 msgid "_Show All"
@@ -202,11 +223,11 @@ msgstr "_Abiinfo"
 
 #: ../src/xpad-pad.c:1678
 msgid "_Contents"
-msgstr "S_isu"
+msgstr ""
 
 #: ../src/xpad-pad.c:1679
 msgid "_About"
-msgstr "Tiitelin_fo"
+msgstr "_Programmist lähemalt"
 
 #: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
 msgid "Appearance"
@@ -214,19 +235,19 @@ msgstr "Välimus"
 
 #: ../src/xpad-pad-properties.c:160
 msgid "Use font from xpad preferences"
-msgstr ""
+msgstr "Kasuta kirjatüüpi Xpadi eelistustest"
 
 #: ../src/xpad-pad-properties.c:161 ../src/xpad-preferences.c:150
 msgid "Use this font:"
-msgstr ""
+msgstr "Kasuta seda kirjatüüpi:"
 
 #: ../src/xpad-pad-properties.c:162
 msgid "Use colors from xpad preferences"
-msgstr ""
+msgstr "Kasuta värve Xpadi eelistustest"
 
 #: ../src/xpad-pad-properties.c:163 ../src/xpad-preferences.c:152
 msgid "Use these colors:"
-msgstr ""
+msgstr "Kasuta neid värve:"
 
 #: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:160
 msgid "Background:"
@@ -234,11 +255,11 @@ msgstr "Taust:"
 
 #: ../src/xpad-pad-properties.c:179 ../src/xpad-preferences.c:168
 msgid "Foreground:"
-msgstr ""
+msgstr "Kiri:"
 
 #: ../src/xpad-pad-properties.c:199 ../src/xpad-preferences.c:192
 msgid "Set Foreground Color"
-msgstr ""
+msgstr "Määra kirja värv"
 
 #: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:193
 msgid "Set Background Color"
@@ -246,31 +267,31 @@ msgstr "Määra tausta värv"
 
 #: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:194
 msgid "Set Font"
-msgstr ""
+msgstr "Määra kirjatüüp"
 
 #: ../src/xpad-preferences.c:149
 msgid "Use font from theme"
-msgstr ""
+msgstr "Kasuta teema kirjatüüpi"
 
 #: ../src/xpad-preferences.c:151
 msgid "Use colors from theme"
-msgstr ""
+msgstr "Kasuta teema värvuseid"
 
 #: ../src/xpad-preferences.c:179
 msgid "_Edit lock"
-msgstr ""
+msgstr "_Muuda lukustust"
 
 #: ../src/xpad-preferences.c:180
 msgid "_Pads start on all workspaces"
-msgstr ""
+msgstr "_Lipikud käivituvad kõigil töölaudadel"
 
 #: ../src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
-msgstr ""
+msgstr "Märkmepaberi kustutamise _kinnitamine"
 
 #: ../src/xpad-preferences.c:187
 msgid "Xpad Preferences"
-msgstr ""
+msgstr "Xpadi eelistused"
 
 #: ../src/xpad-preferences.c:252
 msgid "Options"
@@ -278,19 +299,19 @@ msgstr "Valikud"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
-msgstr ""
+msgstr "Puhasta märkmepaberi sisu"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
-msgstr ""
+msgstr "Lisa pu_hasta tööriistaribale"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
-msgstr ""
+msgstr "Sulge ja salvesta märkmepaber"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
-msgstr ""
+msgstr "Lisa _sulge tööriistaribale"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
@@ -310,19 +331,19 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
-msgstr ""
+msgstr "Kustuta märkmepaber"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
-msgstr ""
+msgstr "Lisa _kustuta tööriistaribale"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
-msgstr ""
+msgstr "Ava uus märkmepaber"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
-msgstr ""
+msgstr "Lisa _uus tööriistaribale"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
@@ -334,19 +355,19 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
-msgstr ""
+msgstr "Eelistuste redigeerimine"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
-msgstr ""
+msgstr "Lisa _eelistused tööriistaribale"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
-msgstr ""
+msgstr "Märkmepaberi omaduste muutmine"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
-msgstr ""
+msgstr "Lisa _omadused tööriistaribale"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
@@ -358,11 +379,11 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
-msgstr ""
+msgstr "Sulge kõik märkmepaberid"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
-msgstr ""
+msgstr "Lisa _sulge tööriistaribale"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Undo"
@@ -374,15 +395,15 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
-msgstr ""
+msgstr "Lisa e_raldaja tööriistaribale"
 
 #: ../src/xpad-toolbar.c:682
 msgid "_Remove From Toolbar"
-msgstr ""
+msgstr "_Eemalda tööriistaribalt"
 
 #: ../src/xpad-toolbar.c:692
 msgid "_Move"
-msgstr ""
+msgstr "_Liiguta"
 
 #: ../src/xpad-toolbar.c:758
 msgid "Remove All _Buttons"
@@ -394,8 +415,8 @@ msgstr ""
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr ""
+msgstr "Märkmepaberid"
 
 #: ../xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr ""
+msgstr "Kiirete märkmete tegemine edaspidiseks"

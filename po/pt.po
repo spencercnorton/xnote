@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-04-28 14:03+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Luis Rascão <luis.rascao@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: pt\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -68,10 +68,11 @@ msgstr ""
 "se."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Por favor envie comentários or relatórios de defeitos para xpad-devel@lists."
-"sourceforge.net"
+"Por favor envie comentários or relatórios de defeitos para xpad-"
+"devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
@@ -316,18 +317,16 @@ msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "Adicionar C_lear a barra de ferramentas"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "Adicionar C_lear a barra de ferramentas"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -350,9 +349,8 @@ msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "Adicionar _Fechar a barra de ferramentas"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -375,9 +373,8 @@ msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "Adicionar _Novo a barra de ferramentas"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -392,9 +389,8 @@ msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "Adicionar _Fechar a barra de ferramentas"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"

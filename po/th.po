@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-01-20 09:28+0000\n"
+"PO-Revision-Date: 2013-10-08 22:19+0000\n"
 "Last-Translator: Tharawut Paripaiboon <Unknown>\n"
 "Language-Team: Thai <th@li.org>\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: th\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -54,7 +54,8 @@ msgid ""
 msgstr ""
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 
 #: ../src/help.c:73
@@ -94,11 +95,11 @@ msgstr ""
 
 #: ../src/xpad-app.c:775
 msgid "Hide all pads"
-msgstr ""
+msgstr "ซ่อน pad ทั้งหมด"
 
 #: ../src/xpad-app.c:776
 msgid "Show all pads"
-msgstr ""
+msgstr "แสดง pad ทั้งหมด"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
@@ -114,7 +115,7 @@ msgstr "ไฟล์"
 
 #: ../src/xpad-app.c:779
 msgid "Close all pads"
-msgstr ""
+msgstr "ปิด pad ทั้งหมด"
 
 #: ../src/xpad-app.c:810
 #, c-format
@@ -128,7 +129,7 @@ msgstr "ไม่สามารถอ่านไฟล์ %s"
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
-msgstr ""
+msgstr "ต้องการจะลบ pad นี้?"
 
 #: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
@@ -177,7 +178,7 @@ msgstr "ซ่อนแถบเครื่องมืออัตโนมั
 
 #: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
-msgstr ""
+msgstr "สกรอลบาร์"
 
 #: ../src/xpad-pad.c:1655
 msgid "_Window Decorations"
@@ -305,9 +306,8 @@ msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "ซ่อนแถบเครื่องมืออัตโนมัติ"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"

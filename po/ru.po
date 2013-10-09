@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-04-09 13:04+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: BasicXP <x12ozmouse@ya.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: \n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -37,7 +37,7 @@ msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
 msgstr ""
-"<b>Чтобы переместить панель<b>, перетаскивайте за панель инструментов, или "
+"<b>Чтобы переместить панель</b>, перетаскивайте за панель инструментов, или "
 "за ресайзер правой кнопкой справа внизу или перетаскивайте за что угодно, "
 "удерживая CTRL"
 
@@ -66,7 +66,8 @@ msgstr ""
 "панели. Пробуйте и наслаждайтесь."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 "Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge.net"
 
@@ -119,7 +120,7 @@ msgstr "Показать все стикеры"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "Показать/Скрыть все заметки"
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
@@ -131,7 +132,7 @@ msgstr "ФАЙЛ"
 
 #: ../src/xpad-app.c:779
 msgid "Close all pads"
-msgstr "Закрыть все стикеры"
+msgstr "Закрыть все заметки"
 
 #: ../src/xpad-app.c:810
 #, c-format
@@ -141,15 +142,15 @@ msgstr "Xpad %s"
 #: ../src/xpad-pad.c:162
 #, c-format
 msgid "Could not read file %s."
-msgstr "Не удалось прочитать файл %s"
+msgstr "Не удалось прочитать %s"
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
-msgstr "Удалить этот стикер?"
+msgstr "Удалить заметку?"
 
 #: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
-msgstr "Все содержимое стикера будет безвозвратно потеряно"
+msgstr "Все содержимое заметки будет утрачено."
 
 #: ../src/xpad-pad.c:755
 #, c-format
@@ -176,7 +177,7 @@ msgstr ""
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
-msgstr "_Стикер"
+msgstr "_Заметка"
 
 #: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
@@ -320,18 +321,16 @@ msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "Добавить кнопку _Очистить"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "Добавить кнопку _Очистить"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -354,9 +353,8 @@ msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "Добавить кнопку _Закрыть"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -379,9 +377,8 @@ msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "Добавить кнопку _Новый стикер"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -396,9 +393,8 @@ msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "Добавить кнопку _Закрыть"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"

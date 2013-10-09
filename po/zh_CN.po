@@ -8,59 +8,60 @@ msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-01-11 17:24+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
-"sourceforge.net>\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-"
+"cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: zh_CN\n"
 
 #: ../src/fio.c:129
 #, c-format
 msgid "Could not write to file %s: %s"
-msgstr ""
+msgstr "无法写入文件 %s: %s"
 
 #: ../src/help.c:49
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
-msgstr ""
+msgstr "每个 xpad 会话有一个或多个打开的页面。这些页面好比你写的便条，然后贴在桌面上。"
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
+msgstr "<b>移动页面</b>，向左拖动工具栏，向右拖动右下角的尺寸标记；或者按住 Ctrl 键不放，同时向左拖动页面。"
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
-msgstr ""
+msgstr "<b>改变页面大小</b>，向左拖动尺寸标记；或者按住 Ctrl 键不放，同时向右拖动页面。"
 
 #: ../src/help.c:57
 msgid ""
 "<b>To change color settings</b>, right click on a pad and choose Edit-"
 ">Preferences."
-msgstr ""
+msgstr "<b>想改变颜色设置</b>，在某个页面里点鼠标右键，选择 编辑 -> 参数。"
 
 #: ../src/help.c:59
 msgid ""
 "Most actions are available throught the popup menu that appears when you "
 "right click on a pad.  Try it out and enjoy."
-msgstr ""
+msgstr "在某个页面上点击鼠标右键，弹出菜单有更多操作可用。多试试吧。"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-msgstr ""
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgstr "请发送评价或缺陷到 xpad-devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
-msgstr ""
+msgstr "帮助"
 
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
@@ -95,15 +96,15 @@ msgstr "即使已经存在，启动时也新建一个便笺"
 
 #: ../src/xpad-app.c:775
 msgid "Hide all pads"
-msgstr ""
+msgstr "隐藏所有页面"
 
 #: ../src/xpad-app.c:776
 msgid "Show all pads"
-msgstr ""
+msgstr "显示所有页面"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "在显示和隐藏所有页面之间进行锁定"
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
@@ -304,18 +305,16 @@ msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "将清空添加至工具栏(_C)"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "将清空添加至工具栏(_C)"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -338,9 +337,8 @@ msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "将关闭添加至工具栏(_C)"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -363,9 +361,8 @@ msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "将新建添加至工具栏(_N)"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -373,16 +370,15 @@ msgstr "关闭所有便笺"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
-msgstr ""
+msgstr "添加 全部关闭 到工具栏(_A)"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "将关闭添加至工具栏(_C)"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"

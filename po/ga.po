@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-01-11 17:24+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
-"Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: ga\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -54,7 +54,8 @@ msgid ""
 msgstr ""
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 
 #: ../src/help.c:73
@@ -88,7 +89,8 @@ msgstr "Taispeáin an uimhir leagain agus scoir"
 
 #: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
+msgstr ""
+"Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
 
 #: ../src/xpad-app.c:774
 msgid "Create a new pad on startup even if pads already exist"
@@ -306,18 +308,16 @@ msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "Cuir G_lan leis an Bharra Uirlisí"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "Cuir G_lan leis an Bharra Uirlisí"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -340,9 +340,8 @@ msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "Cuir _Dún leis an Bharra Uirlisí"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -365,9 +364,8 @@ msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "Cuir _Nua leis an Bharra Uirlisí"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -382,9 +380,8 @@ msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "Cuir _Dún leis an Bharra Uirlisí"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"

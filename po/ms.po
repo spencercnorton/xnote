@@ -1,22 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# KwangSub Lee <chokori@gmail.com>, 2006.
+# Xpad Bahasa Melayu (Malay) (ms)
+# Copyright (C) 2005 Sharuzzaman Ahmat Raslan
+# This file is distributed under the same license as the xpad package.
+# Sharuzzaman Ahmat Raslan <sharuzzaman@myrealbox.com>, 2005, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
-"Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2013-10-08 19:50+0000\n"
-"Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
-"Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2013-10-08 20:57+0000\n"
+"Last-Translator: Sharuzzaman Ahmat Raslan <Unknown>\n"
+"Language-Team: Malay <translation-team-ms@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
-"Language: ko\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -60,11 +59,12 @@ msgstr ""
 
 #: ../src/help.c:73
 msgid "Help"
-msgstr "도움말"
+msgstr ""
 
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad는 GUI 프로그램입니다.  그래픽 환경에서 동작시켜주세요."
+msgstr ""
+"Xpad adalah program bergrafik.  Sila laksanakannya dari desktop anda."
 
 #: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -73,33 +73,35 @@ msgstr "Xpad"
 #: ../src/xpad-app.c:457
 #, c-format
 msgid "Could not open directory %s."
-msgstr "%s 디렉토리를 열수 없습니다."
+msgstr "Tidak dapat membuka direktori %s."
 
 #: ../src/xpad-app.c:460
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
-msgstr "이 디렉토리에는 메모 내용과 Xpad 설정을 저장할수 있어야 합니다.Xpad를 종료합니다."
+msgstr ""
+"Direktori ini diperlukan untuk menyimpan keutamaan dan maklumat pad. Xpad "
+"akan ditutup sekarang."
 
 #: ../src/xpad-app.c:767
 msgid "Show version number and quit"
-msgstr "버전을 넘버를 보고 종료 합니다."
+msgstr "Papar nombor versi dan keluar"
 
 #: ../src/xpad-app.c:768
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "시작할때 예전 메모가 없다면 메모를 생성하지 않습니다."
+msgstr "Jangan cipta pad baru ketika permulaan jika pad terdahulu wujud"
 
 #: ../src/xpad-app.c:774
 msgid "Create a new pad on startup even if pads already exist"
-msgstr "메모를 생성하려는데 메모가 존재합니다."
+msgstr "Cipta pad baru ketika permulaan walaupun pad telah wujud"
 
 #: ../src/xpad-app.c:775
 msgid "Hide all pads"
-msgstr "모든 메모 감추기"
+msgstr ""
 
 #: ../src/xpad-app.c:776
 msgid "Show all pads"
-msgstr "모든 메모 보이기"
+msgstr ""
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
@@ -107,15 +109,15 @@ msgstr ""
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
-msgstr "파일의 내용을 이용하여 새로운 메모를 생성합니다."
+msgstr "Cipta pad baru dengan kandungan fail"
 
 #: ../src/xpad-app.c:778
 msgid "FILE"
-msgstr "파일"
+msgstr "FAIL"
 
 #: ../src/xpad-app.c:779
 msgid "Close all pads"
-msgstr "모든 메모를 닫습니다."
+msgstr "Tutup semua pad"
 
 #: ../src/xpad-app.c:810
 #, c-format
@@ -125,179 +127,175 @@ msgstr "Xpad %s"
 #: ../src/xpad-pad.c:162
 #, c-format
 msgid "Could not read file %s."
-msgstr "%s 파일을 읽을수 없습니다."
+msgstr "Tidak dapat membaca fail %s."
 
 #: ../src/xpad-pad.c:723
 msgid "Delete this pad?"
-msgstr "메모를 지우시겠습니까?"
+msgstr "Padam pad ini?"
 
 #: ../src/xpad-pad.c:724
 msgid "All text of this pad will be irrevocably lost."
-msgstr "모든 메모내용을 복구 할수 없을것입니다."
+msgstr "Semua teks pada pad ini akan hilang selama-lamanya."
 
 #: ../src/xpad-pad.c:755
 #, c-format
 msgid "'%s' Properties"
-msgstr "%s' 속성"
+msgstr "Ciri-ciri '%s'"
 
 #: ../src/xpad-pad.c:1314
 msgid "Sticky notes"
-msgstr "Sticky notes"
+msgstr "Nota lekit"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
 #: ../src/xpad-pad.c:1333
 msgid "translator-credits"
 msgstr ""
-"KwangSub Lee <chokori@gmail.com>\n"
+"Sharuzzaman Ahmat Raslan <sharuzzaman@myrealbox.com>\n"
 "\n"
 "Launchpad Contributions:\n"
-"  KwangSub Lee https://launchpad.net/~chokori\n"
-"\n"
-"Launchpad Contributions:\n"
-"  KwangSub Lee https://launchpad.net/~chokori\n"
-"  Michael Terry https://launchpad.net/~mterry"
+"  Sharuzzaman Ahmat Raslan https://launchpad.net/~sharuzzaman"
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
-msgstr "메모(_P)"
+msgstr "_Pad"
 
 #: ../src/xpad-pad.c:1613
 msgid "Show on _All Workspaces"
-msgstr "모든 화면에서 보이기(_A)"
+msgstr "P_apar pada Semua Ruangkerja"
 
 #: ../src/xpad-pad.c:1621
 msgid "_Edit"
-msgstr "고치기(_E)"
+msgstr "_Sunting"
 
 #: ../src/xpad-pad.c:1644
 msgid "_View"
-msgstr "보기(_V)"
+msgstr "_Lihat"
 
 #: ../src/xpad-pad.c:1651
 msgid "_Toolbar"
-msgstr "툴바(_T)"
+msgstr "Bar Ala_tan"
 
 #: ../src/xpad-pad.c:1652
 msgid "_Autohide Toolbar"
-msgstr "툴바 자동숨기기(_A)"
+msgstr "_Autosorok Bar Alatan"
 
 #: ../src/xpad-pad.c:1654
 msgid "_Scrollbar"
-msgstr "스크롤바(_S)"
+msgstr "Bar _Skrol"
 
 #: ../src/xpad-pad.c:1655
 msgid "_Window Decorations"
-msgstr "메모 창 테두리 보이기(_W)"
+msgstr "_Hiasan Tetingkap"
 
 #: ../src/xpad-pad.c:1658
 msgid "_Notes"
-msgstr "메모(_N)"
+msgstr "_Nota"
 
 #: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
 msgid "_Show All"
-msgstr "모두 보여주기(_S)"
+msgstr "Papar _Semua"
 
 #: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
 msgid "_Close All"
-msgstr "모두 닫기(_C)"
+msgstr "_Tutup Semua"
 
 #. The rest of the notes menu will get set up in the prep function below
 #: ../src/xpad-pad.c:1671
 msgid "_Help"
-msgstr "도움말(_H)"
+msgstr "_Bantuan"
 
 #: ../src/xpad-pad.c:1678
 msgid "_Contents"
-msgstr "_Contents"
+msgstr "_Kandungan"
 
 #: ../src/xpad-pad.c:1679
 msgid "_About"
-msgstr "대하여..(_A)"
+msgstr "_Perihal"
 
 #: ../src/xpad-pad-properties.c:132 ../src/xpad-preferences.c:122
 msgid "Appearance"
-msgstr "보이기"
+msgstr "Penampilan"
 
 #: ../src/xpad-pad-properties.c:160
 msgid "Use font from xpad preferences"
-msgstr "xpad 설정 폰트 사용"
+msgstr "Guna font dari keutamaan xpad"
 
 #: ../src/xpad-pad-properties.c:161 ../src/xpad-preferences.c:150
 msgid "Use this font:"
-msgstr "이 폰트 사용:"
+msgstr "Gunakan font ini:"
 
 #: ../src/xpad-pad-properties.c:162
 msgid "Use colors from xpad preferences"
-msgstr "xpad 설정 컬러 사용"
+msgstr "Guna warna dari keutamaan xpad"
 
 #: ../src/xpad-pad-properties.c:163 ../src/xpad-preferences.c:152
 msgid "Use these colors:"
-msgstr "이 컬러 사용:"
+msgstr "Guna warna ini:"
 
 #: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:160
 msgid "Background:"
-msgstr "배경:"
+msgstr "Latarbelakang:"
 
 #: ../src/xpad-pad-properties.c:179 ../src/xpad-preferences.c:168
 msgid "Foreground:"
-msgstr "전경:"
+msgstr "Latardepan:"
 
 #: ../src/xpad-pad-properties.c:199 ../src/xpad-preferences.c:192
 msgid "Set Foreground Color"
-msgstr "전경 색을 설정"
+msgstr "Tetap Warna Latardepan"
 
 #: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:193
 msgid "Set Background Color"
-msgstr "배경 색을 설정"
+msgstr "Tetap Warna Latarbelakang"
 
 #: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:194
 msgid "Set Font"
-msgstr "폰트 설정"
+msgstr "Tetap Font"
 
 #: ../src/xpad-preferences.c:149
 msgid "Use font from theme"
-msgstr "테마 폰트 사용하기"
+msgstr "Guna font dari tema"
 
 #: ../src/xpad-preferences.c:151
 msgid "Use colors from theme"
-msgstr "테마 색 사용하기"
+msgstr "Guna warna dari tema"
 
 #: ../src/xpad-preferences.c:179
 msgid "_Edit lock"
-msgstr "고치기 잠금(_E)"
+msgstr "_Ubah kunci"
 
 #: ../src/xpad-preferences.c:180
 msgid "_Pads start on all workspaces"
-msgstr "시작할때 모든 화면에서 메모 보이기(_P)"
+msgstr "_Pad bermula pada semua ruangkerja"
 
 #: ../src/xpad-preferences.c:181
 msgid "_Confirm pad deletion"
-msgstr "메모 삭제시 확인(_C)"
+msgstr "_Sahkan pemadaman pad"
 
 #: ../src/xpad-preferences.c:187
 msgid "Xpad Preferences"
-msgstr "Xpad 설정"
+msgstr "Keutamaan Xpad"
 
 #: ../src/xpad-preferences.c:252
 msgid "Options"
-msgstr "옵션"
+msgstr "Pilihan"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
-msgstr "메모 내용 삭제"
+msgstr "Kosongkan Kandungan Pad"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
-msgstr "클리어 버튼을 툴바에 추가(_l)"
+msgstr "Tambah Kosongkan ke Bar A_latan"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
-msgstr "메모 저장후 닫기"
+msgstr "Tutup dan Simpan Pad"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
-msgstr "닫기를 버튼을 툴바에 추가(_C)"
+msgstr "_Tambah Tutup ke Bar Alatan"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
@@ -317,19 +315,19 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
-msgstr "메모 지우기"
+msgstr "Padam Pad"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
-msgstr "툴바에 지우기 버튼 추가(_D)"
+msgstr "Tambah Pa_dam ke Bar Alatan"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
-msgstr "새로운 메모 생성"
+msgstr "Buka Pad Baru"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
-msgstr "툴바에 생성버튼 추가(_N)"
+msgstr "Tambah Baru ke Bar Alata_n"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
@@ -341,19 +339,19 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
-msgstr "설정 내용 고치기"
+msgstr "Sunting Keutamaan"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
-msgstr "설정버튼을 툴바에 추가(_e)"
+msgstr "Tambah K_eutamaan ke Bar Alat"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
-msgstr "메모 설정 고치기"
+msgstr "Sunting Ciri-ciri Pad"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
-msgstr "설정 버튼을 툴바에 추가(_t)"
+msgstr "Tambah Ciri-ciri ke Bar Ala_t"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
@@ -365,7 +363,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
-msgstr "모든 메모 닫기"
+msgstr "Tutup Semua Pad"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
@@ -381,15 +379,15 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
-msgstr "나누기 버튼을 툴바에 추가(_p)"
+msgstr "Tambah _Pengasing ke Bar Alat"
 
 #: ../src/xpad-toolbar.c:682
 msgid "_Remove From Toolbar"
-msgstr "툴바에서 제거(_R)"
+msgstr "Buang Da_ri Bar Alatan"
 
 #: ../src/xpad-toolbar.c:692
 msgid "_Move"
-msgstr "옮기기(_M)"
+msgstr "_Gerak"
 
 #: ../src/xpad-toolbar.c:758
 msgid "Remove All _Buttons"
@@ -401,8 +399,8 @@ msgstr ""
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr "Sticky Notes"
+msgstr "Nota Lekit"
 
 #: ../xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr ""
+msgstr "Catat nota untuk akan datang"

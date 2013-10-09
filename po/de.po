@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2009-05-07 03:45+0000\n"
+"PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: christian.hartmann <christian.hartmann@berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-05-11 01:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
+"Language: de\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -29,8 +29,8 @@ msgid ""
 "basically sticky notes on your desktop in which you can write memos."
 msgstr ""
 "Jede Xpad Sitzung besteht aus einem oder mehreren offenen Zetteln. Xpads "
-"Zettel sind sowas wie Klebezettel auf dem Desktop in die Du deine Notizen "
-"schreiben kannst."
+"Zettel sind wie Klebezettel auf dem Desktop, in die Du deine Notizen "
+"schreiben kannst"
 
 #: ../src/help.c:52
 msgid ""
@@ -39,7 +39,7 @@ msgid ""
 msgstr ""
 "<b>Um einen Zettel zu bewegen</b>, klicke mit der linken Maustaste auf die "
 "Werkzeugleiste oder halte die Strg-Taste gedrückt während Du den Zettel mit "
-"ebenfalls gedrückter linker Maustaste bewegts."
+"ebenfalls gedrückter linker Maustaste bewegts"
 
 #: ../src/help.c:55
 msgid ""
@@ -49,7 +49,7 @@ msgstr ""
 "<b>Um die Größe eines Zettels zu ändern</b>, klicke mit der linken Maustaste "
 "auf das Größenänderungssymbol in der Werkzeugleiste oder halte die Strg-"
 "Taste gedrückt während Du die Größe des Zettels mit ebenfalls gedrückter "
-"rechter Maustaste änderst."
+"rechter Maustaste änderst"
 
 #: ../src/help.c:57
 msgid ""
@@ -65,13 +65,14 @@ msgid ""
 "right click on a pad.  Try it out and enjoy."
 msgstr ""
 "Rechtsklick öffnet das Popup Menü, in dem viele Aktionen und Einstellungen "
-"möglich sind. Probier es auch und habe Spaß mit Xpad"
+"möglich sind. Probier es aus und habe Spaß mit Xpad"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Fehlerberichte und Kommentare kannst Du an xpad-devel@lists.sourceforge.net "
-"schicken."
+"Fehlerberichte und Kommentare bitte per E-Mail an xpad-"
+"devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
@@ -80,7 +81,7 @@ msgstr "Hilfe"
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr ""
-"Xpad ist eine graphische Anwendung. Bitte starte sie nur auf deinem Desktop"
+"Xpad ist eine grafische Anwendung. Bitte nur vom Desktop aus starten."
 
 #: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -122,7 +123,7 @@ msgstr "Zeige alle Zettel"
 
 #: ../src/xpad-app.c:777
 msgid "Toggle between show and hide all pads"
-msgstr ""
+msgstr "Zeige oder Verstecke alle Zettel (Umschalter)"
 
 #: ../src/xpad-app.c:778
 msgid "Create a new pad with the contents of a file"
@@ -157,7 +158,7 @@ msgstr "Der gesamte Text dieses Zettels geht verloren!"
 #: ../src/xpad-pad.c:755
 #, c-format
 msgid "'%s' Properties"
-msgstr "\"%s\" Eigenschaften"
+msgstr "'%s' Eigenschaften"
 
 #: ../src/xpad-pad.c:1314
 msgid "Sticky notes"
@@ -302,7 +303,7 @@ msgstr "Zettelinhalt löschen"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
-msgstr "\"Inhalt löschen\" hinzufügen"
+msgstr "'Inhalt löschen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
@@ -310,25 +311,23 @@ msgstr "Zettel speichern und schließen"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
-msgstr "\"Zettel schließen\" hinzufügen"
+msgstr "'Zettel schließen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:83
-#, fuzzy
 msgid "Add C_opy to Toolbar"
-msgstr "\"Inhalt löschen\" hinzufügen"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:84
-#, fuzzy
 msgid "Add C_ut to Toolbar"
-msgstr "\"Inhalt löschen\" hinzufügen"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -336,49 +335,47 @@ msgstr "Zettel löschen"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
-msgstr "\"Zettel löschen\" hinzufügen"
+msgstr "'Zettel löschen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
-msgstr "Neuen Zettel öffnen"
+msgstr "Neuer Zettel"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
-msgstr "\"Neuen Zettel\" hinzufügen"
+msgstr "'Neuer Zettel' hinzufügen"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:87
-#, fuzzy
 msgid "Add Pa_ste to Toolbar"
-msgstr "\"Zettel schließen\" hinzufügen"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
-msgstr "Einstellungen bearbeiten"
+msgstr "Einstellungen"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
-msgstr "\"Einstellungen\" hinzufügen"
+msgstr "'Einstellungen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
-msgstr "Zetteleinstellungen bearbeiten"
+msgstr "Zetteleinstellungen"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
-msgstr "\"Zetteleinstellungen\" hinzufügen"
+msgstr "'Zetteleinstellungen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:90
-#, fuzzy
 msgid "Add _Redo to Toolbar"
-msgstr "\"Neuen Zettel\" hinzufügen"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -386,16 +383,15 @@ msgstr "Alle Zettel schließen"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
-msgstr "\"Schließen\" hinzufügen"
+msgstr "'Alle Zettel schließen' hinzufügen"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Undo"
 msgstr ""
 
 #: ../src/xpad-toolbar.c:92
-#, fuzzy
 msgid "Add _Undo to Toolbar"
-msgstr "\"Zettel schließen\" hinzufügen"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
