@@ -168,6 +168,12 @@ xpad_pad_group_close_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_close, NULL);
 }
 
+void
+xpad_pad_group_save_unsaved_all (XpadPadGroup *group)
+{
+	if (group)
+		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_save_unsaved, NULL);
+}
 
 void
 xpad_pad_group_show_all (XpadPadGroup *group)

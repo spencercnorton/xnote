@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-properties.h"
+#include "xpad-periodic.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
 #include "xpad-text-buffer.h"
@@ -67,6 +68,9 @@ struct XpadPadPrivate
 	/* menus */
 	GtkWidget *menu;
 	GtkWidget *highlight_menu;
+
+	gboolean unsaved_content;
+	gboolean unsaved_info;
 	
 	XpadPadGroup *group;
 };
@@ -242,6 +246,8 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->toolbar_expanded = FALSE;
 	pad->priv->toolbar_pad_resized = TRUE;
 	pad->priv->properties = NULL;
+	pad->priv->unsaved_content = TRUE;
+	pad->priv->unsaved_info = TRUE;
 	pad->priv->group = NULL;
 
 	XpadTextView *text_view = g_object_new (XPAD_TYPE_TEXT_VIEW,
@@ -785,7 +791,7 @@ prop_notify_follow_font (XpadPad *pad)
 			pango_font_description_free (fontdesc);
 	}
 	
-	xpad_pad_save_info (pad);
+	xpad_save_info_delayed (pad);
 }
 
 static void
@@ -801,7 +807,7 @@ prop_notify_follow_color (XpadPad *pad)
 		gtk_widget_modify_text (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_text_color (prop));
 	}
 	
-	xpad_pad_save_info (pad);
+	xpad_save_info_delayed (pad);
 }
 
 static void
@@ -811,7 +817,7 @@ prop_notify_text (XpadPad *pad)
 	
 	gtk_widget_modify_text (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_text_color (prop));
 	
-	xpad_pad_save_info (pad);
+	xpad_save_info_delayed (pad);
 }
 
 static void
@@ -821,7 +827,7 @@ prop_notify_back (XpadPad *pad)
 	
 	gtk_widget_modify_base (pad->priv->textview, GTK_STATE_NORMAL, xpad_pad_properties_get_back_color (prop));
 	
-	xpad_pad_save_info (pad);
+	xpad_save_info_delayed (pad);
 }
 
 static void
@@ -837,7 +843,7 @@ prop_notify_font (XpadPad *pad)
 	if (fontdesc)
 		pango_font_description_free (fontdesc);
 	
-	xpad_pad_save_info (pad);
+	xpad_save_info_delayed (pad);
 }
 
 static void
@@ -891,7 +897,7 @@ xpad_pad_open_preferences (XpadPad *pad)
 static void
 xpad_pad_quit (XpadPad *pad)
 {
-	gtk_main_quit ();
+	xpad_app_quit ();
 }
 
 static void
@@ -901,7 +907,7 @@ xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 	xpad_pad_sync_title (pad);
 	
 	/* record change */
-	xpad_pad_save_content (pad);
+	xpad_save_content_delayed(pad);
 }
 
 static gboolean
@@ -926,7 +932,7 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 	pad->priv->height = event->height;
 	pad->priv->location_valid = TRUE;
 	
-	xpad_pad_save_info (pad);
+	xpad_save_content_delayed(pad);
 	
 	/* Sometimes when moving, if the toolbar tries to hide itself,
 		the window manager will not resize it correctly.  So, we make
@@ -1138,6 +1144,7 @@ xpad_pad_load_content (XpadPad *pad)
 	xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
 
 	xpad_pad_text_changed(pad, buffer);
+	pad->priv->unsaved_content = FALSE;
 }
 
 void
@@ -1160,7 +1167,8 @@ xpad_pad_save_content (XpadPad *pad)
 	content = xpad_text_buffer_get_text_with_tags (XPAD_TEXT_BUFFER (buffer));
 	
 	fio_set_file (pad->priv->contentname, content);
-	
+
+	pad->priv->unsaved_content = FALSE;
 	g_free (content);
 }
 
@@ -1195,6 +1203,8 @@ load_info (XpadPad *pad, gboolean *show)
 		"s|content", &pad->priv->contentname,
 		NULL))
 		return;
+
+	pad->priv->unsaved_info = FALSE;
 	
 	pad->priv->location_valid = TRUE;
 	if (xpad_settings_get_has_toolbar (xpad_settings ()) &&
@@ -1302,7 +1312,8 @@ xpad_pad_save_info (XpadPad *pad)
 		"s|fontname", fontname,
 		"s|content", pad->priv->contentname,
 		NULL);
-	
+
+	pad->priv->unsaved_info = FALSE;
 	g_free (fontname);
 }
 
@@ -1476,7 +1487,7 @@ menu_toggle_tag (XpadPad *pad, const gchar *name)
 	XpadTextBuffer *buffer = NULL;
 	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	xpad_text_buffer_toggle_tag (buffer, name);
-	xpad_pad_save_content (pad);
+	xpad_save_content_delayed(pad);
 }
 
 static void
@@ -1876,4 +1887,29 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
 	else
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
+}
+
+/* These functions below are used to reduce the amounts of writes, hence improve the performance. */
+void xpad2_save_content (void * vptr)
+{
+   xpad_pad_save_content(vptr);
+}
+void xpad_save_content_delayed (XpadPad *pad)
+{
+   pad->priv->unsaved_content = TRUE;
+   Xpad_periodic_save_content_delayed(pad);
+}
+void xpad_save_info_delayed (XpadPad *pad)
+{
+   pad->priv->unsaved_info = TRUE;
+   Xpad_periodic_save_info_delayed(pad);
+}
+void xpad_pad_save_unsaved (XpadPad *pad)
+{
+   if(pad->priv->unsaved_content == TRUE) {
+      xpad_pad_save_content(pad);
+   }
+   if(pad->priv->unsaved_info == TRUE) {
+      xpad_pad_save_info(pad);
+   }
 }
