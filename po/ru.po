@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-08 14:17-0500\n"
-"PO-Revision-Date: 2013-10-08 19:50+0000\n"
-"Last-Translator: BasicXP <x12ozmouse@ya.ru>\n"
+"PO-Revision-Date: 2013-10-09 14:05+0000\n"
+"Last-Translator: Kyrill Detinov <Unknown>\n"
 "Language-Team: RU <RU@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-10 04:42+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 "Language: \n"
 
@@ -168,12 +168,10 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  AVL https://launchpad.net/~avl-altlinux\n"
+"  Kyrill Detinov https://launchpad.net/~lazy-kent\n"
+"  Platon Pukhlechev https://launchpad.net/~ifalkorr\n"
 "  Rion https://launchpad.net/~rion4ik\n"
-"\n"
-"Launchpad Contributions:\n"
-"  AVL https://launchpad.net/~avl-altlinux\n"
-"  BasicXP https://launchpad.net/~basicxp\n"
-"  Rion https://launchpad.net/~rion4ik"
+"  Roman A. aka BasicXP https://launchpad.net/~basicxp"
 
 #: ../src/xpad-pad.c:1604
 msgid "_Pad"
@@ -318,19 +316,19 @@ msgstr "Добавить кнопку _Закрыть"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Копировать"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Add C_opy to Toolbar"
-msgstr ""
+msgstr "Добавить _Копировать на панель"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
-msgstr ""
+msgstr "Вырезать"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add C_ut to Toolbar"
-msgstr ""
+msgstr "Добавить _Вырезать на панель"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
@@ -350,11 +348,11 @@ msgstr "Добавить кнопку _Новый стикер"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
-msgstr ""
+msgstr "Вставить"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Add Pa_ste to Toolbar"
-msgstr ""
+msgstr "Добавить Вст_авить на панель"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
@@ -374,11 +372,11 @@ msgstr "Добавить кнопку _Свойства"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
-msgstr ""
+msgstr "Вернуть"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Add _Redo to Toolbar"
-msgstr ""
+msgstr "Добавить Ве_рнуть на панель"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
@@ -390,11 +388,11 @@ msgstr "Добавить кнопку Закрыть _все"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
 #: ../src/xpad-toolbar.c:92
 msgid "Add _Undo to Toolbar"
-msgstr ""
+msgstr "Добавить _Отменить на панель"
 
 #: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
@@ -410,11 +408,11 @@ msgstr "Переместить"
 
 #: ../src/xpad-toolbar.c:758
 msgid "Remove All _Buttons"
-msgstr ""
+msgstr "Удалить в_се кнопки"
 
 #: ../src/xpad-toolbar.c:770
 msgid "Remo_ve Last Button"
-msgstr ""
+msgstr "Удалить _последнюю кнопку"
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
