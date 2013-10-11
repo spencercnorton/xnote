@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-10-08 14:17-0500\n"
+"POT-Creation-Date: 2013-10-11 15:09-0500\n"
 "PO-Revision-Date: 2013-10-10 07:03+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-10-11 04:49+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
-"Language: nl\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -68,8 +68,7 @@ msgstr ""
 "Probeert u het maar eens!"
 
 #: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 "Stuur opmerkingen of problemen a.u.b. naar xpad-devel@lists.sourceforge.net"
 
@@ -77,95 +76,95 @@ msgstr ""
 msgid "Help"
 msgstr "Help"
 
-#: ../src/xpad-app.c:131
+#: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr ""
 "Xpad is een grafisch programma; draai het a.u.b. in een grafische omgeving."
 
-#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
+#: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:457
+#: ../src/xpad-app.c:470
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Kon map %s niet openen."
 
-#: ../src/xpad-app.c:460
+#: ../src/xpad-app.c:473
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
 "Deze map is nodig om voorkeuren en memo's in op te slaan.  Xpad sluit nu af."
 
-#: ../src/xpad-app.c:767
+#: ../src/xpad-app.c:780
 msgid "Show version number and quit"
 msgstr "Versienummer tonen en stoppen"
 
-#: ../src/xpad-app.c:768
+#: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Bij starten geen nieuw memoblaadje aanmaken\n"
 "                                    als er nog geen bestaat"
 
-#: ../src/xpad-app.c:774
+#: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Bij starten altijd een nieuw blaadje aanmaken"
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:788
 msgid "Hide all pads"
 msgstr "Alle memo's verbergen"
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:789
 msgid "Show all pads"
 msgstr "Alle memo's tonen"
 
-#: ../src/xpad-app.c:777
+#: ../src/xpad-app.c:790
 msgid "Toggle between show and hide all pads"
 msgstr "Schakelen tussen alle memo's tonen/verbergen"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "Create a new pad with the contents of a file"
 msgstr "Nieuw memo maken van de inhoud van een bestand"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "FILE"
 msgstr "BESTAND"
 
-#: ../src/xpad-app.c:779
+#: ../src/xpad-app.c:792
 msgid "Close all pads"
 msgstr "Alle memo's afsluiten"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:162
+#: ../src/xpad-pad.c:169
 #, c-format
 msgid "Could not read file %s."
 msgstr "Kon bestand %s niet lezen."
 
-#: ../src/xpad-pad.c:723
+#: ../src/xpad-pad.c:731
 msgid "Delete this pad?"
 msgstr "Dit memo verwijderen?"
 
-#: ../src/xpad-pad.c:724
+#: ../src/xpad-pad.c:732
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle tekst van dit memo zal onherstelbaar verloren gaan."
 
-#: ../src/xpad-pad.c:755
+#: ../src/xpad-pad.c:763
 #, c-format
 msgid "'%s' Properties"
 msgstr "Eigenschappen van '%s'"
 
-#: ../src/xpad-pad.c:1314
+#: ../src/xpad-pad.c:1331
 msgid "Sticky notes"
 msgstr "Memo's"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1333
+#: ../src/xpad-pad.c:1350
 msgid "translator-credits"
 msgstr ""
 "Benno Schulenberg <benno@vertaalt.nl>\n"
@@ -176,60 +175,60 @@ msgstr ""
 "  Jeroen T. Vermeulen https://launchpad.net/~jtv\n"
 "  Pjotr12345 https://launchpad.net/~computertip"
 
-#: ../src/xpad-pad.c:1604
+#: ../src/xpad-pad.c:1625
 msgid "_Pad"
 msgstr "_Memo"
 
-#: ../src/xpad-pad.c:1613
+#: ../src/xpad-pad.c:1634
 msgid "Show on _All Workspaces"
 msgstr "_Op alle werkbladen tonen"
 
-#: ../src/xpad-pad.c:1621
+#: ../src/xpad-pad.c:1642
 msgid "_Edit"
 msgstr "Be_werken"
 
-#: ../src/xpad-pad.c:1644
+#: ../src/xpad-pad.c:1665
 msgid "_View"
 msgstr "Beel_d"
 
-#: ../src/xpad-pad.c:1651
+#: ../src/xpad-pad.c:1672
 msgid "_Toolbar"
 msgstr "_Werkbalk"
 
-#: ../src/xpad-pad.c:1652
+#: ../src/xpad-pad.c:1673
 msgid "_Autohide Toolbar"
 msgstr "Werkbalk _automatisch verbergen"
 
-#: ../src/xpad-pad.c:1654
+#: ../src/xpad-pad.c:1675
 msgid "_Scrollbar"
 msgstr "_Schuifbalk"
 
-#: ../src/xpad-pad.c:1655
+#: ../src/xpad-pad.c:1676
 msgid "_Window Decorations"
 msgstr "_Vensterranden"
 
-#: ../src/xpad-pad.c:1658
+#: ../src/xpad-pad.c:1679
 msgid "_Notes"
 msgstr "_Notities"
 
-#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1687 ../src/xpad-tray.c:130
 msgid "_Show All"
 msgstr "Alle _weergeven"
 
-#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1688 ../src/xpad-tray.c:137
 msgid "_Close All"
 msgstr "Alle _sluiten"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1671
+#: ../src/xpad-pad.c:1692
 msgid "_Help"
 msgstr "_Hulp"
 
-#: ../src/xpad-pad.c:1678
+#: ../src/xpad-pad.c:1699
 msgid "_Contents"
 msgstr "_Inhoud"
 
-#: ../src/xpad-pad.c:1679
+#: ../src/xpad-pad.c:1700
 msgid "_About"
 msgstr "O_ver"
 

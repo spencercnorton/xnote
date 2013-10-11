@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-10-08 14:17-0500\n"
+"POT-Creation-Date: 2013-10-11 15:09-0500\n"
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-"
-"cn@lists.sourceforge.net>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
+"sourceforge.net>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
-"Language: zh_CN\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -28,19 +28,25 @@ msgstr "无法写入文件 %s: %s"
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
-msgstr "每个 xpad 会话有一个或多个打开的页面。这些页面好比你写的便条，然后贴在桌面上。"
+msgstr ""
+"每个 xpad 会话有一个或多个打开的页面。这些页面好比你写的便条，然后贴在桌面"
+"上。"
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr "<b>移动页面</b>，向左拖动工具栏，向右拖动右下角的尺寸标记；或者按住 Ctrl 键不放，同时向左拖动页面。"
+msgstr ""
+"<b>移动页面</b>，向左拖动工具栏，向右拖动右下角的尺寸标记；或者按住 Ctrl 键不"
+"放，同时向左拖动页面。"
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
-msgstr "<b>改变页面大小</b>，向左拖动尺寸标记；或者按住 Ctrl 键不放，同时向右拖动页面。"
+msgstr ""
+"<b>改变页面大小</b>，向左拖动尺寸标记；或者按住 Ctrl 键不放，同时向右拖动页"
+"面。"
 
 #: ../src/help.c:57
 msgid ""
@@ -55,99 +61,98 @@ msgid ""
 msgstr "在某个页面上点击鼠标右键，弹出菜单有更多操作可用。多试试吧。"
 
 #: ../src/help.c:62
-msgid ""
-"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr "请发送评价或缺陷到 xpad-devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
 msgstr "帮助"
 
-#: ../src/xpad-app.c:131
+#: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad 是一个图形化程序。请从您的桌面上运行它。"
 
-#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
+#: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:457
+#: ../src/xpad-app.c:470
 #, c-format
 msgid "Could not open directory %s."
 msgstr "无法打开目录 %s"
 
-#: ../src/xpad-app.c:460
+#: ../src/xpad-app.c:473
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr "需要此目录以存储首选项和便笺信息。Xpad 现在将关闭。"
 
-#: ../src/xpad-app.c:767
+#: ../src/xpad-app.c:780
 msgid "Show version number and quit"
 msgstr "显示版本号然后退出"
 
-#: ../src/xpad-app.c:768
+#: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "即使不存在，启动时也不新建便笺"
 
-#: ../src/xpad-app.c:774
+#: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "即使已经存在，启动时也新建一个便笺"
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:788
 msgid "Hide all pads"
 msgstr "隐藏所有页面"
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:789
 msgid "Show all pads"
 msgstr "显示所有页面"
 
-#: ../src/xpad-app.c:777
+#: ../src/xpad-app.c:790
 msgid "Toggle between show and hide all pads"
 msgstr "在显示和隐藏所有页面之间进行锁定"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "Create a new pad with the contents of a file"
 msgstr "从文件创建一个新便签"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "FILE"
 msgstr "文件"
 
-#: ../src/xpad-app.c:779
+#: ../src/xpad-app.c:792
 msgid "Close all pads"
 msgstr "关闭所有便笺"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:162
+#: ../src/xpad-pad.c:169
 #, c-format
 msgid "Could not read file %s."
 msgstr "无法读入文件 %s。"
 
-#: ../src/xpad-pad.c:723
+#: ../src/xpad-pad.c:731
 msgid "Delete this pad?"
 msgstr "删除此便笺？"
 
-#: ../src/xpad-pad.c:724
+#: ../src/xpad-pad.c:732
 msgid "All text of this pad will be irrevocably lost."
 msgstr "此便笺中的所有文本将不可恢复地丢失。"
 
-#: ../src/xpad-pad.c:755
+#: ../src/xpad-pad.c:763
 #, c-format
 msgid "'%s' Properties"
 msgstr "‘%s’属性"
 
-#: ../src/xpad-pad.c:1314
+#: ../src/xpad-pad.c:1331
 msgid "Sticky notes"
 msgstr "自粘性备注"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1333
+#: ../src/xpad-pad.c:1350
 msgid "translator-credits"
 msgstr ""
 "孟杰 <zuxy.meng@gmail.com>\n"
@@ -159,60 +164,60 @@ msgstr ""
 "  Meng Jie https://launchpad.net/~zuxy-meng\n"
 "  Michael Terry https://launchpad.net/~mterry"
 
-#: ../src/xpad-pad.c:1604
+#: ../src/xpad-pad.c:1625
 msgid "_Pad"
 msgstr "便笺(_P)"
 
-#: ../src/xpad-pad.c:1613
+#: ../src/xpad-pad.c:1634
 msgid "Show on _All Workspaces"
 msgstr "显示于所有工作区中(_A)"
 
-#: ../src/xpad-pad.c:1621
+#: ../src/xpad-pad.c:1642
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: ../src/xpad-pad.c:1644
+#: ../src/xpad-pad.c:1665
 msgid "_View"
 msgstr "查看(_V)"
 
-#: ../src/xpad-pad.c:1651
+#: ../src/xpad-pad.c:1672
 msgid "_Toolbar"
 msgstr "工具栏(_T)"
 
-#: ../src/xpad-pad.c:1652
+#: ../src/xpad-pad.c:1673
 msgid "_Autohide Toolbar"
 msgstr "自动隐藏工具栏(_A)"
 
-#: ../src/xpad-pad.c:1654
+#: ../src/xpad-pad.c:1675
 msgid "_Scrollbar"
 msgstr "滚动条(_S)"
 
-#: ../src/xpad-pad.c:1655
+#: ../src/xpad-pad.c:1676
 msgid "_Window Decorations"
 msgstr "窗口装饰(_W)"
 
-#: ../src/xpad-pad.c:1658
+#: ../src/xpad-pad.c:1679
 msgid "_Notes"
 msgstr "备注(_N)"
 
-#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1687 ../src/xpad-tray.c:130
 msgid "_Show All"
 msgstr "全部显示(_S)"
 
-#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1688 ../src/xpad-tray.c:137
 msgid "_Close All"
 msgstr "全部关闭(_C)"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1671
+#: ../src/xpad-pad.c:1692
 msgid "_Help"
 msgstr "帮助(_H)"
 
-#: ../src/xpad-pad.c:1678
+#: ../src/xpad-pad.c:1699
 msgid "_Contents"
 msgstr "内容(_C)"
 
-#: ../src/xpad-pad.c:1679
+#: ../src/xpad-pad.c:1700
 msgid "_About"
 msgstr "关于(_A)"
 
