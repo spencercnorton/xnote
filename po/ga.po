@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
-"Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: ga\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -54,7 +54,8 @@ msgid ""
 msgstr ""
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 
 #: ../src/help.c:73
@@ -88,7 +89,8 @@ msgstr "Taispeáin an uimhir leagain agus scoir"
 
 #: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
+msgstr ""
+"Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
 
 #: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
@@ -151,9 +153,6 @@ msgstr "Nótaí greamaitheacha"
 msgid "translator-credits"
 msgstr ""
 "Kevin Scannell <scannell@slu.edu>\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Kevin Patrick Scannell https://launchpad.net/~scannell\n"
 "\n"
 "Launchpad Contributions:\n"
 "  Kevin Patrick Scannell https://launchpad.net/~scannell\n"

@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
-"Language: af\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: af\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -54,7 +54,8 @@ msgid ""
 msgstr ""
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 
 #: ../src/help.c:73
@@ -150,9 +151,6 @@ msgstr ""
 #: ../src/xpad-pad.c:1350
 msgid "translator-credits"
 msgstr ""
-"Launchpad Contributions:\n"
-"  Petri Jooste https://launchpad.net/~rkwjpj\n"
-"\n"
 "Launchpad Contributions:\n"
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  Petri Jooste https://launchpad.net/~rkwjpj"

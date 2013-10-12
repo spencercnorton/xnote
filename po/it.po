@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: none\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: \n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -68,7 +68,8 @@ msgstr ""
 "quando si fa clic con il pulsante destro su un blocchetto. Buon divertimento."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr "Inviare commenti e segnalare bug a xpad-devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
@@ -168,9 +169,8 @@ msgstr "Foglietti adesivi"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Michael Terry https://launchpad.net/~mterry\n"
-"\n"
-"Launchpad Contributions:\n"
+"  Gianfranco Frisani https://launchpad.net/~gfrisani\n"
+"  LoReNicolò https://launchpad.net/~god121-p-l\n"
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  Michele Gastaldo https://launchpad.net/~poomerang"
 

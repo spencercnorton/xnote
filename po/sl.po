@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad-2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 14:17-0500\n"
+"POT-Creation-Date: 2013-10-11 15:09-0500\n"
 "PO-Revision-Date: 2013-10-10 07:04+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-11 04:49+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -76,20 +76,20 @@ msgstr ""
 msgid "Help"
 msgstr "Pomoč"
 
-#: ../src/xpad-app.c:131
+#: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad je grafični program.  Zaženi ga iz namizja."
 
-#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
+#: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:457
+#: ../src/xpad-app.c:470
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Ne morem odpreti mape %s."
 
-#: ../src/xpad-app.c:460
+#: ../src/xpad-app.c:473
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -97,72 +97,72 @@ msgstr ""
 "Ta mapa je potrebna za shranjevanje uporabniških izbir in informacij o "
 "lističih. Xpad se bo izključil."
 
-#: ../src/xpad-app.c:767
+#: ../src/xpad-app.c:780
 msgid "Show version number and quit"
 msgstr "Pokaži verzijo in zaključi"
 
-#: ../src/xpad-app.c:768
+#: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Ne ustvari novega lističa ob zagonu, če že ne obstaja noben listič"
 
-#: ../src/xpad-app.c:774
+#: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Ustvari nov listič ob zagonu tudi če drugi že obstajajo"
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:788
 msgid "Hide all pads"
 msgstr "Skrij vse bloke"
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:789
 msgid "Show all pads"
 msgstr "Pokaži vse bloke"
 
-#: ../src/xpad-app.c:777
+#: ../src/xpad-app.c:790
 msgid "Toggle between show and hide all pads"
 msgstr "Preklopi med pokaži ali skrij vse bloke"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "Create a new pad with the contents of a file"
 msgstr "Ustvari nov listič z vsebino datoteke"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "FILE"
 msgstr "DATOTEKA"
 
-#: ../src/xpad-app.c:779
+#: ../src/xpad-app.c:792
 msgid "Close all pads"
 msgstr "Zapri vse lističe"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:162
+#: ../src/xpad-pad.c:169
 #, c-format
 msgid "Could not read file %s."
 msgstr "Ne morem prebrati datoteke %s."
 
-#: ../src/xpad-pad.c:723
+#: ../src/xpad-pad.c:731
 msgid "Delete this pad?"
 msgstr "Odstranim ta listič?"
 
-#: ../src/xpad-pad.c:724
+#: ../src/xpad-pad.c:732
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Ves tekst s tega lističa bo izgubljen."
 
-#: ../src/xpad-pad.c:755
+#: ../src/xpad-pad.c:763
 #, c-format
 msgid "'%s' Properties"
 msgstr "'%s' Lastnosti"
 
-#: ../src/xpad-pad.c:1314
+#: ../src/xpad-pad.c:1331
 msgid "Sticky notes"
 msgstr "Lepljivi lističi"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1333
+#: ../src/xpad-pad.c:1350
 msgid "translator-credits"
 msgstr ""
 "prevajalec\n"
@@ -172,60 +172,60 @@ msgstr ""
 "  Dražen Matešić https://launchpad.net/~crazylemon\n"
 "  Matej Urbančič https://launchpad.net/~matej-urban"
 
-#: ../src/xpad-pad.c:1604
+#: ../src/xpad-pad.c:1625
 msgid "_Pad"
 msgstr "_Listič"
 
-#: ../src/xpad-pad.c:1613
+#: ../src/xpad-pad.c:1634
 msgid "Show on _All Workspaces"
 msgstr "Prikaži na vseh namizjih"
 
-#: ../src/xpad-pad.c:1621
+#: ../src/xpad-pad.c:1642
 msgid "_Edit"
 msgstr "_Uredi"
 
-#: ../src/xpad-pad.c:1644
+#: ../src/xpad-pad.c:1665
 msgid "_View"
 msgstr "_Poglej"
 
-#: ../src/xpad-pad.c:1651
+#: ../src/xpad-pad.c:1672
 msgid "_Toolbar"
 msgstr "_Orodni trak"
 
-#: ../src/xpad-pad.c:1652
+#: ../src/xpad-pad.c:1673
 msgid "_Autohide Toolbar"
 msgstr "_Samodejno skrij orodni trak"
 
-#: ../src/xpad-pad.c:1654
+#: ../src/xpad-pad.c:1675
 msgid "_Scrollbar"
 msgstr "_Drsnik"
 
-#: ../src/xpad-pad.c:1655
+#: ../src/xpad-pad.c:1676
 msgid "_Window Decorations"
 msgstr "O_kraševanje oken"
 
-#: ../src/xpad-pad.c:1658
+#: ../src/xpad-pad.c:1679
 msgid "_Notes"
 msgstr "Opo_mbe"
 
-#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1687 ../src/xpad-tray.c:130
 msgid "_Show All"
 msgstr "Prikaži _vse"
 
-#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1688 ../src/xpad-tray.c:137
 msgid "_Close All"
 msgstr "_Zapri vse"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1671
+#: ../src/xpad-pad.c:1692
 msgid "_Help"
 msgstr "Pomo_č"
 
-#: ../src/xpad-pad.c:1678
+#: ../src/xpad-pad.c:1699
 msgid "_Contents"
 msgstr "_Vsebina"
 
-#: ../src/xpad-pad.c:1679
+#: ../src/xpad-pad.c:1700
 msgid "_About"
 msgstr "O Pro_gramu"
 

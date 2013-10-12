@@ -10,12 +10,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: hu\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -65,7 +65,8 @@ msgstr ""
 "kattintással jelenik meg. Próbálja ki és élvezze."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 "Kérem küldjön megjegyzéseket vagy hiba jelentéseket a következõ címre xpad-"
 "devel@lists.sourceforge.net"
@@ -101,7 +102,8 @@ msgstr "Verziószám megjelenítése és kilépés"
 
 #: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ne hozzon létre új jegyzetet indításkor ha az elõzõbõl nem léptünk ki"
+msgstr ""
+"Ne hozzon létre új jegyzetet indításkor ha az elõzõbõl nem léptünk ki"
 
 #: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
@@ -166,12 +168,11 @@ msgstr ""
 "Németh Csaba <csaba@sopron.hu>\n"
 "\n"
 "Launchpad Contributions:\n"
-"  1soproni https://launchpad.net/~csaba\n"
+"  Fox https://launchpad.net/~younfox\n"
 "  Gabor Kelemen https://launchpad.net/~kelemeng\n"
-"\n"
-"Launchpad Contributions:\n"
-"  1soproni https://launchpad.net/~csaba\n"
-"  Gabor Kelemen https://launchpad.net/~kelemeng"
+"  Krasznecz Zoltán https://launchpad.net/~krasznecz-zoltan\n"
+"  Muszela Balázs https://launchpad.net/~bazsi86-deactivatedaccount\n"
+"  Németh Csaba https://launchpad.net/~1soproni"
 
 #: ../src/xpad-pad.c:1625
 msgid "_Pad"

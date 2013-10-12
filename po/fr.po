@@ -10,12 +10,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-10 07:02+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: French <traduc@traduc.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-11 04:49+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: fr\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -67,7 +67,8 @@ msgstr ""
 "vous faites un clic-droit sur une note. Essayez-le pour voir."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 "Merci de transmettre vos commentaires ou rapports d'anomalies à xpad-"
 "devel@lists.sourceforge.net (en anglais)"

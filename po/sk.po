@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 14:17-0500\n"
+"POT-Creation-Date: 2013-10-11 15:09-0500\n"
 "PO-Revision-Date: 2013-10-10 07:04+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-11 04:49+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
 
 #: ../src/fio.c:129
@@ -62,20 +62,20 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: ../src/xpad-app.c:131
+#: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad je grafický program.  Prosím, spustite ho z pracovnej plochy."
 
-#: ../src/xpad-app.c:136 ../xpad.desktop.in.h:1
+#: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:457
+#: ../src/xpad-app.c:470
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Priečinok %s sa nedá otvoriť."
 
-#: ../src/xpad-app.c:460
+#: ../src/xpad-app.c:473
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -83,72 +83,72 @@ msgstr ""
 "Tento priečinok je potrebný pre uloženie nastavení a blokov.  Xpad sa teraz "
 "ukončí."
 
-#: ../src/xpad-app.c:767
+#: ../src/xpad-app.c:780
 msgid "Show version number and quit"
 msgstr "Zobraziť číslo verzie a ukončiť"
 
-#: ../src/xpad-app.c:768
+#: ../src/xpad-app.c:781
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Ak už nejaké bloky existujú, pri štarte nevytvárať nový blok"
 
-#: ../src/xpad-app.c:774
+#: ../src/xpad-app.c:787
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Vytvoriť nový blok pri štarte aj v prípade, že už nejaké existujú"
 
-#: ../src/xpad-app.c:775
+#: ../src/xpad-app.c:788
 msgid "Hide all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:776
+#: ../src/xpad-app.c:789
 msgid "Show all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:777
+#: ../src/xpad-app.c:790
 msgid "Toggle between show and hide all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "Create a new pad with the contents of a file"
 msgstr "Vytvoriť nový blok s obsahom súboru"
 
-#: ../src/xpad-app.c:778
+#: ../src/xpad-app.c:791
 msgid "FILE"
 msgstr "SÚBOR"
 
-#: ../src/xpad-app.c:779
+#: ../src/xpad-app.c:792
 msgid "Close all pads"
 msgstr "Zatvoriť všetky bloky"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:162
+#: ../src/xpad-pad.c:169
 #, c-format
 msgid "Could not read file %s."
 msgstr "Nedá sa čítať zo súboru %s."
 
-#: ../src/xpad-pad.c:723
+#: ../src/xpad-pad.c:731
 msgid "Delete this pad?"
 msgstr "Odstrániť tento blok?"
 
-#: ../src/xpad-pad.c:724
+#: ../src/xpad-pad.c:732
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Všetok text v tomto bloku bude nenávratne stratený."
 
-#: ../src/xpad-pad.c:755
+#: ../src/xpad-pad.c:763
 #, c-format
 msgid "'%s' Properties"
 msgstr "„%s“ Vlastnosti"
 
-#: ../src/xpad-pad.c:1314
+#: ../src/xpad-pad.c:1331
 msgid "Sticky notes"
 msgstr "Prilepené poznámky"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1333
+#: ../src/xpad-pad.c:1350
 msgid "translator-credits"
 msgstr ""
 "Andrej Kacian <andrej@kacian.sk>\n"
@@ -157,60 +157,60 @@ msgstr ""
 "  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
 "  helix84 https://launchpad.net/~helix84"
 
-#: ../src/xpad-pad.c:1604
+#: ../src/xpad-pad.c:1625
 msgid "_Pad"
 msgstr "_Blok"
 
-#: ../src/xpad-pad.c:1613
+#: ../src/xpad-pad.c:1634
 msgid "Show on _All Workspaces"
 msgstr "Zobraziť na _všetkých plochách"
 
-#: ../src/xpad-pad.c:1621
+#: ../src/xpad-pad.c:1642
 msgid "_Edit"
 msgstr "_Upraviť"
 
-#: ../src/xpad-pad.c:1644
+#: ../src/xpad-pad.c:1665
 msgid "_View"
 msgstr "_Zobraziť"
 
-#: ../src/xpad-pad.c:1651
+#: ../src/xpad-pad.c:1672
 msgid "_Toolbar"
 msgstr "_Panel nástrojov"
 
-#: ../src/xpad-pad.c:1652
+#: ../src/xpad-pad.c:1673
 msgid "_Autohide Toolbar"
 msgstr "_Automaticky skryť panel nástrojov"
 
-#: ../src/xpad-pad.c:1654
+#: ../src/xpad-pad.c:1675
 msgid "_Scrollbar"
 msgstr "_Posuvná lišta"
 
-#: ../src/xpad-pad.c:1655
+#: ../src/xpad-pad.c:1676
 msgid "_Window Decorations"
 msgstr "_Dekorácie okna"
 
-#: ../src/xpad-pad.c:1658
+#: ../src/xpad-pad.c:1679
 msgid "_Notes"
 msgstr "_Poznámky"
 
-#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:130
+#: ../src/xpad-pad.c:1687 ../src/xpad-tray.c:130
 msgid "_Show All"
 msgstr "Zobraziť _všetky"
 
-#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1688 ../src/xpad-tray.c:137
 msgid "_Close All"
 msgstr "Z_atvoriť všetky"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1671
+#: ../src/xpad-pad.c:1692
 msgid "_Help"
 msgstr "_Nápoveda"
 
-#: ../src/xpad-pad.c:1678
+#: ../src/xpad-pad.c:1699
 msgid "_Contents"
 msgstr "O_bsah"
 
-#: ../src/xpad-pad.c:1679
+#: ../src/xpad-pad.c:1700
 msgid "_About"
 msgstr "_O programe"
 

@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Stevo-88 <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: hr\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -67,10 +67,11 @@ msgstr ""
 "kliknete na blok desnom tipkom. Iskušajte i uživajte!"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Molimo Vas da komentare ili prijave grešaka šaljete na xpad-devel@lists."
-"sourceforge.net."
+"Molimo Vas da komentare ili prijave grešaka šaljete na xpad-"
+"devel@lists.sourceforge.net."
 
 #: ../src/help.c:73
 msgid "Help"
@@ -168,6 +169,9 @@ msgstr "Papirići"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Michael Terry https://launchpad.net/~mterry\n"
+"  Miro Glavić https://launchpad.net/~klek\n"
+"  Saša Teković https://launchpad.net/~hseagle2015\n"
 "  Stevo-88 https://launchpad.net/~stevo-8888"
 
 #: ../src/xpad-pad.c:1625

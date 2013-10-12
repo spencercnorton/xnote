@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Paco Molinero <paco@byasl.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: es\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -67,10 +67,11 @@ msgstr ""
 "el botón derecho en una nota. Pruébelas y disfrute"
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
-"Por favor, envíe comentarios o informes de error a xpad-devel@lists."
-"sourceforge.net"
+"Por favor, envíe comentarios o informes de error a xpad-"
+"devel@lists.sourceforge.net"
 
 #: ../src/help.c:73
 msgid "Help"
@@ -78,7 +79,8 @@ msgstr "Ayuda"
 
 #: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad es un programa gráfico. Por favor ejecútelo desde el escritorio."
+msgstr ""
+"Xpad es un programa gráfico. Por favor ejecútelo desde el escritorio."
 
 #: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -167,14 +169,12 @@ msgstr "Post-it"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Andres E. Rodriguez Lazo https://launchpad.net/~andreserl\n"
-"  Ramón Rey Vicente https://launchpad.net/~ramon-rey\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Andres E. Rodriguez Lazo https://launchpad.net/~andreserl\n"
+"  Andres Rodriguez https://launchpad.net/~andreserl\n"
+"  Feder Sáiz https://launchpad.net/~federsaiz-deactivatedaccount\n"
 "  Felix https://launchpad.net/~shuko\n"
 "  Paco Molinero https://launchpad.net/~franciscomol\n"
-"  Ramón Rey Vicente https://launchpad.net/~ramon-rey"
+"  Ramón Rey Vicente https://launchpad.net/~ramon-rey\n"
+"  angvp https://launchpad.net/~angvp"
 
 #: ../src/xpad-pad.c:1625
 msgid "_Pad"

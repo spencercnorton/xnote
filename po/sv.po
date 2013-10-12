@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-08 19:50+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-09 05:19+0000\n"
+"X-Launchpad-Export-Date: 2013-10-12 05:02+0000\n"
 "X-Generator: Launchpad (build 16799)\n"
+"Language: sv\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -67,7 +67,8 @@ msgstr ""
 "högerklickar på ett block.  Prova det och lycka till."
 
 #: ../src/help.c:62
-msgid "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+msgid ""
+"Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 msgstr ""
 "Skicka kommentarer eller felrapporter till xpad-devel@lists.sourceforge.net"
 
@@ -170,9 +171,7 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Daniel Nylander https://launchpad.net/~yeager\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Daniel Nylander https://launchpad.net/~yeager"
+"  nairobie https://launchpad.net/~samuel-ostman"
 
 #: ../src/xpad-pad.c:1625
 msgid "_Pad"
