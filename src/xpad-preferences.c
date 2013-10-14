@@ -285,7 +285,8 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->trayconfigbox = gtk_combo_box_new_text();
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Do Nothing" );
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Toggle Show All" );
-	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "New Note" );
+	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "List of Pads" );
+	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "New Pad" );
 	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), xpad_settings_get_tray_click_handler(xpad_settings()));
 
 	hbox = gtk_hbox_new(FALSE, 12);
