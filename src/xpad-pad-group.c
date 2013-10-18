@@ -18,20 +18,18 @@
  */
 
 #include "xpad-pad-group.h"
+#include "xpad-settings.h"
 #include "xpad-pad.h"
-
-G_DEFINE_TYPE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
-
-#define XPAD_PAD_GROUP_GET_PRIVATE(object)  (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PAD_GROUP, XpadPadGroupPrivate))
 
 struct XpadPadGroupPrivate
 {
 	GSList *pads;
 };
 
-static void     xpad_pad_group_dispose           (GObject *object);
+G_DEFINE_TYPE_WITH_PRIVATE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
-static void     xpad_pad_group_destroy_pads      (XpadPadGroup *group);
+static void     xpad_pad_group_dispose           (GObject *object);
+static void     xpad_pad_group_finalize          (GObject *object);
 
 enum {
 	PROP_0
@@ -53,11 +51,20 @@ xpad_pad_group_new (void)
 }
 
 static void
+xpad_pad_group_init (XpadPadGroup *group)
+{
+	group->priv = xpad_pad_group_get_instance_private(group);
+
+	group->priv->pads = NULL;
+}
+
+static void
 xpad_pad_group_class_init (XpadPadGroupClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
 	object_class->dispose = xpad_pad_group_dispose;
+	object_class->finalize = xpad_pad_group_finalize;
 	
 	signals[PAD_ADDED] =
 		g_signal_new ("pad_added",
@@ -80,8 +87,6 @@ xpad_pad_group_class_init (XpadPadGroupClass *klass)
 		              G_TYPE_NONE,
 		              1,
 		              GTK_TYPE_WIDGET);
-	
-	g_type_class_add_private (object_class, sizeof (XpadPadGroupPrivate));
 }
 
 static void
@@ -89,17 +94,22 @@ xpad_pad_group_dispose (GObject *object)
 {
 	XpadPadGroup *group = XPAD_PAD_GROUP (object);
 
-	xpad_pad_group_destroy_pads (group);
+	// Save all pads of this group
+	xpad_pad_group_save_unsaved_all(group);
+
+	G_OBJECT_CLASS (xpad_pad_group_parent_class)->dispose (object);
 }
 
 static void
-xpad_pad_group_init (XpadPadGroup *group)
+xpad_pad_group_finalize (GObject *object)
 {
-	group->priv = XPAD_PAD_GROUP_GET_PRIVATE (group);
-	
-	group->priv->pads = NULL;
-}
+	XpadPadGroup *group = XPAD_PAD_GROUP (object);
 
+	g_slist_free (group->priv->pads);
+	group->priv->pads = NULL;
+
+	G_OBJECT_CLASS (xpad_pad_group_parent_class)->finalize (object);
+}
 
 GSList *
 xpad_pad_group_get_pads (XpadPadGroup *group)
@@ -107,13 +117,12 @@ xpad_pad_group_get_pads (XpadPadGroup *group)
 	return g_slist_copy (group->priv->pads);
 }
 
-
-/* Subsumes a pad into this group */
+/* Add a pad to this group */
 void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
 	g_object_ref(pad);
-	g_object_ref_sink(GTK_OBJECT(pad));
+	// g_object_ref_sink(GTK_OBJECT(pad));
 	
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);
@@ -121,21 +130,19 @@ xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 	g_signal_emit (group, signals[PAD_ADDED], 0, pad);
 }
 
-
-/* Removes a pad from this group */
+/* Remove a pad from this group */
 void
 xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 {
 	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
-	
-	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
-	
 	g_object_unref(pad);
+	pad = NULL;
+
+	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
 }
 
-
-/* Deletes all the current pads in the group */
-static void
+/* Delete all the current pads in the group */
+void
 xpad_pad_group_destroy_pads (XpadPadGroup *group)
 {
 	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
@@ -143,6 +150,11 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 	group->priv->pads = NULL;
 }
 
+guint
+xpad_pad_group_num_pads (XpadPadGroup *group)
+{
+	return g_slist_length(group->priv->pads);
+}
 
 gint
 xpad_pad_group_num_visible_pads (XpadPadGroup *group)
@@ -156,10 +168,10 @@ xpad_pad_group_num_visible_pads (XpadPadGroup *group)
 			if (GTK_WIDGET_VISIBLE(GTK_WIDGET(i->data)))
 				num ++;
 		}
+		g_slist_free(i);
 	}
 	return num;
 }
-
 
 void
 xpad_pad_group_close_all (XpadPadGroup *group)
@@ -182,11 +194,9 @@ xpad_pad_group_show_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_show, NULL);
 }
 
-
 void
 xpad_pad_group_toggle_hide(XpadPadGroup *group)
 {
 	if (group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_toggle, NULL);
 }
-

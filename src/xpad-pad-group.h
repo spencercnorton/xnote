@@ -64,6 +64,7 @@ void     xpad_pad_group_toggle_hide      (XpadPadGroup *group);
 GSList * xpad_pad_group_get_pads         (XpadPadGroup *group);
 gint     xpad_pad_group_num_visible_pads (XpadPadGroup *group);
 void     xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
+void     xpad_pad_group_destroy_pads     (XpadPadGroup *group);
 
 G_END_DECLS
 

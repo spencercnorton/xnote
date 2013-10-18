@@ -25,9 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
 
-G_DEFINE_TYPE(XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
-#define XPAD_PREFERENCES_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PREFERENCES, XpadPreferencesPrivate))
-
 struct XpadPreferencesPrivate 
 {
 	GtkWidget *fontcheck;
@@ -60,6 +57,8 @@ struct XpadPreferencesPrivate
 	guint confirmcheck_handler;
 };
 
+G_DEFINE_TYPE_WITH_PRIVATE(XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
+
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_sticky_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
@@ -74,6 +73,7 @@ static void notify_confirm (XpadPreferences *pref);
 static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
 static void notify_back_color (XpadPreferences *pref);
+static void xpad_preferences_dispose (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
 static void xpad_preferences_response (GtkDialog *dialog, gint response);
 
@@ -98,10 +98,9 @@ static void
 xpad_preferences_class_init (XpadPreferencesClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-	
+
+	gobject_class->dispose = xpad_preferences_dispose;
 	gobject_class->finalize = xpad_preferences_finalize;
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadPreferencesPrivate));
 }
 
 static void
@@ -117,7 +116,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	GtkRequisition req;
 	
-	pref->priv = XPAD_PREFERENCES_GET_PRIVATE (pref);
+	pref->priv = xpad_preferences_get_instance_private(pref);
 	
 	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
 	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
@@ -312,11 +311,15 @@ xpad_preferences_init (XpadPreferences *pref)
 }
 
 static void
+xpad_preferences_dispose (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_preferences_parent_class)->dispose (object);
+}
+
+static void
 xpad_preferences_finalize (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
-	
-	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pref);
 	
 	G_OBJECT_CLASS (xpad_preferences_parent_class)->finalize (object);
 }

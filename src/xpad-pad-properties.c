@@ -22,9 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include "xpad-pad-properties.h"
 
-G_DEFINE_TYPE(XpadPadProperties, xpad_pad_properties, GTK_TYPE_DIALOG)
-#define XPAD_PAD_PROPERTIES_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PAD_PROPERTIES, XpadPadPropertiesPrivate))
-
 struct XpadPadPropertiesPrivate 
 {
 	GtkWidget *fontcheck;
@@ -40,6 +37,10 @@ struct XpadPadPropertiesPrivate
 	GtkWidget *fontbutton;
 };
 
+G_DEFINE_TYPE_WITH_PRIVATE(XpadPadProperties, xpad_pad_properties, GTK_TYPE_DIALOG)
+
+static void xpad_pad_properties_dispose (GObject *object);
+static void xpad_pad_properties_finalize (GObject *object);
 static void xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_response (GtkDialog *dialog, gint response);
@@ -71,6 +72,8 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	
+	gobject_class->dispose = xpad_pad_properties_dispose;
+	gobject_class->finalize = xpad_pad_properties_finalize;
 	gobject_class->set_property = xpad_pad_properties_set_property;
 	gobject_class->get_property = xpad_pad_properties_get_property;
 	
@@ -115,8 +118,6 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 	                                                      "The name of the font for the pad",
 	                                                      NULL,
 	                                                      G_PARAM_READWRITE));
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadPadPropertiesPrivate));
 }
 
 static void
@@ -127,7 +128,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gchar *text;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	
-	prop->priv = XPAD_PAD_PROPERTIES_GET_PRIVATE (prop);
+	prop->priv = xpad_pad_properties_get_instance_private(prop);
 	
 	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
 	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
@@ -230,6 +231,25 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 		"child", appearance_frame,
 		NULL);
 	gtk_widget_show_all (GTK_DIALOG (prop)->vbox);
+}
+
+static void
+xpad_pad_properties_dispose (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_pad_properties_parent_class)->dispose (object);
+}
+
+static void
+xpad_pad_properties_finalize (GObject *object)
+{
+	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (object);
+
+	if (&prop->priv->texttmp)
+		gdk_color_free (&prop->priv->texttmp);
+	if (&prop->priv->backtmp != NULL)
+		gdk_color_free (&prop->priv->backtmp);
+
+	G_OBJECT_CLASS (xpad_pad_properties_parent_class)->finalize (object);
 }
 
 static void

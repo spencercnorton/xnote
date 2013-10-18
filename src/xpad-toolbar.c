@@ -26,25 +26,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-settings.h"
 #include "xpad-grip-tool-item.h"
 
-G_DEFINE_TYPE(XpadToolbar, xpad_toolbar, GTK_TYPE_TOOLBAR)
-#define XPAD_TOOLBAR_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_TOOLBAR, XpadToolbarPrivate))
-
-enum {
-	XPAD_BUTTON_TYPE_SEPARATOR,
-	XPAD_BUTTON_TYPE_BUTTON,
-	XPAD_BUTTON_TYPE_TOGGLE
-};
-
 struct XpadToolbarPrivate
 {
-	GtkToolItem *move_button;
 	gboolean move_removed;
 	guint move_index;
 	guint move_motion_handler;
 	guint move_button_release_handler;
 	guint move_key_press_handler;
-	GtkToolItem *tool_items;
 	XpadPad *pad;
+	// GtkToolItem *move_button;
+	// GtkToolItem *tool_items;
+};
+
+G_DEFINE_TYPE_WITH_PRIVATE(XpadToolbar, xpad_toolbar, GTK_TYPE_TOOLBAR)
+
+enum {
+	XPAD_BUTTON_TYPE_SEPARATOR,
+	XPAD_BUTTON_TYPE_BUTTON,
+	XPAD_BUTTON_TYPE_TOGGLE
 };
 
 typedef struct
@@ -94,26 +93,28 @@ static const XpadToolbarButton buttons[] =
 	/*{"Minimize to Tray", "gtk-goto-bottom", 1, N_("Minimize Pads to System Tray")}*/
 };
 
-
 static G_CONST_RETURN XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
 static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button);
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
+static void xpad_toolbar_dispose (GObject *object);
 static void xpad_toolbar_finalize (GObject *object);
 static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_toolbar_remove_all_buttons ();
 static void xpad_toolbar_remove_last_button ();
 static void xpad_toolbar_add_button (const gchar *button_name);
+static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
+
+/* Unfinished new feature of previous developer
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
-static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
 static gboolean xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar);
-
 static gboolean xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button);
 static gboolean xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event);
 static gboolean xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event);
 static gboolean xpad_toolbar_move_button_end (XpadToolbar *toolbar);
+*/
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
@@ -139,6 +140,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
 	gobject_class->set_property = xpad_toolbar_set_property;
 	gobject_class->get_property = xpad_toolbar_get_property;
+	gobject_class->dispose = xpad_toolbar_dispose;
 	gobject_class->finalize = xpad_toolbar_finalize;
 	
 	/* Signals */
@@ -260,16 +262,13 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 									"Pad ",
 									"Pad associated with this toolbar",
 									G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadToolbarPrivate));
 }
 
 static void
 xpad_toolbar_init (XpadToolbar *toolbar)
 {
-	toolbar->priv = XPAD_TOOLBAR_GET_PRIVATE (toolbar);
+	toolbar->priv = xpad_toolbar_get_instance_private(toolbar);
 
-	toolbar->priv->pad = NULL;	
 	toolbar->priv->move_motion_handler = 0;
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
@@ -286,17 +285,21 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 }
 
 static void
-xpad_toolbar_finalize (GObject *object)
+xpad_toolbar_dispose (GObject *object)
 {
 	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
 	
-	if (toolbar->priv->move_button)
-		g_object_unref (toolbar->priv->move_button);
-	if (toolbar->priv->pad)
+	if (toolbar->priv->pad) {
 		g_object_unref (toolbar->priv->pad);
-	
-	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, toolbar);
-	
+		toolbar->priv->pad = NULL;
+	}
+
+	G_OBJECT_CLASS (xpad_toolbar_parent_class)->dispose (object);
+}
+
+static void
+xpad_toolbar_finalize (GObject *object)
+{
 	G_OBJECT_CLASS (xpad_toolbar_parent_class)->finalize (object);
 }
 
@@ -340,30 +343,10 @@ xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParam
 	}
 }
 
-static gboolean
-xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event)
-{
-	/* Ignore double-clicks and triple-clicks */
-	if (event->button == 3 && event->type == GDK_BUTTON_PRESS)
-	{
-		XpadToolbar *toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (widget), "xpad-toolbar"));
-		xpad_toolbar_popup_button_menu (widget, event, toolbar);
-		return TRUE;
-	}
-	else if (event->button == 2 && event->type == GDK_BUTTON_PRESS)
-	{
-		XpadToolbar *toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (widget), "xpad-toolbar"));
-		xpad_toolbar_move_button_start (toolbar, widget);
-		return TRUE;
-	}
-	
-	return FALSE;
-}
-
 static G_CONST_RETURN XpadToolbarButton *
 xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name)
 {
-	gint i;
+	guint i;
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 		if (!g_ascii_strcasecmp (name, buttons[i].name))
 			return &buttons[i];
@@ -375,7 +358,7 @@ static GtkToolItem *
 xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button)
 {
 	GtkToolItem *item;
-	GtkWidget *child;
+	// GtkWidget *child;
 
 	item = GTK_TOOL_ITEM (g_object_get_data (G_OBJECT (toolbar), button->name));
 	if (item)
@@ -406,17 +389,6 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	if (button->desc)
 		gtk_tool_item_set_tooltip_text (item, _(button->desc));
 
-	// This won't work anymore because we make some buttons insensitive
-	// so we cannot handle right clicks on them anymore. That's why we just add "Remove all butons"
-	// and "Remove last button" to toolbar context menu
-	/*
-	child = gtk_bin_get_child (GTK_BIN (item));
-	if (child)
-	{
-		g_signal_connect_swapped (child, "button-press-event", G_CALLBACK (xpad_toolbar_button_press_event), item);
-	}
-	*/
-
 	return item;
 }
 
@@ -437,7 +409,8 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 {
 	GList *list, *temp;
 	const GSList *slist, *stemp;
-	gint i = 0, j;
+	gint i = 0;
+	guint j = 0;
 	GtkToolItem *item;
 	
 	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
@@ -446,6 +419,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 		gtk_widget_destroy (temp->data);
 	
 	g_list_free (list);
+	g_list_free (temp);
 
 	for (j = 0; j < G_N_ELEMENTS (buttons); j++)
 		g_object_set_data (G_OBJECT (toolbar), buttons[j].name, NULL);
@@ -510,198 +484,9 @@ xpad_toolbar_add_button (const gchar *name)
 }
 
 static void
-xpad_toolbar_remove_button (GtkWidget *button)
-{
-	gint button_num;
-	
-	button_num = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "xpad-button-num"));
-	
-	xpad_settings_remove_toolbar_button (xpad_settings (), button_num);
-}
-
-static gboolean
-xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button)
-{
-	GdkGrabStatus  status;
-	GdkCursor     *fleur_cursor;
-	GtkWidget *widget;
-	
-	widget = GTK_WIDGET (toolbar);
-	gtk_grab_add (widget);
-	
-	fleur_cursor = gdk_cursor_new (GDK_FLEUR);
-	
-	g_object_ref (button);
-	toolbar->priv->move_removed = FALSE;
-	toolbar->priv->move_button = GTK_TOOL_ITEM (button);
-	toolbar->priv->move_index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "xpad-button-num"));
-	
-	toolbar->priv->move_button_release_handler = g_signal_connect (toolbar, "button-release-event", G_CALLBACK (xpad_toolbar_move_button_end), NULL);
-	toolbar->priv->move_key_press_handler = g_signal_connect (toolbar, "key-press-event", G_CALLBACK (xpad_toolbar_move_button_move_keyboard), NULL);
-	toolbar->priv->move_motion_handler = g_signal_connect (toolbar, "motion-notify-event", G_CALLBACK (xpad_toolbar_move_button_move), NULL);
-	
-	status = gdk_pointer_grab (widget->window, FALSE,
-				   GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK, NULL,
-				   fleur_cursor, gtk_get_current_event_time ());
-	
-	gdk_cursor_unref (fleur_cursor);
-	gdk_flush ();
-	
-	if (status != GDK_GRAB_SUCCESS)
-	{
-		xpad_toolbar_move_button_end (toolbar);
-	}
-	
-	return TRUE;
-}
-
-static gboolean
-xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event)
-{
-	if (event->keyval == GDK_Left || event->keyval == GDK_KP_Left)
-	{
-		if (!toolbar->priv->move_removed)
-		{
-			toolbar->priv->move_removed = TRUE;
-			gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
-		}
-		
-		if (toolbar->priv->move_index > 0)
-			toolbar->priv->move_index--;
-		
-		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
-	}
-	else if (event->keyval == GDK_Right || event->keyval == GDK_KP_Right)
-	{
-		gint max;
-		
-		if (!toolbar->priv->move_removed)
-		{
-			toolbar->priv->move_removed = TRUE;
-			gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
-		}
-		
-		max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
-		
-		if (toolbar->priv->move_index < max)
-			toolbar->priv->move_index++;
-		
-		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
-	}
-	else if (event->keyval == GDK_space || event->keyval == GDK_KP_Space || event->keyval == GDK_Return || event->keyval == GDK_KP_Enter)
-	{
-		xpad_toolbar_move_button_end (toolbar);
-		return TRUE;
-	}
-	
-	return TRUE;
-}
-
-static gboolean
-xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event)
-{
-	gint max;
-	
-	if (!toolbar->priv->move_removed)
-	{
-		toolbar->priv->move_removed = TRUE;
-		gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
-	}
-	
-	toolbar->priv->move_index = gtk_toolbar_get_drop_index (GTK_TOOLBAR (toolbar), event->x, event->y);
-	
-	/* Must not move past separator or grip */
-	max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
-	toolbar->priv->move_index = MIN (toolbar->priv->move_index, max);
-	
-	gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
-	
-	return TRUE;
-}
-
-static gboolean
-xpad_toolbar_move_button_end (XpadToolbar *toolbar)
-{
-	gint old_spot;
-	gint max;
-	
-	g_signal_handler_disconnect (toolbar, toolbar->priv->move_button_release_handler);
-	g_signal_handler_disconnect (toolbar, toolbar->priv->move_key_press_handler);
-	g_signal_handler_disconnect (toolbar, toolbar->priv->move_motion_handler);
-	toolbar->priv->move_button_release_handler = 0;
-	toolbar->priv->move_key_press_handler = 0;
-	toolbar->priv->move_motion_handler = 0;
-	
-	gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), NULL, 0);
-	
-	old_spot = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (toolbar->priv->move_button), "xpad-button-num"));
-	
-	/* Must not move past separator or grip */
-	max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
-	toolbar->priv->move_index = MIN (toolbar->priv->move_index, max);
-	
-	if (!xpad_settings_move_toolbar_button (xpad_settings (), old_spot,	toolbar->priv->move_index) &&
-	    toolbar->priv->move_removed)
-	{
-		gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
-	}
-	
-	g_object_unref (toolbar->priv->move_button);
-	toolbar->priv->move_button = NULL;
-	
-	gtk_grab_remove (GTK_WIDGET (toolbar));
-	gdk_pointer_ungrab (gtk_get_current_event_time ());
-	return TRUE;
-}
-
-static void
-move_menu_item_activated (GtkWidget *button)
-{
-	XpadToolbar *toolbar;
-	
-	toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (button), "xpad-toolbar"));
-	
-	xpad_toolbar_move_button_start (toolbar, button);
-}
-
-static void
 menu_deactivated (GtkWidget *menu, GtkToolbar *toolbar)
 {
 	g_signal_emit (toolbar, signals[POPDOWN], 0, menu);
-}
-
-static gboolean
-xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar)
-{
-	GtkWidget *menu;
-	GtkWidget *item, *image;
-	
-	menu = gtk_menu_new ();
-	
-	
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Remove From Toolbar"));
-	
-	image = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-	
-	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_button), button);
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, 0, 1);
-	gtk_widget_show (item);
-	
-	
-	item = gtk_menu_item_new_with_mnemonic (_("_Move"));
-	g_signal_connect_swapped (item, "activate", G_CALLBACK (move_menu_item_activated), button);
-	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, 1, 2);
-	gtk_widget_show (item);
-	
-	
-	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
-	
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event ? event->button : 0, gtk_get_current_event_time ());
-	
-	g_signal_emit (toolbar, signals[POPUP], 0, menu);
-	
-	return TRUE;
 }
 
 static gboolean
@@ -709,7 +494,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 {
 	GtkWidget *menu;
 	const GSList *current_buttons;
-	gint i;
+	guint i;
 	
 	menu = gtk_menu_new ();
 	
@@ -780,7 +565,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	
 	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
 	
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, (button < 0) ? 0 : button, gtk_get_current_event_time ());
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, (guint) ((button < 0) ? 0 : button), gtk_get_current_event_time ());
 	
 	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 	
@@ -831,3 +616,215 @@ xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable)
 	xpad_toolbar_enable_button (toolbar, button, enable);
 }
 
+/*
+ * The code below was code in progress of a previous developer
+static gboolean
+xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event)
+{
+	// Ignore double-clicks and triple-clicks
+	if (event->button == 3 && event->type == GDK_BUTTON_PRESS)
+	{
+		XpadToolbar *toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (widget), "xpad-toolbar"));
+		xpad_toolbar_popup_button_menu (widget, event, toolbar);
+		return TRUE;
+	}
+	else if (event->button == 2 && event->type == GDK_BUTTON_PRESS)
+	{
+		XpadToolbar *toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (widget), "xpad-toolbar"));
+		xpad_toolbar_move_button_start (toolbar, widget);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static gboolean
+xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar)
+{
+	GtkWidget *menu;
+	GtkWidget *item, *image;
+
+	menu = gtk_menu_new ();
+
+
+	item = gtk_image_menu_item_new_with_mnemonic (_("_Remove From Toolbar"));
+
+	image = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_button), button);
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, 0, 1);
+	gtk_widget_show (item);
+
+
+	item = gtk_menu_item_new_with_mnemonic (_("_Move"));
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (move_menu_item_activated), button);
+	gtk_menu_attach (GTK_MENU (menu), item, 0, 1, 1, 2);
+	gtk_widget_show (item);
+
+
+	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
+
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event ? event->button : 0, gtk_get_current_event_time ());
+
+	g_signal_emit (toolbar, signals[POPUP], 0, menu);
+
+	return TRUE;
+}
+
+static void
+xpad_toolbar_remove_button (GtkWidget *button)
+{
+	gint button_num;
+
+	button_num = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "xpad-button-num"));
+
+	xpad_settings_remove_toolbar_button (xpad_settings (), button_num);
+}
+
+static void
+move_menu_item_activated (GtkWidget *button)
+{
+	XpadToolbar *toolbar;
+
+	toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (button), "xpad-toolbar"));
+
+	xpad_toolbar_move_button_start (toolbar, button);
+}
+
+static gboolean
+xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button)
+{
+	GdkGrabStatus  status;
+	GdkCursor     *fleur_cursor;
+	GtkWidget *widget;
+
+	widget = GTK_WIDGET (toolbar);
+	gtk_grab_add (widget);
+
+	fleur_cursor = gdk_cursor_new (GDK_FLEUR);
+
+	// g_object_ref (button);
+	toolbar->priv->move_removed = FALSE;
+	toolbar->priv->move_button = GTK_TOOL_ITEM (button);
+	toolbar->priv->move_index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "xpad-button-num"));
+
+	toolbar->priv->move_button_release_handler = g_signal_connect (toolbar, "button-release-event", G_CALLBACK (xpad_toolbar_move_button_end), NULL);
+	toolbar->priv->move_key_press_handler = g_signal_connect (toolbar, "key-press-event", G_CALLBACK (xpad_toolbar_move_button_move_keyboard), NULL);
+	toolbar->priv->move_motion_handler = g_signal_connect (toolbar, "motion-notify-event", G_CALLBACK (xpad_toolbar_move_button_move), NULL);
+
+	status = gdk_pointer_grab (widget->window, FALSE,
+				   GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK, NULL,
+				   fleur_cursor, gtk_get_current_event_time ());
+
+	gdk_cursor_unref (fleur_cursor);
+	gdk_flush ();
+
+	if (status != GDK_GRAB_SUCCESS)
+	{
+		xpad_toolbar_move_button_end (toolbar);
+	}
+
+	return TRUE;
+}
+
+static gboolean
+xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event)
+{
+	if (event->keyval == GDK_Left || event->keyval == GDK_KP_Left)
+	{
+		if (!toolbar->priv->move_removed)
+		{
+			toolbar->priv->move_removed = TRUE;
+			gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
+		}
+
+		if (toolbar->priv->move_index > 0)
+			toolbar->priv->move_index--;
+
+		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
+	}
+	else if (event->keyval == GDK_Right || event->keyval == GDK_KP_Right)
+	{
+		gint max;
+
+		if (!toolbar->priv->move_removed)
+		{
+			toolbar->priv->move_removed = TRUE;
+			gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
+		}
+
+		max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
+
+		if (toolbar->priv->move_index < max)
+			toolbar->priv->move_index++;
+
+		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
+	}
+	else if (event->keyval == GDK_space || event->keyval == GDK_KP_Space || event->keyval == GDK_Return || event->keyval == GDK_KP_Enter)
+	{
+		xpad_toolbar_move_button_end (toolbar);
+		return TRUE;
+	}
+
+	return TRUE;
+}
+
+static gboolean
+xpad_toolbar_move_button_move (XpadToolbar *toolbar, GdkEventMotion *event)
+{
+	gint max;
+
+	if (!toolbar->priv->move_removed)
+	{
+		toolbar->priv->move_removed = TRUE;
+		gtk_container_remove (GTK_CONTAINER (toolbar), GTK_WIDGET (toolbar->priv->move_button));
+	}
+
+	toolbar->priv->move_index = gtk_toolbar_get_drop_index (GTK_TOOLBAR (toolbar), event->x, event->y);
+
+	// Must not move past separator or grip
+	max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
+	toolbar->priv->move_index = MIN (toolbar->priv->move_index, max);
+
+	gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
+
+	return TRUE;
+}
+
+static gboolean
+xpad_toolbar_move_button_end (XpadToolbar *toolbar)
+{
+	gint old_spot;
+	gint max;
+
+	g_signal_handler_disconnect (toolbar, toolbar->priv->move_button_release_handler);
+	g_signal_handler_disconnect (toolbar, toolbar->priv->move_key_press_handler);
+	g_signal_handler_disconnect (toolbar, toolbar->priv->move_motion_handler);
+	toolbar->priv->move_button_release_handler = 0;
+	toolbar->priv->move_key_press_handler = 0;
+	toolbar->priv->move_motion_handler = 0;
+
+	gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), NULL, 0);
+
+	old_spot = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (toolbar->priv->move_button), "xpad-button-num"));
+
+	// Must not move past separator or grip
+	max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
+	toolbar->priv->move_index = MIN (toolbar->priv->move_index, max);
+
+	if (!xpad_settings_move_toolbar_button (xpad_settings (), old_spot,	toolbar->priv->move_index) &&
+	    toolbar->priv->move_removed)
+	{
+		gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
+	}
+
+	// g_object_unref (toolbar->priv->move_button);
+	toolbar->priv->move_button = NULL;
+
+	gtk_grab_remove (GTK_WIDGET (toolbar));
+	gdk_pointer_ungrab (gtk_get_current_event_time ());
+	return TRUE;
+}
+
+*/

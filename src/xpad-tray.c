@@ -33,17 +33,19 @@ static void xpad_tray_activate_cb (GtkStatusIcon *icon);
 static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
 
 static GtkStatusIcon  *docklet = NULL;
+static GtkWidget *menu = NULL;
 
 void
 xpad_tray_open (void)
 {
 	GtkIconTheme *theme;
-	
-	xpad_tray_close ();
+
+	// xpad_tray_close ();
 	
 	theme = gtk_icon_theme_get_default ();
-	if (!gtk_icon_theme_has_icon (theme, PACKAGE))
+	if (!gtk_icon_theme_has_icon (theme, PACKAGE)) {
 		return;
+	}
 	
 	if (gtk_icon_theme_has_icon (theme, "xpad-panel"))
     {
@@ -68,6 +70,9 @@ xpad_tray_close (void)
 		g_object_unref (docklet);
 		docklet = NULL;
 	}
+
+	if (menu)
+		gtk_widget_destroy(menu);
 }
 
 gboolean
@@ -111,7 +116,7 @@ menu_spawn (XpadPadGroup *group)
 static void
 xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 {
-	GtkWidget *menu, *item;
+	GtkWidget *item;
 	GSList *pads, *l;
 	gint n;
 	
@@ -126,7 +131,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	item = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
-	
+
 	item = gtk_menu_item_new_with_mnemonic (_("_Show All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_show_all), xpad_app_get_pad_group ());
 	gtk_container_add (GTK_CONTAINER (menu), item);
@@ -202,4 +207,3 @@ xpad_tray_activate_cb (GtkStatusIcon *icon)
 	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
 	g_slist_free (pads);
 }
-

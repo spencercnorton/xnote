@@ -59,8 +59,8 @@ _("<b>To change color settings</b>, right click on a pad "
 _("Most actions are available throught the popup menu "
 "that appears when you right click on a pad.  Try it out and "
 "enjoy."),
-_("Please send comments or bug reports to "
-"xpad-devel@lists.sourceforge.net"));
+_("Please send ideas or bug reports to\n"
+"https://bugs.launchpad.net/xpad/+filebug"));
 	
 	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
 	

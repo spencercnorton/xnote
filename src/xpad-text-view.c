@@ -20,9 +20,6 @@
 #include "xpad-text-buffer.h"
 #include "xpad-settings.h"
 
-G_DEFINE_TYPE(XpadTextView, xpad_text_view, GTK_TYPE_TEXT_VIEW)
-#define XPAD_TEXT_VIEW_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_TEXT_VIEW, XpadTextViewPrivate))
-
 struct XpadTextViewPrivate 
 {
 	gboolean follow_font_style;
@@ -33,10 +30,13 @@ struct XpadTextViewPrivate
 	XpadTextBuffer *buffer;
 };
 
+G_DEFINE_TYPE_WITH_PRIVATE(XpadTextView, xpad_text_view, GTK_TYPE_TEXT_VIEW)
+
 static void xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
-static void xpad_text_view_realize (XpadTextView *widget);
+static void xpad_text_view_dispose (GObject *object);
 static void xpad_text_view_finalize (GObject *object);
+static void xpad_text_view_realize (XpadTextView *widget);
 static gboolean xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event);
 static gboolean xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event);
 static void xpad_text_view_notify_edit_lock (XpadTextView *view);
@@ -64,7 +64,8 @@ static void
 xpad_text_view_class_init (XpadTextViewClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-	
+
+	gobject_class->dispose = xpad_text_view_dispose;
 	gobject_class->finalize = xpad_text_view_finalize;
 	gobject_class->set_property = xpad_text_view_set_property;
 	gobject_class->get_property = xpad_text_view_get_property;
@@ -86,8 +87,6 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 	                                                       "Whether to use the default xpad color style",
 	                                                       TRUE,
 	                                                       G_PARAM_READWRITE));
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadTextViewPrivate));
 }
 
 static void
@@ -95,12 +94,12 @@ xpad_text_view_init (XpadTextView *view)
 {
 	gchar *name;
 	
-	view->priv = XPAD_TEXT_VIEW_GET_PRIVATE (view);
+	view->priv = xpad_text_view_get_instance_private(view);
 	
 	view->priv->follow_font_style = TRUE;
 	view->priv->follow_color_style = TRUE;
 	
-	view->priv->buffer = xpad_text_buffer_new (NULL);
+	view->priv->buffer = xpad_text_buffer_new();
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
@@ -126,18 +125,20 @@ xpad_text_view_init (XpadTextView *view)
 }
 
 static void
-xpad_text_view_finalize (GObject *object)
+xpad_text_view_dispose (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
-	if (view->priv->buffer)
-	{
+	if (view->priv->buffer) {
 		g_object_unref (view->priv->buffer);
-		view->priv->buffer = NULL;
 	}
 	
-	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
-	
+	G_OBJECT_CLASS (xpad_text_view_parent_class)->dispose (object);
+}
+
+static void
+xpad_text_view_finalize (GObject *object)
+{
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
 
