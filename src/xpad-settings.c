@@ -30,6 +30,7 @@ struct XpadSettingsPrivate
 	gboolean confirm_destroy;
 	gboolean edit_lock;
 	gboolean sticky;
+	guint tray_click_configuration;
 	gboolean has_toolbar;
 	gboolean autohide_toolbar;
 	gboolean has_scrollbar;
@@ -58,6 +59,7 @@ enum
   PROP_CONFIRM_DESTROY,
   PROP_STICKY,
   PROP_EDIT_LOCK,
+  PROP_TRAY_CLICK_CONFIGURATION,
   PROP_HAS_TOOLBAR,
   PROP_AUTOHIDE_TOOLBAR,
   PROP_HAS_SCROLLBAR,
@@ -150,7 +152,15 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                                       "Whether edit lock mode is enabled",
 	                                                       FALSE,
 	                                                       G_PARAM_READWRITE));
-	
+	g_object_class_install_property (gobject_class,
+                                     PROP_TRAY_CLICK_CONFIGURATION,
+                                     g_param_spec_uint ("tray_click_configuration",
+                                                        "Tray Click Configuration",
+                                                        "What configuration is selected on tray click",
+                                                        0,
+                                                        G_MAXUINT,
+                                                        2,
+                                                        G_PARAM_READWRITE));
 	g_object_class_install_property (gobject_class,
 	                                 PROP_HAS_TOOLBAR,
 	                                 g_param_spec_boolean ("has_toolbar",
@@ -238,6 +248,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->confirm_destroy = TRUE;
 	settings->priv->sticky = FALSE;
 	settings->priv->edit_lock = FALSE;
+	settings->priv->tray_click_configuration = 0;
 	settings->priv->fontname = NULL;
 	settings->priv->has_toolbar = TRUE;
 	settings->priv->autohide_toolbar = TRUE;
@@ -357,6 +368,21 @@ void xpad_settings_set_edit_lock (XpadSettings *settings, gboolean lock)
 gboolean xpad_settings_get_edit_lock (XpadSettings *settings)
 {
 	return settings->priv->edit_lock;
+}
+
+void xpad_settings_set_tray_click_handler (XpadSettings *settings, guint conf)
+{
+	if (settings->priv->tray_click_configuration == conf)
+		return;
+	
+	settings->priv->tray_click_configuration = conf;
+	save_to_file(settings, DEFAULTS_FILENAME);
+	g_object_notify (G_OBJECT (settings), "tray_click_configuration");
+}
+
+guint xpad_settings_get_tray_click_handler(XpadSettings *settings)
+{
+	return settings->priv->tray_click_configuration;
 }
 
 void xpad_settings_set_has_toolbar (XpadSettings *settings, gboolean toolbar)
@@ -636,7 +662,11 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 	case PROP_EDIT_LOCK:
 		xpad_settings_set_edit_lock (settings, g_value_get_boolean (value));
 		break;
-	
+		
+	case PROP_TRAY_CLICK_CONFIGURATION:
+		xpad_settings_set_tray_click_handler(settings, g_value_get_uint(value));
+		break;
+		
 	case PROP_HAS_TOOLBAR:
 		xpad_settings_set_has_toolbar (settings, g_value_get_boolean (value));
 		break;
@@ -756,6 +786,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|confirm_destroy", &settings->priv->confirm_destroy,
 		"b|edit_lock", &settings->priv->edit_lock,
 		"b|sticky_on_start", &settings->priv->sticky,
+		"u|tray_click_configuration", &settings->priv->tray_click_configuration,
 		"h|back_red", &back.red,
 		"h|back_green", &back.green,
 		"h|back_blue", &back.blue,
@@ -847,6 +878,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|confirm_destroy", settings->priv->confirm_destroy,
 		"b|edit_lock", settings->priv->edit_lock,
 		"b|sticky_on_start", settings->priv->sticky,
+		"u|tray_click_configuration", settings->priv->tray_click_configuration,
 		"h|back_red", settings->priv->back ? settings->priv->back->red : 0,
 		"h|back_green", settings->priv->back ? settings->priv->back->green : 0,
 		"h|back_blue", settings->priv->back ? settings->priv->back->blue : 0,

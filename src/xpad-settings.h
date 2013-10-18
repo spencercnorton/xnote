@@ -97,6 +97,8 @@ G_CONST_RETURN GdkColor *xpad_settings_get_text_color (XpadSettings *settings);
 void xpad_settings_set_fontname (XpadSettings *settings, const gchar *fontname);
 G_CONST_RETURN gchar *xpad_settings_get_fontname (XpadSettings *settings);
 
+guint xpad_settings_get_tray_click_handler(XpadSettings *settings);
+
 G_END_DECLS
 
 #endif /* __XPAD_SETTINGS_H__ */
