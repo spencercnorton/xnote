@@ -22,11 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-settings.h"
 #include "fio.h"
 
-G_DEFINE_TYPE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
-#define XPAD_SETTINGS_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_SETTINGS, XpadSettingsPrivate))
-
-#define DEFAULTS_FILENAME	"default-style"
-
 struct XpadSettingsPrivate 
 {
 	guint width;
@@ -43,6 +38,10 @@ struct XpadSettingsPrivate
 	gchar *fontname;
 	GSList *toolbar_buttons;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
+
+#define DEFAULTS_FILENAME	"default-style"
 
 enum
 {
@@ -72,6 +71,7 @@ static void load_from_file (XpadSettings *settings, const gchar *filename);
 static void save_to_file (XpadSettings *settings, const gchar *filename);
 static void xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_settings_dispose (GObject *object);
 static void xpad_settings_finalize (GObject *object);
 
 static XpadSettings *_xpad_settings = NULL;
@@ -91,7 +91,8 @@ static void
 xpad_settings_class_init (XpadSettingsClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-	
+
+	gobject_class->dispose = xpad_settings_dispose;
 	gobject_class->finalize = xpad_settings_finalize;
 	gobject_class->set_property = xpad_settings_set_property;
 	gobject_class->get_property = xpad_settings_get_property;
@@ -207,8 +208,6 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 		              G_STRUCT_OFFSET (XpadSettingsClass, change_buttons),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadSettingsPrivate));
 }
 
 static void
@@ -216,7 +215,7 @@ xpad_settings_init (XpadSettings *settings)
 {
 	GdkColor back, text;
 	
-	settings->priv = XPAD_SETTINGS_GET_PRIVATE (settings);
+	settings->priv = xpad_settings_get_instance_private(settings);
 	
 	/* A pleasant light yellow color, similar to 
 	   commercial sticky notes. */
@@ -253,13 +252,23 @@ xpad_settings_init (XpadSettings *settings)
 }
 
 static void
+xpad_settings_dispose (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_settings_parent_class)->dispose (object);
+}
+
+static void
 xpad_settings_finalize (GObject *object)
 {
 	XpadSettings *settings = XPAD_SETTINGS (object);
 	
 	g_slist_free (settings->priv->toolbar_buttons);
-	gdk_color_free (settings->priv->text);
-	gdk_color_free (settings->priv->back);
+
+	if (settings->priv->text)
+		gdk_color_free (settings->priv->text);
+	if (settings->priv->back)
+		gdk_color_free (settings->priv->back);
+
 	g_free (settings->priv->fontname);
 	
 	G_OBJECT_CLASS (xpad_settings_parent_class)->finalize (object);
@@ -427,20 +436,27 @@ void xpad_settings_add_toolbar_button (XpadSettings *settings, const gchar *butt
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 }
 
+/* Unused function of previous developer
 gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button, gint new)
 {
-	GSList *element;
+	GSList *element = NULL;
 	gpointer data;
 	
-	if (button == new)
+	if (button == new) {
+		g_slist_free(element);
 		return FALSE;
+	}
 	
-	if (new >= g_slist_length (settings->priv->toolbar_buttons) || 0 > new )
+	if (new >= (gint) g_slist_length (settings->priv->toolbar_buttons) || 0 > new ) {
+		g_slist_free(element);
 		return FALSE;
+	}
 	
 	element = g_slist_nth (settings->priv->toolbar_buttons, button);
-	if (!element)
+	if (!element) {
+		g_slist_free(element);
 		return FALSE;
+	}
 	
 	data = element->data;
 	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
@@ -450,8 +466,11 @@ gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button,
 	
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 	
+	g_slist_free(element);
+
 	return TRUE;
 }
+*/
 
 static void xpad_settings_remove_toolbar_list_element (XpadSettings *settings, GSList *element)
 {
@@ -459,14 +478,17 @@ static void xpad_settings_remove_toolbar_list_element (XpadSettings *settings, G
 	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
 }
 
+/* Unused function of previous developer
 gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint button)
 {
 	GSList *element;
 	
 	element = g_slist_nth (settings->priv->toolbar_buttons, button);
 	
-	if (!element)
+	if (!element) {
+		g_slist_free(element);
 		return FALSE;
+	}
 	
 	xpad_settings_remove_toolbar_list_element (settings, element);
 	
@@ -474,8 +496,11 @@ gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint butto
 	
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 	
+	g_slist_free(element);
+
 	return TRUE;
 }
+*/
 
 gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings)
 {
@@ -503,8 +528,10 @@ gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings)
 	
 	element = g_slist_last (settings->priv->toolbar_buttons);
 	
-	if (!element)
+	if (!element) {
+		g_slist_free(element);
 		return FALSE;
+	}
 	
 	xpad_settings_remove_toolbar_list_element (settings, element);
 	
@@ -512,6 +539,8 @@ gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings)
 	
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 	
+	g_slist_free(element);
+
 	return TRUE;
 }
 

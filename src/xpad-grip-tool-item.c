@@ -18,15 +18,16 @@
 
 #include "xpad-grip-tool-item.h"
 
-G_DEFINE_TYPE(XpadGripToolItem, xpad_grip_tool_item, GTK_TYPE_TOOL_ITEM)
-#define XPAD_GRIP_TOOL_ITEM_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_GRIP_TOOL_ITEM, XpadGripToolItemPrivate))
-
 struct XpadGripToolItemPrivate
 {
 	GtkWidget *drawbox;
 };
 
-/*static void xpad_grip_tool_item_size_request (GtkWidget *widget, GtkRequisition *requisition);*/
+G_DEFINE_TYPE_WITH_PRIVATE(XpadGripToolItem, xpad_grip_tool_item, GTK_TYPE_TOOL_ITEM)
+
+static void xpad_grip_tool_item_dispose (GObject *object);
+static void xpad_grip_tool_item_finalize (GObject *object);
+
 static gboolean xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event);
 static void xpad_grip_tool_item_event_box_realize (GtkWidget *widget);
 static gboolean xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *event);
@@ -40,15 +41,10 @@ xpad_grip_tool_item_new (void)
 static void
 xpad_grip_tool_item_class_init (XpadGripToolItemClass *klass)
 {
-	GObjectClass *gobject_class;
-	GtkContainerClass *container_class;
-	GtkWidgetClass *widget_class;
+	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	
-	gobject_class = (GObjectClass *)klass;
-	container_class = (GtkContainerClass *)klass;
-	widget_class = (GtkWidgetClass *)klass;
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadGripToolItemPrivate));
+	gobject_class->dispose = xpad_grip_tool_item_dispose;
+	gobject_class->finalize = xpad_grip_tool_item_finalize;
 }
 
 static void
@@ -57,7 +53,7 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	GtkWidget *alignment;
 	gboolean right;
 	
-	grip->priv = XPAD_GRIP_TOOL_ITEM_GET_PRIVATE (grip);
+	grip->priv = xpad_grip_tool_item_get_instance_private(grip);
 	
 	grip->priv->drawbox = gtk_drawing_area_new ();
 	gtk_widget_add_events (grip->priv->drawbox, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
@@ -72,6 +68,19 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	gtk_container_add (GTK_CONTAINER (alignment), grip->priv->drawbox);
 	gtk_container_add (GTK_CONTAINER (grip), alignment);
 }
+
+static void
+xpad_grip_tool_item_dispose (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_grip_tool_item_parent_class)->dispose (object);
+}
+
+static void
+xpad_grip_tool_item_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_grip_tool_item_parent_class)->finalize (object);
+}
+
 
 static gboolean
 xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *event)

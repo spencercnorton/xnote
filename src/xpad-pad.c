@@ -40,13 +40,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-toolbar.h"
 #include "xpad-tray.h"
 
-G_DEFINE_TYPE(XpadPad, xpad_pad, GTK_TYPE_WINDOW)
-#define XPAD_PAD_GET_PRIVATE(object) (G_TYPE_INSTANCE_GET_PRIVATE ((object), XPAD_TYPE_PAD, XpadPadPrivate))
-
 struct XpadPadPrivate 
 {
 	/* saved values */
-	gint x, y, width, height;
+	gint x, y;
+	guint width, height;
 	gboolean location_valid;
 	gchar *infoname;
 	gchar *contentname;
@@ -59,7 +57,7 @@ struct XpadPadPrivate
 	/* toolbar stuff */
 	GtkWidget *toolbar;
 	guint toolbar_timeout;
-	gint toolbar_height;
+	guint toolbar_height;
 	gboolean toolbar_expanded;
 	gboolean toolbar_pad_resized;
 	
@@ -72,9 +70,13 @@ struct XpadPadPrivate
 
 	gboolean unsaved_content;
 	gboolean unsaved_info;
+
+	GtkClipboard *clipboard;
 	
 	XpadPadGroup *group;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE(XpadPad, xpad_pad, GTK_TYPE_WINDOW)
 
 enum
 {
@@ -221,8 +223,6 @@ xpad_pad_class_init (XpadPadClass *klass)
 																			 "Pad Group",
 																			 "Pad group for this pad",
 																			 G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-	
-	g_type_class_add_private (gobject_class, sizeof (XpadPadPrivate));
 }
 
 /* Class pad - initializer */
@@ -231,9 +231,8 @@ xpad_pad_init (XpadPad *pad)
 {
 	GtkWidget *vbox;
 	GtkAccelGroup *accel_group;
-	GtkClipboard *clipboard;
 
-	pad->priv = XPAD_PAD_GET_PRIVATE (pad);
+	pad->priv = xpad_pad_get_instance_private(pad);
 
 	pad->priv->x = 0;
 	pad->priv->y = 0;
@@ -251,8 +250,8 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->toolbar_expanded = FALSE;
 	pad->priv->toolbar_pad_resized = TRUE;
 	pad->priv->properties = NULL;
-	pad->priv->unsaved_content = TRUE;
-	pad->priv->unsaved_info = TRUE;
+	pad->priv->unsaved_content = FALSE;
+	pad->priv->unsaved_info = FALSE;
 	pad->priv->group = NULL;
 
 	XpadTextView *text_view = g_object_new (XPAD_TYPE_TEXT_VIEW,
@@ -277,12 +276,11 @@ xpad_pad_init (XpadPad *pad)
 
 	accel_group = gtk_accel_group_new ();
 	gtk_window_add_accel_group (GTK_WINDOW (pad), accel_group);
-	g_object_unref (G_OBJECT (accel_group));
 	pad->priv->menu = menu_get_popup_no_highlight (pad, accel_group);
 	pad->priv->highlight_menu = menu_get_popup_highlight (pad, accel_group);
 	gtk_accel_group_connect (accel_group, GDK_Q, GDK_CONTROL_MASK, 0,
 									 g_cclosure_new_swap (G_CALLBACK (xpad_pad_quit), pad, NULL));
-
+	g_object_unref (G_OBJECT (accel_group));
 
 	vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
 		"homogeneous", FALSE,
@@ -293,7 +291,7 @@ xpad_pad_init (XpadPad *pad)
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
 
 	gtk_window_set_decorated (GTK_WINDOW(pad), xpad_settings_get_has_decorations (xpad_settings ()));
-	gtk_window_set_default_size (GTK_WINDOW(pad), xpad_settings_get_width (xpad_settings ()), xpad_settings_get_height (xpad_settings ()));
+	gtk_window_set_default_size (GTK_WINDOW(pad), (gint) xpad_settings_get_width (xpad_settings ()), (gint) xpad_settings_get_height (xpad_settings ()));
 	gtk_window_set_gravity (GTK_WINDOW(pad),  GDK_GRAVITY_STATIC); /* static gravity makes saving pad x,y work */
 	gtk_window_set_skip_pager_hint (GTK_WINDOW(pad),xpad_settings_get_has_decorations (xpad_settings ()));
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW(pad), !xpad_settings_get_has_decorations (xpad_settings ()));
@@ -309,7 +307,19 @@ xpad_pad_init (XpadPad *pad)
 	xpad_pad_notify_clipboard_owner_changed (pad);
 	xpad_pad_notify_undo_redo_changed (pad);
 
- 	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+ 	pad->priv->clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+
+	if (pad->priv->sticky)
+		gtk_window_stick (GTK_WINDOW (pad));
+	else
+		gtk_window_unstick (GTK_WINDOW (pad));
+
+	xpad_pad_sync_title (pad);
+
+	gtk_widget_show_all (vbox);
+
+	gtk_widget_hide (pad->priv->toolbar);
+	xpad_pad_notify_has_toolbar (pad);
 
 	/* Set up signals */
 	gtk_widget_add_events (GTK_WIDGET (pad), GDK_BUTTON_PRESS_MASK | GDK_PROPERTY_CHANGE_MASK);
@@ -332,7 +342,7 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect_swapped (xpad_settings (), "notify::autohide-toolbar", G_CALLBACK (xpad_pad_notify_autohide_toolbar), pad);
 	g_signal_connect_swapped (xpad_settings (), "notify::has-scrollbar", G_CALLBACK (xpad_pad_notify_has_scrollbar), pad);
 	g_signal_connect_swapped (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)), "notify::has-selection", G_CALLBACK (xpad_pad_notify_has_selection), pad);
-	g_signal_connect_swapped (clipboard, "owner-change", G_CALLBACK (xpad_pad_notify_clipboard_owner_changed), pad);
+	g_signal_connect_swapped (pad->priv->clipboard, "owner-change", G_CALLBACK (xpad_pad_notify_clipboard_owner_changed), pad);
 
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-new", G_CALLBACK (xpad_pad_spawn), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-clear", G_CALLBACK (xpad_pad_clear), pad);
@@ -352,18 +362,6 @@ xpad_pad_init (XpadPad *pad)
 
 	g_signal_connect (pad->priv->menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
 	g_signal_connect (pad->priv->highlight_menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
-
-	if (pad->priv->sticky)
-		gtk_window_stick (GTK_WINDOW (pad));
-	else
-		gtk_window_unstick (GTK_WINDOW (pad));
-
-	xpad_pad_sync_title (pad);
-
-	gtk_widget_show_all (vbox);
-
-	gtk_widget_hide (pad->priv->toolbar);
-	xpad_pad_notify_has_toolbar (pad);
 }
 
 static void
@@ -389,18 +387,31 @@ static void
 xpad_pad_dispose (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
-	
-	if (pad->priv->toolbar_timeout)
-	{
-		g_source_remove (pad->priv->toolbar_timeout);
-		pad->priv->toolbar_timeout = 0;
+
+	if (pad->priv->group) {
+		g_object_unref(pad->priv->group);
+		pad->priv->group = NULL;
 	}
-	
-	if (pad->priv->properties)
-		gtk_widget_destroy (pad->priv->properties);
-	
-	gtk_widget_destroy (pad->priv->menu);
-	gtk_widget_destroy (pad->priv->highlight_menu);
+
+	if (GTK_IS_WIDGET(pad->priv->menu)) {
+		gtk_widget_destroy (pad->priv->menu);
+		pad->priv->menu = NULL;
+	}
+
+	if (GTK_IS_WIDGET(pad->priv->highlight_menu)) {
+		gtk_widget_destroy (pad->priv->highlight_menu);
+		pad->priv->highlight_menu = NULL;
+	}
+
+	if (GTK_IS_CLIPBOARD(pad->priv->clipboard)) {
+		// For some reason the clipboard handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error.
+		g_signal_handlers_disconnect_matched (pad->priv->clipboard, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
+	}
+
+	if (GTK_IS_TOOLBAR(pad->priv->toolbar)) {
+		// For some reason the toolbar handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error.
+		g_signal_handlers_disconnect_matched (pad->priv->toolbar, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
+	}
 	
 	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
 }
@@ -409,11 +420,11 @@ static void
 xpad_pad_finalize (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
-	
+
+	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
+
 	g_free (pad->priv->infoname);
 	g_free (pad->priv->contentname);
-	
-	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 	
 	G_OBJECT_CLASS (xpad_pad_parent_class)->finalize (object);
 }
@@ -458,11 +469,11 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	/* reshow_with_initial_size() seems to set the window back to a never-shown state.
 		This is good, as some WMs don't like us changing the above parameters mid-run,
 		even if we do a hide/show cycle. */
-	gtk_window_set_default_size (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+	gtk_window_set_default_size (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 	gtk_window_reshow_with_initial_size (GTK_WINDOW (pad));
 }
 
-static gint
+static guint
 xpad_pad_text_and_toolbar_height (XpadPad *pad)
 {
 	GdkRectangle rec;
@@ -477,7 +488,14 @@ xpad_pad_text_and_toolbar_height (XpadPad *pad)
 		&textx, &texty);
 	gtk_widget_translate_coordinates(pad->priv->textview, GTK_WIDGET(pad), textx, texty, &x, &y);
 
-	return y + pad->priv->toolbar_height + gtk_container_get_border_width(GTK_CONTAINER(pad->priv->textview));
+	// Safe cast from gint to guint
+	if (y >= 0) {
+		return (guint) y + pad->priv->toolbar_height + gtk_container_get_border_width(GTK_CONTAINER(pad->priv->textview));
+	}
+	else {
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+		return 0;
+	}
 }
 
 static void
@@ -493,7 +511,14 @@ xpad_pad_show_toolbar (XpadPad *pad)
 		if (!pad->priv->toolbar_height)
 		{
 			gtk_widget_size_request (pad->priv->toolbar, &req);
-			pad->priv->toolbar_height = req.height;
+			// safe cast from gint to guint
+			if (req.height >= 0) {
+				pad->priv->toolbar_height = (guint) req.height;
+			}
+			else {
+				g_warning("There is a problem in the program Xpad. In function 'xpad_pad_show_toolbar' the variable 'req.height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+				pad->priv->toolbar_height = 0;
+			}
 		}
 
 		/* Do we have room for the toolbar without covering text? */
@@ -501,7 +526,7 @@ xpad_pad_show_toolbar (XpadPad *pad)
 		{
 			pad->priv->toolbar_expanded = TRUE;
 			pad->priv->height += pad->priv->toolbar_height;
-			gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+			gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 		}
 		else
 			pad->priv->toolbar_expanded = FALSE;
@@ -526,7 +551,7 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 			 (pad->priv->toolbar_pad_resized && xpad_pad_text_and_toolbar_height (pad) >= pad->priv->height))
 		{
 				pad->priv->height -= pad->priv->toolbar_height;
-				gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+				gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 				pad->priv->toolbar_expanded = FALSE;
 		}
 		if (GTK_WIDGET (pad)->window)
@@ -549,6 +574,9 @@ xpad_pad_notify_has_toolbar (XpadPad *pad)
 static gboolean
 toolbar_timeout (XpadPad *pad)
 {
+	if (pad || !pad->priv || !pad->priv->toolbar_timeout)
+		return FALSE;
+
 	if (pad->priv->toolbar_timeout &&
 		 xpad_settings_get_autohide_toolbar (xpad_settings ()) &&
 		 xpad_settings_get_has_toolbar (xpad_settings ()))
@@ -597,11 +625,17 @@ xpad_pad_notify_clipboard_owner_changed (XpadPad *pad)
 	g_return_if_fail (pad);
 
 	XpadToolbar *toolbar = NULL;
-	toolbar = XPAD_TOOLBAR (pad->priv->toolbar);
-	g_return_if_fail (toolbar);
+	// safe cast to toolbar
+	if (XPAD_IS_TOOLBAR(pad->priv->toolbar)) {
+		toolbar = XPAD_TOOLBAR (pad->priv->toolbar);
+		g_return_if_fail (toolbar);
 
-	GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
-	xpad_toolbar_enable_paste_button (toolbar, gtk_clipboard_wait_is_text_available (clipboard));
+		GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+		xpad_toolbar_enable_paste_button (toolbar, gtk_clipboard_wait_is_text_available (clipboard));
+	}
+	else {
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_notify_clipboard_owner_changed' the variable 'pad->priv->toolbar' is not of type toolbar. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+	}
 }
 
 void
@@ -722,6 +756,12 @@ should_confirm_delete (XpadPad *pad)
 static void
 xpad_pad_delete (XpadPad *pad)
 {
+	g_return_if_fail (pad);
+
+	// With the delayed saving functionality, it is necessary to clear the unsaved flags to prevent usage of non-existing object information.
+	pad->priv->unsaved_info = FALSE;
+	pad->priv->unsaved_content = FALSE;
+
 	if (should_confirm_delete (pad))
 	{
 		GtkWidget *dialog;
@@ -744,11 +784,13 @@ xpad_pad_delete (XpadPad *pad)
 			return;
 	}
 	
+	// These two if statements actually erase the pad on the harddisk.
 	if (pad->priv->infoname)
 		fio_remove_file (pad->priv->infoname);
 	if (pad->priv->contentname)
 		fio_remove_file (pad->priv->contentname);
 	
+	// Remove the pad from the group and destroy it.
 	gtk_widget_destroy (GTK_WIDGET (pad));
 }
 
@@ -915,7 +957,14 @@ xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 static gboolean
 xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 {
-	pad->priv->toolbar_height = event->height;
+	// safe cast from gint to guint
+	if (event->height >= 0) {
+		pad->priv->toolbar_height = (guint) event->height;
+	}
+	else {
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+		pad->priv->toolbar_height = 0;
+	}
 	return FALSE;
 }
 
@@ -924,17 +973,27 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 {
 	if (!GTK_WIDGET_VISIBLE (pad))
 		return FALSE;
+
+	int eWidth = event->width;
+	int eHeight = event->height;
 	
-	if (pad->priv->width != event->width || pad->priv->height != event->height)
-		pad->priv->toolbar_pad_resized = TRUE;
+	// safe cast from gint to guint
+	if (eWidth >= 0 && eHeight >=0 ) {
+		if (pad->priv->width != (guint) eWidth || pad->priv->height != (guint) eHeight)
+			pad->priv->toolbar_pad_resized = TRUE;
+
+		pad->priv->width = (guint) event->width;
+		pad->priv->height = (guint) event->height;
+	}
+	else {
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_configure_event' the variable 'event->width' or 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+	}
 	
 	pad->priv->x = event->x;
 	pad->priv->y = event->y;
-	pad->priv->width = event->width;
-	pad->priv->height = event->height;
 	pad->priv->location_valid = TRUE;
 	
-	xpad_pad_save_content_delayed(pad);
+	xpad_pad_save_info_delayed(pad);
 	
 	/* Sometimes when moving, if the toolbar tries to hide itself,
 		the window manager will not resize it correctly.  So, we make
@@ -974,7 +1033,7 @@ xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *eve
 		case 1:
 			if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
 			{
-				gtk_window_begin_move_drag (GTK_WINDOW (pad), event->button, event->x_root, event->y_root, event->time);
+				gtk_window_begin_move_drag (GTK_WINDOW (pad), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 				return TRUE;
 			}
 			break;
@@ -989,7 +1048,7 @@ xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *eve
 				else
 					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
 				
-				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, event->button, event->x_root, event->y_root, event->time);
+				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			}
 			else
 			{
@@ -1010,7 +1069,7 @@ xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 		switch (event->button)
 		{
 		case 1:
-			gtk_window_begin_move_drag (GTK_WINDOW (pad), event->button, event->x_root, event->y_root, event->time);
+			gtk_window_begin_move_drag (GTK_WINDOW (pad), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			return TRUE;
 		
 		case 3:
@@ -1023,7 +1082,7 @@ xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 				else
 					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
 				
-				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, event->button, event->x_root, event->y_root, event->time);
+				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			}
 			else
 			{
@@ -1059,6 +1118,8 @@ static void
 xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group)
 {
 	pad->priv->group = group;
+	g_object_ref(pad->priv->group);
+
 	if (group)
 		xpad_pad_group_add (group, GTK_WIDGET (pad));
 }
@@ -1143,6 +1204,9 @@ xpad_pad_save_content (XpadPad *pad)
 	gchar *content;
 	GtkTextBuffer *buffer;
 	
+	if (!pad->priv->unsaved_content)
+		return;
+
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
 	{
@@ -1150,9 +1214,13 @@ xpad_pad_save_content (XpadPad *pad)
 		if (!pad->priv->contentname)
 			return;
 	}
-	
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
-	content = xpad_text_buffer_get_text_with_tags (XPAD_TEXT_BUFFER (buffer));
+
+	if (GTK_IS_TEXT_VIEW(pad->priv->textview)) {
+		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
+		content = xpad_text_buffer_get_text_with_tags (XPAD_TEXT_BUFFER (buffer));
+	}
+	else
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_save_content' the variable 'pad->priv->textview' is not of type textview. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 	
 	fio_set_file (pad->priv->contentname, content);
 
@@ -1204,7 +1272,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 		xpad_pad_show_toolbar (pad); /* these will resize pad at correct height */
 	}
 	else
-		gtk_window_resize (GTK_WINDOW (pad), pad->priv->width, pad->priv->height);
+		gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 	
 	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_font);
@@ -1268,14 +1336,21 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	
 	if (show)
 		*show = !hidden;
+
+	g_free(fontname);
 }
 
 void
 xpad_pad_save_info (XpadPad *pad)
 {
-	gint height;
-	GtkStyle *style;
-	gchar *fontname;
+	guint height = NULL;
+	GtkStyle *style = NULL;
+	gchar *fontname = NULL;
+
+	g_return_if_fail (pad);
+
+	if (!pad->priv->unsaved_info)
+		return;
 	
 	/* Must create pad info file if it doesn't exist yet */
 	if (!pad->priv->infoname)
@@ -1327,7 +1402,7 @@ static void
 menu_about (XpadPad *pad)
 {
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
-	const gchar *authors[] = {"Arthur Borsboom <arthurborsboom@gmail.com", "Jeroen Vermeulen <jtv@xs4all.nl>", "Michael Terry <mike@mterry.name>", "Paul Ivanov <pivanov@berkeley.edu>", NULL};
+	const gchar *authors[] = {"Arthur Borsboom <arthurborsboom@gmail.com>", "Jeroen Vermeulen <jtv@xs4all.nl>", "Michael Terry <mike@mterry.name>", "Paul Ivanov <pivanov@berkeley.edu>", NULL};
 	const gchar *comments = _("Sticky notes");
 	const gchar *copyright = "© 2001-2007 Michael Terry";
 	/* we use g_strdup_printf because C89 has size limits on static strings */
@@ -1460,6 +1535,9 @@ menu_show_all (XpadPad *pad)
 	gtk_window_present (GTK_WINDOW (pad));
 	
 	g_slist_free (pads);
+	g_slist_free (i);
+	pads = NULL;
+	i = NULL;
 }
 
 static void
@@ -1530,7 +1608,7 @@ menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
-	xpad_pad_save_info (pad);
+	xpad_pad_save_info_delayed (pad);
 }
 
 static void
@@ -1781,6 +1859,9 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 			g_free (key);
 		}
 		g_slist_free (pads);
+		g_slist_free (l);
+		pads = NULL;
+		l = NULL;
 	}
 }
 
@@ -1893,10 +1974,6 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 }
 
 /* These functions below are used to reduce the amounts of writes, hence improve the performance. */
-void xpad2_save_content (void * vptr)
-{
-   xpad_pad_save_content(vptr);
-}
 void xpad_pad_save_content_delayed (XpadPad *pad)
 {
    pad->priv->unsaved_content = TRUE;
@@ -1913,6 +1990,6 @@ void xpad_pad_save_unsaved (XpadPad *pad)
       xpad_pad_save_content(pad);
    }
    if(pad->priv->unsaved_info == TRUE) {
-      xpad_pad_save_info(pad);
+	   xpad_pad_save_info(pad);
    }
 }

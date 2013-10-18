@@ -82,8 +82,8 @@ void xpad_settings_set_has_scrollbar (XpadSettings *settings, gboolean scrollbar
 gboolean xpad_settings_get_has_scrollbar (XpadSettings *settings);
 
 void xpad_settings_add_toolbar_button (XpadSettings *settings, const gchar *button);
-gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button, gint new);
-gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint button);
+// gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button, gint new);
+// gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint button);
 gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings);
 gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings);
 G_CONST_RETURN GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings);

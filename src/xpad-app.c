@@ -42,6 +42,7 @@
 #include "xpad-pad-group.h"
 #include "xpad-periodic.h"
 #include "xpad-session-manager.h"
+#include "xpad-settings.h"
 #include "xpad-tray.h"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
@@ -98,8 +99,8 @@ xpad_app_init (int argc, char **argv)
 {
 	gboolean first_time;
 	gboolean have_gtk;
-/*	GdkVisual *visual;*/
-	
+	// GdkVisual *visual;
+
 	/* Set up i18n */
 #ifdef ENABLE_NLS
 	gtk_set_locale ();
@@ -107,7 +108,7 @@ xpad_app_init (int argc, char **argv)
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
-	
+
 	have_gtk = gtk_init_check (&argc, &argv);
 	xpad_argc = argc;
 	xpad_argv = argv;
@@ -253,7 +254,19 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
-	xpad_pad_group_save_unsaved_all(xpad_app_get_pad_group());
+	// Free the memory used by the pads belonging to this group
+	xpad_pad_group_destroy_pads(xpad_app_get_pad_group());
+
+	// Free the memory used by group.
+	g_object_unref(xpad_app_get_pad_group());
+
+	// Free the memory used by the settings menu.
+	g_object_unref(XPAD_SETTINGS(xpad_settings()));
+
+	// Free the memory used by the tray icon and its menu.
+	xpad_tray_close();
+
+	// Give GTK the signal to clean the rest and quit the application.
 	gtk_main_quit();
 }
 
@@ -290,21 +303,24 @@ make_path (const gchar *path)
 {
 	GSList *dirs = NULL, *i;
 	gchar *dirname;
-	
+
 	dirname = g_strdup (path);
+
 	while (!g_file_test (dirname, G_FILE_TEST_EXISTS))
 	{
 		dirs = g_slist_prepend (dirs, dirname);
 		dirname = g_path_get_dirname (dirname);
 	}
 	g_free (dirname);
-	
+
 	for (i = dirs; i; i = i->next)
 	{
 		g_mkdir ((gchar *) i->data, 0700);
 		g_free (i->data);
 	}
-	g_slist_free (dirs);
+
+	g_slist_free(dirs);
+	g_slist_free(i);
 }
 
 /**
@@ -315,9 +331,9 @@ static gchar *
 make_config_dir (void)
 {
 	gchar *dir = NULL;
-	
+
 	make_path (g_get_user_config_dir ());
-	
+
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	
 	if (!g_file_test (dir, G_FILE_TEST_EXISTS))
@@ -391,7 +407,7 @@ static void
 register_stock_icons (void)
 {
 	GtkIconTheme *theme;
-	
+
 	theme = gtk_icon_theme_get_default ();
 	gtk_icon_theme_prepend_search_path (theme, THEME_DIR);
 }
@@ -699,6 +715,7 @@ xpad_app_pass_args (void)
 	gint size;
 	gint bytesRead;
 	gboolean connected = FALSE;
+	ssize_t error = NULL;
 	
 	/* create master socket */
 	client_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
@@ -713,10 +730,14 @@ xpad_app_pass_args (void)
 	size = args_to_string (xpad_argc, xpad_argv, &args) + 1;
 	
 	/* first, write length of string */
-	write (client_fd, &size, sizeof (size));
+	error = write (client_fd, &size, sizeof (size));
+	if (error == -1)
+		g_error("There is a problem writing information to the socket.");
 	
 	/* now, write string */
-	write (client_fd, args, size);
+	error = write (client_fd, args, (size_t) size);
+	if (error == -1)
+		g_error("There is a problem writing information to the socket.");
 	
 	do
 	{
