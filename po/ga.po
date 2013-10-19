@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:22+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
-"Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 05:18+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
+"Language: ga\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -90,7 +90,8 @@ msgstr "Taispeáin an uimhir leagain agus scoir"
 
 #: ../src/xpad-app.c:802
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
+msgstr ""
+"Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
 
 #: ../src/xpad-app.c:808
 msgid "Create a new pad on startup even if pads already exist"

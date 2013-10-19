@@ -10,14 +10,14 @@ msgstr ""
 "POT-Creation-Date: 2013-10-18 13:50-0500\n"
 "PO-Revision-Date: 2013-10-12 08:22+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists."
-"sourceforge.net>\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-"
+"cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 05:19+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
+"Language: zh_CN\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -28,25 +28,19 @@ msgstr "无法写入文件 %s: %s"
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
-msgstr ""
-"每个 xpad 会话有一个或多个打开的页面。这些页面好比你写的便条，然后贴在桌面"
-"上。"
+msgstr "每个 xpad 会话有一个或多个打开的页面。这些页面好比你写的便条，然后贴在桌面上。"
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
-"<b>移动页面</b>，向左拖动工具栏，向右拖动右下角的尺寸标记；或者按住 Ctrl 键不"
-"放，同时向左拖动页面。"
+msgstr "<b>移动页面</b>，向左拖动工具栏，向右拖动右下角的尺寸标记；或者按住 Ctrl 键不放，同时向左拖动页面。"
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
-msgstr ""
-"<b>改变页面大小</b>，向左拖动尺寸标记；或者按住 Ctrl 键不放，同时向右拖动页"
-"面。"
+msgstr "<b>改变页面大小</b>，向左拖动尺寸标记；或者按住 Ctrl 键不放，同时向右拖动页面。"
 
 #: ../src/help.c:57
 msgid ""
@@ -405,12 +399,12 @@ msgstr "自粘性备注"
 msgid "Jot down notes for later"
 msgstr "简要记录备注以备日后使用"
 
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr "请发送评价或缺陷到 xpad-devel@lists.sourceforge.net"
-
 #~ msgid "_Remove From Toolbar"
 #~ msgstr "从工具栏中删除(_R)"
 
 #~ msgid "_Move"
 #~ msgstr "移动(_M)"
+
+#~ msgid ""
+#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+#~ msgstr "请发送评价或缺陷到 xpad-devel@lists.sourceforge.net"

@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:19+0000\n"
 "Last-Translator: Paco Molinero <paco@byasl.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 05:18+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
+"Language: es\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -78,7 +78,8 @@ msgstr "Ayuda"
 
 #: ../src/xpad-app.c:133
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad es un programa gráfico. Por favor ejecútelo desde el escritorio."
+msgstr ""
+"Xpad es un programa gráfico. Por favor ejecútelo desde el escritorio."
 
 #: ../src/xpad-app.c:138 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -415,14 +416,14 @@ msgstr "Post-it"
 msgid "Jot down notes for later"
 msgstr "Anotar más tarde"
 
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Por favor, envíe comentarios o informes de error a xpad-devel@lists."
-#~ "sourceforge.net"
-
 #~ msgid "_Remove From Toolbar"
 #~ msgstr "_Quitar de la barra de herramientas"
 
 #~ msgid "_Move"
 #~ msgstr "_Mover"
+
+#~ msgid ""
+#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+#~ msgstr ""
+#~ "Por favor, envíe comentarios o informes de error a xpad-"
+#~ "devel@lists.sourceforge.net"

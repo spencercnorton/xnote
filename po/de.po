@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:23+0000\n"
 "Last-Translator: Christian Hartmann <christian.hartmann@berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 05:18+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
+"Language: de\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -79,7 +79,8 @@ msgstr "Hilfe"
 
 #: ../src/xpad-app.c:133
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad ist eine grafische Anwendung. Bitte nur vom Desktop aus starten."
+msgstr ""
+"Xpad ist eine grafische Anwendung. Bitte nur vom Desktop aus starten."
 
 #: ../src/xpad-app.c:138 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -413,14 +414,14 @@ msgstr "Klebezettel"
 msgid "Jot down notes for later"
 msgstr "Notizen für später notieren"
 
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Fehlerberichte und Kommentare bitte per E-Mail an xpad-devel@lists."
-#~ "sourceforge.net"
+#~ msgid "_Move"
+#~ msgstr "_Verschieben"
 
 #~ msgid "_Remove From Toolbar"
 #~ msgstr "Aus Werkzeugleiste entfernen"
 
-#~ msgid "_Move"
-#~ msgstr "_Verschieben"
+#~ msgid ""
+#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+#~ msgstr ""
+#~ "Fehlerberichte und Kommentare bitte per E-Mail an xpad-"
+#~ "devel@lists.sourceforge.net"

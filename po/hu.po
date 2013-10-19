@@ -10,12 +10,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:21+0000\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-13 05:18+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
+"Language: hu\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -101,7 +101,8 @@ msgstr "Verziószám megjelenítése és kilépés"
 
 #: ../src/xpad-app.c:802
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ne hozzon létre új jegyzetet indításkor ha az elõzõbõl nem léptünk ki"
+msgstr ""
+"Ne hozzon létre új jegyzetet indításkor ha az elõzõbõl nem léptünk ki"
 
 #: ../src/xpad-app.c:808
 msgid "Create a new pad on startup even if pads already exist"
@@ -413,14 +414,14 @@ msgstr "Ragadós jegyzetek"
 msgid "Jot down notes for later"
 msgstr "Jegyzetek felvitele késõbbi használatra"
 
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Kérem küldjön megjegyzéseket vagy hiba jelentéseket a következõ címre "
-#~ "xpad-devel@lists.sourceforge.net"
-
 #~ msgid "_Remove From Toolbar"
 #~ msgstr "Eltávolítás az eszköztárról"
 
 #~ msgid "_Move"
 #~ msgstr "_Mozgatás"
+
+#~ msgid ""
+#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
+#~ msgstr ""
+#~ "Kérem küldjön megjegyzéseket vagy hiba jelentéseket a következõ címre xpad-"
+#~ "devel@lists.sourceforge.net"
