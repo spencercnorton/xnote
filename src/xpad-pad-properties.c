@@ -242,13 +242,6 @@ xpad_pad_properties_dispose (GObject *object)
 static void
 xpad_pad_properties_finalize (GObject *object)
 {
-	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (object);
-
-	if (&prop->priv->texttmp)
-		gdk_color_free (&prop->priv->texttmp);
-	if (&prop->priv->backtmp != NULL)
-		gdk_color_free (&prop->priv->backtmp);
-
 	G_OBJECT_CLASS (xpad_pad_properties_parent_class)->finalize (object);
 }
 

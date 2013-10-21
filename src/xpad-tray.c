@@ -198,7 +198,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	gtk_widget_show (item);
 	
 	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
-	g_signal_connect (item, "activate", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect (item, "activate", G_CALLBACK (xpad_app_quit), NULL);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	

@@ -345,6 +345,8 @@ static void
 xpad_preferences_finalize (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
+
+	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pref);
 	
 	G_OBJECT_CLASS (xpad_preferences_parent_class)->finalize (object);
 }

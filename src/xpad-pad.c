@@ -574,7 +574,7 @@ xpad_pad_notify_has_toolbar (XpadPad *pad)
 static gboolean
 toolbar_timeout (XpadPad *pad)
 {
-	if (pad || !pad->priv || !pad->priv->toolbar_timeout)
+	if (!pad || !pad->priv || !pad->priv->toolbar_timeout)
 		return FALSE;
 
 	if (pad->priv->toolbar_timeout &&
