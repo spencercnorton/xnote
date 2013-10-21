@@ -21,6 +21,10 @@ PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12 gio-2.0)
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.38)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
