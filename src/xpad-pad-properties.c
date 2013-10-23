@@ -271,18 +271,30 @@ change_font_check (GtkToggleButton *button, XpadPadProperties *prop)
 static void
 change_text_color (GtkColorButton *button, XpadPadProperties *prop)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) button;
+
 	g_object_notify (G_OBJECT (prop), "text-color");
 }
 
 static void
 change_back_color (GtkColorButton *button, XpadPadProperties *prop)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) button;
+
 	g_object_notify (G_OBJECT (prop), "back-color");
 }
 
 static void
 change_font_face (GtkFontButton *button, XpadPadProperties *prop)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) button;
+
 	g_object_notify (G_OBJECT (prop), "fontname");
 }
 

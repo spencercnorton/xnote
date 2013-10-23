@@ -26,6 +26,7 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <errno.h>
 
 #include <string.h>
 #include <stdlib.h> /* for exit */
@@ -529,16 +530,27 @@ xpad_app_load_pads (void)
 converts main program arguments into one long string.
 puts allocated string in dest, and returns size
 */
-static gint
+static guint
 args_to_string (int argc, char **argv, char **dest)
 {
-	gint i;
-	gint size = 0;
-	gchar *p;
+	gint i = 0;
+	guint size = 0;
+	gchar *p = NULL;
+	size_t string_length = 0;
 	
-	for (i = 0; i < argc; i++)
-		size += strlen (argv[i]) + 1;
 	
+	for (i = 0; i < argc; i++) {
+		string_length = strlen (argv[i]) + 1;
+
+		// safe cast
+		if( string_length <= UINT_MAX ) {
+		       size += (guint) string_length;
+		}
+		else {
+			g_warning("casting the size of the arguments failed");
+		}
+	}
+
 	*dest = g_malloc (size);
 	
 	p = *dest;
@@ -561,10 +573,10 @@ args_to_string (int argc, char **argv, char **dest)
 /*
 returns number of strings in newly allocated argv
 */
-static gint
+static guint
 string_to_args (const char *string, char ***argv)
 {
-	gint num, i;
+	guint num, i;
 	const gchar *tmp;
 	char **list;
 	
@@ -582,8 +594,18 @@ string_to_args (const char *string, char ***argv)
 		/* string points to beginning of current arg */
 		tmp = strchr (string, ' '); /* NULL or end of this arg */
 		
-		if (tmp) len = tmp - string;
-		else   len = strlen (string);
+		if (tmp) {
+			long int difference = tmp - string;
+			// safe cast from long int to size_t
+			if (difference >= 0)
+				len = (size_t) difference;
+			else {
+				g_warning("Error casting argument length. Arguments might not be processed correctly.");
+				len = 0;
+			}
+		}
+		else
+			len = strlen (string);
 		
 		list[i] = g_malloc (len + 1);
 		strncpy (list[i], string, len);
@@ -600,18 +622,18 @@ string_to_args (const char *string, char ***argv)
 	return num;
 }
 
-#include <errno.h>
 /* This reads a line from the proc file.  This line will contain arguments to process. */
 static void
 xpad_app_read_from_proc_file (void)
 {
-	gint client_fd, size;
+	gint client_fd;
+	guint size = 0;
 	gint argc;
 	gchar **argv;
 	gchar *args;
 	struct sockaddr_un client;
 	socklen_t client_len;
-	size_t bytes;
+	ssize_t bytes = -1;
 	
 	/* accept waiting connection */
 	client_len = sizeof (client);
@@ -619,10 +641,12 @@ xpad_app_read_from_proc_file (void)
 	if (client_fd == -1)
 		return;
 	
-	/* get size of args */
+	/* get size of args and verify for errors */
 	bytes = read (client_fd, &size, sizeof (size));
-	if (bytes != sizeof(size))
+	if (bytes == -1 || bytes != sizeof(size)) {
+		g_warning("Cannot read proc file correctly");
 		goto close_client_fd;
+	}
 	
 	/* alloc memory */
 	args = (gchar *) g_malloc (size);
@@ -634,7 +658,7 @@ xpad_app_read_from_proc_file (void)
 	if (bytes < size)
 		goto close_client_fd;
 	
-	argc = string_to_args (args, &argv);
+	argc = (gint) string_to_args (args, &argv);
 	
 	g_free (args);
 	
@@ -645,7 +669,11 @@ xpad_app_read_from_proc_file (void)
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
-		gchar **v = g_malloc (sizeof (gchar *) * c);
+		gchar **v = NULL;
+		unsigned long int my_size = 0;
+		// safe cast
+		my_size = sizeof (gchar *) * (long unsigned) c;
+		v = g_malloc (my_size);
 		v[0] = PACKAGE;
 		v[1] = "--new";
 		
@@ -665,10 +693,15 @@ close_client_fd:
 	close (client_fd);
 }
 
-
 static gboolean
 can_read_from_server_fd (GIOChannel *source, GIOCondition condition, gpointer data)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) source;
+	(void) condition;
+	(void) data;
+
 	xpad_app_read_from_proc_file ();
 	
 	return TRUE;
@@ -712,8 +745,8 @@ xpad_app_pass_args (void)
 	fd_set fdset;
 	gchar buf [129];
 	gchar *args = NULL;
-	gint size;
-	gint bytesRead;
+	guint size;
+	ssize_t bytesRead;
 	gboolean connected = FALSE;
 	ssize_t error = NULL;
 	

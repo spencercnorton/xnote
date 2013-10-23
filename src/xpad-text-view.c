@@ -139,6 +139,10 @@ xpad_text_view_dispose (GObject *object)
 static void
 xpad_text_view_finalize (GObject *object)
 {
+	XpadTextView *view = XPAD_TEXT_VIEW (object);
+
+	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
+
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
 
@@ -151,6 +155,10 @@ xpad_text_view_realize (XpadTextView *view)
 static gboolean
 xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) event;
+
 	if (xpad_settings_get_edit_lock (xpad_settings ()))
 	{
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
@@ -174,7 +182,7 @@ xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 		}
 		else if (event->type == GDK_BUTTON_PRESS)
 		{
-			gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)), event->button, event->x_root, event->y_root, event->time);
+			gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			return TRUE;
 		}
 	}

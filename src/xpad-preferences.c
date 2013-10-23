@@ -286,7 +286,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Toggle Show All" );
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "List of Pads" );
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "New Pad" );
-	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), xpad_settings_get_tray_click_handler(xpad_settings()));
+	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), (gint) xpad_settings_get_tray_click_handler(xpad_settings()));
 
 	hbox = gtk_hbox_new(FALSE, 12);
 	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
@@ -427,7 +427,7 @@ static void
 change_tray_click_configuration(GtkComboBox *box, XpadPreferences *pref)
 {
 	g_signal_handler_block(xpad_settings(), pref->priv->notify_tray_handler);
-	xpad_settings_set_tray_click_handler(xpad_settings(), gtk_combo_box_get_active(box));
+	xpad_settings_set_tray_click_handler(xpad_settings(), (guint) gtk_combo_box_get_active(box));
 	g_signal_handler_unblock(xpad_settings(), pref->priv->notify_tray_handler);
 }
 
@@ -559,7 +559,7 @@ static void
 notify_tray_click(XpadPreferences *pref)
 {
 	g_signal_handler_block(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->trayconfigbox), xpad_settings_get_tray_click_handler(xpad_settings()));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->trayconfigbox), (gint) xpad_settings_get_tray_click_handler(xpad_settings()));
 	g_signal_handler_unblock(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
 }
 

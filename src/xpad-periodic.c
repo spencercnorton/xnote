@@ -57,21 +57,20 @@ static XpadPeriodic xpptr [1];
 gboolean Xpad_periodic_init (void)
 {
     memset(xpptr, 0, sizeof(*xpptr));
-    xpptr->after_id =
-    g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
+    xpptr->after_id = (gint) g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
 
     /* Allocate space for the signal references. */
     int tlen = xpptr->template_len = 5;
     int slen = xpptr->sigs_len = 20;
-    xpptr->template = g_malloc0(tlen * sizeof(Xpadsigref));
-    xpptr->sigs = g_malloc0(slen * sizeof(Xpadsigref));
+    xpptr->template = g_malloc0((gsize) tlen * sizeof(Xpadsigref));
+    xpptr->sigs = g_malloc0((gsize) slen * sizeof(Xpadsigref));
 
     return TRUE;
 }
 
 void    Xpad_periodic_close (void)
 {
-    if (xpptr->after_id) { g_source_remove(xpptr->after_id); }
+    if (xpptr->after_id) { g_source_remove((guint) xpptr->after_id); }
     /* Free the signal references memory. */
     g_free(xpptr->template);
     g_free(xpptr->sigs);
@@ -92,6 +91,10 @@ xppd_intercept - intercepts a timer tick
 ************************/
 gint xppd_intercept (gpointer cdata)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) cdata;
+
     int cnt=0;
     XpadPeriodicFunc fnptr=0;
     xpptr->count++; /* increment tick count */
@@ -228,6 +231,10 @@ gboolean str_equal (const char * s1, const char * s2) {
 
 gint gprint_ignore (const char * fmt, ...)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) fmt;
+
     return 0;
 }
 

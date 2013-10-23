@@ -36,6 +36,10 @@ static void show_help_at_page (gint page);
 
 static GtkWidget *create_help (gint page)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) page;
+
 	GtkWidget *dialog, *helptext, *button;
 	gchar *helptextbuf;
 	

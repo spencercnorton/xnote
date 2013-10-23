@@ -935,18 +935,30 @@ xpad_pad_open_properties (XpadPad *pad)
 static void
 xpad_pad_open_preferences (XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_preferences_open ();
 }
 
 static void
 xpad_pad_quit (XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_app_quit ();
 }
 
 static void
 xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) buffer;
+
 	/* set title */
 	xpad_pad_sync_title (pad);
 	
@@ -1010,6 +1022,10 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 static gboolean
 xpad_pad_delete_event (XpadPad *pad, GdkEvent *event)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) event;
+
 	xpad_pad_close (pad);
 	
 	return TRUE;
@@ -1026,6 +1042,10 @@ xpad_pad_popup_menu (XpadPad *pad)
 static gboolean
 xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) text_view;
+
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		switch (event->button)
@@ -1614,24 +1634,40 @@ menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
 static void
 menu_toolbar (XpadPad *pad, GtkCheckMenuItem *check)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_settings_set_has_toolbar (xpad_settings (), gtk_check_menu_item_get_active (check));
 }
 
 static void
 menu_scrollbar (XpadPad *pad, GtkCheckMenuItem *check)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_settings_set_has_scrollbar (xpad_settings (), gtk_check_menu_item_get_active (check));
 }
 
 static void
 menu_autohide (XpadPad *pad, GtkCheckMenuItem *check)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_settings_set_autohide_toolbar (xpad_settings (), gtk_check_menu_item_get_active (check));
 }
 
 static void
 menu_decorated (XpadPad *pad, GtkCheckMenuItem *check)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	xpad_settings_set_has_decorations (xpad_settings (), gtk_check_menu_item_get_active (check));
 }
 
@@ -1889,6 +1925,10 @@ menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 static void
 menu_prep_popup_highlight (XpadPad *pad, GtkWidget *menu)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) pad;
+
 	GtkWidget *item;
 	GtkClipboard *clipboard;
 	
@@ -1902,6 +1942,10 @@ menu_prep_popup_highlight (XpadPad *pad, GtkWidget *menu)
 static void
 menu_popup (GtkWidget *menu, XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) menu;
+
 	g_signal_handlers_block_matched (pad, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) xpad_pad_leave_notify_event, NULL);
 	pad->priv->toolbar_timeout = 0;
 }
@@ -1909,6 +1953,10 @@ menu_popup (GtkWidget *menu, XpadPad *pad)
 static void
 menu_popdown (GtkWidget *menu, XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) menu;
+
 	GdkRectangle rect;
 	
 	g_signal_handlers_unblock_matched (pad, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) xpad_pad_leave_notify_event, NULL);
@@ -1934,12 +1982,20 @@ xpad_pad_popup_deactivate (GtkWidget *menu, XpadPad *pad)
 static void
 xpad_pad_toolbar_popup (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) toolbar;
+
 	menu_popup (GTK_WIDGET (menu), pad);
 }
 
 static void
 xpad_pad_toolbar_popdown (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) toolbar;
+
 	menu_popdown (GTK_WIDGET (menu), pad);
 }
 

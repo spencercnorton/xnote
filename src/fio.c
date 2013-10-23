@@ -57,14 +57,14 @@ fio_fill_filename (const gchar *filename)
 gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 {
 	gchar *p;
-	gint rsize = strlen (replacement);
-	gint osize = 1;
-	gint diff = rsize - osize;
+	gsize rsize = strlen (replacement);
+	gsize osize = 1;
+	gsize diff = rsize - osize;
 	
 	p = *string;
 	while ((p = strchr (p, obj)))
 	{
-		gint offset = p - *string;
+		long offset = p - *string;
 		*string = g_realloc (*string, strlen (*string) + diff + 1);
 		p = *string + offset;
 		g_memmove (p + rsize, p + osize, strlen (p + osize) + 1);
@@ -188,7 +188,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		gchar *fullitem;
 		gint *value;
 		gchar *where;
-		gint size;
+		gsize size;
 		gchar type;
 		
 		type = item[0];

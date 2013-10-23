@@ -346,6 +346,10 @@ xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParam
 static G_CONST_RETURN XpadToolbarButton *
 xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) toolbar;
+
 	guint i;
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 		if (!g_ascii_strcasecmp (name, buttons[i].name))
@@ -492,6 +496,11 @@ menu_deactivated (GtkWidget *menu, GtkToolbar *toolbar)
 static gboolean
 xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) x;
+	(void) y;
+
 	GtkWidget *menu;
 	const GSList *current_buttons;
 	guint i;

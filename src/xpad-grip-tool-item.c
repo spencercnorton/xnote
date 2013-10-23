@@ -95,7 +95,7 @@ xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *eve
 			edge = GDK_WINDOW_EDGE_SOUTH_WEST;
 	
 		gtk_window_begin_resize_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
-			edge, event->button, event->x_root, event->y_root, event->time);
+			edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 		
 		return TRUE;
 	}
@@ -123,6 +123,10 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 static gboolean
 xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) event;
+
 	GdkWindowEdge edge;
 	
 	if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)

@@ -117,7 +117,7 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 static void
 menu_show_all (XpadPadGroup *group)
 {
-	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	GSList *pads = xpad_pad_group_get_pads (group);
 	g_slist_foreach (pads, (GFunc) gtk_window_present, NULL);
 	g_slist_free (pads);
 }
@@ -153,7 +153,6 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 {
 	GtkWidget *item;
 	GSList *pads;
-	gint n;
 	gboolean no_any_pad = FALSE;
 	
 	menu = gtk_menu_new ();

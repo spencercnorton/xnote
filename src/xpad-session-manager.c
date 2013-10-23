@@ -56,8 +56,14 @@ static void xpad_session_manager_save_complete (SmcConn smc_conn, SmPointer clie
 static gboolean
 xpad_session_manager_cycle (GIOChannel *source, GIOCondition condition,
                             gpointer data)
-{	
-  gboolean rv = TRUE;
+{
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) source;
+	(void) condition;
+	(void) data;
+
+	gboolean rv = TRUE;
 	IceConn ice_conn;
 	
 	ice_conn = SmcGetIceConnection (xpad_session_manager_conn);
@@ -102,8 +108,13 @@ xpad_session_manager_add_cycle_to_main_loop ()
 static void
 xpad_session_manager_start_interact_callback (SmcConn smc_conn, SmPointer client_data)
 {
-  if (blocking)
-    gtk_main_quit ();
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+	(void) smc_conn;
+
+	if (blocking)
+		gtk_main_quit ();
 	blocking = FALSE;
 }
 
@@ -163,6 +174,11 @@ static void
 xpad_session_manager_ice_connection_watch (IceConn ice_conn,
 	IcePointer client_data, Bool opening, IcePointer *watch_data)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+	(void) watch_data;
+
 	int fd = IceConnectionNumber (ice_conn);
 	
 	if (opening)
@@ -192,9 +208,10 @@ xpad_session_manager_set_properties (void)
 	};
 	SmProp *props[G_N_ELEMENTS (prop)];
 	struct passwd *pw;
-	int i;
+	uint i;
 	gchar *pid_str;
 	gchar *command = g_strdup (xpad_app_get_program_path ());
+	size_t string_length = 0;
 	
 	prop[0].vals = vals.clone;
 	prop[1].vals = vals.program;
@@ -207,28 +224,57 @@ xpad_session_manager_set_properties (void)
 	}
 	
 	pw = getpwuid (getuid ());
-	
+
+	// While setting all the properties, safe casts are being used.
 	vals.user->value = pw ? pw->pw_name : "";
-	vals.user->length = strlen (vals.user->value);
+	string_length = strlen (vals.user->value);
+	if (string_length <= INT_MAX)
+		vals.user->length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
 	
 	vals.program->value = command;
-	vals.program->length = strlen (vals.program->value);
+	string_length = strlen (vals.program->value);
+	if (string_length <= INT_MAX)
+		vals.program->length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
 	
 	vals.clone->value = command;
-	vals.clone->length = strlen (vals.clone->value);
+	string_length = strlen (vals.clone->value);
+	if (string_length <= INT_MAX)
+		vals.clone->length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
 	
 	vals.restart[0].value = command;
-	vals.restart[0].length = strlen (vals.restart[0].value);
-	
+	string_length = strlen (vals.restart[0].value);
+	if (string_length <= INT_MAX)
+		vals.restart[0].length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+
 	vals.restart[1].value = "--sm-client-id";
-	vals.restart[1].length = strlen (vals.restart[1].value);
-	
+	string_length = strlen (vals.restart[1].value);
+	if (string_length <= INT_MAX)
+		vals.restart[1].length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+
 	vals.restart[2].value = client_id;
-	vals.restart[2].length = strlen (vals.restart[2].value);
+	string_length = strlen (vals.restart[2].value);
+	if (string_length <= INT_MAX)
+		vals.restart[2].length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
 	
 	pid_str = g_strdup_printf ("%i", getpid ());
 	vals.process->value = pid_str;
-	vals.process->length = strlen (vals.process->value);
+	string_length = strlen (vals.process->value);
+	if (string_length <= INT_MAX)
+		vals.process->length = (int) string_length;
+	else
+		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
 	
 	SmcSetProperties (xpad_session_manager_conn, 4, (SmProp **) &props);
 	
@@ -306,6 +352,10 @@ xpad_session_manager_shutdown (void)
 static void
 xpad_session_manager_save_global (Bool fast)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) fast;
+
 	/* No need to do anything.  Currently, all xpad pads are always current with
 	hard drive. */
 }
@@ -313,6 +363,10 @@ xpad_session_manager_save_global (Bool fast)
 static void
 xpad_session_manager_save_local (Bool fast)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) fast;
+
 	/* should also save cursor positions and open accessory windows */
 	
 	if (set_props)
@@ -327,6 +381,10 @@ xpad_session_manager_save_yourself (SmcConn smc_conn, SmPointer client_data,
                                     int save_type, Bool shutdown, int interact_style,
                                     Bool fast)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+
 	RETURN_IF_BAD_CONN (smc_conn);
 	
 	xpad_interact_style = interact_style;
@@ -357,6 +415,10 @@ xpad_session_manager_save_yourself (SmcConn smc_conn, SmPointer client_data,
 static void
 xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+
 	RETURN_IF_BAD_CONN (smc_conn);
 	xpad_shutdown = True;
 	
@@ -372,6 +434,10 @@ xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data)
 static void
 xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	xpad_shutdown = False;
@@ -386,6 +452,10 @@ xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data
 static void
 xpad_session_manager_save_complete (SmcConn smc_conn, SmPointer client_data)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) client_data;
+
 	RETURN_IF_BAD_CONN (smc_conn);
 	RETURN_IF_NOT_SAVING ();
 	
