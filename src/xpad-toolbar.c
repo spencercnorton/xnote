@@ -740,7 +740,7 @@ xpad_toolbar_move_button_start (XpadToolbar *toolbar, GtkWidget *button)
 static gboolean
 xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event)
 {
-	if (event->keyval == GDK_Left || event->keyval == GDK_KP_Left)
+	if (event->keyval == GDK_KEY_Left || event->keyval == GDK_KEY_KP_Left)
 	{
 		if (!toolbar->priv->move_removed)
 		{
@@ -753,7 +753,7 @@ xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event
 
 		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
 	}
-	else if (event->keyval == GDK_Right || event->keyval == GDK_KP_Right)
+	else if (event->keyval == GDK_KEY_Right || event->keyval == GDK_KEY_KP_Right)
 	{
 		gint max;
 
@@ -770,7 +770,7 @@ xpad_toolbar_move_button_move_keyboard (XpadToolbar *toolbar, GdkEventKey *event
 
 		gtk_toolbar_set_drop_highlight_item (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);
 	}
-	else if (event->keyval == GDK_space || event->keyval == GDK_KP_Space || event->keyval == GDK_Return || event->keyval == GDK_KP_Enter)
+	else if (event->keyval == GDK_KEY_space || event->keyval == GDK_KEY_KP_Space || event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter)
 	{
 		xpad_toolbar_move_button_end (toolbar);
 		return TRUE;

@@ -227,10 +227,9 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	
 	g_object_unref (size_group_labels);
 	
-	g_object_set (G_OBJECT (GTK_DIALOG (prop)->vbox),
-		"child", appearance_frame,
-		NULL);
-	gtk_widget_show_all (GTK_DIALOG (prop)->vbox);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), appearance_frame);
+
+	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (prop)));
 }
 
 static void

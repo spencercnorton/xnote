@@ -386,14 +386,14 @@ xpad_app_alert_new (GtkWindow *parent, const gchar *stock,
 	gtk_label_set_markup (GTK_LABEL (label), buf);
 	g_free (buf);
 	
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
+	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 12);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), hbox);
 	gtk_container_add (GTK_CONTAINER (hbox), image);
 	gtk_container_add (GTK_CONTAINER (hbox), label);
 	
 	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (dialog)->vbox), 12);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);

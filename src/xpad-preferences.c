@@ -281,7 +281,7 @@ xpad_preferences_init (XpadPreferences *pref)
 		"spacing", 6,
 		NULL));
 
-	pref->priv->trayconfigbox = gtk_combo_box_new_text();
+	pref->priv->trayconfigbox = gtk_combo_box_text_new();
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Do Nothing" );
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Toggle Show All" );
 	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "List of Pads" );
@@ -307,7 +307,7 @@ xpad_preferences_init (XpadPreferences *pref)
 		"child", options_frame,
 		NULL);
 	
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (pref)->vbox), global_vbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), global_vbox, FALSE, FALSE, 0);
 	
 	pref->priv->editcheck_handler = g_signal_connect (pref->priv->editcheck, "toggled", G_CALLBACK (change_edit_check), pref);
 	pref->priv->stickycheck_handler = g_signal_connect (pref->priv->stickycheck, "toggled", G_CALLBACK (change_sticky_check), pref);
@@ -328,7 +328,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	
 	g_object_unref (size_group_labels);
 	
-	gtk_widget_show_all (GTK_DIALOG (pref)->vbox);
+	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (pref)));
 	
 	/* Make window not so squished */
 	gtk_widget_size_request (GTK_WIDGET (pref), &req);

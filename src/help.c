@@ -36,35 +36,34 @@ static void show_help_at_page (gint page);
 
 static GtkWidget *create_help (gint page)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
-	(void) page;
-
 	GtkWidget *dialog, *helptext, *button;
 	gchar *helptextbuf;
 	
 	/* Create the widgets */
-	
 	dialog = gtk_dialog_new ();
 	helptext = gtk_label_new ("");
 	
-	/* we use g_strdup_printf because C89 has size limits on static strings */
-	helptextbuf = g_strdup_printf ("%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
-_("Each xpad session consists of one or more open pads.  "
-"These pads are basically sticky notes on your desktop in which "
-"you can write memos."),
-_("<b>To move a pad</b>, left drag on the toolbar, right drag "
-"on the resizer in the bottom right, or hold down CTRL "
-"while left dragging anywhere on the pad."),
-_("<b>To resize a pad</b>, left drag on the resizer or hold down "
-"CTRL while right dragging anywhere on the pad."),
-_("<b>To change color settings</b>, right click on a pad "
-"and choose Edit->Preferences."),
-_("Most actions are available throught the popup menu "
-"that appears when you right click on a pad.  Try it out and "
-"enjoy."),
-_("Please send ideas or bug reports to\n"
-"https://bugs.launchpad.net/xpad/+filebug"));
+	if (page == 0) {
+		/* we use g_strdup_printf because C89 has size limits on static strings */
+		helptextbuf = g_strdup_printf ("%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
+		_("Each xpad session consists of one or more open pads.  "
+		"These pads are basically sticky notes on your desktop in which "
+		"you can write memos."),
+		_("<b>To move a pad</b>, left drag on the toolbar, right drag "
+		"on the resizer in the bottom right, or hold down CTRL "
+		"while left dragging anywhere on the pad."),
+		_("<b>To resize a pad</b>, left drag on the resizer or hold down "
+		"CTRL while right dragging anywhere on the pad."),
+		_("<b>To change color settings</b>, right click on a pad "
+		"and choose Edit->Preferences."),
+		_("Most actions are available throught the popup menu "
+		"that appears when you right click on a pad.  Try it out and "
+		"enjoy."),
+		_("Please send ideas or bug reports to\n"
+		"https://bugs.launchpad.net/xpad/+filebug"));
+	}
+	else
+		helptextbuf = g_strdup_printf("Unknown help page requested");
 	
 	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
 	
@@ -77,7 +76,7 @@ _("Please send ideas or bug reports to\n"
 	gtk_window_set_title (GTK_WINDOW (dialog), _("Help"));
 	
 	/* Add the label, and show everything we've added to the dialog. */
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), helptext);
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), helptext);
 	button = gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
 	
 	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);

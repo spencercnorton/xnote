@@ -278,7 +278,7 @@ xpad_pad_init (XpadPad *pad)
 	gtk_window_add_accel_group (GTK_WINDOW (pad), accel_group);
 	pad->priv->menu = menu_get_popup_no_highlight (pad, accel_group);
 	pad->priv->highlight_menu = menu_get_popup_highlight (pad, accel_group);
-	gtk_accel_group_connect (accel_group, GDK_Q, GDK_CONTROL_MASK, 0,
+	gtk_accel_group_connect (accel_group, GDK_KEY_Q, GDK_CONTROL_MASK, 0,
 									 g_cclosure_new_swap (G_CALLBACK (xpad_pad_quit), pad, NULL));
 	g_object_unref (G_OBJECT (accel_group));
 
@@ -408,9 +408,11 @@ xpad_pad_dispose (GObject *object)
 		g_signal_handlers_disconnect_matched (pad->priv->clipboard, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 	}
 
-	if (GTK_IS_TOOLBAR(pad->priv->toolbar)) {
+	if (XPAD_IS_TOOLBAR(pad->priv->toolbar)) {
 		// For some reason the toolbar handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error.
 		g_signal_handlers_disconnect_matched (pad->priv->toolbar, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
+		gtk_widget_destroy(pad->priv->toolbar);
+		pad->priv->toolbar = NULL;
 	}
 	
 	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
@@ -501,12 +503,12 @@ xpad_pad_text_and_toolbar_height (XpadPad *pad)
 static void
 xpad_pad_show_toolbar (XpadPad *pad)
 {
-	if (!GTK_WIDGET_VISIBLE (pad->priv->toolbar))
+	if (!gtk_widget_get_visible (pad->priv->toolbar))
 	{
 		GtkRequisition req;
 		
-		if (GTK_WIDGET (pad)->window)
-			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
+		if (gtk_widget_get_window(GTK_WIDGET(pad)))
+			gdk_window_freeze_updates (gtk_widget_get_window(GTK_WIDGET(pad)));
 		gtk_widget_show (pad->priv->toolbar);
 		if (!pad->priv->toolbar_height)
 		{
@@ -533,18 +535,18 @@ xpad_pad_show_toolbar (XpadPad *pad)
 		
 		pad->priv->toolbar_pad_resized = FALSE;
 		
-		if (GTK_WIDGET (pad)->window)
-			gdk_window_thaw_updates (GTK_WIDGET (pad)->window);
+		if (gtk_widget_get_window(GTK_WIDGET(pad)))
+			gdk_window_thaw_updates (gtk_widget_get_window(GTK_WIDGET(pad)));
 	}
 }
 
 static void
 xpad_pad_hide_toolbar (XpadPad *pad)
 {
-	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar))
+	if (gtk_widget_get_visible (pad->priv->toolbar))
 	{
-		if (GTK_WIDGET (pad)->window)
-			gdk_window_freeze_updates (GTK_WIDGET (pad)->window);
+		if (gtk_widget_get_window(GTK_WIDGET(pad)))
+			gdk_window_freeze_updates (gtk_widget_get_window(GTK_WIDGET(pad)));
 		gtk_widget_hide (pad->priv->toolbar);
 		
 		if (pad->priv->toolbar_expanded ||
@@ -554,8 +556,8 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 				gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 				pad->priv->toolbar_expanded = FALSE;
 		}
-		if (GTK_WIDGET (pad)->window)
-			gdk_window_thaw_updates (GTK_WIDGET (pad)->window);
+		if (gtk_widget_get_window(GTK_WIDGET(pad)))
+			gdk_window_thaw_updates (gtk_widget_get_window(GTK_WIDGET(pad)));
 	}
 }
 
@@ -725,7 +727,7 @@ xpad_pad_close (XpadPad *pad)
 void
 xpad_pad_toggle(XpadPad *pad)
 {
-	 if (GTK_WIDGET_VISIBLE (pad)) 
+	 if (gtk_widget_get_visible (GTK_WIDGET(pad)))
 		  xpad_pad_close (pad);
 	 else
 		  gtk_widget_show (GTK_WIDGET (pad));
@@ -983,7 +985,7 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 static gboolean
 xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 {
-	if (!GTK_WIDGET_VISIBLE (pad))
+	if (!gtk_widget_get_visible (GTK_WIDGET(pad)))
 		return FALSE;
 
 	int eWidth = event->width;
@@ -1389,7 +1391,7 @@ xpad_pad_save_info (XpadPad *pad)
 	}
 	
 	height = pad->priv->height;
-	if (GTK_WIDGET_VISIBLE (pad->priv->toolbar) && pad->priv->toolbar_expanded)
+	if (gtk_widget_get_visible (pad->priv->toolbar) && pad->priv->toolbar_expanded)
 		height -= pad->priv->toolbar_height;
 	
 	style = gtk_widget_get_style (pad->priv->textview);
@@ -1403,7 +1405,7 @@ xpad_pad_save_info (XpadPad *pad)
 		"b|follow_font", xpad_text_view_get_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"b|follow_color", xpad_text_view_get_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"b|sticky", pad->priv->sticky,
-		"b|hidden", !GTK_WIDGET_VISIBLE (pad),
+		"b|hidden", !gtk_widget_get_visible (GTK_WIDGET(pad)),
 		"h|back_red", style->base[GTK_STATE_NORMAL].red,
 		"h|back_green", style->base[GTK_STATE_NORMAL].green,
 		"h|back_blue", style->base[GTK_STATE_NORMAL].blue,
@@ -1760,10 +1762,10 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	 
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDO, menu_undo, GDK_Z, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDO, menu_undo, GDK_KEY_Z, GDK_CONTROL_MASK);
 	g_object_set_data (G_OBJECT (uppermenu), "undo", item);
 	 
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_REDO, menu_redo, GDK_R, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_REDO, menu_redo, GDK_KEY_R, GDK_CONTROL_MASK);
 	g_object_set_data (G_OBJECT (uppermenu), "redo", item);
 
 	MENU_ADD_SEP();
@@ -1810,7 +1812,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	
-	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, GDK_F1, 0, show_help);
+	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, GDK_KEY_F1, 0, show_help);
 	MENU_ADD (_("_About"), GTK_STOCK_ABOUT, 0, 0, menu_about);
 	
 	return uppermenu;
@@ -1914,9 +1916,9 @@ menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
 	g_object_set_data (G_OBJECT (menu), "paste", item);
 	MENU_ADD_SEP ();
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_BOLD, menu_bold, GDK_b, GDK_CONTROL_MASK);
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_ITALIC, menu_italic, GDK_i, GDK_CONTROL_MASK);
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDERLINE, menu_underline, GDK_u, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_BOLD, menu_bold, GDK_KEY_b, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_ITALIC, menu_italic, GDK_KEY_i, GDK_CONTROL_MASK);
+	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDERLINE, menu_underline, GDK_KEY_u, GDK_CONTROL_MASK);
 	MENU_ADD_STOCK (GTK_STOCK_STRIKETHROUGH, menu_strikethrough);
 	
 	return menu;
@@ -1964,7 +1966,7 @@ menu_popdown (GtkWidget *menu, XpadPad *pad)
 	/**
 	 * We must check if we disabled off of pad and start the timeout if so.
 	 */
-	gdk_window_get_pointer (GTK_WIDGET (pad)->window, &rect.x, &rect.y, NULL);
+	gdk_window_get_pointer (gtk_widget_get_window(GTK_WIDGET(pad)), &rect.x, &rect.y, NULL);
 	rect.width = 1;
 	rect.height = 1;
 	

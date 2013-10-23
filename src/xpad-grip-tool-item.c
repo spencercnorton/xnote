@@ -116,7 +116,7 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 		cursor_type = GDK_BOTTOM_LEFT_CORNER;
 	
 	cursor = gdk_cursor_new_for_display (display, cursor_type);
-	gdk_window_set_cursor (widget->window, cursor);
+	gdk_window_set_cursor (gtk_widget_get_window(widget), cursor);
 	gdk_cursor_unref (cursor);
 }
 
@@ -135,15 +135,22 @@ xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event)
 		edge = GDK_WINDOW_EDGE_SOUTH_WEST;
 	
 	gtk_paint_resize_grip (
-		widget->style,
-		widget->window,
-		GTK_WIDGET_STATE (widget),
-		NULL,
-		widget,
-		"xpad-grip-tool-item",
-		edge,
-		0, 0,
-		widget->allocation.width, widget->allocation.height);
+			gtk_widget_get_style(widget),
+			gtk_widget_get_window(widget),
+			gtk_widget_get_state(widget),
+			NULL,
+			widget,
+			"xpad-grip-tool-item",
+			edge,
+			0, 0,
+// The GTK2 int's have to be disabled, since it blocks the migration process
+// The GTK3 int's are good, but not recognized by GTK2.
+// Therefore, temporarily during the migration, these fixed numbers have been set.
+			200, 200);
+// GTK3		gtk_widget_get_allocated_width(widget),
+// GTK3		gtk_widget_get_allocated_width(height));
+// GTK2		widget->allocation.width,
+// GTK2		widget->allocation.height);
 	
 	return FALSE;
 }
