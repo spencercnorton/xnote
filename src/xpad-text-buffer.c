@@ -25,7 +25,6 @@ struct XpadTextBufferPrivate
 {
 	XpadUndo *undo;
 	XpadPad *pad;
-	GtkTextTagTable *tag_table;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
@@ -51,7 +50,7 @@ XpadTextBuffer *
 xpad_text_buffer_new (void)
 {
 	XpadPad *pad = NULL;
-	return g_object_new (XPAD_TYPE_TEXT_BUFFER, "pad", pad, NULL);
+	return g_object_new (XPAD_TYPE_TEXT_BUFFER, "tag_table", create_tag_table(), "pad", pad, NULL);
 }
 
 static void
@@ -77,7 +76,6 @@ xpad_text_buffer_init (XpadTextBuffer *buffer)
 {
 	buffer->priv = xpad_text_buffer_get_instance_private(buffer);
 
-	buffer->priv->tag_table = create_tag_table ();
 	buffer->priv->undo = xpad_undo_new (buffer);
 }
 
@@ -96,10 +94,8 @@ xpad_text_buffer_dispose (GObject *object)
 		buffer->priv->undo = NULL;
 	}
 
-	if (buffer->priv->tag_table) {
-		g_object_unref(buffer->priv->tag_table);
-		buffer->priv->tag_table = NULL;
-	}
+	g_object_unref(gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(buffer)));
+
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
 }
 
