@@ -1,7 +1,6 @@
-Version 4.1
-* New: Undo functionality such as CTRL-Z (#1121740)
+Version 4.2
+* New: Undo/redo functionality such as CTRL-Z (#1121740)
 * New: Tray click behaviour can now be configured (#345278, #304331, #890335)
-* New: Tray icon can be hidden (#890334)
 * New: Theme builders can now use seperate tray icon by adding xpad-panel.xvg (#907705)
 * Fix: Theme color stays after application restart (#307669)
 * Fix: Translation - get many new translations in from translators (thanks guys!!)

@@ -1,4 +1,5 @@
 Version 4.2
+* New: Undo/redo functionality such as CTRL-Z
 * New: ability to reconfigure the left-right click behaviour of the tray icon
 * Many bugfixes: see Changelog
 
