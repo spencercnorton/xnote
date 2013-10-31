@@ -81,9 +81,9 @@ static GtkWidget *create_help (gint page)
 	
 	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
 	
-	g_signal_connect (GTK_OBJECT (dialog), "destroy", 
+	g_signal_connect (GTK_WINDOW (dialog), "destroy",
 		G_CALLBACK (help_close), NULL);
-	g_signal_connect_swapped (GTK_OBJECT (button), "clicked", 
+	g_signal_connect_swapped (GTK_BUTTON (button), "clicked",
 		G_CALLBACK (gtk_widget_destroy), dialog);
 	
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);

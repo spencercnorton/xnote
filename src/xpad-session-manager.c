@@ -18,10 +18,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
 #include "xpad-session-manager.h"
 
 #ifndef X_DISPLAY_MISSING
 
+#include <gdk/gdkx.h>
 #include <X11/SM/SMlib.h>
 #include <stdio.h>	/* only for printf */
 #include <sys/types.h> /* for getuid and getpwuid */
@@ -316,7 +318,7 @@ xpad_session_manager_init (void)
 	xpad_ice_fd = -1;
 	IceAddConnectionWatch (xpad_session_manager_ice_connection_watch, NULL);
 	
-	gdk_set_sm_client_id (client_id);
+	gdk_x11_set_sm_client_id (client_id);
 }
 
 void

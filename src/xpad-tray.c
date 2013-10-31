@@ -2,6 +2,7 @@
 
 Copyright (c) 2002 Jamis Buck
 Copyright (c) 2003-2007 Michael Terry
+Copyright (c) 2013 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,26 +53,25 @@ static GtkStatusIcon  *docklet = NULL;
 static GtkWidget *menu = NULL;
 
 void
-xpad_tray_open (void)
+xpad_tray_open ()
 {
 	GtkIconTheme *theme;
 
-	// xpad_tray_close ();
-	
 	theme = gtk_icon_theme_get_default ();
+
 	if (!gtk_icon_theme_has_icon (theme, PACKAGE)) {
 		return;
 	}
-	
+
 	if (gtk_icon_theme_has_icon (theme, "xpad-panel"))
-    {
-	    docklet = gtk_status_icon_new_from_icon_name ("xpad-panel");
-    }
-    else
-    {
+	{
+		docklet = gtk_status_icon_new_from_icon_name ("xpad-panel");
+	}
+	else
+	{
 	    docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
-    }
-	
+	}
+
 	if (docklet)
 	{
 		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
@@ -207,7 +207,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 static void
 xpad_tray_activate_cb (GtkStatusIcon *icon)
 {
-	switch (xpad_settings_get_tray_click_handler(xpad_settings()))
+	switch (xpad_settings_get_tray_click_handler(xpad_global_settings))
 	{
 		case TOGGLE_SHOW_ALL:
 			xpad_tray_show_hide_all();

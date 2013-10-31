@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-toolbar.h"
 #include "xpad-settings.h"
 #include "xpad-grip-tool-item.h"
+#include "xpad-app.h"
 
 struct XpadToolbarPrivate
 {
@@ -279,7 +280,7 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 	              "toolbar-style", GTK_TOOLBAR_ICONS,
 	              NULL);
 	
-	g_signal_connect_swapped (xpad_settings (), "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
+	g_signal_connect_swapped (xpad_global_settings, "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
 	
 	xpad_toolbar_change_buttons (toolbar);
 }
@@ -288,7 +289,7 @@ static void
 xpad_toolbar_dispose (GObject *object)
 {
 	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
-	
+
 	if (toolbar->priv->pad) {
 		g_object_unref (toolbar->priv->pad);
 		toolbar->priv->pad = NULL;
@@ -428,7 +429,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	for (j = 0; j < G_N_ELEMENTS (buttons); j++)
 		g_object_set_data (G_OBJECT (toolbar), buttons[j].name, NULL);
 	
-	slist = xpad_settings_get_toolbar_buttons (xpad_settings ());
+	slist = xpad_settings_get_toolbar_buttons (xpad_global_settings);
 	for (stemp = slist; stemp; stemp = stemp->next)
 	{
 		const XpadToolbarButton *button;
@@ -472,19 +473,19 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 static void
 xpad_toolbar_remove_all_buttons ()
 {
-	xpad_settings_remove_all_toolbar_buttons (xpad_settings ());
+	xpad_settings_remove_all_toolbar_buttons (xpad_global_settings);
 }
 
 static void
 xpad_toolbar_remove_last_button ()
 {
-	xpad_settings_remove_last_toolbar_button (xpad_settings ());
+	xpad_settings_remove_last_toolbar_button (xpad_global_settings);
 }
 
 static void
 xpad_toolbar_add_button (const gchar *name)
 {
-	xpad_settings_add_toolbar_button (xpad_settings (), name);
+	xpad_settings_add_toolbar_button (xpad_global_settings, name);
 }
 
 static void
@@ -507,7 +508,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	
 	menu = gtk_menu_new ();
 	
-	current_buttons = xpad_settings_get_toolbar_buttons (xpad_settings ());
+	current_buttons = xpad_settings_get_toolbar_buttons (xpad_global_settings);
 
 	gboolean is_button = FALSE;
 	
@@ -688,7 +689,7 @@ xpad_toolbar_remove_button (GtkWidget *button)
 
 	button_num = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "xpad-button-num"));
 
-	xpad_settings_remove_toolbar_button (xpad_settings (), button_num);
+	xpad_settings_remove_toolbar_button (xpad_global_settings, button_num);
 }
 
 static void
@@ -822,7 +823,7 @@ xpad_toolbar_move_button_end (XpadToolbar *toolbar)
 	max = gtk_toolbar_get_n_items (GTK_TOOLBAR (toolbar)) - 2;
 	toolbar->priv->move_index = MIN (toolbar->priv->move_index, max);
 
-	if (!xpad_settings_move_toolbar_button (xpad_settings (), old_spot,	toolbar->priv->move_index) &&
+	if (!xpad_settings_move_toolbar_button (xpad_global_settings, old_spot,	toolbar->priv->move_index) &&
 	    toolbar->priv->move_removed)
 	{
 		gtk_toolbar_insert (GTK_TOOLBAR (toolbar), toolbar->priv->move_button, toolbar->priv->move_index);

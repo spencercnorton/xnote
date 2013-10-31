@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Sets up autoconf.
-AC_INIT([Xpad],[4.2],[xpad-hackers@lists.launchpad.net])
+AC_INIT([Xpad],[4.3],[xpad-hackers@lists.launchpad.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
@@ -15,15 +15,36 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_INTLTOOL([0.31], [no-xml])
 
-# Checks for libraries.
 AC_PATH_XTRA
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.12 gio-2.0)
+
+# Checks for GTK+ 3.0
+PKG_CHECK_MODULES(GTK, gtk+-3.0 gio-2.0)
+AM_CONDITIONAL(GTK, test -n "$GTK_LIBS")
+# ensure that only allowed headers are included
+GTK_CFLAGS+="-DGTK_DISABLE_SINGLE_INCLUDES "
+# ensure that no gtk deprecated symbols are used
+GTK_CFLAGS+="-DGDK_DISABLE_DEPRECATED "
+GTK_CFLAGS+="-DGTK_DISABLE_DEPRECATED "
+# ensure use of accessors
+GTK_CFLAGS+="-DGSEAL_ENABLE "
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.38)
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(PANGO, pango >= 1.32)
+AC_SUBST(PANGO_LIBS)
+AC_SUBST(PANGO_CFLAGS)
+
+PKG_CHECK_MODULES(PIXBUF, gdk-pixbuf-2.0 >= 2.28)
+AC_SUBST(PIXBUF_LIBS)
+AC_SUBST(PIXBUF_CFLAGS)
+
+PKG_CHECK_MODULES(ATK, atk >= 2.8 atk-bridge-2.0)
+AC_SUBST(ATK_LIBS)
+AC_SUBST(ATK_CFLAGS)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

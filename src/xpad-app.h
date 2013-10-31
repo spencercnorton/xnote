@@ -21,6 +21,7 @@
 
 #include <gtk/gtk.h>
 #include "xpad-pad-group.h"
+#include "xpad-settings.h"
 
 G_BEGIN_DECLS
 
@@ -30,6 +31,7 @@ GtkWidget *xpad_app_alert_new (GtkWindow *parent, const gchar *stock, const gcha
 G_CONST_RETURN gchar *xpad_app_get_config_dir (void);
 G_CONST_RETURN gchar *xpad_app_get_program_path (void);
 XpadPadGroup         *xpad_app_get_pad_group (void);
+XpadSettings		 *xpad_global_settings;
 gboolean              xpad_app_get_translucent (void);
 void                  xpad_app_quit (void);
 

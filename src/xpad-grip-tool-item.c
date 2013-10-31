@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "../config.h"
 #include "xpad-grip-tool-item.h"
 
 struct XpadGripToolItemPrivate
@@ -28,7 +29,7 @@ G_DEFINE_TYPE_WITH_PRIVATE(XpadGripToolItem, xpad_grip_tool_item, GTK_TYPE_TOOL_
 static void xpad_grip_tool_item_dispose (GObject *object);
 static void xpad_grip_tool_item_finalize (GObject *object);
 
-static gboolean xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event);
+static gboolean xpad_grip_tool_item_event_box_draw (GtkWidget *widget, cairo_t *cr);
 static void xpad_grip_tool_item_event_box_realize (GtkWidget *widget);
 static gboolean xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *event);
 
@@ -59,7 +60,7 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	gtk_widget_add_events (grip->priv->drawbox, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
 	g_signal_connect (grip->priv->drawbox, "button-press-event", G_CALLBACK (xpad_grip_tool_item_button_pressed_event), NULL);
 	g_signal_connect (grip->priv->drawbox, "realize", G_CALLBACK (xpad_grip_tool_item_event_box_realize), NULL);
-	g_signal_connect (grip->priv->drawbox, "expose-event", G_CALLBACK (xpad_grip_tool_item_event_box_expose), NULL);
+	g_signal_connect (grip->priv->drawbox, "draw", G_CALLBACK (xpad_grip_tool_item_event_box_draw), NULL);
 	gtk_widget_set_size_request (grip->priv->drawbox, 18, 18);
 	
 	right =	gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR;
@@ -117,40 +118,17 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 	
 	cursor = gdk_cursor_new_for_display (display, cursor_type);
 	gdk_window_set_cursor (gtk_widget_get_window(widget), cursor);
-	gdk_cursor_unref (cursor);
+	g_object_unref (cursor);
 }
 
 static gboolean
-xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event)
+xpad_grip_tool_item_event_box_draw (GtkWidget *widget, cairo_t *cr)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
-	(void) event;
-
-	GdkWindowEdge edge;
-	
-	if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-		edge = GDK_WINDOW_EDGE_SOUTH_EAST;
-	else
-		edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-	
-	gtk_paint_resize_grip (
-			gtk_widget_get_style(widget),
-			gtk_widget_get_window(widget),
-			gtk_widget_get_state(widget),
-			NULL,
-			widget,
-			"xpad-grip-tool-item",
-			edge,
+	gtk_render_handle(gtk_widget_get_style_context(widget),
+			cr,
 			0, 0,
-// The GTK2 int's have to be disabled, since it blocks the migration process
-// The GTK3 int's are good, but not recognized by GTK2.
-// Therefore, temporarily during the migration, these fixed numbers have been set.
-			200, 200);
-// GTK3		gtk_widget_get_allocated_width(widget),
-// GTK3		gtk_widget_get_allocated_width(height));
-// GTK2		widget->allocation.width,
-// GTK2		widget->allocation.height);
+			gtk_widget_get_allocated_width(widget),
+			gtk_widget_get_allocated_width(widget));
 	
 	return FALSE;
 }

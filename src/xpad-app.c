@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2004-2007 Michael Terry
  * Copyright (c) 2009 Paul Ivanov
+ * Copyright (c) 2013 Arthur Borsboom
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
 /* define _GNU_SOURCE here because that makes our sockets work nice
  Unfortunately, we lose portability... */
 #define _GNU_SOURCE	1
+#include "../config.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/un.h>
@@ -31,7 +33,6 @@
 #include <string.h>
 #include <stdlib.h> /* for exit */
 
-#include "../config.h"
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 
@@ -78,21 +79,21 @@ static gchar *program_path;
 static gchar *server_filename;
 static gint server_fd;
 static FILE *output;
-static gboolean xpad_translucent = FALSE;
 static XpadPadGroup *pad_group;
 static gint pads_loaded_on_start = 0;
+XpadSettings *xpad_global_settings;
 
-static gboolean  process_local_args         (gint *argc, gchar **argv[]);
-static gboolean  process_remote_args        (gint *argc, gchar **argv[], gboolean have_gtk);
+static gboolean		process_local_args          (gint *argc, gchar **argv[]);
+static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboolean have_gtk);
 
-static gboolean  config_dir_exists          (void);
-static gchar    *make_config_dir            (void);
-static void      register_stock_icons       (void);
-static gint      xpad_app_load_pads         (void);
-static gboolean  xpad_app_quit_if_no_pads   (XpadPadGroup *group);
-static gboolean  xpad_app_first_idle_check  (XpadPadGroup *group);
-static gboolean  xpad_app_pass_args         (void);
-static gboolean  xpad_app_open_proc_file    (void);
+static gboolean		config_dir_exists           (void);
+static gchar		*make_config_dir            (void);
+static void			register_stock_icons        (void);
+static gint			xpad_app_load_pads          (void);
+static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
+static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
+static gboolean		xpad_app_pass_args          (void);
+static gboolean		xpad_app_open_proc_file     (void);
 
 
 static void
@@ -100,17 +101,15 @@ xpad_app_init (int argc, char **argv)
 {
 	gboolean first_time;
 	gboolean have_gtk;
-	// GdkVisual *visual;
 
-	/* Set up i18n */
+	/* Set up support different languages */
 #ifdef ENABLE_NLS
-	gtk_set_locale ();
 	bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-	have_gtk = gtk_init_check (&argc, &argv);
+	have_gtk = gtk_init_check (&argc, &argv); // Leaves 135 referenced objects behind. No idea how to unref. Total up to here 135.
 	xpad_argc = argc;
 	xpad_argv = argv;
 	output = stdout;
@@ -138,18 +137,9 @@ xpad_app_init (int argc, char **argv)
 	
 	g_set_application_name (_("Xpad"));
 	gdk_set_program_class (PACKAGE);
-	
-	/* Set up translucency. */
-/*	visual = gdk_visual_get_best_with_depth (32);
-	if (visual)
-	{
-		GdkColormap *colormap;
-		colormap = gdk_colormap_new (visual, TRUE);
-		gtk_widget_set_default_colormap (colormap);
-		xpad_translucent = TRUE;
-	}*/
-	
+
 	/* Set up program path. */
+
 	if (xpad_argc > 0)
 		program_path = g_find_program_in_path (xpad_argv[0]);
 	else
@@ -159,18 +149,20 @@ xpad_app_init (int argc, char **argv)
 	
 	if (xpad_app_pass_args ())
 		exit (0);
-	
+
 	/* Race condition here, between calls */
 	xpad_app_open_proc_file ();
 	
-	register_stock_icons ();
+	register_stock_icons (); // Leaves 1039 referenced objects behind. No idea how to unref, except 1. Total up to here 1173.
 	gtk_window_set_default_icon_name (PACKAGE);
 	
-	pad_group = xpad_pad_group_new();
+	pad_group = xpad_pad_group_new(); // Creates 1 referenced object; but does get unrefferenced. Total 1173.
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE);
 	
-	xpad_tray_open ();
+	xpad_tray_open (); // Creates 34 referenced objects; but only 14 get unrefferenced. Total 1193.
 	xpad_session_manager_init ();
+
+	xpad_global_settings = xpad_settings_new (); // Creates 1 reference, 1 reference gets cleaned up. Total 1193
 
 	/* Initialize Xpad-periodic module */
 	Xpad_periodic_init();
@@ -178,7 +170,7 @@ xpad_app_init (int argc, char **argv)
 	Xpad_periodic_set_callback("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 	
 	/* load all pads */
-	pads_loaded_on_start = xpad_app_load_pads ();
+	pads_loaded_on_start = xpad_app_load_pads (); // each pad creates 333 references and leaves about 100 references behind. Total 1268.
 	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
@@ -195,18 +187,14 @@ xpad_app_init (int argc, char **argv)
 	server_filename = NULL;
 }
 
-
 gint main (gint argc, gchar **argv)
 {
 	xpad_app_init (argc, argv);
-	
+
 	gtk_main ();
 	
 	return 0;
 }
-
-
-
 
 /* parent and secondary may be NULL.
  * Returns when user dismisses error.
@@ -229,14 +217,11 @@ xpad_app_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
 	xpad_session_manager_stop_interact (FALSE);
 }
 
-
-
 G_CONST_RETURN gchar *
 xpad_app_get_config_dir (void)
 {
 	return config_dir;
 }
-
 
 /* Returns absolute path to our own executable. May be NULL. */
 G_CONST_RETURN gchar *
@@ -244,7 +229,6 @@ xpad_app_get_program_path (void)
 {
 	return program_path;
 }
-
 
 XpadPadGroup *
 xpad_app_get_pad_group (void)
@@ -256,25 +240,23 @@ void
 xpad_app_quit (void)
 {
 	// Free the memory used by the pads belonging to this group
-	xpad_pad_group_destroy_pads(xpad_app_get_pad_group());
+	xpad_pad_group_destroy_pads (xpad_app_get_pad_group());
 
 	// Free the memory used by group.
-	g_object_unref(xpad_app_get_pad_group());
+	g_object_unref (xpad_app_get_pad_group());
 
 	// Free the memory used by the settings menu.
-	g_object_unref(XPAD_SETTINGS(xpad_settings()));
+	g_object_unref (xpad_global_settings);
+	xpad_global_settings = NULL; // This is needed due to the asynchronous finalizing process.
 
 	// Free the memory used by the tray icon and its menu.
-	xpad_tray_close();
+	xpad_tray_close ();
+
+	// Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind.
+	g_object_unref (gtk_icon_theme_get_default ());
 
 	// Give GTK the signal to clean the rest and quit the application.
-	gtk_main_quit();
-}
-
-gboolean
-xpad_app_get_translucent (void)
-{
-	return xpad_translucent;
+	gtk_main_quit ();
 }
 
 static gboolean
@@ -362,19 +344,17 @@ make_config_dir (void)
  * secondary text of 'secondary'.  No buttons are added.
  */
 GtkWidget *
-xpad_app_alert_new (GtkWindow *parent, const gchar *stock,
-                    const gchar *primary, const gchar *secondary)
+xpad_app_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary)
 {
 	GtkWidget *dialog, *hbox, *image, *label;
 	gchar *buf;
 	
-	dialog = gtk_dialog_new_with_buttons (
-		"",
-		parent,
-		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
-		NULL);
-	
-	hbox = gtk_hbox_new (FALSE, 12);
+	dialog = gtk_dialog_new();
+	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+
+	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 12);
 	image = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_DIALOG);
 	label = gtk_label_new (NULL);
 	

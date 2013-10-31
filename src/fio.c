@@ -316,4 +316,3 @@ void fio_remove_file (const gchar *filename)
 	g_file_delete (file, NULL, NULL);
 	g_object_unref (file);
 }
-
