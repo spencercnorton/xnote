@@ -790,13 +790,36 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 	if (use_text)
 	{
 		gdk_rgba_free (settings->priv->text);
-		gdk_rgba_parse (&text, text_color_string);
+
+		// If, for some reason, one of the colors could not be retrieved
+		// (for example due to the migration to the new GdkRGBA colors), set the color to the default.
+		if (text_color_string == NULL) {
+			text = (GdkRGBA) {0, 0, 0, 1};
+		}
+		else {
+			// If, for some reason, the parsing of the colors fail, set the color to the default.
+			if (!gdk_rgba_parse (&text, text_color_string)) {
+				text = (GdkRGBA) {0, 0, 0, 1};
+			}
+		}
+
 		settings->priv->text = gdk_rgba_copy (&text);
 	}
 
 	gdk_rgba_free (settings->priv->back);
 	if (use_back) {
-		gdk_rgba_parse (&back, background_color_string);
+		// If, for some reason, one of the colors could not be retrieved
+		// (for example due to the migration to the new GdkRGBA colors), set the color to the default.
+		if (background_color_string == NULL) {
+			back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+		}
+		else {
+			// If, for some reason, the parsing of the colors fail, set the color to the default.
+			if (!gdk_rgba_parse (&back, background_color_string)) {
+				back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			}
+		}
+
 		settings->priv->back = gdk_rgba_copy (&back);
 	}
 	else

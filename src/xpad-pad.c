@@ -1256,8 +1256,8 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	gboolean hidden = FALSE;
 	gchar *text_color_string = NULL;
 	gchar *background_color_string = NULL;
-	GdkRGBA text = {1, 1, 1, 1};
-	GdkRGBA back = {0, 0, 0, 1};
+	GdkRGBA text = {0, 0, 0, 0};
+	GdkRGBA back = {0, 0, 0, 0};
 	gchar *fontname = NULL;
 
 	if (!pad->priv->infoname)
@@ -1312,8 +1312,19 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 
 	if (!follow_color)
 	{
-		gdk_rgba_parse (&text, text_color_string);
-		gdk_rgba_parse (&back, background_color_string);
+		// If, for some reason, one of the colors could not be retrieved
+		// (for example due to the migration to the new GdkRGBA colors), set the color to the default.
+		if (text_color_string == NULL || background_color_string == NULL) {
+			text = (GdkRGBA) {0, 0, 0, 1};
+			back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+		}
+		else {
+			// If, for some reason, the parsing of the colors fail, set the color to the default.
+			if (!gdk_rgba_parse (&text, text_color_string) || !gdk_rgba_parse (&back, background_color_string)) {
+				text = (GdkRGBA) {0, 0, 0, 1};
+				back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			}
+		}
 
 		// Set the text and background color for this pad, as stated in its properties file.
 		gtk_widget_override_cursor (pad->priv->textview, &text, &text);
