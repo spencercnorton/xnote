@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-10-18 13:50-0500\n"
+"POT-Creation-Date: 2013-11-01 15:18-0500\n"
 "PO-Revision-Date: 2013-10-12 08:23+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-29 04:50+0000\n"
-"X-Generator: Launchpad (build 16818)\n"
-"Language: sv\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -72,7 +72,7 @@ msgid ""
 "https://bugs.launchpad.net/xpad/+filebug"
 msgstr ""
 
-#: ../src/help.c:73
+#: ../src/help.c:76
 msgid "Help"
 msgstr "Hjälp"
 
@@ -85,12 +85,12 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:486
+#: ../src/xpad-app.c:467
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Kunde inte öppna katalog %s."
 
-#: ../src/xpad-app.c:489
+#: ../src/xpad-app.c:470
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -98,44 +98,44 @@ msgstr ""
 "Denna katalog behövs för att lagra inställningar och blockinformation. Xpad "
 "kommer stängas nu."
 
-#: ../src/xpad-app.c:801
+#: ../src/xpad-app.c:814
 msgid "Show version number and quit"
 msgstr "Visa versionsnummer och avsluta"
 
-#: ../src/xpad-app.c:802
+#: ../src/xpad-app.c:815
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Skapa inte ett nytt block vid uppstart om inga tidigare block existerar"
 
-#: ../src/xpad-app.c:808
+#: ../src/xpad-app.c:821
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Skapa ett nytt block vid uppstart även om block redan existerar"
 
-#: ../src/xpad-app.c:809
+#: ../src/xpad-app.c:822
 msgid "Hide all pads"
 msgstr "Dölj alla block"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 msgid "Show all pads"
 msgstr "Visa alla block"
 
-#: ../src/xpad-app.c:811
+#: ../src/xpad-app.c:824
 msgid "Toggle between show and hide all pads"
 msgstr "Växla mella visa och göm alla block"
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "Create a new pad with the contents of a file"
 msgstr "Skapa ett nytt block med innehållet från en fil"
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "FILE"
 msgstr "FIL"
 
-#: ../src/xpad-app.c:813
+#: ../src/xpad-app.c:826
 msgid "Close all pads"
 msgstr "Stäng alla block"
 
-#: ../src/xpad-app.c:844
+#: ../src/xpad-app.c:857
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -158,13 +158,13 @@ msgstr "All text i detta block kommer att förloras och kan inte återfås."
 msgid "'%s' Properties"
 msgstr "Egenskaper för'%s"
 
-#: ../src/xpad-pad.c:1406
+#: ../src/xpad-pad.c:1446
 msgid "Sticky notes"
 msgstr "Klistriga anteckningar"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1425
+#: ../src/xpad-pad.c:1450
 msgid "translator-credits"
 msgstr ""
 "Daniel Nylander <po@danielnylander.se>\n"
@@ -173,64 +173,64 @@ msgstr ""
 "  Daniel Nylander https://launchpad.net/~yeager\n"
 "  nairobie https://launchpad.net/~samuel-ostman"
 
-#: ../src/xpad-pad.c:1703
+#: ../src/xpad-pad.c:1742
 msgid "_Pad"
 msgstr "_Block"
 
-#: ../src/xpad-pad.c:1712
+#: ../src/xpad-pad.c:1751
 msgid "Show on _All Workspaces"
 msgstr "Visa på _alla arbetsytor"
 
-#: ../src/xpad-pad.c:1720
+#: ../src/xpad-pad.c:1758
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: ../src/xpad-pad.c:1743
+#: ../src/xpad-pad.c:1781
 msgid "_View"
 msgstr "_Visa"
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1788
 msgid "_Toolbar"
 msgstr "_Verktygslist"
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1789
 msgid "_Autohide Toolbar"
 msgstr "Göm verktygslist _automatiskt"
 
-#: ../src/xpad-pad.c:1753
+#: ../src/xpad-pad.c:1791
 msgid "_Scrollbar"
 msgstr "_Rullist"
 
-#: ../src/xpad-pad.c:1754
+#: ../src/xpad-pad.c:1792
 msgid "_Window Decorations"
 msgstr "_Fönsterdekorationer"
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1795
 msgid "_Notes"
 msgstr "_Anteckningar"
 
-#: ../src/xpad-pad.c:1765 ../src/xpad-tray.c:135
+#: ../src/xpad-pad.c:1803 ../src/xpad-tray.c:173
 msgid "_Show All"
 msgstr "_Visa alla"
 
-#: ../src/xpad-pad.c:1766 ../src/xpad-tray.c:142
+#: ../src/xpad-pad.c:1804 ../src/xpad-tray.c:180
 msgid "_Close All"
 msgstr "_Stäng alla"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1770
+#: ../src/xpad-pad.c:1808
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: ../src/xpad-pad.c:1777
+#: ../src/xpad-pad.c:1815
 msgid "_Contents"
 msgstr "_Innehåll"
 
-#: ../src/xpad-pad.c:1778
+#: ../src/xpad-pad.c:1816
 msgid "_About"
 msgstr "_Om"
 
-#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:121
+#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:128
 msgid "Appearance"
 msgstr "Utseende"
 
@@ -238,7 +238,7 @@ msgstr "Utseende"
 msgid "Use font from xpad preferences"
 msgstr "Använd typsnitt från xpads inställningar"
 
-#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:149
+#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:155
 msgid "Use this font:"
 msgstr "Använd detta typsnitt:"
 
@@ -246,163 +246,185 @@ msgstr "Använd detta typsnitt:"
 msgid "Use colors from xpad preferences"
 msgstr "Använd färger från xpads inställningar"
 
-#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:151
+#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:157
 msgid "Use these colors:"
 msgstr "Använd dessa färger:"
 
-#: ../src/xpad-pad-properties.c:172 ../src/xpad-preferences.c:159
+#: ../src/xpad-pad-properties.c:174 ../src/xpad-preferences.c:167
 msgid "Background:"
 msgstr "Bakgrund:"
 
-#: ../src/xpad-pad-properties.c:180 ../src/xpad-preferences.c:167
+#: ../src/xpad-pad-properties.c:182 ../src/xpad-preferences.c:176
 msgid "Foreground:"
 msgstr "Förgrund:"
 
-#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:191
+#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:199
 msgid "Set Foreground Color"
 msgstr "Sätt förgrundsfärg"
 
-#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:192
+#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:200
 msgid "Set Background Color"
 msgstr "Sätt bakgrundsfärg"
 
-#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:193
+#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:201
 msgid "Set Font"
 msgstr "Ställ in typsnitt"
 
-#: ../src/xpad-preferences.c:148
+#: ../src/xpad-preferences.c:154
 msgid "Use font from theme"
 msgstr "Använd typsnitt från tema"
 
-#: ../src/xpad-preferences.c:150
+#: ../src/xpad-preferences.c:156
 msgid "Use colors from theme"
 msgstr "Använd färger från tema"
 
-#: ../src/xpad-preferences.c:178
+#: ../src/xpad-preferences.c:187
 msgid "_Edit lock"
 msgstr "_Redigera lås"
 
-#: ../src/xpad-preferences.c:179
+#: ../src/xpad-preferences.c:188
 msgid "_Pads start on all workspaces"
 msgstr "Block _startar på alla arbetsytor"
 
-#: ../src/xpad-preferences.c:180
+#: ../src/xpad-preferences.c:189
 msgid "_Confirm pad deletion"
 msgstr "_Bekräfta borttagning av block"
 
-#: ../src/xpad-preferences.c:186
+#: ../src/xpad-preferences.c:194
 msgid "Xpad Preferences"
 msgstr "Inställningar för Xpad"
 
-#: ../src/xpad-preferences.c:251
+#: ../src/xpad-preferences.c:262
 msgid "Options"
 msgstr "Alternativ"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-preferences.c:289
+msgid "Do Nothing"
+msgstr ""
+
+#: ../src/xpad-preferences.c:290
+#, fuzzy
+msgid "Toggle Show All"
+msgstr "_Visa alla"
+
+#: ../src/xpad-preferences.c:291
+msgid "List of Pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:292
+#, fuzzy
+msgid "New Pad"
+msgstr "Öppna nytt block"
+
+#: ../src/xpad-preferences.c:295
+msgid "Tray click behaviour"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
 msgstr "Rensa blockets innehåll"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
 msgstr "Lägg till R_ensa till verktygslist"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
 msgstr "Stäng och spara block"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
 msgstr "Lägg till _Stäng till verktygslist"
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Add C_opy to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Add C_ut to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
 msgstr "Ta bort block"
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
 msgstr "Lägg till _Ta bort till verktygslist"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
 msgstr "Öppna nytt block"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
 msgstr "Lägg till _Ny till verktyglist"
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Add Pa_ste to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
 msgstr "Redigera inställningar"
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Lägg till _Inställningar till verktygslist"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr "Redigera blockets egenskaper"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr "Lägg till _Egenskaper till verktygslist"
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Redo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Add _Redo to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
 msgstr "Stäng alla block"
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
 msgstr "Lägg till Stäng _alla till verktygsraden"
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Undo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Add _Undo to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:92
+#: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
 msgstr "Lägg till en se_parator till verktygslist"
 
-#: ../src/xpad-toolbar.c:543
+#: ../src/xpad-toolbar.c:553
 msgid "Remove All _Buttons"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:555
+#: ../src/xpad-toolbar.c:565
 msgid "Remo_ve Last Button"
 msgstr ""
 
@@ -423,4 +445,5 @@ msgstr "Plita ner anteckningar för senare användning"
 #~ msgid ""
 #~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 #~ msgstr ""
-#~ "Skicka kommentarer eller felrapporter till xpad-devel@lists.sourceforge.net"
+#~ "Skicka kommentarer eller felrapporter till xpad-devel@lists.sourceforge."
+#~ "net"

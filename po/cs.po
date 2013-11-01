@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-10-18 13:50-0500\n"
+"POT-Creation-Date: 2013-11-01 15:18-0500\n"
 "PO-Revision-Date: 2013-10-12 08:18+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-29 04:50+0000\n"
-"X-Generator: Launchpad (build 16818)\n"
-"Language: cs\n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -69,25 +69,24 @@ msgid ""
 "https://bugs.launchpad.net/xpad/+filebug"
 msgstr ""
 
-#: ../src/help.c:73
+#: ../src/help.c:76
 msgid "Help"
 msgstr "Pomoc"
 
 #: ../src/xpad-app.c:133
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr ""
-"Xpad je graphický program. Prosím spouštějte ho v grafickém prostředí."
+msgstr "Xpad je graphický program. Prosím spouštějte ho v grafickém prostředí."
 
 #: ../src/xpad-app.c:138 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:486
+#: ../src/xpad-app.c:467
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Nelze otevřít adresář %s"
 
-#: ../src/xpad-app.c:489
+#: ../src/xpad-app.c:470
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -95,44 +94,44 @@ msgstr ""
 "Tento adresář je potřebný k uložení nastavení a dalších informací. X pad se "
 "nyní zavře."
 
-#: ../src/xpad-app.c:801
+#: ../src/xpad-app.c:814
 msgid "Show version number and quit"
 msgstr "Zobrazit číslo verze a skončit."
 
-#: ../src/xpad-app.c:802
+#: ../src/xpad-app.c:815
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Nevytvářet nové lepítko při startu i když žádné přechozí lepítko neexistuje."
 
-#: ../src/xpad-app.c:808
+#: ../src/xpad-app.c:821
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Vytvářet nové lepítko při startu i když nějaké lepítko už existuje."
 
-#: ../src/xpad-app.c:809
+#: ../src/xpad-app.c:822
 msgid "Hide all pads"
 msgstr "Skrýt všechna lepítka."
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 msgid "Show all pads"
 msgstr "Zobrazit všechna lepítka."
 
-#: ../src/xpad-app.c:811
+#: ../src/xpad-app.c:824
 msgid "Toggle between show and hide all pads"
 msgstr "Zobrazit/skrýt všechna lepítka."
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "Create a new pad with the contents of a file"
 msgstr "Vytvořit nové lepítko s obsahem souboru"
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "FILE"
 msgstr "Soubor"
 
-#: ../src/xpad-app.c:813
+#: ../src/xpad-app.c:826
 msgid "Close all pads"
 msgstr "Zavřít všechna lepítka"
 
-#: ../src/xpad-app.c:844
+#: ../src/xpad-app.c:857
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -155,13 +154,13 @@ msgstr "Celý text tohoto lepítka bude nenávratně ztracen."
 msgid "'%s' Properties"
 msgstr "'%s' Vlastnosti"
 
-#: ../src/xpad-pad.c:1406
+#: ../src/xpad-pad.c:1446
 msgid "Sticky notes"
 msgstr "Poznámková lepítka"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1425
+#: ../src/xpad-pad.c:1450
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -169,64 +168,64 @@ msgstr ""
 "  Milos Koutny https://launchpad.net/~milos-koutny\n"
 "  tomasjerabek https://launchpad.net/~tomasjerabek"
 
-#: ../src/xpad-pad.c:1703
+#: ../src/xpad-pad.c:1742
 msgid "_Pad"
 msgstr "Le_pítko"
 
-#: ../src/xpad-pad.c:1712
+#: ../src/xpad-pad.c:1751
 msgid "Show on _All Workspaces"
 msgstr "Zobr_az na všech plochách"
 
-#: ../src/xpad-pad.c:1720
+#: ../src/xpad-pad.c:1758
 msgid "_Edit"
 msgstr "_Upravit"
 
-#: ../src/xpad-pad.c:1743
+#: ../src/xpad-pad.c:1781
 msgid "_View"
 msgstr "_Zobrazení"
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1788
 msgid "_Toolbar"
 msgstr "_Nástrojová lišta"
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1789
 msgid "_Autohide Toolbar"
 msgstr "_Automatický skrývat lištu nástrojů"
 
-#: ../src/xpad-pad.c:1753
+#: ../src/xpad-pad.c:1791
 msgid "_Scrollbar"
 msgstr "_Posuvná lišta"
 
-#: ../src/xpad-pad.c:1754
+#: ../src/xpad-pad.c:1792
 msgid "_Window Decorations"
 msgstr "_Ovládací prvky okna"
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1795
 msgid "_Notes"
 msgstr "_Lepítka"
 
-#: ../src/xpad-pad.c:1765 ../src/xpad-tray.c:135
+#: ../src/xpad-pad.c:1803 ../src/xpad-tray.c:173
 msgid "_Show All"
 msgstr "U_kázat vše"
 
-#: ../src/xpad-pad.c:1766 ../src/xpad-tray.c:142
+#: ../src/xpad-pad.c:1804 ../src/xpad-tray.c:180
 msgid "_Close All"
 msgstr "_Zavřít vše"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1770
+#: ../src/xpad-pad.c:1808
 msgid "_Help"
 msgstr "_Pomoc"
 
-#: ../src/xpad-pad.c:1777
+#: ../src/xpad-pad.c:1815
 msgid "_Contents"
 msgstr "_Obsah"
 
-#: ../src/xpad-pad.c:1778
+#: ../src/xpad-pad.c:1816
 msgid "_About"
 msgstr "O programu"
 
-#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:121
+#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:128
 msgid "Appearance"
 msgstr "Vzhled"
 
@@ -234,7 +233,7 @@ msgstr "Vzhled"
 msgid "Use font from xpad preferences"
 msgstr "Použít písmo z Xpad nastavení"
 
-#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:149
+#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:155
 msgid "Use this font:"
 msgstr "Použít toto písmo"
 
@@ -242,163 +241,185 @@ msgstr "Použít toto písmo"
 msgid "Use colors from xpad preferences"
 msgstr "Použít barvy z Xpad nastavení"
 
-#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:151
+#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:157
 msgid "Use these colors:"
 msgstr "Užít tyto barvy"
 
-#: ../src/xpad-pad-properties.c:172 ../src/xpad-preferences.c:159
+#: ../src/xpad-pad-properties.c:174 ../src/xpad-preferences.c:167
 msgid "Background:"
 msgstr "Pozadí"
 
-#: ../src/xpad-pad-properties.c:180 ../src/xpad-preferences.c:167
+#: ../src/xpad-pad-properties.c:182 ../src/xpad-preferences.c:176
 msgid "Foreground:"
 msgstr "Popředí"
 
-#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:191
+#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:199
 msgid "Set Foreground Color"
 msgstr "Nastavit barvu popředí"
 
-#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:192
+#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:200
 msgid "Set Background Color"
 msgstr "Nastavit barvu pozadí"
 
-#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:193
+#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:201
 msgid "Set Font"
 msgstr "Nastavit písmo"
 
-#: ../src/xpad-preferences.c:148
+#: ../src/xpad-preferences.c:154
 msgid "Use font from theme"
 msgstr "Použít písmo z motivu"
 
-#: ../src/xpad-preferences.c:150
+#: ../src/xpad-preferences.c:156
 msgid "Use colors from theme"
 msgstr "Použít barvy z motivu"
 
-#: ../src/xpad-preferences.c:178
+#: ../src/xpad-preferences.c:187
 msgid "_Edit lock"
 msgstr "Zakazat úpravy"
 
-#: ../src/xpad-preferences.c:179
+#: ../src/xpad-preferences.c:188
 msgid "_Pads start on all workspaces"
 msgstr "Le_pítka se spustí na všech plochách"
 
-#: ../src/xpad-preferences.c:180
+#: ../src/xpad-preferences.c:189
 msgid "_Confirm pad deletion"
 msgstr "P_otvrzovat odstranění lepítka"
 
-#: ../src/xpad-preferences.c:186
+#: ../src/xpad-preferences.c:194
 msgid "Xpad Preferences"
 msgstr "Xpad nastavení"
 
-#: ../src/xpad-preferences.c:251
+#: ../src/xpad-preferences.c:262
 msgid "Options"
 msgstr "Možnosti"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-preferences.c:289
+msgid "Do Nothing"
+msgstr ""
+
+#: ../src/xpad-preferences.c:290
+#, fuzzy
+msgid "Toggle Show All"
+msgstr "U_kázat vše"
+
+#: ../src/xpad-preferences.c:291
+msgid "List of Pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:292
+#, fuzzy
+msgid "New Pad"
+msgstr "Otevřít nové lepítko"
+
+#: ../src/xpad-preferences.c:295
+msgid "Tray click behaviour"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
 msgstr "Vymazat obsah lepítka"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
 msgstr "Přidat V_ymazání na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
 msgstr "Uložit a zavřít lepítko"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
 msgstr "Přidat _Uzavření na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Add C_opy to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Add C_ut to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
 msgstr "Odstranit lepítko"
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
 msgstr "Přidat _Odstranění na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
 msgstr "Otevřít nové lepítko"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
 msgstr "Přidat _Nové lepítko na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Add Pa_ste to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
 msgstr "Upravit nastavení"
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Přidat Nastavení na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr "Upravit vlastnosti lepítka"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr "Přidat Vlas_tnosti na na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Redo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Add _Redo to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
 msgstr "Uzavřít všechna lepítka"
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
 msgstr "Přidat Uz_avřít vše  na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Undo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Add _Undo to Toolbar"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:92
+#: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
 msgstr "Přidat O_ddělovač na lištu nástrojů"
 
-#: ../src/xpad-toolbar.c:543
+#: ../src/xpad-toolbar.c:553
 msgid "Remove All _Buttons"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:555
+#: ../src/xpad-toolbar.c:565
 msgid "Remo_ve Last Button"
 msgstr ""
 

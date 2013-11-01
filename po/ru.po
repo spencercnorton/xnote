@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-10-18 13:50-0500\n"
+"POT-Creation-Date: 2013-11-01 15:18-0500\n"
 "PO-Revision-Date: 2013-10-11 07:43+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: RU <RU@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-29 04:50+0000\n"
-"X-Generator: Launchpad (build 16818)\n"
-"Language: \n"
+"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16807)\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -71,7 +71,7 @@ msgid ""
 "https://bugs.launchpad.net/xpad/+filebug"
 msgstr ""
 
-#: ../src/help.c:73
+#: ../src/help.c:76
 msgid "Help"
 msgstr "Помощь"
 
@@ -85,12 +85,12 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:486
+#: ../src/xpad-app.c:467
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Не удалось открыть каталог %s"
 
-#: ../src/xpad-app.c:489
+#: ../src/xpad-app.c:470
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -98,43 +98,43 @@ msgstr ""
 "Эта директория необходима для сохранения настроек и содержимого стикеров.  А "
 "сейчас Xpad будет закрыт."
 
-#: ../src/xpad-app.c:801
+#: ../src/xpad-app.c:814
 msgid "Show version number and quit"
 msgstr "Показать версию и выйти"
 
-#: ../src/xpad-app.c:802
+#: ../src/xpad-app.c:815
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Не создавать новый стикер на старте если их ещё нет"
 
-#: ../src/xpad-app.c:808
+#: ../src/xpad-app.c:821
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Создать новый стикер на старте, даже если уже есть."
 
-#: ../src/xpad-app.c:809
+#: ../src/xpad-app.c:822
 msgid "Hide all pads"
 msgstr "Скрыть все стикеры"
 
-#: ../src/xpad-app.c:810
+#: ../src/xpad-app.c:823
 msgid "Show all pads"
 msgstr "Показать все стикеры"
 
-#: ../src/xpad-app.c:811
+#: ../src/xpad-app.c:824
 msgid "Toggle between show and hide all pads"
 msgstr "Показать/Скрыть все заметки"
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "Create a new pad with the contents of a file"
 msgstr "Создать новый стикер с содержимым из файла"
 
-#: ../src/xpad-app.c:812
+#: ../src/xpad-app.c:825
 msgid "FILE"
 msgstr "ФАЙЛ"
 
-#: ../src/xpad-app.c:813
+#: ../src/xpad-app.c:826
 msgid "Close all pads"
 msgstr "Закрыть все заметки"
 
-#: ../src/xpad-app.c:844
+#: ../src/xpad-app.c:857
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -157,13 +157,13 @@ msgstr "Все содержимое заметки будет утрачено."
 msgid "'%s' Properties"
 msgstr "Свойства '%s'"
 
-#: ../src/xpad-pad.c:1406
+#: ../src/xpad-pad.c:1446
 msgid "Sticky notes"
 msgstr "Липкие записки"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1425
+#: ../src/xpad-pad.c:1450
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -174,64 +174,64 @@ msgstr ""
 "  Rion https://launchpad.net/~rion4ik\n"
 "  Roman A. aka BasicXP https://launchpad.net/~basicxp"
 
-#: ../src/xpad-pad.c:1703
+#: ../src/xpad-pad.c:1742
 msgid "_Pad"
 msgstr "_Заметка"
 
-#: ../src/xpad-pad.c:1712
+#: ../src/xpad-pad.c:1751
 msgid "Show on _All Workspaces"
 msgstr "Показать на _всех рабочих столах"
 
-#: ../src/xpad-pad.c:1720
+#: ../src/xpad-pad.c:1758
 msgid "_Edit"
 msgstr "_Правка"
 
-#: ../src/xpad-pad.c:1743
+#: ../src/xpad-pad.c:1781
 msgid "_View"
 msgstr "_Вид"
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1788
 msgid "_Toolbar"
 msgstr "_Панель инструментов"
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1789
 msgid "_Autohide Toolbar"
 msgstr "Автоскрытие панели инструментов"
 
-#: ../src/xpad-pad.c:1753
+#: ../src/xpad-pad.c:1791
 msgid "_Scrollbar"
 msgstr "Полоса прокрутки"
 
-#: ../src/xpad-pad.c:1754
+#: ../src/xpad-pad.c:1792
 msgid "_Window Decorations"
 msgstr "Рамка окна"
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1795
 msgid "_Notes"
 msgstr "_Заметки"
 
-#: ../src/xpad-pad.c:1765 ../src/xpad-tray.c:135
+#: ../src/xpad-pad.c:1803 ../src/xpad-tray.c:173
 msgid "_Show All"
 msgstr "Показать все"
 
-#: ../src/xpad-pad.c:1766 ../src/xpad-tray.c:142
+#: ../src/xpad-pad.c:1804 ../src/xpad-tray.c:180
 msgid "_Close All"
 msgstr "_Закрыть все"
 
 #. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1770
+#: ../src/xpad-pad.c:1808
 msgid "_Help"
 msgstr "_Справка"
 
-#: ../src/xpad-pad.c:1777
+#: ../src/xpad-pad.c:1815
 msgid "_Contents"
 msgstr "_Содержание"
 
-#: ../src/xpad-pad.c:1778
+#: ../src/xpad-pad.c:1816
 msgid "_About"
 msgstr "_О программе"
 
-#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:121
+#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:128
 msgid "Appearance"
 msgstr "Оформление"
 
@@ -239,7 +239,7 @@ msgstr "Оформление"
 msgid "Use font from xpad preferences"
 msgstr "Использовать общие настройки шрифта"
 
-#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:149
+#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:155
 msgid "Use this font:"
 msgstr "Другой шрифт"
 
@@ -247,163 +247,185 @@ msgstr "Другой шрифт"
 msgid "Use colors from xpad preferences"
 msgstr "Использовать общие настройки цвета"
 
-#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:151
+#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:157
 msgid "Use these colors:"
 msgstr "Другие цвета"
 
-#: ../src/xpad-pad-properties.c:172 ../src/xpad-preferences.c:159
+#: ../src/xpad-pad-properties.c:174 ../src/xpad-preferences.c:167
 msgid "Background:"
 msgstr "Фон:"
 
-#: ../src/xpad-pad-properties.c:180 ../src/xpad-preferences.c:167
+#: ../src/xpad-pad-properties.c:182 ../src/xpad-preferences.c:176
 msgid "Foreground:"
 msgstr "Текст:"
 
-#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:191
+#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:199
 msgid "Set Foreground Color"
 msgstr "Установить цвет текста"
 
-#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:192
+#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:200
 msgid "Set Background Color"
 msgstr "Установить цвет фона"
 
-#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:193
+#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:201
 msgid "Set Font"
 msgstr "Установить шрифт"
 
-#: ../src/xpad-preferences.c:148
+#: ../src/xpad-preferences.c:154
 msgid "Use font from theme"
 msgstr "Использовать шрифт темы"
 
-#: ../src/xpad-preferences.c:150
+#: ../src/xpad-preferences.c:156
 msgid "Use colors from theme"
 msgstr "Использоватать цвета темы"
 
-#: ../src/xpad-preferences.c:178
+#: ../src/xpad-preferences.c:187
 msgid "_Edit lock"
 msgstr "Защита от редактирования"
 
-#: ../src/xpad-preferences.c:179
+#: ../src/xpad-preferences.c:188
 msgid "_Pads start on all workspaces"
 msgstr "_Стикеры на всех рабочих столах"
 
-#: ../src/xpad-preferences.c:180
+#: ../src/xpad-preferences.c:189
 msgid "_Confirm pad deletion"
 msgstr "Подтверждать удаление панели"
 
-#: ../src/xpad-preferences.c:186
+#: ../src/xpad-preferences.c:194
 msgid "Xpad Preferences"
 msgstr "Общие настройки Xpad"
 
-#: ../src/xpad-preferences.c:251
+#: ../src/xpad-preferences.c:262
 msgid "Options"
 msgstr "Настройки"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-preferences.c:289
+msgid "Do Nothing"
+msgstr ""
+
+#: ../src/xpad-preferences.c:290
+#, fuzzy
+msgid "Toggle Show All"
+msgstr "Показать все"
+
+#: ../src/xpad-preferences.c:291
+msgid "List of Pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:292
+#, fuzzy
+msgid "New Pad"
+msgstr "Новый стикер"
+
+#: ../src/xpad-preferences.c:295
+msgid "Tray click behaviour"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:81
 msgid "Clear Pad Contents"
 msgstr "Очистить содержимое стикера"
 
-#: ../src/xpad-toolbar.c:80
+#: ../src/xpad-toolbar.c:81
 msgid "Add C_lear to Toolbar"
 msgstr "Добавить кнопку _Очистить"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Close and Save Pad"
 msgstr "Сохранить и закрыть стикер"
 
-#: ../src/xpad-toolbar.c:81
+#: ../src/xpad-toolbar.c:82
 msgid "Add _Close to Toolbar"
 msgstr "Добавить кнопку _Закрыть"
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Copy to Clipboard"
 msgstr "Копировать"
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:83
 msgid "Add C_opy to Toolbar"
 msgstr "Добавить _Копировать на панель"
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Cut to Clipboard"
 msgstr "Вырезать"
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:84
 msgid "Add C_ut to Toolbar"
 msgstr "Добавить _Вырезать на панель"
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Delete Pad"
 msgstr "Удалить стикер"
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:85
 msgid "Add _Delete to Toolbar"
 msgstr "Добавиьт кнопку _Удалить"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
 msgstr "Новый стикер"
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:86
 msgid "Add _New to Toolbar"
 msgstr "Добавить кнопку _Новый стикер"
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Paste from Clipboard"
 msgstr "Вставить"
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:87
 msgid "Add Pa_ste to Toolbar"
 msgstr "Добавить Вст_авить на панель"
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
 msgstr "Изменить настройки"
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences to Toolbar"
 msgstr "Добавить кнопку _Настройки"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
 msgstr "Правка настроек стикера"
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties to Toolbar"
 msgstr "Добавить кнопку _Свойства"
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Redo"
 msgstr "Вернуть"
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:90
 msgid "Add _Redo to Toolbar"
 msgstr "Добавить Ве_рнуть на панель"
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
 msgstr "Закрыть все стикеры"
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:91
 msgid "Add Close _All to Toolbar"
 msgstr "Добавить кнопку Закрыть _все"
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Undo"
 msgstr "Отменить"
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:92
 msgid "Add _Undo to Toolbar"
 msgstr "Добавить _Отменить на панель"
 
-#: ../src/xpad-toolbar.c:92
+#: ../src/xpad-toolbar.c:93
 msgid "Add a Se_parator to Toolbar"
 msgstr "Добавить разделитель"
 
-#: ../src/xpad-toolbar.c:543
+#: ../src/xpad-toolbar.c:553
 msgid "Remove All _Buttons"
 msgstr "Удалить в_се кнопки"
 
-#: ../src/xpad-toolbar.c:555
+#: ../src/xpad-toolbar.c:565
 msgid "Remo_ve Last Button"
 msgstr "Удалить _последнюю кнопку"
 
@@ -418,7 +440,8 @@ msgstr "Заметки/стикеры на вашем рабочем столе"
 #~ msgid ""
 #~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 #~ msgstr ""
-#~ "Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge.net"
+#~ "Пожалуйста, присылайте комментарии по адресу xpad-devel@lists.sourceforge."
+#~ "net"
 
 #~ msgid "_Move"
 #~ msgstr "Переместить"
