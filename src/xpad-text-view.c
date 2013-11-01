@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "../config.h"
 #include "xpad-text-view.h"
 #include "xpad-text-buffer.h"
 #include "xpad-settings.h"
+#include "xpad-app.h"
 
 struct XpadTextViewPrivate 
 {
@@ -42,9 +44,7 @@ static gboolean xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus
 static void xpad_text_view_notify_edit_lock (XpadTextView *view);
 static void xpad_text_view_notify_editable (XpadTextView *view);
 static void xpad_text_view_notify_fontname (XpadTextView *view);
-static void xpad_text_view_notify_text_color (XpadTextView *view);
-static void xpad_text_view_notify_back_color (XpadTextView *view);
-static void xpad_text_view_style_set (GtkWidget *widget, GtkStyle *previous_style);
+static void xpad_text_view_notify_colors (XpadTextView *view);
 
 enum
 {
@@ -57,7 +57,7 @@ enum
 GtkWidget *
 xpad_text_view_new (void)
 {
-	return GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW, NULL));
+	return GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW, "follow-font-style", TRUE, "follow-color-style", TRUE, NULL));
 }
 
 static void
@@ -113,14 +113,12 @@ xpad_text_view_init (XpadTextView *view)
 	g_signal_connect_after (view, "focus-out-event", G_CALLBACK (xpad_text_view_focus_out_event), NULL);
 	g_signal_connect (view, "realize", G_CALLBACK (xpad_text_view_realize), NULL);
 	g_signal_connect (view, "notify::editable", G_CALLBACK (xpad_text_view_notify_editable), NULL);
-	g_signal_connect (view, "style-set", G_CALLBACK (xpad_text_view_style_set), NULL);
-	g_signal_connect_swapped (xpad_settings (), "notify::edit-lock", G_CALLBACK (xpad_text_view_notify_edit_lock), view);
-	view->priv->notify_font_handler = g_signal_connect_swapped (xpad_settings (), "notify::fontname", G_CALLBACK (xpad_text_view_notify_fontname), view);
-	view->priv->notify_text_handler = g_signal_connect_swapped (xpad_settings (), "notify::text-color", G_CALLBACK (xpad_text_view_notify_text_color), view);
-	view->priv->notify_back_handler = g_signal_connect_swapped (xpad_settings (), "notify::back-color", G_CALLBACK (xpad_text_view_notify_back_color), view);
+	g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (xpad_text_view_notify_edit_lock), view);
+	view->priv->notify_font_handler = g_signal_connect_swapped (xpad_global_settings, "notify::fontname", G_CALLBACK (xpad_text_view_notify_fontname), view);
+	view->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (xpad_text_view_notify_colors), view);
+	view->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (xpad_text_view_notify_colors), view);
 	
-	xpad_text_view_notify_text_color (view);
-	xpad_text_view_notify_back_color (view);
+	xpad_text_view_notify_colors (view);
 	xpad_text_view_notify_fontname (view);
 }
 
@@ -139,19 +137,27 @@ xpad_text_view_dispose (GObject *object)
 static void
 xpad_text_view_finalize (GObject *object)
 {
+	XpadTextView *view = XPAD_TEXT_VIEW (object);
+
+	g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
+
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
 
 static void
 xpad_text_view_realize (XpadTextView *view)
 {
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_settings ()));
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_global_settings));
 }
 
 static gboolean
 xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 {
-	if (xpad_settings_get_edit_lock (xpad_settings ()))
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) event;
+
+	if (xpad_settings_get_edit_lock (xpad_global_settings))
 	{
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
 		return TRUE;
@@ -164,7 +170,7 @@ static gboolean
 xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 {
 	if (event->button == 1 &&
-	    xpad_settings_get_edit_lock (xpad_settings ()) &&
+	    xpad_settings_get_edit_lock (xpad_global_settings) &&
 	    !gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)))
 	{
 		if (event->type == GDK_2BUTTON_PRESS)
@@ -174,7 +180,7 @@ xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 		}
 		else if (event->type == GDK_BUTTON_PRESS)
 		{
-			gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)), event->button, event->x_root, event->y_root, event->time);
+			gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			return TRUE;
 		}
 	}
@@ -186,7 +192,7 @@ static void
 xpad_text_view_notify_edit_lock (XpadTextView *view)
 {
 	/* chances are good that they don't have the text view focused while it changed, so make non-editable if edit lock turned on */
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_settings ()));
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_global_settings));
 }
 
 static void
@@ -203,71 +209,53 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	gdk_window_set_cursor (gtk_text_view_get_window (GTK_TEXT_VIEW (view), GTK_TEXT_WINDOW_TEXT), cursor);
 	
 	if (cursor)
-		gdk_cursor_unref (cursor);
-}
-
-/* Adjust the cursor to match the text color */
-static void
-xpad_text_view_style_set (GtkWidget *widget, GtkStyle *previous_style)
-{
-	GdkColor c;
-	
-	/* text color changes */
-	c = gtk_widget_get_style (widget)->text[GTK_STATE_NORMAL];
-	if (!previous_style || !gdk_color_equal (&c, &previous_style->text[GTK_STATE_NORMAL]))
-	{
-		const gchar *name = gtk_widget_get_name (widget);
-		gchar *style_string = g_strdup_printf ("style '%s' {GtkWidget::cursor_color = {%" G_GUINT16_FORMAT ", %" G_GUINT16_FORMAT ", %" G_GUINT16_FORMAT "}} widget '*%s' style '%s'", name, c.red, c.green, c.blue, name, name);
-		gtk_rc_parse_string (style_string);
-		g_free (style_string);
-		gtk_widget_reset_rc_styles (widget);
-	}
-	
-	/* base color changes */
-	c = gtk_widget_get_style (widget)->base[GTK_STATE_NORMAL];
-	if (!previous_style || !gdk_color_equal (&c, &previous_style->base[GTK_STATE_NORMAL]))
-	{
-		gtk_widget_modify_bg (widget, GTK_STATE_NORMAL, &c);
-	}
+		g_object_unref (cursor);
 }
 
 static void
 xpad_text_view_notify_fontname (XpadTextView *view)
 {
-	const gchar *font = xpad_settings_get_fontname (xpad_settings ());
+	const gchar *font = xpad_settings_get_fontname (xpad_global_settings);
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = font ? pango_font_description_from_string (font) : NULL;
-	gtk_widget_modify_font (GTK_WIDGET (view), fontdesc);
+	gtk_widget_override_font (GTK_WIDGET (view), fontdesc);
 	if (fontdesc)
 		pango_font_description_free (fontdesc);
 }
 
+// Update the colors of the textview
 static void
-xpad_text_view_notify_text_color (XpadTextView *view)
+xpad_text_view_notify_colors (XpadTextView *view)
 {
-	gtk_widget_modify_text (GTK_WIDGET (view), GTK_STATE_NORMAL, xpad_settings_get_text_color (xpad_settings ()));
-}
+	// Set the colors of this individual pad to the global setting preference.
+	const GdkRGBA *text_color = xpad_settings_get_text_color (xpad_global_settings);
+	const GdkRGBA *back_color = xpad_settings_get_back_color (xpad_global_settings);
 
-static void
-xpad_text_view_notify_back_color (XpadTextView *view)
-{
-	gtk_widget_modify_base (GTK_WIDGET (view), GTK_STATE_NORMAL, xpad_settings_get_back_color (xpad_settings ()));
+	gtk_widget_override_cursor (GTK_WIDGET (view), text_color, text_color);
+	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, text_color);
+	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, back_color);
+
+	// Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors.
+	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, back_color);
+	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, text_color);
 }
 
 void
 xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow)
 {
+	g_return_if_fail (view);
+
 	if (follow != view->priv->follow_font_style)
 	{
 		if (follow)
 		{
-			g_signal_handler_unblock (xpad_settings (), view->priv->notify_font_handler);
+			g_signal_handler_unblock (xpad_global_settings, view->priv->notify_font_handler);
 			xpad_text_view_notify_fontname (view);
 		}
 		else
 		{
-			g_signal_handler_block (xpad_settings (), view->priv->notify_font_handler);
+			g_signal_handler_block (xpad_global_settings, view->priv->notify_font_handler);
 		}
 	}
 	
@@ -279,37 +267,44 @@ xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow)
 gboolean
 xpad_text_view_get_follow_font_style (XpadTextView *view)
 {
-	return view->priv->follow_font_style;
+	if (view == NULL)
+		return TRUE;
+	else
+		return view->priv->follow_font_style;
 }
 
 void
 xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow)
 {
+	g_return_if_fail (view);
+
 	if (follow != view->priv->follow_color_style)
 	{
 		if (follow)
 		{
-			g_signal_handler_unblock (xpad_settings (), view->priv->notify_text_handler);
-			g_signal_handler_unblock (xpad_settings (), view->priv->notify_back_handler);
-			xpad_text_view_notify_text_color (view);
-			xpad_text_view_notify_back_color (view);
+			xpad_text_view_notify_colors (view);
+			g_signal_handler_unblock (xpad_global_settings, view->priv->notify_text_handler);
+			g_signal_handler_unblock (xpad_global_settings, view->priv->notify_back_handler);
 		}
 		else
 		{
-			g_signal_handler_block (xpad_settings (), view->priv->notify_text_handler);
-			g_signal_handler_block (xpad_settings (), view->priv->notify_back_handler);
+			g_signal_handler_block (xpad_global_settings, view->priv->notify_text_handler);
+			g_signal_handler_block (xpad_global_settings, view->priv->notify_back_handler);
 		}
+
+		view->priv->follow_color_style = follow;
 	}
-	
-	view->priv->follow_color_style = follow;
-	
+
 	g_object_notify (G_OBJECT (view), "follow_color_style");
 }
 
 gboolean
 xpad_text_view_get_follow_color_style (XpadTextView *view)
 {
-	return view->priv->follow_color_style;
+	if (view == NULL)
+		return TRUE;
+	else
+		return view->priv->follow_color_style;
 }
 
 static void

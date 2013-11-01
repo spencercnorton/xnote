@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "../config.h"
 #include "xpad-grip-tool-item.h"
 
 struct XpadGripToolItemPrivate
@@ -28,7 +29,7 @@ G_DEFINE_TYPE_WITH_PRIVATE(XpadGripToolItem, xpad_grip_tool_item, GTK_TYPE_TOOL_
 static void xpad_grip_tool_item_dispose (GObject *object);
 static void xpad_grip_tool_item_finalize (GObject *object);
 
-static gboolean xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event);
+static gboolean xpad_grip_tool_item_event_box_draw (GtkWidget *widget, cairo_t *cr);
 static void xpad_grip_tool_item_event_box_realize (GtkWidget *widget);
 static gboolean xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *event);
 
@@ -59,7 +60,7 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	gtk_widget_add_events (grip->priv->drawbox, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
 	g_signal_connect (grip->priv->drawbox, "button-press-event", G_CALLBACK (xpad_grip_tool_item_button_pressed_event), NULL);
 	g_signal_connect (grip->priv->drawbox, "realize", G_CALLBACK (xpad_grip_tool_item_event_box_realize), NULL);
-	g_signal_connect (grip->priv->drawbox, "expose-event", G_CALLBACK (xpad_grip_tool_item_event_box_expose), NULL);
+	g_signal_connect (grip->priv->drawbox, "draw", G_CALLBACK (xpad_grip_tool_item_event_box_draw), NULL);
 	gtk_widget_set_size_request (grip->priv->drawbox, 18, 18);
 	
 	right =	gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR;
@@ -95,7 +96,7 @@ xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *eve
 			edge = GDK_WINDOW_EDGE_SOUTH_WEST;
 	
 		gtk_window_begin_resize_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
-			edge, event->button, event->x_root, event->y_root, event->time);
+			edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 		
 		return TRUE;
 	}
@@ -116,30 +117,18 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 		cursor_type = GDK_BOTTOM_LEFT_CORNER;
 	
 	cursor = gdk_cursor_new_for_display (display, cursor_type);
-	gdk_window_set_cursor (widget->window, cursor);
-	gdk_cursor_unref (cursor);
+	gdk_window_set_cursor (gtk_widget_get_window(widget), cursor);
+	g_object_unref (cursor);
 }
 
 static gboolean
-xpad_grip_tool_item_event_box_expose (GtkWidget *widget, GdkEventExpose *event)
+xpad_grip_tool_item_event_box_draw (GtkWidget *widget, cairo_t *cr)
 {
-	GdkWindowEdge edge;
-	
-	if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-		edge = GDK_WINDOW_EDGE_SOUTH_EAST;
-	else
-		edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-	
-	gtk_paint_resize_grip (
-		widget->style,
-		widget->window,
-		GTK_WIDGET_STATE (widget),
-		NULL,
-		widget,
-		"xpad-grip-tool-item",
-		edge,
-		0, 0,
-		widget->allocation.width, widget->allocation.height);
+	gtk_render_handle(gtk_widget_get_style_context(widget),
+			cr,
+			0, 0,
+			gtk_widget_get_allocated_width(widget),
+			gtk_widget_get_allocated_width(widget));
 	
 	return FALSE;
 }

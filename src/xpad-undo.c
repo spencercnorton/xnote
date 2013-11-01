@@ -223,12 +223,20 @@ xpad_undo_get_property (GObject *object, guint prop_id, GValue *value, GParamSpe
 static void
 xpad_undo_begin_user_action (GtkTextBuffer *buffer, XpadUndo *undo)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) buffer;
+
 	undo->priv->user_action++;
 }
 
 static void
 xpad_undo_end_user_action (GtkTextBuffer *buffer, XpadUndo *undo)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) buffer;
+
 	if (undo->priv->user_action > 0)
 		undo->priv->user_action--;
 }
@@ -275,15 +283,28 @@ xpad_undo_clear_history (XpadUndo *undo)
 static void
 xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text, gint len, XpadUndo *undo)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) buffer;
+
 	if (undo->priv->frozen)
 		return;
 
 	if (undo->priv->user_action)
 	{
+		gint n_utf8_chars = 0;
+		glong string_length = 0;
+
 		xpad_undo_clear_redo_history (undo);
 
 		gint pos = gtk_text_iter_get_offset (location);
-		gint n_utf8_chars = g_utf8_strlen (text, len);
+
+		// safe cast
+		string_length = g_utf8_strlen (text, len);
+		if (string_length <= UINT_MAX)
+			n_utf8_chars = (gint) string_length;
+		else
+			g_warning("Casting problem in undo insert text function. Please send a bugreport.");
 
 		/* Merge similar actions. This is how Undo works in most editors, if there is a series of
 			1-letter insertions - they are merge for Undo */
@@ -299,8 +320,8 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 					&& (prev_action->n_utf8_chars == 1 || prev_action->merged)) // with which we should merge
 				{
 					/* if there was a space stop merging unless that was a series of spaces */
-					if ((!g_unichar_isspace (prev_action->text[0]) && !g_ascii_isspace (text[0])) ||
-						(g_unichar_isspace (prev_action->text[0]) && g_unichar_isspace (text[0])))
+					if ((!g_unichar_isspace ((gunichar) prev_action->text[0]) && !g_ascii_isspace ((gunichar) text[0])) ||
+						(g_unichar_isspace ((gunichar) prev_action->text[0]) && g_unichar_isspace ((gunichar) text[0])))
 					{
 						gchar *joined_str = g_strjoin (NULL, prev_action->text, text, NULL);
 						g_free (prev_action->text);
@@ -328,7 +349,11 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 			is nothing after history_curr at this point so we
 			insert right after it. history_start won't change
 			since it is a left guard - not NULL */
-		GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+		GList *dummy_start = g_list_append (undo->priv->history_curr, action);
+		// A dirty way to silence the compiler for these unused variables.
+		// Feel free to implement these variables in the way they are ment to be used.
+		(void) dummy_start;
+
 		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
 		xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
@@ -338,18 +363,31 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 static void
 xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo)
 {
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) buffer;
+
 	if (undo->priv->frozen)
 		return;
 
 	if (undo->priv->user_action)
 	{
+		gint n_utf8_chars = 0;
+		glong string_length = 0;
+
 		xpad_undo_clear_redo_history (undo);
 
 		gchar *text = gtk_text_iter_get_text (start, end);
 		gint start_offset = gtk_text_iter_get_offset (start);
 		gint end_offset = gtk_text_iter_get_offset (end);
 		gint len = abs (end_offset - start_offset);
-		gint n_utf8_chars = g_utf8_strlen (text, len);
+
+		// safe cast
+		string_length = g_utf8_strlen (text, len);
+		if (string_length <= UINT_MAX)
+			n_utf8_chars = (gint) string_length;
+		else
+			g_warning("Casting problem in undo delete range function. Please send a bugreport.");
 
 		UserAction *action = g_new (UserAction, 1);
 		action->action_type = USER_ACTION_DELETE_RANGE;
@@ -360,7 +398,11 @@ xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *
 		action->n_utf8_chars = n_utf8_chars;
 		action->merged = FALSE;
 
-		GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+		GList *dummy_start = g_list_append (undo->priv->history_curr, action);
+		// A dirty way to silence the compiler for these unused variables.
+		// Feel free to implement these variables in the way they are ment to be used.
+		(void) dummy_start;
+
 		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
 		xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
@@ -385,7 +427,11 @@ xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkT
 	action->end = end_offset;	
 	action->merged = FALSE;
 
-	GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+	GList *dummy_start = g_list_append (undo->priv->history_curr, action);
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) dummy_start;
+
 	undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
 	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
@@ -409,7 +455,11 @@ xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, Gtk
 	action->end = end_offset;
 	action->merged = FALSE;
 
-	GList *dummy_start = g_list_append (undo->priv->history_curr, action); // supress warning, we have left guard for start
+	GList *dummy_start = g_list_append (undo->priv->history_curr, action);
+	// A dirty way to silence the compiler for these unused variables.
+	// Feel free to implement these variables in the way they are ment to be used.
+	(void) dummy_start;
+
 	undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
 	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));

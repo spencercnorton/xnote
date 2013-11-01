@@ -52,7 +52,7 @@ struct XpadSettingsClass
 
 GType xpad_settings_get_type (void);
 
-XpadSettings *xpad_settings (void);
+XpadSettings *xpad_settings_new (void);
 
 void xpad_settings_set_width (XpadSettings *settings, guint width);
 guint xpad_settings_get_width (XpadSettings *settings);
@@ -88,15 +88,16 @@ gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings);
 gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings);
 G_CONST_RETURN GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings);
 
-void xpad_settings_set_back_color (XpadSettings *settings, const GdkColor *back);
-G_CONST_RETURN GdkColor *xpad_settings_get_back_color (XpadSettings *settings);
+void xpad_settings_set_back_color (XpadSettings *settings, const GdkRGBA *back);
+G_CONST_RETURN GdkRGBA *xpad_settings_get_back_color (XpadSettings *settings);
 
-void xpad_settings_set_text_color (XpadSettings *settings, const GdkColor *text);
-G_CONST_RETURN GdkColor *xpad_settings_get_text_color (XpadSettings *settings);
+void xpad_settings_set_text_color (XpadSettings *settings, const GdkRGBA *text);
+G_CONST_RETURN GdkRGBA *xpad_settings_get_text_color (XpadSettings *settings);
 
 void xpad_settings_set_fontname (XpadSettings *settings, const gchar *fontname);
 G_CONST_RETURN gchar *xpad_settings_get_fontname (XpadSettings *settings);
 
+void xpad_settings_set_tray_click_handler (XpadSettings *settings, guint conf);
 guint xpad_settings_get_tray_click_handler(XpadSettings *settings);
 
 G_END_DECLS

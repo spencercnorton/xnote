@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "../config.h"
 #include "xpad-pad-group.h"
 #include "xpad-settings.h"
 #include "xpad-pad.h"
@@ -165,7 +166,7 @@ xpad_pad_group_num_visible_pads (XpadPadGroup *group)
 		GSList *i;
 		for (i = group->priv->pads; i; i = i->next)
 		{
-			if (GTK_WIDGET_VISIBLE(GTK_WIDGET(i->data)))
+			if (gtk_widget_get_visible(GTK_WIDGET(i->data)))
 				num ++;
 		}
 		g_slist_free(i);

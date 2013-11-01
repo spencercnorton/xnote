@@ -397,7 +397,7 @@ br_extract_dir (const char *path)
 
 	while (end > path && *end == '/')
 		end--;
-	result = br_strndup ((char *) path, end - path + 1);
+	result = br_strndup ((char *) path, ((size_t) (end - path + 1)));
 	if (!*result)
 	{
 		free (result);
@@ -431,7 +431,7 @@ br_extract_prefix (const char *path)
 	end = strrchr (path, '/');
 	if (!end) return strdup (path);
 
-	tmp = br_strndup ((char *) path, end - path);
+	tmp = br_strndup ((char *) path, ((size_t) (end - path)));
 	if (!*tmp)
 	{
 		free (tmp);
@@ -440,7 +440,7 @@ br_extract_prefix (const char *path)
 	end = strrchr (tmp, '/');
 	if (!end) return tmp;
 
-	result = br_strndup (tmp, end - tmp);
+	result = br_strndup (tmp, ((size_t) (end - tmp)));
 	free (tmp);
 
 	if (!*result)

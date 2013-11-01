@@ -42,22 +42,22 @@ struct XpadPreferencesPrivate
 	GtkWidget *backbutton;
 	GtkWidget *fontbutton;
 	
-	guint notify_edit_handler;
-	guint notify_sticky_handler;
-	guint notify_confirm_handler;
-	guint notify_font_handler;
-	guint notify_back_handler;
-	guint notify_text_handler;
-	guint notify_tray_handler;
-	guint font_handler;
-	guint back_handler;
-	guint text_handler;
-	guint colorcheck_handler;
-	guint fontcheck_handler;
-	guint editcheck_handler;
-	guint stickycheck_handler;
-	guint confirmcheck_handler;
-	guint trayclick_handler;
+	gulong notify_edit_handler;
+	gulong notify_sticky_handler;
+	gulong notify_confirm_handler;
+	gulong notify_font_handler;
+	gulong notify_back_handler;
+	gulong notify_text_handler;
+	gulong notify_tray_handler;
+	gulong font_handler;
+	gulong back_handler;
+	gulong text_handler;
+	gulong colorcheck_handler;
+	gulong fontcheck_handler;
+	gulong editcheck_handler;
+	gulong stickycheck_handler;
+	gulong confirmcheck_handler;
+	gulong trayclick_handler;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
@@ -67,8 +67,8 @@ static void change_sticky_check (GtkToggleButton *button, XpadPreferences *pref)
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_color_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_font_check (GtkToggleButton *button, XpadPreferences *pref);
-static void change_text_color (GtkColorButton *button, XpadPreferences *pref);
-static void change_back_color (GtkColorButton *button, XpadPreferences *pref);
+static void change_text_color (GtkColorChooser *chooser, XpadPreferences *pref);
+static void change_back_color (GtkColorChooser *chooser, XpadPreferences *pref);
 static void change_font_face (GtkFontButton *button, XpadPreferences *pref);
 static void change_tray_click_configuration(GtkComboBox *box, XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
@@ -112,14 +112,16 @@ static void
 xpad_preferences_init (XpadPreferences *pref)
 {
 	GtkWidget *hbox, *font_hbox, *vbox;
-	const GdkColor *color;
+	const GdkRGBA *color;
 	const gchar *fontname;
-	GtkStyle *style;
+	GtkStyleContext *style;
 	GtkWidget *label, *appearance_frame, *alignment, *appearance_vbox;
 	GtkWidget *options_frame, *options_vbox, *global_vbox, *tray_config_vbox;
 	gchar *text;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	GtkRequisition req;
+	GdkRGBA theme_text_color = {0, 0, 0, 0};
+	GdkRGBA theme_background_color = {0, 0, 0, 0};
 	
 	pref->priv = xpad_preferences_get_instance_private(pref);
 	
@@ -130,10 +132,9 @@ xpad_preferences_init (XpadPreferences *pref)
 		"xalign", 0.0,
 		NULL));
 	g_free (text);
-	appearance_vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
-		"homogeneous", FALSE,
-		"spacing", 18,
-		NULL));
+	appearance_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
+	gtk_box_set_homogeneous (GTK_BOX (appearance_vbox), FALSE);
+
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
@@ -155,12 +156,14 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->anticolorcheck = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from theme"));
 	pref->priv->colorcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->anticolorcheck), _("Use these colors:"));
 	
-	font_hbox = gtk_hbox_new (FALSE, 6);
+	font_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+
 	gtk_box_pack_start (GTK_BOX (font_hbox), pref->priv->fontcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (font_hbox), pref->priv->fontbutton, TRUE, TRUE, 0);
 	
-	pref->priv->colorbox = gtk_vbox_new (FALSE, 6);
-	hbox = gtk_hbox_new (FALSE, 12);
+	pref->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+
 	label = gtk_label_new_with_mnemonic (_("Background:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
@@ -168,7 +171,8 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_box_pack_start (GTK_BOX (hbox), pref->priv->backbutton, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (pref->priv->colorbox), "child", hbox, NULL);
 	
-	hbox = gtk_hbox_new (FALSE, 12);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+
 	label = gtk_label_new_with_mnemonic (_("Foreground:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
@@ -186,40 +190,41 @@ xpad_preferences_init (XpadPreferences *pref)
 	
 	gtk_dialog_add_button (GTK_DIALOG (pref), "gtk-close", GTK_RESPONSE_CLOSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (pref), GTK_RESPONSE_CLOSE);
-	gtk_dialog_set_has_separator (GTK_DIALOG (pref), FALSE);
 	g_signal_connect (pref, "response", G_CALLBACK (xpad_preferences_response), NULL);
 	gtk_window_set_title (GTK_WINDOW (pref), _("Xpad Preferences"));
 	
-	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (pref->priv->textbutton), FALSE);
-	gtk_color_button_set_use_alpha (GTK_COLOR_BUTTON (pref->priv->backbutton), xpad_app_get_translucent ());
+	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (pref->priv->textbutton), FALSE);
+	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (pref->priv->backbutton), TRUE);
 	
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->textbutton), _("Set Foreground Color"));
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->backbutton), _("Set Background Color"));
 	gtk_font_button_set_title (GTK_FONT_BUTTON (pref->priv->fontbutton), _("Set Font"));
 	
 	/* Set current state */
-	style = gtk_widget_get_default_style ();
+	style = gtk_widget_get_style_context (GTK_WIDGET(pref));
+	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &theme_text_color);
+	gtk_style_context_get_background_color (style, GTK_STATE_FLAG_NORMAL, &theme_background_color);
 	
-	color = xpad_settings_get_back_color (xpad_settings ());
+	color = xpad_settings_get_back_color (xpad_global_settings);
 	if (color)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->backbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), color);
 	}
 	else
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->anticolorcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->colorbox, FALSE);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->backbutton), &style->base[GTK_STATE_NORMAL]);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &theme_background_color);
 	}
 	
-	color = xpad_settings_get_text_color (xpad_settings ());
+	color = xpad_settings_get_text_color (xpad_global_settings);
 	if (color)
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->textbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), color);
 	else
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->textbutton), &style->text[GTK_STATE_NORMAL]);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &theme_text_color);
 	
-	fontname = xpad_settings_get_fontname (xpad_settings ());
+	fontname = xpad_settings_get_fontname (xpad_global_settings);
 	if (fontname)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->fontcheck), TRUE);
@@ -227,31 +232,32 @@ xpad_preferences_init (XpadPreferences *pref)
 	}
 	else
 	{
-		gchar *str;
+		PangoFontDescription *font;
 		
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->antifontcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->fontbutton, FALSE);
 		
-		str = pango_font_description_to_string (style->font_desc);
-		gtk_font_button_set_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton), str);
-		g_free (str);
+		gtk_style_context_get (style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
+		gtk_font_button_set_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton), pango_font_description_to_string(font));
+		pango_font_description_free (font);
 	}
 	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_settings ()));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->stickycheck), xpad_settings_get_sticky (xpad_settings ()));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_settings ()));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->stickycheck), xpad_settings_get_sticky (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
 	
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+
 	gtk_box_pack_start (GTK_BOX (vbox), pref->priv->antifontcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), font_hbox, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (appearance_vbox), vbox, FALSE, FALSE, 0);
 	
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+
 	gtk_box_pack_start (GTK_BOX (vbox), pref->priv->anticolorcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), pref->priv->colorcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox), alignment, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (appearance_vbox), vbox, FALSE, FALSE, 0);
-	
 	
 	text = g_strconcat ("<b>", _("Options"), "</b>", NULL);
 	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
@@ -260,10 +266,10 @@ xpad_preferences_init (XpadPreferences *pref)
 		"xalign", 0.0,
 		NULL));
 	g_free (text);
-	options_vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
-		"homogeneous", FALSE,
-		"spacing", 6,
-		NULL));
+
+	options_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	gtk_box_set_homogeneous (GTK_BOX (options_vbox), FALSE);
+
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
@@ -275,39 +281,35 @@ xpad_preferences_init (XpadPreferences *pref)
 		"shadow-type", GTK_SHADOW_NONE,
 		"child", alignment,
 		NULL));
-	
-	tray_config_vbox = GTK_WIDGET (g_object_new (GTK_TYPE_VBOX,
-		"homogeneous", FALSE,
-		"spacing", 6,
-		NULL));
 
-	pref->priv->trayconfigbox = gtk_combo_box_new_text();
-	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Do Nothing" );
-	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "Toggle Show All" );
-	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "List of Pads" );
-	gtk_combo_box_append_text( GTK_COMBO_BOX( pref->priv->trayconfigbox ), "New Pad" );
-	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), xpad_settings_get_tray_click_handler(xpad_settings()));
-
-	hbox = gtk_hbox_new(FALSE, 12);
+	// System tray configuration left-click behaviour
+	tray_config_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	gtk_box_set_homogeneous (GTK_BOX (tray_config_vbox), FALSE);
+	pref->priv->trayconfigbox = gtk_combo_box_text_new();
+	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->trayconfigbox ), _("Do Nothing") );
+	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->trayconfigbox ), _("Toggle Show All") );
+	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->trayconfigbox ), _("List of Pads") );
+	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->trayconfigbox ), _("New Pad") );
+	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->trayconfigbox ), (gint) xpad_settings_get_tray_click_handler(xpad_global_settings));
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->trayconfigbox, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(tray_config_vbox), hbox, TRUE, TRUE, 0);
 
+	// Edit, sticky and confirmation checkboxes
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->editcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->stickycheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (options_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);	
 	g_object_set (GTK_WIDGET(options_vbox), "child", tray_config_vbox, NULL);
 	
-	global_vbox = g_object_new (GTK_TYPE_VBOX,
-		"border-width", 6,
-		"homogeneous", FALSE,
-		"spacing", 18,
-		"child", appearance_frame,
-		"child", options_frame,
-		NULL);
-	
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (pref)->vbox), global_vbox, FALSE, FALSE, 0);
+	global_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	gtk_box_set_homogeneous (GTK_BOX (global_vbox), FALSE);
+	gtk_box_pack_start (GTK_BOX (global_vbox), appearance_frame, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (global_vbox), options_frame, FALSE, FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (global_vbox), 6);
+
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), global_vbox, FALSE, FALSE, 0);
 	
 	pref->priv->editcheck_handler = g_signal_connect (pref->priv->editcheck, "toggled", G_CALLBACK (change_edit_check), pref);
 	pref->priv->stickycheck_handler = g_signal_connect (pref->priv->stickycheck, "toggled", G_CALLBACK (change_sticky_check), pref);
@@ -318,20 +320,20 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->back_handler = g_signal_connect (pref->priv->backbutton, "color-set", G_CALLBACK (change_back_color), pref);
 	pref->priv->font_handler = g_signal_connect (pref->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), pref);
 	pref->priv->trayclick_handler = g_signal_connect(pref->priv->trayconfigbox, "changed", G_CALLBACK(change_tray_click_configuration), pref);
-	pref->priv->notify_font_handler = g_signal_connect_swapped (xpad_settings (), "notify::fontname", G_CALLBACK (notify_fontname), pref);
-	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_settings (), "notify::text-color", G_CALLBACK (notify_text_color), pref);
-	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_settings (), "notify::back-color", G_CALLBACK (notify_back_color), pref);
-	pref->priv->notify_sticky_handler = g_signal_connect_swapped (xpad_settings (), "notify::sticky", G_CALLBACK (notify_sticky), pref);
-	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_settings (), "notify::edit-lock", G_CALLBACK (notify_edit), pref);
-	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_settings (), "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
-	pref->priv->notify_tray_handler = g_signal_connect_swapped (xpad_settings (), "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
+	pref->priv->notify_font_handler = g_signal_connect_swapped (xpad_global_settings, "notify::fontname", G_CALLBACK (notify_fontname), pref);
+	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
+	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (notify_back_color), pref);
+	pref->priv->notify_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_sticky), pref);
+	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (notify_edit), pref);
+	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_global_settings, "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
+	pref->priv->notify_tray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
 	
-	gtk_widget_show_all (GTK_DIALOG (pref)->vbox);
+	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (pref)));
 	
 	/* Make window not so squished */
-	gtk_widget_size_request (GTK_WIDGET (pref), &req);
+	gtk_widget_get_preferred_size (GTK_WIDGET (pref), &req, NULL);
 	g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height * 0.8), NULL);
 }
 
@@ -346,7 +348,7 @@ xpad_preferences_finalize (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
-	g_signal_handlers_disconnect_matched (xpad_settings (), G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pref);
+	g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pref);
 	
 	G_OBJECT_CLASS (xpad_preferences_parent_class)->finalize (object);
 }
@@ -361,108 +363,110 @@ xpad_preferences_response (GtkDialog *dialog, gint response)
 static void
 change_color_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_back_handler);
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_text_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_back_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_text_handler);
 	
 	if (!gtk_toggle_button_get_active (button))
 	{
-		xpad_settings_set_text_color (xpad_settings (), NULL);
-		xpad_settings_set_back_color (xpad_settings (), NULL);
+		xpad_settings_set_text_color (xpad_global_settings, NULL);
+		xpad_settings_set_back_color (xpad_global_settings, NULL);
 	}
 	else
 	{
-		GdkColor color;
-		gtk_color_button_get_color (GTK_COLOR_BUTTON (pref->priv->textbutton), &color);
-		xpad_settings_set_text_color (xpad_settings (), &color);
-		gtk_color_button_get_color (GTK_COLOR_BUTTON (pref->priv->backbutton), &color);
-		xpad_settings_set_back_color (xpad_settings (), &color);
+		GdkRGBA color;
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &color);
+		xpad_settings_set_text_color (xpad_global_settings, &color);
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &color);
+		xpad_settings_set_back_color (xpad_global_settings, &color);
 	}
 	
 	gtk_widget_set_sensitive (pref->priv->colorbox, gtk_toggle_button_get_active (button));
 	
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_back_handler);
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_text_handler);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_back_handler);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_text_handler);
 }
 
 static void
 change_font_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_font_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_font_handler);
 	
 	if (!gtk_toggle_button_get_active (button))
-		xpad_settings_set_fontname (xpad_settings (), NULL);
+		xpad_settings_set_fontname (xpad_global_settings, NULL);
 	else
-		xpad_settings_set_fontname (xpad_settings (), gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)));
+		xpad_settings_set_fontname (xpad_global_settings, gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)));
 	
 	gtk_widget_set_sensitive (pref->priv->fontbutton, gtk_toggle_button_get_active (button));
 	
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_font_handler);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_font_handler);
 }
 
 static void
 change_edit_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_edit_handler);
-	xpad_settings_set_edit_lock (xpad_settings (), gtk_toggle_button_get_active (button));
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_edit_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_edit_handler);
+	xpad_settings_set_edit_lock (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_edit_handler);
 }
 
 static void
 change_sticky_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_sticky_handler);
-	xpad_settings_set_sticky (xpad_settings (), gtk_toggle_button_get_active (button));
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_sticky_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_sticky_handler);
+	xpad_settings_set_sticky (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_sticky_handler);
 }
 
 static void
 change_confirm_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_confirm_handler);
-	xpad_settings_set_confirm_destroy (xpad_settings (), gtk_toggle_button_get_active (button));
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_confirm_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_confirm_handler);
+	xpad_settings_set_confirm_destroy (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_confirm_handler);
 }
 
 static void
 change_tray_click_configuration(GtkComboBox *box, XpadPreferences *pref)
 {
-	g_signal_handler_block(xpad_settings(), pref->priv->notify_tray_handler);
-	xpad_settings_set_tray_click_handler(xpad_settings(), gtk_combo_box_get_active(box));
-	g_signal_handler_unblock(xpad_settings(), pref->priv->notify_tray_handler);
+	g_signal_handler_block(xpad_global_settings, pref->priv->notify_tray_handler);
+	xpad_settings_set_tray_click_handler(xpad_global_settings, (guint) gtk_combo_box_get_active(box));
+	g_signal_handler_unblock(xpad_global_settings, pref->priv->notify_tray_handler);
 }
 
 static void
-change_text_color (GtkColorButton *button, XpadPreferences *pref)
+change_text_color (GtkColorChooser *chooser, XpadPreferences *pref)
 {
-	GdkColor color;
-	gtk_color_button_get_color (button, &color);
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_text_handler);
-	xpad_settings_set_text_color (xpad_settings (), &color);
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_text_handler);
+	GdkRGBA color = {0, 0, 0, 0};
+	gtk_color_chooser_get_rgba (chooser, &color);
+
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_text_handler);
+	xpad_settings_set_text_color (xpad_global_settings, &color);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_text_handler);
 }
 
 static void
-change_back_color (GtkColorButton *button, XpadPreferences *pref)
+change_back_color (GtkColorChooser *chooser, XpadPreferences *pref)
 {
-	GdkColor color;
-	gtk_color_button_get_color (button, &color);
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_back_handler);
-	xpad_settings_set_back_color (xpad_settings (), &color);
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_back_handler);
+	GdkRGBA color = {0, 0, 0, 0};
+	gtk_color_chooser_get_rgba (chooser, &color);
+
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_back_handler);
+	xpad_settings_set_back_color (xpad_global_settings, &color);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_back_handler);
 }
 
 static void
 change_font_face (GtkFontButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_settings (), pref->priv->notify_font_handler);
-	xpad_settings_set_fontname (xpad_settings (), gtk_font_button_get_font_name (button));
-	g_signal_handler_unblock (xpad_settings (), pref->priv->notify_font_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_font_handler);
+	xpad_settings_set_fontname (xpad_global_settings, gtk_font_button_get_font_name (button));
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_font_handler);
 }
 
 static void
 notify_back_color (XpadPreferences *pref)
 {
-	const GdkColor *color = xpad_settings_get_back_color (xpad_settings ());
+	const GdkRGBA *color = xpad_settings_get_back_color (xpad_global_settings);
 	
 	g_signal_handler_block (pref->priv->backbutton, pref->priv->back_handler);
 	g_signal_handler_block (pref->priv->colorcheck, pref->priv->colorcheck_handler);
@@ -471,7 +475,7 @@ notify_back_color (XpadPreferences *pref)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->colorbox, TRUE);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->backbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), color);
 	}
 	else
 	{
@@ -486,7 +490,7 @@ notify_back_color (XpadPreferences *pref)
 static void
 notify_text_color (XpadPreferences *pref)
 {
-	const GdkColor *color = xpad_settings_get_text_color (xpad_settings ());
+	const GdkRGBA *color = xpad_settings_get_text_color (xpad_global_settings);
 	
 	g_signal_handler_block (pref->priv->textbutton, pref->priv->text_handler);
 	g_signal_handler_block (pref->priv->colorcheck, pref->priv->colorcheck_handler);
@@ -495,7 +499,8 @@ notify_text_color (XpadPreferences *pref)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->colorbox, TRUE);
-		gtk_color_button_set_color (GTK_COLOR_BUTTON (pref->priv->textbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), color);
+
 	}
 	else
 	{
@@ -510,7 +515,7 @@ notify_text_color (XpadPreferences *pref)
 static void
 notify_fontname (XpadPreferences *pref)
 {
-	const gchar *fontname = xpad_settings_get_fontname (xpad_settings ());
+	const gchar *fontname = xpad_settings_get_fontname (xpad_global_settings);
 	
 	g_signal_handler_block (pref->priv->fontbutton, pref->priv->font_handler);
 	g_signal_handler_block (pref->priv->fontcheck, pref->priv->fontcheck_handler);
@@ -535,7 +540,7 @@ static void
 notify_edit (XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->editcheck, pref->priv->editcheck_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_settings ()));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_global_settings));
 	g_signal_handler_unblock (pref->priv->editcheck, pref->priv->editcheck_handler);
 }
 
@@ -543,7 +548,7 @@ static void
 notify_sticky (XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->stickycheck, pref->priv->stickycheck_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->stickycheck), xpad_settings_get_sticky (xpad_settings ()));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->stickycheck), xpad_settings_get_sticky (xpad_global_settings));
 	g_signal_handler_unblock (pref->priv->stickycheck, pref->priv->stickycheck_handler);
 }
 
@@ -551,7 +556,7 @@ static void
 notify_confirm (XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_settings ()));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
 	g_signal_handler_unblock (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
 }
 
@@ -559,7 +564,7 @@ static void
 notify_tray_click(XpadPreferences *pref)
 {
 	g_signal_handler_block(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->trayconfigbox), xpad_settings_get_tray_click_handler(xpad_settings()));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(pref->priv->trayconfigbox), (gint) xpad_settings_get_tray_click_handler(xpad_global_settings));
 	g_signal_handler_unblock(pref->priv->trayconfigbox, pref->priv->trayclick_handler);
 }
 

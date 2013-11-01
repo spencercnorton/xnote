@@ -18,11 +18,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
 #include <string.h>
 #include "xpad-settings.h"
 #include "fio.h"
 
-struct XpadSettingsPrivate 
+struct XpadSettingsPrivate
 {
 	guint width;
 	guint height;
@@ -34,8 +35,8 @@ struct XpadSettingsPrivate
 	gboolean has_toolbar;
 	gboolean autohide_toolbar;
 	gboolean has_scrollbar;
-	GdkColor *back;
-	GdkColor *text;
+	GdkRGBA *back;
+	GdkRGBA *text;
 	gchar *fontname;
 	GSList *toolbar_buttons;
 };
@@ -76,17 +77,12 @@ static void xpad_settings_get_property (GObject *object, guint prop_id, GValue *
 static void xpad_settings_dispose (GObject *object);
 static void xpad_settings_finalize (GObject *object);
 
-static XpadSettings *_xpad_settings = NULL;
 static guint signals[LAST_SIGNAL] = { 0 };
 
 XpadSettings *
-xpad_settings (void)
+xpad_settings_new (void)
 {
-	/* Singleton class */
-	if (!_xpad_settings)
-		_xpad_settings = XPAD_SETTINGS (g_object_new (XPAD_TYPE_SETTINGS, NULL));
-	
-	return _xpad_settings;
+	return g_object_new (XPAD_TYPE_SETTINGS, NULL);
 }
 
 static void
@@ -198,7 +194,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                 g_param_spec_boxed ("text_color",
 	                                                     "Text Color",
 	                                                     "Default color of pad text",
-	                                                     GDK_TYPE_COLOR,
+	                                                     GDK_TYPE_RGBA,
 	                                                     G_PARAM_READWRITE));
 	
 	g_object_class_install_property (gobject_class,
@@ -206,7 +202,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                 g_param_spec_boxed ("back_color",
 	                                                     "Back Color",
 	                                                     "Default color of pad background",
-	                                                     GDK_TYPE_COLOR,
+	                                                     GDK_TYPE_RGBA,
 	                                                     G_PARAM_READWRITE));
 	
 	/* Signals */
@@ -223,25 +219,12 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 static void
 xpad_settings_init (XpadSettings *settings)
 {
-	GdkColor back, text;
-	
 	settings->priv = xpad_settings_get_instance_private(settings);
-	
-	/* A pleasant light yellow color, similar to 
-	   commercial sticky notes. */
-	back.pixel = 0;
-	back.red = 65535;
-	back.green = 61166;
-	back.blue = 39321;
-	settings->priv->back = gdk_color_copy (&back);
-	
-	/* Black */
-	text.pixel = 0;
-	text.red = 0;
-	text.green = 0;
-	text.blue = 0;
-	settings->priv->text = gdk_color_copy (&text);
-	
+
+	/* A pleasant light yellow background color, similar to commercial sticky notes, with black text. */
+	settings->priv->text = gdk_rgba_copy(&(GdkRGBA) {0, 0, 0, 1});
+	settings->priv->back = gdk_rgba_copy(&(GdkRGBA) {1, 0.933334350586, 0.6, 1});
+
 	settings->priv->width = 200;
 	settings->priv->height = 200;
 	settings->priv->has_decorations = TRUE;
@@ -276,9 +259,9 @@ xpad_settings_finalize (GObject *object)
 	g_slist_free (settings->priv->toolbar_buttons);
 
 	if (settings->priv->text)
-		gdk_color_free (settings->priv->text);
+		gdk_rgba_free (settings->priv->text);
 	if (settings->priv->back)
-		gdk_color_free (settings->priv->back);
+		gdk_rgba_free (settings->priv->back);
 
 	g_free (settings->priv->fontname);
 	
@@ -575,13 +558,13 @@ G_CONST_RETURN GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings
 	return settings->priv->toolbar_buttons;
 }
 
-void xpad_settings_set_back_color (XpadSettings *settings, const GdkColor *back)
+void xpad_settings_set_back_color (XpadSettings *settings, const GdkRGBA *back)
 {
 	if (settings->priv->back)
-		gdk_color_free (settings->priv->back);
+		gdk_rgba_free (settings->priv->back);
 	
 	if (back)
-		settings->priv->back = gdk_color_copy (back);
+		settings->priv->back = gdk_rgba_copy (back);
 	else
 		settings->priv->back = NULL;
 	
@@ -590,18 +573,18 @@ void xpad_settings_set_back_color (XpadSettings *settings, const GdkColor *back)
 	g_object_notify (G_OBJECT (settings), "back_color");
 }
 
-G_CONST_RETURN GdkColor *xpad_settings_get_back_color (XpadSettings *settings)
+G_CONST_RETURN GdkRGBA *xpad_settings_get_back_color (XpadSettings *settings)
 {
 	return settings->priv->back;
 }
 
-void xpad_settings_set_text_color (XpadSettings *settings, const GdkColor *text)
+void xpad_settings_set_text_color (XpadSettings *settings, const GdkRGBA *text)
 {
 	if (settings->priv->text)
-		gdk_color_free (settings->priv->text);
+		gdk_rgba_free (settings->priv->text);
 	
 	if (text)
-		settings->priv->text = gdk_color_copy (text);
+		settings->priv->text = gdk_rgba_copy (text);
 	else
 		settings->priv->text = NULL;
 	
@@ -610,7 +593,7 @@ void xpad_settings_set_text_color (XpadSettings *settings, const GdkColor *text)
 	g_object_notify (G_OBJECT (settings), "text_color");
 }
 
-G_CONST_RETURN GdkColor *xpad_settings_get_text_color (XpadSettings *settings)
+G_CONST_RETURN GdkRGBA *xpad_settings_get_text_color (XpadSettings *settings)
 {
 	return settings->priv->text;
 }
@@ -767,18 +750,23 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 	 * We need to set up int values for all these to take the value from the file.
 	 * These will be assigned back to the appropriate values after load.
 	 */
+
 	gchar *buttons = NULL;
-	GdkColor text = {0}, back = {0};
+	gchar *text_color_string = NULL;
+	gchar *background_color_string = NULL;
+	GdkRGBA text = {0, 0, 0, 0};
+	GdkRGBA back = {0, 0, 0, 0};
 	gboolean use_text, use_back;
 	
 	use_text = settings->priv->text ? TRUE : FALSE;
 	if (settings->priv->text)
 		text = *settings->priv->text;
-	
+
 	use_back = settings->priv->back ? TRUE : FALSE;
 	if (settings->priv->back)
 		back = *settings->priv->back;
-	
+
+	// get all the values from the default-style text file in the forms of booleans, ints or strings.
 	if (fio_get_values_from_file (filename, 
 		"b|decorations", &settings->priv->has_decorations,
 		"u|height", &settings->priv->height,
@@ -787,13 +775,9 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|edit_lock", &settings->priv->edit_lock,
 		"b|sticky_on_start", &settings->priv->sticky,
 		"u|tray_click_configuration", &settings->priv->tray_click_configuration,
-		"h|back_red", &back.red,
-		"h|back_green", &back.green,
-		"h|back_blue", &back.blue,
+		"s|back", &background_color_string,
 		"b|use_back", &use_back,
-		"h|text_red", &text.red,
-		"h|text_green", &text.green,
-		"h|text_blue", &text.blue,
+		"s|text", &text_color_string,
 		"b|use_text", &use_text,
 		"s|fontname", &settings->priv->fontname,
 		"b|toolbar", &settings->priv->has_toolbar,
@@ -802,21 +786,46 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"s|buttons", &buttons,
 		NULL))
 		return;
-	
+
 	if (use_text)
 	{
-		gdk_color_free (settings->priv->text);
-		settings->priv->text = gdk_color_copy (&text);
+		gdk_rgba_free (settings->priv->text);
+
+		// If, for some reason, one of the colors could not be retrieved
+		// (for example due to the migration to the new GdkRGBA colors), set the color to the default.
+		if (text_color_string == NULL) {
+			text = (GdkRGBA) {0, 0, 0, 1};
+		}
+		else {
+			// If, for some reason, the parsing of the colors fail, set the color to the default.
+			if (!gdk_rgba_parse (&text, text_color_string)) {
+				text = (GdkRGBA) {0, 0, 0, 1};
+			}
+		}
+
+		settings->priv->text = gdk_rgba_copy (&text);
 	}
 
-	gdk_color_free (settings->priv->back);
-	if (use_back)
-		settings->priv->back = gdk_color_copy (&back);
+	gdk_rgba_free (settings->priv->back);
+	if (use_back) {
+		// If, for some reason, one of the colors could not be retrieved
+		// (for example due to the migration to the new GdkRGBA colors), set the color to the default.
+		if (background_color_string == NULL) {
+			back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+		}
+		else {
+			// If, for some reason, the parsing of the colors fail, set the color to the default.
+			if (!gdk_rgba_parse (&back, background_color_string)) {
+				back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			}
+		}
+
+		settings->priv->back = gdk_rgba_copy (&back);
+	}
 	else
 		settings->priv->back = NULL;
 
-	if (settings->priv->fontname &&
-	    strcmp (settings->priv->fontname, "NULL") == 0)
+	if (settings->priv->fontname && strcmp (settings->priv->fontname, "NULL") == 0)
 	{
 		g_free (settings->priv->fontname);
 		settings->priv->fontname = NULL;
@@ -841,7 +850,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		{
 			settings->priv->toolbar_buttons = 
 				g_slist_append (settings->priv->toolbar_buttons,
-				g_strstrip (button_names[i])); /* takes ownership of string */
+				g_strstrip (button_names[i])); // takes ownership of string
 		}
 		
 		g_free (button_names);
@@ -879,13 +888,9 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|edit_lock", settings->priv->edit_lock,
 		"b|sticky_on_start", settings->priv->sticky,
 		"u|tray_click_configuration", settings->priv->tray_click_configuration,
-		"h|back_red", settings->priv->back ? settings->priv->back->red : 0,
-		"h|back_green", settings->priv->back ? settings->priv->back->green : 0,
-		"h|back_blue", settings->priv->back ? settings->priv->back->blue : 0,
+		"s|back", settings->priv->back ? gdk_rgba_to_string (settings->priv->back) : "NULL",
 		"b|use_back", settings->priv->back ? TRUE : FALSE,
-		"h|text_red", settings->priv->text ? settings->priv->text->red : 0,
-		"h|text_green", settings->priv->text ? settings->priv->text->green : 0,
-		"h|text_blue", settings->priv->text ? settings->priv->text->blue : 0,
+		"s|text", settings->priv->text ? gdk_rgba_to_string (settings->priv->text) : "NULL",
 		"b|use_text", settings->priv->text ? TRUE : FALSE,
 		"s|fontname", settings->priv->fontname ? settings->priv->fontname : "NULL",
 		"b|toolbar", settings->priv->has_toolbar,
