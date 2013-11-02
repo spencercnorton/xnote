@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-13 08:57+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
-"X-Generator: Launchpad (build 16807)\n"
+"X-Launchpad-Export-Date: 2013-11-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: hr\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -304,18 +304,16 @@ msgid "Do Nothing"
 msgstr ""
 
 #: ../src/xpad-preferences.c:290
-#, fuzzy
 msgid "Toggle Show All"
-msgstr "_Prikaži sve"
+msgstr ""
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
 msgstr ""
 
 #: ../src/xpad-preferences.c:292
-#, fuzzy
 msgid "New Pad"
-msgstr "Otvori novi blok"
+msgstr ""
 
 #: ../src/xpad-preferences.c:295
 msgid "Tray click behaviour"
@@ -440,8 +438,8 @@ msgstr "Zapiši bilješku za poslije"
 #~ msgid ""
 #~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
 #~ msgstr ""
-#~ "Molimo Vas da komentare ili prijave grešaka šaljete na xpad-devel@lists."
-#~ "sourceforge.net."
+#~ "Molimo Vas da komentare ili prijave grešaka šaljete na xpad-"
+#~ "devel@lists.sourceforge.net."
 
 #~ msgid "_Move"
 #~ msgstr "_Premjesti"

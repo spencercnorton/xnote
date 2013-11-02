@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-11-01 15:18-0500\n"
-"PO-Revision-Date: 2013-10-10 07:02+0000\n"
+"PO-Revision-Date: 2013-11-01 23:41+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: French <traduc@traduc.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
-"X-Generator: Launchpad (build 16807)\n"
+"X-Launchpad-Export-Date: 2013-11-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: fr\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -175,8 +175,7 @@ msgstr ""
 "  Hornblende https://launchpad.net/~hornblende\n"
 "  Michel Robitaille https://launchpad.net/~robitail\n"
 "  Nicolas Delvaux https://launchpad.net/~malizor\n"
-"  Sébastien Duthil https://launchpad.net/~duthils\n"
-"  computerhelp https://launchpad.net/~comp-conf"
+"  Sébastien Duthil https://launchpad.net/~duthils"
 
 #: ../src/xpad-pad.c:1742
 msgid "_Pad"
@@ -308,18 +307,16 @@ msgid "Do Nothing"
 msgstr ""
 
 #: ../src/xpad-preferences.c:290
-#, fuzzy
 msgid "Toggle Show All"
-msgstr "_Tout afficher"
+msgstr ""
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
 msgstr ""
 
 #: ../src/xpad-preferences.c:292
-#, fuzzy
 msgid "New Pad"
-msgstr "Ouvrir une nouvelle note"
+msgstr ""
 
 #: ../src/xpad-preferences.c:295
 msgid "Tray click behaviour"

@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-10 07:03+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
-"X-Generator: Launchpad (build 16807)\n"
+"X-Launchpad-Export-Date: 2013-11-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: ja\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -27,42 +27,33 @@ msgstr "ファイル %s に書き込むことができません :%s"
 msgid ""
 "Each xpad session consists of one or more open pads.  These pads are "
 "basically sticky notes on your desktop in which you can write memos."
-msgstr ""
-"各xpadセッションでは複数のパッドを開けます。基本的に、これらのパッドとはデス"
-"クトップ上の付箋です。その中にメモを書き込みできます。"
+msgstr "各xpadセッションでは複数のパッドを開けます。基本的に、これらのパッドとはデスクトップ上の付箋です。その中にメモを書き込みできます。"
 
 #: ../src/help.c:52
 msgid ""
 "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
 "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
 msgstr ""
-"<b>パッドを移動する</b>では、ツールバーの左ドラッグか、右下のサイズ変更バーを"
-"右ドラッグか、CTRLキーを押しながらパッド上の任意の場所に左ドラッグもできま"
-"す。"
+"<b>パッドを移動する</b>では、ツールバーの左ドラッグか、右下のサイズ変更バーを右ドラッグか、CTRLキーを押しながらパッド上の任意の場所に左ドラッグ"
+"もできます。"
 
 #: ../src/help.c:55
 msgid ""
 "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
 "right dragging anywhere on the pad."
-msgstr ""
-"<b>パッドのサイズ変更する</b>では変更バーを左ドラッグか、CTRLキーを押しながら"
-"パッド上の任意の場所に右ドラッグもできます。"
+msgstr "<b>パッドのサイズ変更する</b>では変更バーを左ドラッグか、CTRLキーを押しながらパッド上の任意の場所に右ドラッグもできます。"
 
 #: ../src/help.c:57
 msgid ""
 "<b>To change color settings</b>, right click on a pad and choose Edit-"
 ">Preferences."
-msgstr ""
-"<b>カラー設定を変更するためには</b>、 パッド上で右クリックし、編集 -> 設定を"
-"選択してください。"
+msgstr "<b>カラー設定を変更するためには</b>、 パッド上で右クリックし、編集 -> 設定を選択してください。"
 
 #: ../src/help.c:59
 msgid ""
 "Most actions are available throught the popup menu that appears when you "
 "right click on a pad.  Try it out and enjoy."
-msgstr ""
-"ほとんどのアクションはパッドを右クリックしたときに表示されるポップアップメ"
-"ニューから使用可能です。今すぐ、試してみて、お楽しみください。"
+msgstr "ほとんどのアクションはパッドを右クリックしたときに表示されるポップアップメニューから使用可能です。今すぐ、試してみて、お楽しみください。"
 
 #: ../src/help.c:62
 msgid ""
@@ -91,9 +82,7 @@ msgstr "ディレクトリー %s を開くことができません。"
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
-msgstr ""
-"個人設定やパッドの情報を格納するために必要なディレクトリは見つかりません。"
-"XPADは終了します。"
+msgstr "個人設定やパッドの情報を格納するために必要なディレクトリは見つかりません。XPADは終了します。"
 
 #: ../src/xpad-app.c:814
 msgid "Show version number and quit"
@@ -301,18 +290,16 @@ msgid "Do Nothing"
 msgstr ""
 
 #: ../src/xpad-preferences.c:290
-#, fuzzy
 msgid "Toggle Show All"
-msgstr "すべて表示(_S)"
+msgstr ""
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
 msgstr ""
 
 #: ../src/xpad-preferences.c:292
-#, fuzzy
 msgid "New Pad"
-msgstr "新しいパッドを開く"
+msgstr ""
 
 #: ../src/xpad-preferences.c:295
 msgid "Tray click behaviour"
@@ -436,8 +423,7 @@ msgstr "手早くメモを行います"
 
 #~ msgid ""
 #~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "コメントやバク報告を xpad-devel@lists.sourceforge.net にお送りください"
+#~ msgstr "コメントやバク報告を xpad-devel@lists.sourceforge.net にお送りください"
 
 #~ msgid "_Move"
 #~ msgstr "移動(_M)"

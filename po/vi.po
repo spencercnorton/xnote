@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:23+0000\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
-"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
-"X-Generator: Launchpad (build 16807)\n"
+"X-Launchpad-Export-Date: 2013-11-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: vi\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -65,7 +65,8 @@ msgstr ""
 
 #: ../src/xpad-app.c:133
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad là một chương trình đồ hoạ. Hãy chạy nó từ màn hình nền của bạn."
+msgstr ""
+"Xpad là một chương trình đồ hoạ. Hãy chạy nó từ màn hình nền của bạn."
 
 #: ../src/xpad-app.c:138 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -286,18 +287,16 @@ msgid "Do Nothing"
 msgstr ""
 
 #: ../src/xpad-preferences.c:290
-#, fuzzy
 msgid "Toggle Show All"
-msgstr "_Hiện tất cả"
+msgstr ""
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
 msgstr ""
 
 #: ../src/xpad-preferences.c:292
-#, fuzzy
 msgid "New Pad"
-msgstr "Mở trang mới"
+msgstr ""
 
 #: ../src/xpad-preferences.c:295
 msgid "Tray click behaviour"

@@ -11,12 +11,12 @@ msgstr ""
 "PO-Revision-Date: 2013-10-12 08:22+0000\n"
 "Last-Translator: Michael Terry <michael.terry@canonical.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
-"Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-19 04:59+0000\n"
-"X-Generator: Launchpad (build 16807)\n"
+"X-Launchpad-Export-Date: 2013-11-02 05:58+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
+"Language: ga\n"
 
 #: ../src/fio.c:129
 #, c-format
@@ -90,7 +90,8 @@ msgstr "Taispeáin an uimhir leagain agus scoir"
 
 #: ../src/xpad-app.c:815
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
+msgstr ""
+"Ná cruthaigh ceap nua ag am tosaithe mura bhfuil ceap ann cheana féin"
 
 #: ../src/xpad-app.c:821
 msgid "Create a new pad on startup even if pads already exist"
@@ -289,18 +290,16 @@ msgid "Do Nothing"
 msgstr ""
 
 #: ../src/xpad-preferences.c:290
-#, fuzzy
 msgid "Toggle Show All"
-msgstr "_Taispeáin an t-iomlán"
+msgstr ""
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
 msgstr ""
 
 #: ../src/xpad-preferences.c:292
-#, fuzzy
 msgid "New Pad"
-msgstr "Oscail Ceap Nótaí Nua"
+msgstr ""
 
 #: ../src/xpad-preferences.c:295
 msgid "Tray click behaviour"
