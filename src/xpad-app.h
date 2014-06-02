@@ -26,7 +26,7 @@
 G_BEGIN_DECLS
 
 void       xpad_app_error     (GtkWindow *parent, const gchar *primary, const gchar *secondary);
-GtkWidget *xpad_app_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary);
+GtkWidget *xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *primary, const gchar *secondary);
 
 G_CONST_RETURN gchar *xpad_app_get_config_dir (void);
 G_CONST_RETURN gchar *xpad_app_get_program_path (void);

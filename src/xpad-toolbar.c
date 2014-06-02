@@ -50,7 +50,8 @@ enum {
 typedef struct
 {
 	const gchar *name;
-	const gchar *stock;
+	const gchar *label;
+	const gchar *icon_name;
 	guint signal;
 	guint type;
 	const gchar *desc;
@@ -78,20 +79,22 @@ enum
 
 static const XpadToolbarButton buttons[] =
 {
-	{"Clear", GTK_STOCK_CLEAR, ACTIVATE_CLEAR, XPAD_BUTTON_TYPE_BUTTON, N_("Clear Pad Contents"), N_("Add C_lear to Toolbar")},
-	{"Close", GTK_STOCK_CLOSE, ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
-	{"Copy", GTK_STOCK_COPY, ACTIVATE_COPY, XPAD_BUTTON_TYPE_BUTTON, N_("Copy to Clipboard"), N_("Add C_opy to Toolbar")},
-	{"Cut", GTK_STOCK_CUT, ACTIVATE_CUT, XPAD_BUTTON_TYPE_BUTTON, N_("Cut to Clipboard"), N_("Add C_ut to Toolbar")},
-	{"Delete", GTK_STOCK_DELETE, ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
-	{"New", GTK_STOCK_NEW, ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
-	{"Paste", GTK_STOCK_PASTE, ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
-	{"Preferences", GTK_STOCK_PREFERENCES, ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
-	{"Properties", GTK_STOCK_PROPERTIES, ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
-	{"Redo", GTK_STOCK_REDO, ACTIVATE_REDO, XPAD_BUTTON_TYPE_BUTTON, N_("Redo"), N_("Add _Redo to Toolbar")},
-	{"Quit", GTK_STOCK_QUIT, ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
-	{"Undo", GTK_STOCK_UNDO, ACTIVATE_UNDO, XPAD_BUTTON_TYPE_BUTTON, N_("Undo"), N_("Add _Undo to Toolbar")},
-	{"sep", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add a Se_parator to Toolbar")} /* Separator */
+	{"Clear", ("_Clear"), "edit-clear", ACTIVATE_CLEAR, XPAD_BUTTON_TYPE_BUTTON, N_("Clear Pad Contents"), N_("Add C_lear to Toolbar")},
+	{"Close", ("_Close"), "window-close", ACTIVATE_CLOSE, XPAD_BUTTON_TYPE_BUTTON, N_("Close and Save Pad"), N_("Add _Close to Toolbar")},
+	{"Copy", ("_Copy"), "edit-copy", ACTIVATE_COPY, XPAD_BUTTON_TYPE_BUTTON, N_("Copy to Clipboard"), N_("Add C_opy to Toolbar")},
+	{"Cut", ("Cu_t"), "edit-cut", ACTIVATE_CUT, XPAD_BUTTON_TYPE_BUTTON, N_("Cut to Clipboard"), N_("Add C_ut to Toolbar")},
+	{"Delete", ("_Delete"), "edit-delete", ACTIVATE_DELETE, XPAD_BUTTON_TYPE_BUTTON, N_("Delete Pad"), N_("Add _Delete to Toolbar")},
+	{"New", ("_New"), "document-new", ACTIVATE_NEW, XPAD_BUTTON_TYPE_BUTTON, N_("Open New Pad"), N_("Add _New to Toolbar")},
+	{"Paste", ("_Paste"), "edit-paste", ACTIVATE_PASTE, XPAD_BUTTON_TYPE_BUTTON, N_("Paste from Clipboard"), N_("Add Pa_ste to Toolbar")},
+	{"Preferences", ("_Preferences"), "preferences-system", ACTIVATE_PREFERENCES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Preferences"), N_("Add Pr_eferences to Toolbar")},
+	{"Properties", ("_Properties"), "document-properties", ACTIVATE_PROPERTIES, XPAD_BUTTON_TYPE_BUTTON, N_("Edit Pad Properties"), N_("Add Proper_ties to Toolbar")},
+	{"Redo", ("_Redot"), "edit-redo", ACTIVATE_REDO, XPAD_BUTTON_TYPE_BUTTON, N_("Redo"), N_("Add _Redo to Toolbar")},
+	{"Quit", ("_Quit"), "application-exit", ACTIVATE_QUIT, XPAD_BUTTON_TYPE_BUTTON, N_("Close All Pads"), N_("Add Close _All to Toolbar")},
+	{"Undo", ("_Undo"), "edit-undo", ACTIVATE_UNDO, XPAD_BUTTON_TYPE_BUTTON, N_("Undo"), N_("Add _Undo to Toolbar")},
+	{"sep", NULL, NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add a Se_parator to Toolbar")} /* Separator */
 	/*{"Minimize to Tray", "gtk-goto-bottom", 1, N_("Minimize Pads to System Tray")}*/
+	
+	// Todo: make labels translatable. I removed the underscore to prevent a compiler error: initializer element is not a constant
 };
 
 static G_CONST_RETURN XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
@@ -107,7 +110,7 @@ static void xpad_toolbar_remove_last_button ();
 static void xpad_toolbar_add_button (const gchar *button_name);
 static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
 
-/* Unfinished new feature of previous developer
+/* Unfinished new feature of a previous developer
 static void xpad_toolbar_remove_button (GtkWidget *button);
 static gboolean xpad_toolbar_button_press_event (GtkWidget *widget, GdkEventButton *event);
 static gboolean xpad_toolbar_popup_button_menu (GtkWidget *button, GdkEventButton *event, XpadToolbar *toolbar);
@@ -372,11 +375,15 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	switch (button->type)
 	{
 	case XPAD_BUTTON_TYPE_BUTTON:
-		item = GTK_TOOL_ITEM (gtk_tool_button_new_from_stock (button->stock));
+		//item = GTK_TOOL_ITEM (gtk_tool_button_new_from_stock (button->stock));
+		item = gtk_tool_button_new (NULL, button->label);
+		gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), button->icon_name);
 		g_signal_connect (item, "clicked", G_CALLBACK (xpad_toolbar_button_activated), NULL);
 		break;
 	case XPAD_BUTTON_TYPE_TOGGLE:
-		item = GTK_TOOL_ITEM (gtk_toggle_tool_button_new_from_stock (button->stock));
+		//item = GTK_TOOL_ITEM (gtk_toggle_tool_button_new_from_stock (button->stock));
+		item = gtk_tool_button_new (NULL, button->label);
+		gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), button->icon_name);
 		g_signal_connect (item, "toggled", G_CALLBACK (xpad_toolbar_button_activated), NULL);
 		break;
 	case XPAD_BUTTON_TYPE_SEPARATOR:
@@ -535,10 +542,11 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 			continue;
 		}
 		
-		item = gtk_image_menu_item_new_with_mnemonic (buttons[i].menu_desc);
-		
-		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		item = gtk_menu_item_new_with_mnemonic (buttons[i].menu_desc);
+
+		// TODO: add menu icons
+		//image = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);		
+		//gtk_image_menu_item_set_image (GTK_MENU_ITEM (item), image);
 		
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_add_button), (gpointer) buttons[i].name);
 		
@@ -550,10 +558,11 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	{
 		GtkWidget *item, *image;
 
-		item = gtk_image_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
+		item = gtk_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
 		
-		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		// TODO: add menu icons
+		//image = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);		
+		//gtk_image_menu_item_set_image (GTK_MENU_ITEM (item), image);
 		
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), NULL);
 		
@@ -562,10 +571,11 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 		i++;
 		
-		item = gtk_image_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
+		item = gtk_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
 		
-		image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
+		// TODO: add menu icons
+		//image = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);		
+		//gtk_image_menu_item_set_image (GTK_MENU_ITEM (item), image);
 		
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), NULL);
 		
@@ -836,5 +846,4 @@ xpad_toolbar_move_button_end (XpadToolbar *toolbar)
 	gdk_pointer_ungrab (gtk_get_current_event_time ());
 	return TRUE;
 }
-
 */

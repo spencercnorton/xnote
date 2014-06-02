@@ -62,7 +62,6 @@
 #define SUN_LEN(sunp) ((size_t)((struct sockaddr_un *)0)->sun_path + strlen((sunp)->sun_path))
 #endif
 
-
 static gint xpad_argc;
 static gchar **xpad_argv;
 static gboolean option_nonew;
@@ -94,7 +93,6 @@ static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
 static gboolean		xpad_app_open_proc_file     (void);
-
 
 static void
 xpad_app_init (int argc, char **argv)
@@ -209,8 +207,8 @@ xpad_app_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
 	
 	g_printerr ("%s\n", primary);
 	
-	dialog = xpad_app_alert_new (parent, GTK_STOCK_DIALOG_ERROR, primary, secondary);
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_OK, 1, NULL);
+	dialog = xpad_app_alert_dialog (parent, "dialog-error", primary, secondary);	
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("_Ok"), GTK_RESPONSE_OK, NULL);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 	
@@ -338,24 +336,23 @@ make_config_dir (void)
 	return dir;
 }
 
-
 /**
- * Creates an alert with 'stock' used to create an icon and parent text of 'parent',
+ * Creates an alert with a named-icon used to create an icon and parent text of 'parent',
  * secondary text of 'secondary'.  No buttons are added.
  */
 GtkWidget *
-xpad_app_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary, const gchar *secondary)
+xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *primary, const gchar *secondary)
 {
 	GtkWidget *dialog, *hbox, *image, *label;
 	gchar *buf;
 	
-	dialog = gtk_dialog_new();
+	dialog = gtk_dialog_new ();
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 12);
-	image = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);	
 	label = gtk_label_new (NULL);
 	
 	if (secondary)
@@ -383,7 +380,6 @@ xpad_app_alert_new (GtkWindow *parent, const gchar *stock, const gchar *primary,
 	return dialog;
 }
 
-
 static void
 register_stock_icons (void)
 {
@@ -392,7 +388,6 @@ register_stock_icons (void)
 	theme = gtk_icon_theme_get_default ();
 	gtk_icon_theme_prepend_search_path (theme, THEME_DIR);
 }
-
 
 static gboolean
 xpad_app_quit_if_no_pads (XpadPadGroup *group)
@@ -411,7 +406,6 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 	
 	return FALSE;
 }
-
 
 static gboolean
 xpad_app_first_idle_check (XpadPadGroup *group)
@@ -438,7 +432,6 @@ xpad_app_first_idle_check (XpadPadGroup *group)
 	
 	return FALSE;
 }
-
 
 static void
 xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)
@@ -495,17 +488,6 @@ xpad_app_load_pads (void)
 	return opened;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /*
 converts main program arguments into one long string.
 puts allocated string in dest, and returns size
@@ -548,7 +530,6 @@ args_to_string (int argc, char **argv, char **dest)
 	
 	return size;
 }
-
 
 /*
 returns number of strings in newly allocated argv
@@ -783,27 +764,6 @@ done:
 	
 	return connected;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Here are the functions called when arguments are passed to us.

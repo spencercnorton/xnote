@@ -470,7 +470,10 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 		This is good, as some WMs don't like us changing the above parameters mid-run,
 		even if we do a hide/show cycle. */
 	gtk_window_set_default_size (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
-	gtk_window_reshow_with_initial_size (GTK_WINDOW (pad));
+	//gtk_window_reshow_with_initial_size (GTK_WINDOW (pad));
+	gtk_widget_hide(GTK_WIDGET (pad));
+	gtk_widget_unrealize(GTK_WIDGET (pad));
+	gtk_widget_show(GTK_WIDGET (pad));
 }
 
 static guint
@@ -766,21 +769,19 @@ xpad_pad_delete (XpadPad *pad)
 	{
 		GtkWidget *dialog;
 		gint response;
-		
-		dialog = xpad_app_alert_new (GTK_WINDOW (pad), GTK_STOCK_DIALOG_WARNING,
-			_("Delete this pad?"),
-			_("All text of this pad will be irrevocably lost."));
+
+		dialog = xpad_app_alert_dialog (GTK_WINDOW (pad), "dialog-warning", _("Delete this pad?"), _("All text of this pad will be irrevocably lost."));
 		
 		if (!dialog)
 			return;
-		
-		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, 1, GTK_STOCK_DELETE, 2, NULL);
-		
+
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("_Delete"), GTK_RESPONSE_ACCEPT, _("_Cancel"), GTK_RESPONSE_REJECT, NULL);
+
 		response = gtk_dialog_run (GTK_DIALOG (dialog));
 		
 		gtk_widget_destroy (dialog);
 		
-		if (response != 2)
+		if (response != GTK_RESPONSE_ACCEPT)
 			return;
 	}
 	
@@ -1686,33 +1687,24 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	return rv;
 }
 
+// FIXME: Accelerators are working but not visible for menu items with an image (icon).
 #define MENU_ADD(mnemonic, image, key, mask, callback) {\
-	item = gtk_image_menu_item_new_with_mnemonic (mnemonic);\
 	if (image) {\
-		GtkWidget *imgwidget = gtk_image_new_from_stock (image, GTK_ICON_SIZE_MENU);\
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), imgwidget);\
+		item = gtk_menu_item_new ();\
+		GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);\
+		GdkRGBA bg = {0, 0, 0, 0};\
+		gtk_widget_override_background_color (hbox, GTK_STATE_FLAG_NORMAL, &bg);\
+		gtk_container_add (GTK_CONTAINER (hbox), gtk_image_new_from_icon_name (image, GTK_ICON_SIZE_MENU));\
+		gtk_container_add (GTK_CONTAINER (hbox), gtk_label_new_with_mnemonic (mnemonic));\
+		gtk_container_add (GTK_CONTAINER (item), hbox);\
+	}\
+	else {\
+		item = gtk_menu_item_new_with_mnemonic (mnemonic);\
 	}\
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
 	if (key)\
-		gtk_widget_add_accelerator(item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
+		gtk_widget_add_accelerator (item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
 	gtk_container_add (GTK_CONTAINER (menu), item);\
-	gtk_widget_show (item);\
-	}
-
-#define MENU_ADD_STOCK(stock, callback) {\
-	item = gtk_image_menu_item_new_from_stock (stock, accel_group);\
-	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
-	gtk_container_add (GTK_CONTAINER (menu), item);\
-	gtk_widget_show (item);\
-	}
-
-#define MENU_ADD_STOCK_WITH_ACCEL(stock, callback, key, mask) {\
-	item = gtk_image_menu_item_new_from_stock (stock, accel_group);\
-	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
-	if (key)\
-		gtk_widget_add_accelerator(item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
-	gtk_container_add (GTK_CONTAINER (menu), item);\
-	gtk_widget_show (item);\
 	}
 
 #define MENU_ADD_CHECK(mnemonic, active, callback) {\
@@ -1720,13 +1712,11 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), active);\
 	g_signal_connect_swapped (item, "toggled", G_CALLBACK (callback), pad);\
 	gtk_container_add (GTK_CONTAINER (menu), item);\
-	gtk_widget_show (item);\
 	}
 
 #define MENU_ADD_SEP() {\
 	item = gtk_separator_menu_item_new ();\
 	gtk_container_add (GTK_CONTAINER (menu), item);\
-	gtk_widget_show (item);\
 	}
 
 static GtkWidget *
@@ -1736,82 +1726,65 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	
 	uppermenu = gtk_menu_new ();
 	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
-	
+
+	// Pad submenu
 	item = gtk_menu_item_new_with_mnemonic (_("_Pad"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	gtk_widget_show (item);
-	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	
-	MENU_ADD_STOCK (GTK_STOCK_NEW, xpad_pad_spawn);
+	MENU_ADD (_("_New"), "document-new", 0, 0, xpad_pad_spawn);
 	MENU_ADD_SEP ();
 	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
 	g_object_set_data (G_OBJECT (uppermenu), "sticky", item);
-	MENU_ADD_STOCK (GTK_STOCK_PROPERTIES, xpad_pad_open_properties);
+	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
 	MENU_ADD_SEP ();
-	MENU_ADD_STOCK (GTK_STOCK_CLOSE, xpad_pad_close);
-	MENU_ADD_STOCK (GTK_STOCK_DELETE, xpad_pad_delete);
-	
+	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
+	MENU_ADD (_("_Delete"), "edit-delete", 0, 0, xpad_pad_delete);
+
+	// Edit submenu
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	gtk_widget_show (item);
-	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	 
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDO, menu_undo, GDK_KEY_Z, GDK_CONTROL_MASK);
+	MENU_ADD (_("_Undo"), "edit-undo", GDK_KEY_Z, GDK_CONTROL_MASK, menu_undo);
 	g_object_set_data (G_OBJECT (uppermenu), "undo", item);
-	 
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_REDO, menu_redo, GDK_KEY_R, GDK_CONTROL_MASK);
+	MENU_ADD (_("_Redo"), "edit-redo", GDK_KEY_R, GDK_CONTROL_MASK, menu_redo);
 	g_object_set_data (G_OBJECT (uppermenu), "redo", item);
-
 	MENU_ADD_SEP();
-	
-	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
+	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, menu_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
-
 	MENU_ADD_SEP ();
+	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
 
-	MENU_ADD_STOCK (GTK_STOCK_PREFERENCES, xpad_pad_open_preferences);
-	
-	
+	// View submenu
 	item = gtk_menu_item_new_with_mnemonic (_("_View"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	gtk_widget_show (item);
-	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	
 	MENU_ADD_CHECK (_("_Toolbar"), xpad_settings_get_has_toolbar (xpad_global_settings), menu_toolbar);
 	MENU_ADD_CHECK (_("_Autohide Toolbar"), xpad_settings_get_autohide_toolbar (xpad_global_settings), menu_autohide);
 	gtk_widget_set_sensitive (item, xpad_settings_get_has_toolbar (xpad_global_settings));
 	MENU_ADD_CHECK (_("_Scrollbar"), xpad_settings_get_has_scrollbar (xpad_global_settings), menu_scrollbar);
 	MENU_ADD_CHECK (_("_Window Decorations"), xpad_settings_get_has_decorations (xpad_global_settings), menu_decorated);
 	
-	
+	// Notes submenu
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	gtk_widget_show (item);
-	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
-	
 	MENU_ADD (_("_Show All"), NULL, 0, 0, menu_show_all);
 	MENU_ADD (_("_Close All"), NULL, 0, 0, xpad_pad_close_all);
-	
-	/* The rest of the notes menu will get set up in the prep function below */
-	
+
+	// Help submenu
 	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	gtk_widget_show (item);
-	
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+	MENU_ADD (_("_Help"), "help-browser", GDK_KEY_F1, 0, show_help);	
+	MENU_ADD (_("_About"), "help-about", 0, 0, menu_about);
 	
-	MENU_ADD (_("_Contents"), GTK_STOCK_HELP, GDK_KEY_F1, 0, show_help);
-	MENU_ADD (_("_About"), GTK_STOCK_ABOUT, 0, 0, menu_about);
+	gtk_widget_show_all (uppermenu);
 	
 	return uppermenu;
 }
@@ -1909,15 +1882,17 @@ menu_get_popup_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = gtk_menu_new ();
 	gtk_menu_set_accel_group (GTK_MENU (menu), accel_group);
 	
-	MENU_ADD_STOCK (GTK_STOCK_CUT, menu_cut);
-	MENU_ADD_STOCK (GTK_STOCK_COPY, menu_copy);
-	MENU_ADD_STOCK (GTK_STOCK_PASTE, menu_paste);
+	MENU_ADD (_("Cu_t"), "edit-cut", 0, 0, menu_cut);
+	MENU_ADD (_("_Copy"), "edit-copy", 0, 0, menu_copy);	
+	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, menu_paste);	
 	g_object_set_data (G_OBJECT (menu), "paste", item);
 	MENU_ADD_SEP ();
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_BOLD, menu_bold, GDK_KEY_b, GDK_CONTROL_MASK);
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_ITALIC, menu_italic, GDK_KEY_i, GDK_CONTROL_MASK);
-	MENU_ADD_STOCK_WITH_ACCEL (GTK_STOCK_UNDERLINE, menu_underline, GDK_KEY_u, GDK_CONTROL_MASK);
-	MENU_ADD_STOCK (GTK_STOCK_STRIKETHROUGH, menu_strikethrough);
+	MENU_ADD (_("_Bold"), "format-text-bold", GDK_KEY_b, GDK_CONTROL_MASK, menu_bold);	
+	MENU_ADD (_("_Italic"), "format-text-italic", GDK_KEY_i, GDK_CONTROL_MASK, menu_italic);	
+	MENU_ADD (_("_Underline"), "format-text-underline", GDK_KEY_u, GDK_CONTROL_MASK, menu_underline);
+	MENU_ADD (_("_Strikethrough"), "format-text-strikethrough", 0, 0, menu_strikethrough);	
+	
+	gtk_widget_show_all (menu);
 	
 	return menu;
 }
@@ -1962,14 +1937,6 @@ menu_popdown (GtkWidget *menu, XpadPad *pad)
 	/**
 	 * We must check if we disabled off of pad and start the timeout if so.
 	 */
-
-	// TODO: The replacement GTK3 function below gives a Gdk-critical error.
-	//       However when setting the rectangular to a fixed x and y position, I don't see any negative effects.
-	//       What is the reason of getting the device position for making the menu dissapear?
-
-	// GTK2: gdk_window_get_pointer (gtk_widget_get_window(GTK_WIDGET(pad)), &rect.x, &rect.y, NULL);
-	// GTK3: gdk_window_get_device_position (gtk_widget_get_window (GTK_WIDGET (pad)), GDK_SOURCE_MOUSE, &rect.x, &rect.y, NULL);
-	// Gdk-CRITICAL **: gdk_window_get_device_position: assertion 'GDK_IS_DEVICE (device)' failed
 
 	rect.x = 10;
 	rect.y = 10;
