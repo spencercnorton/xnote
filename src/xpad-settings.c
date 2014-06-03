@@ -240,7 +240,13 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->toolbar_buttons = NULL;
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("New"));
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Delete"));
-	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Close"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Separator"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Cut"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Copy"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Paste"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Separator"));	
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Undo"));
+	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Redo"));	
 	
 	load_from_file (settings, DEFAULTS_FILENAME);
 }
@@ -487,30 +493,6 @@ static void xpad_settings_remove_toolbar_list_element (XpadSettings *settings, G
 	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
 }
 
-/* Unused function of previous developer
-gboolean xpad_settings_remove_toolbar_button (XpadSettings *settings, gint button)
-{
-	GSList *element;
-	
-	element = g_slist_nth (settings->priv->toolbar_buttons, button);
-	
-	if (!element) {
-		g_slist_free(element);
-		return FALSE;
-	}
-	
-	xpad_settings_remove_toolbar_list_element (settings, element);
-	
-	save_to_file (settings, DEFAULTS_FILENAME);
-	
-	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
-	
-	g_slist_free(element);
-
-	return TRUE;
-}
-*/
-
 gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings)
 {
 	if (settings->priv->toolbar_buttons == NULL)
@@ -548,8 +530,6 @@ gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings)
 	
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 	
-	g_slist_free(element);
-
 	return TRUE;
 }
 

@@ -1,4 +1,12 @@
-Version 4.1
+Version 4.3
+* New: Toolbar - ability to add multiple separators (#351775)
+* New: Toolbar - ability to add paste button on toolbar (#351775)
+* Fix: Toolbar - improved default toolbar items to the commonly used items
+* Fix: Toolbar - improved item names
+* Fix: Toolbar - prevented a crash when erasing toolbar items
+* Fix: Migrated Xpad from GTK2 to GTK3 (#1242424)
+
+Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)
 * New: Tray click behaviour can now be configured (#345278, #304331, #890335)
 * New: Tray icon can be hidden (#890334)
