@@ -95,7 +95,7 @@ xpad_pad_group_dispose (GObject *object)
 {
 	XpadPadGroup *group = XPAD_PAD_GROUP (object);
 
-	// Save all pads of this group
+	/* Save all pads of this group */
 	xpad_pad_group_save_unsaved_all(group);
 
 	G_OBJECT_CLASS (xpad_pad_group_parent_class)->dispose (object);
@@ -123,7 +123,6 @@ void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
 	g_object_ref(pad);
-	// g_object_ref_sink(GTK_OBJECT(pad));
 	
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);

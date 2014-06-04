@@ -91,7 +91,7 @@ static const XpadToolbarButton buttons[] =
 	{"Separator", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add Se_parator")}
 };
 
-static G_CONST_RETURN XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
+static const XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
 static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button);
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
@@ -330,11 +330,10 @@ xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParam
 	}
 }
 
-static G_CONST_RETURN XpadToolbarButton *
+static const XpadToolbarButton *
 xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) toolbar;
 
 	guint i;
@@ -488,8 +487,7 @@ menu_deactivated (GtkWidget *menu, GtkToolbar *toolbar)
 static gboolean
 xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) x;
 	(void) y;
 
@@ -506,7 +504,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 	{
 		const GSList *j;
-		GtkWidget *item, *image;
+		GtkWidget *item;
 
 		for (j = current_buttons; j; j = j->next)
 			if (g_ascii_strcasecmp (j->data, "Separator") && !g_ascii_strcasecmp (j->data, buttons[i].name))
@@ -526,7 +524,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 	if (is_button)
 	{
-		GtkWidget *item, *image;
+		GtkWidget *item;
 
 		item = gtk_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), NULL);		

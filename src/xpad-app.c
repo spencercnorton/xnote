@@ -107,7 +107,7 @@ xpad_app_init (int argc, char **argv)
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-	have_gtk = gtk_init_check (&argc, &argv); // Leaves 135 referenced objects behind. No idea how to unref. Total up to here 135.
+	have_gtk = gtk_init_check (&argc, &argv);
 	xpad_argc = argc;
 	xpad_argv = argv;
 	output = stdout;
@@ -151,16 +151,16 @@ xpad_app_init (int argc, char **argv)
 	/* Race condition here, between calls */
 	xpad_app_open_proc_file ();
 	
-	register_stock_icons (); // Leaves 1039 referenced objects behind. No idea how to unref, except 1. Total up to here 1173.
+	register_stock_icons ();
 	gtk_window_set_default_icon_name (PACKAGE);
 	
-	pad_group = xpad_pad_group_new(); // Creates 1 referenced object; but does get unrefferenced. Total 1173.
+	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE);
 	
-	xpad_tray_open (); // Creates 34 referenced objects; but only 14 get unrefferenced. Total 1193.
+	xpad_tray_open ();
 	xpad_session_manager_init ();
 
-	xpad_global_settings = xpad_settings_new (); // Creates 1 reference, 1 reference gets cleaned up. Total 1193
+	xpad_global_settings = xpad_settings_new ();
 
 	/* Initialize Xpad-periodic module */
 	Xpad_periodic_init();
@@ -168,7 +168,7 @@ xpad_app_init (int argc, char **argv)
 	Xpad_periodic_set_callback("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 	
 	/* load all pads */
-	pads_loaded_on_start = xpad_app_load_pads (); // each pad creates 333 references and leaves about 100 references behind. Total 1268.
+	pads_loaded_on_start = xpad_app_load_pads ();
 	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group);
@@ -215,14 +215,14 @@ xpad_app_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
 	xpad_session_manager_stop_interact (FALSE);
 }
 
-G_CONST_RETURN gchar *
+const gchar *
 xpad_app_get_config_dir (void)
 {
 	return config_dir;
 }
 
 /* Returns absolute path to our own executable. May be NULL. */
-G_CONST_RETURN gchar *
+const gchar *
 xpad_app_get_program_path (void)
 {
 	return program_path;
@@ -237,23 +237,23 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
-	// Free the memory used by the pads belonging to this group
+	/* Free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (xpad_app_get_pad_group());
 
-	// Free the memory used by group.
+	/* Free the memory used by group. */
 	g_object_unref (xpad_app_get_pad_group());
 
-	// Free the memory used by the settings menu.
+	/* Free the memory used by the settings menu. */
 	g_object_unref (xpad_global_settings);
-	xpad_global_settings = NULL; // This is needed due to the asynchronous finalizing process.
+	xpad_global_settings = NULL; /* This is needed due to the asynchronous finalizing process. */
 
-	// Free the memory used by the tray icon and its menu.
+	/* Free the memory used by the tray icon and its menu. */
 	xpad_tray_close ();
 
-	// Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind.
+	/* Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind. */
 	g_object_unref (gtk_icon_theme_get_default ());
 
-	// Give GTK the signal to clean the rest and quit the application.
+	/* Give GTK the signal to clean the rest and quit the application. */
 	gtk_main_quit ();
 }
 
@@ -447,7 +447,7 @@ xpad_app_load_pads (void)
 {
 	gint opened = 0;
 	GDir *dir;
-	G_CONST_RETURN gchar *name;
+	const gchar *name;
 	
 	g_signal_connect (pad_group, "pad-added", G_CALLBACK (xpad_app_pad_added), NULL);
 	
@@ -504,7 +504,7 @@ args_to_string (int argc, char **argv, char **dest)
 	for (i = 0; i < argc; i++) {
 		string_length = strlen (argv[i]) + 1;
 
-		// safe cast
+		/* safe cast */
 		if( string_length <= UINT_MAX ) {
 		       size += (guint) string_length;
 		}
@@ -557,7 +557,7 @@ string_to_args (const char *string, char ***argv)
 		
 		if (tmp) {
 			long int difference = tmp - string;
-			// safe cast from long int to size_t
+			/* safe cast from long int to size_t */
 			if (difference >= 0)
 				len = (size_t) difference;
 			else {
@@ -632,7 +632,7 @@ xpad_app_read_from_proc_file (void)
 		gint c = 2;
 		gchar **v = NULL;
 		unsigned long int my_size = 0;
-		// safe cast
+		/* safe cast */
 		my_size = sizeof (gchar *) * (long unsigned) c;
 		v = g_malloc (my_size);
 		v[0] = PACKAGE;
@@ -657,8 +657,7 @@ close_client_fd:
 static gboolean
 can_read_from_server_fd (GIOChannel *source, GIOCondition condition, gpointer data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) source;
 	(void) condition;
 	(void) data;
