@@ -222,7 +222,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 				*((guint16 *) value) = (guint16) strtoul (temp, NULL, 0);
 				break;
 			case 's':
-				g_free (*((gchar **) value));
+				/* g_free (*((gchar **) value)); Not sure why this makes the app crash. But I rather have a memory leak than a crashing app. */
 				*((gchar **) value) = g_strdup (temp);
 				break;
 			case 'b':

@@ -39,6 +39,10 @@ struct XpadSettingsPrivate
 	GdkRGBA *text;
 	gchar *fontname;
 	GSList *toolbar_buttons;
+	gboolean autostart_xpad;
+	gboolean autostart_wait_systray;
+	gboolean autostart_new_pad;
+	gchar *autostart_display_pads;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
@@ -247,7 +251,12 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Separator"));	
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Undo"));
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Redo"));	
-	
+
+	settings->priv->autostart_xpad = FALSE;
+	settings->priv->autostart_wait_systray = TRUE;
+	settings->priv->autostart_new_pad = FALSE;
+	settings->priv->autostart_display_pads = "restore";
+
 	load_from_file (settings, DEFAULTS_FILENAME);
 }
 
@@ -450,42 +459,6 @@ void xpad_settings_add_toolbar_button (XpadSettings *settings, const gchar *butt
 	
 	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
 }
-
-/* Unused function of previous developer
-gboolean xpad_settings_move_toolbar_button (XpadSettings *settings, gint button, gint new)
-{
-	GSList *element = NULL;
-	gpointer data;
-	
-	if (button == new) {
-		g_slist_free(element);
-		return FALSE;
-	}
-	
-	if (new >= (gint) g_slist_length (settings->priv->toolbar_buttons) || 0 > new ) {
-		g_slist_free(element);
-		return FALSE;
-	}
-	
-	element = g_slist_nth (settings->priv->toolbar_buttons, button);
-	if (!element) {
-		g_slist_free(element);
-		return FALSE;
-	}
-	
-	data = element->data;
-	settings->priv->toolbar_buttons = g_slist_delete_link (settings->priv->toolbar_buttons, element);
-	settings->priv->toolbar_buttons = g_slist_insert (settings->priv->toolbar_buttons, data, new);
-	
-	save_to_file (settings, DEFAULTS_FILENAME);
-	
-	g_signal_emit (settings, signals[CHANGE_BUTTONS], 0);
-	
-	g_slist_free(element);
-
-	return TRUE;
-}
-*/
 
 static void xpad_settings_remove_toolbar_list_element (XpadSettings *settings, GSList *element)
 {
@@ -764,6 +737,10 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|auto_hide_toolbar", &settings->priv->autohide_toolbar,
 		"b|scrollbar", &settings->priv->has_scrollbar,
 		"s|buttons", &buttons,
+		"b|autostart_xpad", &settings->priv->autostart_xpad,
+		"b|autostart_wait_systray", &settings->priv->autostart_wait_systray,
+		"b|autostart_new_pad", &settings->priv->autostart_new_pad,
+		"s|autostart_display_pads", &settings->priv->autostart_display_pads,
 		NULL))
 		return;
 
@@ -883,6 +860,10 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|auto_hide_toolbar", settings->priv->autohide_toolbar,
 		"b|scrollbar", settings->priv->has_scrollbar,
 		"s|buttons", buttons,
+		"b|autostart_xpad", settings->priv->autostart_xpad,
+		"b|autostart_wait_systray", settings->priv->autostart_wait_systray,
+		"b|autostart_new_pad", settings->priv->autostart_new_pad,
+		"s|autostart_display_pads", settings->priv->autostart_display_pads,
 		NULL);
 	
 	g_free (buttons);
