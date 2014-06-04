@@ -30,7 +30,6 @@ struct XpadSettingsPrivate
 	gboolean has_decorations;
 	gboolean confirm_destroy;
 	gboolean edit_lock;
-	gboolean sticky;
 	guint tray_click_configuration;
 	gboolean has_toolbar;
 	gboolean autohide_toolbar;
@@ -42,7 +41,8 @@ struct XpadSettingsPrivate
 	gboolean autostart_xpad;
 	gboolean autostart_wait_systray;
 	gboolean autostart_new_pad;
-	gchar *autostart_display_pads;
+	gboolean autostart_sticky;	
+	guint autostart_display_pads;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
@@ -71,6 +71,7 @@ enum
   PROP_BACK_COLOR,
   PROP_TEXT_COLOR,
   PROP_FONTNAME,
+  PROP_AUTOSTART_DISPLAY_PADS,
   LAST_PROP
 };
 
@@ -208,7 +209,16 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                                     "Default color of pad background",
 	                                                     GDK_TYPE_RGBA,
 	                                                     G_PARAM_READWRITE));
-	
+
+	g_object_class_install_property (gobject_class,
+                                     PROP_TRAY_CLICK_CONFIGURATION,
+                                     g_param_spec_uint ("autostart_display_pads",
+                                                        "Autostart display pads",
+                                                        "How to show the different pads when Xpad is started",
+                                                        0,
+                                                        G_MAXUINT,
+                                                        2,
+                                                        G_PARAM_READWRITE));
 	/* Signals */
 	
 	signals[CHANGE_BUTTONS] = 
@@ -233,7 +243,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->height = 200;
 	settings->priv->has_decorations = TRUE;
 	settings->priv->confirm_destroy = TRUE;
-	settings->priv->sticky = FALSE;
+	settings->priv->autostart_sticky = FALSE;
 	settings->priv->edit_lock = FALSE;
 	settings->priv->tray_click_configuration = 0;
 	settings->priv->fontname = NULL;
@@ -255,7 +265,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->autostart_xpad = FALSE;
 	settings->priv->autostart_wait_systray = TRUE;
 	settings->priv->autostart_new_pad = FALSE;
-	settings->priv->autostart_display_pads = "restore";
+	settings->priv->autostart_display_pads = 2;
 
 	load_from_file (settings, DEFAULTS_FILENAME);
 }
@@ -279,7 +289,7 @@ xpad_settings_finalize (GObject *object)
 		gdk_rgba_free (settings->priv->back);
 
 	g_free (settings->priv->fontname);
-	
+		
 	G_OBJECT_CLASS (xpad_settings_parent_class)->finalize (object);
 }
 
@@ -400,21 +410,21 @@ gboolean xpad_settings_get_has_toolbar (XpadSettings *settings)
 	return settings->priv->has_toolbar;
 }
 
-void xpad_settings_set_sticky (XpadSettings *settings, gboolean sticky)
+void xpad_settings_set_autostart_sticky (XpadSettings *settings, gboolean sticky)
 {
-	if (settings->priv->sticky == sticky)
+	if (settings->priv->autostart_sticky == sticky)
 		return;
 	
-	settings->priv->sticky = sticky;
+	settings->priv->autostart_sticky = sticky;
 	
 	save_to_file (settings, DEFAULTS_FILENAME);
 	
 	g_object_notify (G_OBJECT (settings), "sticky");
 }
 
-gboolean xpad_settings_get_sticky (XpadSettings *settings)
+gboolean xpad_settings_get_autostart_sticky (XpadSettings *settings)
 {
-	return settings->priv->sticky;
+	return settings->priv->autostart_sticky;
 }
 
 void xpad_settings_set_autohide_toolbar (XpadSettings *settings, gboolean hide)
@@ -566,6 +576,57 @@ const gchar *xpad_settings_get_fontname (XpadSettings *settings)
 	return settings->priv->fontname;
 }
 
+void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean autostart)
+{
+	settings->priv->autostart_xpad = autostart;
+	
+	save_to_file (settings, DEFAULTS_FILENAME);
+}
+
+gboolean xpad_settings_get_autostart_xpad (XpadSettings *settings)
+{
+	return settings->priv->autostart_xpad;
+}
+
+void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean wait_systray)
+{
+	settings->priv->autostart_wait_systray = wait_systray;
+	
+	save_to_file (settings, DEFAULTS_FILENAME);
+}
+
+gboolean xpad_settings_get_autostart_wait_systray (XpadSettings *settings)
+{
+	return settings->priv->autostart_wait_systray;
+}
+
+void xpad_settings_set_autostart_new_pad (XpadSettings *settings, gboolean new_pad)
+{
+	settings->priv->autostart_new_pad = new_pad;
+	
+	save_to_file (settings, DEFAULTS_FILENAME);
+}
+
+gboolean xpad_settings_get_autostart_new_pad (XpadSettings *settings)
+{
+	return settings->priv->autostart_new_pad;
+}
+
+void xpad_settings_set_autostart_display_pads (XpadSettings *settings, guint conf)
+{
+	if (settings->priv->autostart_display_pads == conf)
+		return;
+	
+	settings->priv->autostart_display_pads = conf;
+	save_to_file(settings, DEFAULTS_FILENAME);
+	g_object_notify (G_OBJECT (settings), "autostart_display_pads");
+}
+
+guint xpad_settings_get_autostart_display_pads(XpadSettings *settings)
+{
+	return settings->priv->autostart_display_pads;
+}
+
 static void
 xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -592,7 +653,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		break;
 	
 	case PROP_STICKY:
-		xpad_settings_set_sticky (settings, g_value_get_boolean (value));
+		xpad_settings_set_autostart_sticky (settings, g_value_get_boolean (value));
 		break;
 	
 	case PROP_EDIT_LOCK:
@@ -627,6 +688,10 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		xpad_settings_set_fontname (settings, g_value_get_string (value));
 		break;
 	
+	case PROP_AUTOSTART_DISPLAY_PADS:
+		xpad_settings_set_autostart_display_pads (settings, g_value_get_uint(value));
+		break;
+		
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -659,7 +724,7 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		break;
 	
 	case PROP_STICKY:
-		g_value_set_boolean (value, xpad_settings_get_sticky (settings));
+		g_value_set_boolean (value, xpad_settings_get_autostart_sticky (settings));
 		break;
 	
 	case PROP_EDIT_LOCK:
@@ -688,6 +753,10 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 	
 	case PROP_FONTNAME:
 		g_value_set_string (value, xpad_settings_get_fontname (settings));
+		break;
+	
+	case PROP_AUTOSTART_DISPLAY_PADS:
+		g_value_set_uint (value, xpad_settings_get_autostart_display_pads (settings));
 		break;
 	
 	default:
@@ -726,7 +795,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"u|width", &settings->priv->width,
 		"b|confirm_destroy", &settings->priv->confirm_destroy,
 		"b|edit_lock", &settings->priv->edit_lock,
-		"b|sticky_on_start", &settings->priv->sticky,
+		"b|sticky_on_start", &settings->priv->autostart_sticky,
 		"u|tray_click_configuration", &settings->priv->tray_click_configuration,
 		"s|back", &background_color_string,
 		"b|use_back", &use_back,
@@ -740,7 +809,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|autostart_xpad", &settings->priv->autostart_xpad,
 		"b|autostart_wait_systray", &settings->priv->autostart_wait_systray,
 		"b|autostart_new_pad", &settings->priv->autostart_new_pad,
-		"s|autostart_display_pads", &settings->priv->autostart_display_pads,
+		"u|autostart_display_pads", &settings->priv->autostart_display_pads,
 		NULL))
 		return;
 
@@ -849,7 +918,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"u|width", settings->priv->width,
 		"b|confirm_destroy", settings->priv->confirm_destroy,
 		"b|edit_lock", settings->priv->edit_lock,
-		"b|sticky_on_start", settings->priv->sticky,
+		"b|sticky_on_start", settings->priv->autostart_sticky,
 		"u|tray_click_configuration", settings->priv->tray_click_configuration,
 		"s|back", settings->priv->back ? gdk_rgba_to_string (settings->priv->back) : "NULL",
 		"b|use_back", settings->priv->back ? TRUE : FALSE,
@@ -863,7 +932,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|autostart_xpad", settings->priv->autostart_xpad,
 		"b|autostart_wait_systray", settings->priv->autostart_wait_systray,
 		"b|autostart_new_pad", settings->priv->autostart_new_pad,
-		"s|autostart_display_pads", settings->priv->autostart_display_pads,
+		"u|autostart_display_pads", settings->priv->autostart_display_pads,
 		NULL);
 	
 	g_free (buttons);

@@ -241,7 +241,7 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->height = xpad_settings_get_height (xpad_global_settings);
 	pad->priv->infoname = NULL;
 	pad->priv->contentname = NULL;
-	pad->priv->sticky = xpad_settings_get_sticky (xpad_global_settings);
+	pad->priv->sticky = xpad_settings_get_autostart_sticky (xpad_global_settings);
 	pad->priv->textview = NULL;
 	pad->priv->scrollbar = NULL;
 	pad->priv->toolbar = NULL;
