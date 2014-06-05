@@ -1,18 +1,19 @@
 Version 4.3
 * New: Toolbar - ability to add multiple separators (#351775)
 * New: Toolbar - ability to add paste button on toolbar (#351775)
+* New: Preferences - Ability to set the automatic startup of a new pad on Xpad launch in the Preferences menu
 * New: Preferences - Extended the preference dialog with the still to implement new startup features
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
+* Fix: Preferences - Changed description of Edit Lock into Make pads read-only
 * Fix: Technical - Migrated Xpad from GTK2 to GTK3 (#1242424)
 * Fix: Technical - Replaced deprecated Glib and GTK statements
 * Fix: Technical - Improved configure.ac for better debugging and code quality
 * Fix: Technical - Corrected commenting style to C89 standard
 * Fix: Technical - Reorganized code of preferences dialog in preparation of another change
 * Fix: Technical - Prevented an error while changing the Edit lock preference
-* Fix: Preferences - Changed description of Edit Lock into Make pads read-only
-
+* Fix: Technical - Prevented a crash when using command line option -n (= new pad)
 
 Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)

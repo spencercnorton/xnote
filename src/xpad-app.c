@@ -83,12 +83,12 @@ static gint pads_loaded_on_start = 0;
 XpadSettings *xpad_global_settings;
 
 static gboolean		process_local_args          (gint *argc, gchar **argv[]);
-static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboolean have_gtk);
+static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings *xpad_settings);
 
 static gboolean		config_dir_exists           (void);
 static gchar		*make_config_dir            (void);
-static void			register_stock_icons        (void);
-static gint			xpad_app_load_pads          (void);
+static void		register_stock_icons        (void);
+static gint		xpad_app_load_pads          (void);
 static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
@@ -127,7 +127,7 @@ xpad_app_init (int argc, char **argv)
 		process_local_args (&xpad_argc, &xpad_argv);
 		if (!xpad_app_pass_args ())
 		{
-			process_remote_args (&xpad_argc, &xpad_argv, FALSE);
+			process_remote_args (&xpad_argc, &xpad_argv, FALSE, xpad_global_settings);
 			fprintf (output, "%s\n", _("Xpad is a graphical program.  Please run it from your desktop."));
 		}
 		exit (0);
@@ -154,13 +154,14 @@ xpad_app_init (int argc, char **argv)
 	register_stock_icons ();
 	gtk_window_set_default_icon_name (PACKAGE);
 	
+	/* Read the Xpad configuration file from disk (if exists) */
+	xpad_global_settings = xpad_settings_new ();
+
 	pad_group = xpad_pad_group_new();
-	process_remote_args (&xpad_argc, &xpad_argv, TRUE);
+	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);
 	
 	xpad_tray_open ();
 	xpad_session_manager_init ();
-
-	xpad_global_settings = xpad_settings_new ();
 
 	/* Initialize Xpad-periodic module */
 	Xpad_periodic_init();
@@ -626,7 +627,7 @@ xpad_app_read_from_proc_file (void)
 	/* here we redirect singleton->priv->output to the socket */
 	output = fdopen (client_fd, "w");
 	
-	if (!process_remote_args (&argc, &argv, TRUE))
+	if (!process_remote_args (&argc, &argv, TRUE, xpad_global_settings))
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
@@ -638,7 +639,7 @@ xpad_app_read_from_proc_file (void)
 		v[0] = PACKAGE;
 		v[1] = "--new";
 		
-		process_remote_args (&c, &v, TRUE);
+		process_remote_args (&c, &v, TRUE, xpad_global_settings);
 		
 		g_free (v);
 	}
@@ -831,7 +832,7 @@ process_local_args (gint *argc, gchar **argv[])
 }
 
 static gboolean
-process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
+process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings *xpad_settings)
 {
 	GError *error = NULL;
 	GOptionContext *context;
@@ -853,7 +854,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk)
 		if (have_gtk && option_smid)
 			xpad_session_manager_set_id (option_smid);
 		
-		if (have_gtk && option_new)
+		if (have_gtk && (option_new || xpad_settings_get_autostart_new_pad (xpad_settings)))
 		{
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
