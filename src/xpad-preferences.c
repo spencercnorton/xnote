@@ -184,7 +184,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 
-	label = gtk_label_new_with_mnemonic (_("Foreground:"));
+	label = gtk_label_new_with_mnemonic (_("Text:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
@@ -543,13 +543,68 @@ change_back_color (GtkColorChooser *chooser, XpadPreferences *pref)
 static void
 change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 {
+	gboolean autostart;
+	
+	autostart = gtk_toggle_button_get_active (button);
 	/* g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler); */
-	xpad_settings_set_autostart_xpad (xpad_global_settings, gtk_toggle_button_get_active (button));
-	if (xpad_settings_get_autostart_xpad (xpad_global_settings))
-		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
-	else
-		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
 	/* g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler); */
+	
+	if (autostart) {
+		/* Copy the xpad.desktop file to the autostart folder and enable/disable the wait for systray preference */
+		gboolean success;
+		char *source_filename;
+		char *destination_directory;
+		GFile *source, *destination;
+		GError *error = NULL;
+		const char *homedir;
+
+		homedir = g_getenv ("HOME");
+		source_filename = "/usr/share/applications/xpad.desktop";
+		destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", homedir);
+
+		source = g_file_new_for_path (source_filename);
+		destination = g_file_new_for_path (destination_directory);
+		success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+		
+		if (!success) {
+			gchar *errtext;
+			errtext = g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message);
+			xpad_app_error (NULL, _("Error enabling Xpad autostart"), errtext);
+			g_free (errtext);
+			
+			gtk_toggle_button_set_active (button, FALSE);
+		}
+		else {
+			xpad_settings_set_autostart_xpad (xpad_global_settings, TRUE);			
+			gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);			
+		}
+	}
+	else {
+		/* Remove the xpad.desktop file from the autostart folder and enable/disable the wait for systray preference */
+		gboolean success;
+		char *filename;
+		GFile *file;
+		GError *error = NULL;		
+		const char *homedir;
+		
+		homedir = g_getenv ("HOME");		
+		filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", homedir);		
+		file = g_file_new_for_path (filename);
+		success = g_file_delete (file, NULL, &error);
+
+		if (!success) {
+			gchar *errtext;
+			errtext = g_strdup_printf (_("Could not delete %s\n%s"), filename, error->message);
+			xpad_app_error (NULL, _("Error disabling Xpad autostart"), errtext);
+			g_free (errtext);
+			
+			gtk_toggle_button_set_active (button, TRUE);
+		}
+		else {
+			xpad_settings_set_autostart_xpad (xpad_global_settings, FALSE);
+			gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);			
+		}
+	}
 }
 
 static void
