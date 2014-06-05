@@ -2,11 +2,12 @@ Version 4.3
 * New: Toolbar - ability to add multiple separators (#351775)
 * New: Toolbar - ability to add paste button on toolbar (#351775)
 * New: Preferences - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
-* New: Preferences - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu
+* New: Preferences - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu (#405314)
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
 * Fix: Preferences - Changed description of Edit Lock into Make pads read-only
+* Fix: Preferences - Make sure that the preference window is always presented up front to the user, when requested.
 * Fix: Technical - Migrated Xpad from GTK2 to GTK3 (#1242424)
 * Fix: Technical - Replaced deprecated Glib and GTK statements
 * Fix: Technical - Improved configure.ac for better debugging and code quality

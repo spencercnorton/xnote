@@ -109,16 +109,12 @@ static GtkWidget *_xpad_preferences = NULL;
 void
 xpad_preferences_open (void)
 {
-	if (_xpad_preferences)
-	{
-		gtk_window_present (GTK_WINDOW (_xpad_preferences));
-	}
-	else
+	if (!_xpad_preferences)
 	{
 		_xpad_preferences = GTK_WIDGET (g_object_new (XPAD_TYPE_PREFERENCES, NULL));
 		g_signal_connect_swapped (_xpad_preferences, "destroy", G_CALLBACK (g_nullify_pointer), &_xpad_preferences);
-		gtk_widget_show (_xpad_preferences);
 	}
+	gtk_window_present (GTK_WINDOW (_xpad_preferences));
 }
 
 static void
