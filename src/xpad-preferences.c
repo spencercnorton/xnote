@@ -422,8 +422,8 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_font_handler = g_signal_connect_swapped (xpad_global_settings, "notify::fontname", G_CALLBACK (notify_fontname), pref);
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
 	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (notify_back_color), pref);
-/*
-	pref->priv->notify_autostart_xpad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_autostart_sticky), pref);
+
+/*	pref->priv->notify_autostart_xpad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_autostart_sticky), pref);
 	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_autostart_sticky), pref);
 	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_autostart_sticky), pref);*/
 	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::sticky", G_CALLBACK (notify_autostart_sticky), pref);

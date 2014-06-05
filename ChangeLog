@@ -1,8 +1,8 @@
 Version 4.3
 * New: Toolbar - ability to add multiple separators (#351775)
 * New: Toolbar - ability to add paste button on toolbar (#351775)
-* New: Preferences - Ability to set the automatic startup of a new pad on Xpad launch in the Preferences menu
-* New: Preferences - Extended the preference dialog with the still to implement new startup features
+* New: Preferences - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
+* New: Preferences - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
@@ -14,6 +14,7 @@ Version 4.3
 * Fix: Technical - Reorganized code of preferences dialog in preparation of another change
 * Fix: Technical - Prevented an error while changing the Edit lock preference
 * Fix: Technical - Prevented a crash when using command line option -n (= new pad)
+* Fix: Technical - Improve the hiding of pads at Xpad launch (#405314)
 
 Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)

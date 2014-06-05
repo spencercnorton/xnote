@@ -137,7 +137,6 @@ xpad_app_init (int argc, char **argv)
 	gdk_set_program_class (PACKAGE);
 
 	/* Set up program path. */
-
 	if (xpad_argc > 0)
 		program_path = g_find_program_in_path (xpad_argv[0]);
 	else
@@ -176,6 +175,14 @@ xpad_app_init (int argc, char **argv)
 			gtk_widget_show (pad);
 		}
 	}
+
+	/* Since all pads have been loaded, reprocess the show/hide/toggle option for all pads */
+	if (have_gtk && (option_show))
+		xpad_pad_group_show_all (pad_group);
+	if (have_gtk && (option_hide))
+		xpad_pad_group_close_all (pad_group);
+	if (have_gtk && option_toggle)
+		xpad_pad_group_toggle_hide (pad_group);
 	
 	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
 	
@@ -860,15 +867,11 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 			gtk_widget_show (pad);
 		}
 
-		if (have_gtk && option_show)
-		  xpad_pad_group_show_all (pad_group);
+		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 0)
+			option_show = TRUE;
+		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 1)
+			option_hide = TRUE;
 		
-		if (have_gtk && option_hide)
-		  xpad_pad_group_close_all (pad_group);
-		
-		if (have_gtk && option_toggle)
-		  xpad_pad_group_toggle_hide (pad_group);
-
 		if (have_gtk && option_files)
 		{
 			int i;
