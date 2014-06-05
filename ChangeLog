@@ -17,6 +17,7 @@ Version 4.3
 * Fix: Technical - Prevented an error while changing the Edit lock preference
 * Fix: Technical - Prevented a crash when using command line option -n (= new pad)
 * Fix: Technical - Improve the hiding of pads at Xpad launch (#405314)
+* Fix: Technical - Added thread safe handling of new preferences
 
 Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)
