@@ -93,22 +93,22 @@ void xpad_settings_set_fontname (XpadSettings *settings, const gchar *fontname);
 const gchar *xpad_settings_get_fontname (XpadSettings *settings);
 
 void xpad_settings_set_tray_click_handler (XpadSettings *settings, guint conf);
-guint xpad_settings_get_tray_click_handler(XpadSettings *settings);
+guint xpad_settings_get_tray_click_handler (XpadSettings *settings);
 
-void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean autostart);
+void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_xpad (XpadSettings *settings);
 
-void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean wait_systray);
+void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_wait_systray (XpadSettings *settings);
 
-void xpad_settings_set_autostart_new_pad (XpadSettings *settings, gboolean new_pad);
+void xpad_settings_set_autostart_new_pad (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_new_pad (XpadSettings *settings);
 
-void xpad_settings_set_autostart_sticky (XpadSettings *settings, gboolean sticky);
+void xpad_settings_set_autostart_sticky (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_sticky (XpadSettings *settings);
 
 void xpad_settings_set_autostart_display_pads (XpadSettings *settings, guint conf);
-guint xpad_settings_get_autostart_display_pads(XpadSettings *settings);
+guint xpad_settings_get_autostart_display_pads (XpadSettings *settings);
 
 G_END_DECLS
 

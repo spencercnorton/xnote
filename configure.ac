@@ -39,6 +39,9 @@ PKG_CHECK_MODULES(ATK, atk >= 2.8 atk-bridge-2.0)
 AC_SUBST(ATK_LIBS)
 AC_SUBST(ATK_CFLAGS)
 
+# Force the use of GNU libraries, for the special case of the function readlink
+AC_GNU_SOURCE
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T

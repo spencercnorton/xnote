@@ -24,6 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-app.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 struct XpadPreferencesPrivate 
 {
@@ -114,6 +119,7 @@ xpad_preferences_open (void)
 		_xpad_preferences = GTK_WIDGET (g_object_new (XPAD_TYPE_PREFERENCES, NULL));
 		g_signal_connect_swapped (_xpad_preferences, "destroy", G_CALLBACK (g_nullify_pointer), &_xpad_preferences);
 	}
+	
 	gtk_window_present (GTK_WINDOW (_xpad_preferences));
 }
 
@@ -124,7 +130,7 @@ xpad_preferences_class_init (XpadPreferencesClass *klass)
 
 	gobject_class->dispose = xpad_preferences_dispose;
 	gobject_class->finalize = xpad_preferences_finalize;
-}
+}	
 
 static void
 xpad_preferences_init (XpadPreferences *pref)
@@ -291,7 +297,15 @@ xpad_preferences_init (XpadPreferences *pref)
 		
 	pref->priv->autostart_xpad = gtk_check_button_new_with_mnemonic (_("_Start Xpad automatically after login"));
 	gtk_box_pack_start (GTK_BOX (autostart_vbox), pref->priv->autostart_xpad, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), xpad_settings_get_autostart_xpad (xpad_global_settings));
+
+	/* Verify and correct the autostart setting if an external application has added the xpad.desktop file to the autostart folder */
+	const gchar *filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+	if (g_file_test (filename, G_FILE_TEST_EXISTS))
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), TRUE);
+	else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), FALSE);	
+	
+
 
 	pref->priv->autostart_wait_systray = gtk_check_button_new_with_mnemonic (_("_Wait for systray"));
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
@@ -554,28 +568,53 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 		char *destination_directory;
 		GFile *source, *destination;
 		GError *error = NULL;
-		const char *homedir;
-
-		homedir = g_getenv ("HOME");
-		source_filename = "/usr/share/applications/xpad.desktop";
-		destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", homedir);
-
-		source = g_file_new_for_path (source_filename);
-		destination = g_file_new_for_path (destination_directory);
-		success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
 		
-		if (!success) {
+		/* Find the base directory where the application is installed /usr or /usr/local, to find the correct xpad.desktop file. */
+		char *szTmp = g_strdup_printf ("/proc/%d/exe", getpid());
+		enum { BUFFERSIZE = 1024 };
+		char buf[BUFFERSIZE];
+		ssize_t len = readlink(szTmp, buf, sizeof(buf)-1);
+		
+		if (len == -1) {
 			gchar *errtext;
-			errtext = g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message);
+			errtext = g_strdup_printf (_("Could not find the directory where Xpad is installed\n%s"), error->message);
 			xpad_app_error (NULL, _("Error enabling Xpad autostart"), errtext);
 			g_free (errtext);
 			
 			gtk_toggle_button_set_active (button, FALSE);
 		}
 		else {
-			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
-			xpad_settings_set_autostart_xpad (xpad_global_settings, TRUE);			
-			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
+			char basedir[len-8];
+			guint i;
+			for (i=0; i<len-8; i++)
+				basedir[i] = buf[i];
+			basedir[len-9] = '\0';
+
+			source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);
+			destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+
+			source = g_file_new_for_path (source_filename);
+			destination = g_file_new_for_path (destination_directory);
+			success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+			
+			if (!success) {
+				gchar *errtext;
+				errtext = g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message);
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), errtext);
+				g_free (errtext);
+				
+				gtk_toggle_button_set_active (button, FALSE);
+			}
+			else {
+				g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
+				xpad_settings_set_autostart_xpad (xpad_global_settings, TRUE);			
+				g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
+				
+				g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
+				gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
+				change_autostart_wait_systray (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), pref);				
+				g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
+			}
 		}
 	}
 	else {
@@ -584,10 +623,8 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 		char *filename;
 		GFile *file;
 		GError *error = NULL;		
-		const char *homedir;
 		
-		homedir = g_getenv ("HOME");		
-		filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", homedir);		
+		filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
 		file = g_file_new_for_path (filename);
 		success = g_file_delete (file, NULL, &error);
 
@@ -603,6 +640,10 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
 			xpad_settings_set_autostart_xpad (xpad_global_settings, FALSE);
 			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
+
+			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
+			gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
+			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
 		}
 	}
 }
@@ -610,8 +651,45 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 static void
 change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 {
+	GKeyFile *keyfile;
+	GKeyFileFlags flags;
+	GError *error = NULL;
+	char *filename;
+	gboolean wait_systray;
+
+	wait_systray = gtk_toggle_button_get_active (button);
+
+	/* Create a new GKeyFile object and a bitwise list of flags. */
+	keyfile = g_key_file_new ();
+	filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));	
+	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+	error = NULL;
+	
+	/* Load the GKeyFile from xpad.desktop or show an error message. */
+	if (!g_key_file_load_from_file (keyfile, filename, flags, &error)) {
+		gchar *errtext;
+		errtext = g_strdup_printf (_("Could not load %s\n%s"), filename, error->message);
+		xpad_app_error (NULL, _("Error changing wait for systray setting"), errtext);
+		g_free (errtext);
+
+		gtk_toggle_button_set_active (button, !wait_systray);
+		return;
+	}
+
+	g_key_file_set_boolean (keyfile, "Desktop Entry", "X-LXQt-Need-Tray", wait_systray);
+
+	if (!g_key_file_save_to_file (keyfile, filename, &error)) {
+		gchar *errtext;
+		errtext = g_strdup_printf (_("Could not save %s\n%s"), filename, error->message);
+		xpad_app_error (NULL, _("Error changing wait for systray setting"), errtext);
+		g_free (errtext);
+		
+		gtk_toggle_button_set_active (button, !wait_systray);
+		return;
+	}
+
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-	xpad_settings_set_autostart_wait_systray (xpad_global_settings, gtk_toggle_button_get_active (button));
+	xpad_settings_set_autostart_wait_systray (xpad_global_settings, wait_systray);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
 }
 
@@ -739,16 +817,9 @@ notify_back_color (XpadPreferences *pref)
 static void
 notify_autostart_xpad (XpadPreferences *pref)
 {
-	gboolean autostart = xpad_settings_get_autostart_xpad (xpad_global_settings);
-	
 	g_signal_handler_block (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
-	g_signal_handler_block (pref->priv->autostart_wait_systray, pref->priv->autostart_xpad_handler);
-	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), autostart);
-	gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, autostart);
-	
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), xpad_settings_get_autostart_xpad (xpad_global_settings));
 	g_signal_handler_unblock (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
-	g_signal_handler_unblock (pref->priv->autostart_wait_systray, pref->priv->autostart_xpad_handler);
 }
 
 static void

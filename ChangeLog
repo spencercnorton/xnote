@@ -4,6 +4,7 @@ Version 4.3
 * New: Preferences - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
 * New: Preferences - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu (#405314)
 * New: Preferences - Ability to set the automatic start of Xpad in the Preferences menu (#405314)
+* New: Preferences - Ability to set the wait for systray option in the Preferences menu (#405314)
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
