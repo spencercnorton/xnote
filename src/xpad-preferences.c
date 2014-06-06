@@ -66,7 +66,6 @@ struct XpadPreferencesPrivate
 	gulong notify_font_handler;
 	gulong notify_text_handler;
 	gulong notify_back_handler;
-	gulong notify_autostart_xpad_handler;
 	gulong notify_autostart_wait_systray_handler;
 	gulong notify_autostart_new_pad_handler;
 	gulong notify_autostart_sticky_handler;
@@ -96,7 +95,6 @@ static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
 static void notify_back_color (XpadPreferences *pref);
 
-static void notify_autostart_xpad (XpadPreferences *pref);
 static void notify_autostart_wait_systray (XpadPreferences *pref);
 static void notify_autostart_new_pad (XpadPreferences *pref);
 static void notify_autostart_sticky (XpadPreferences *pref);
@@ -297,15 +295,7 @@ xpad_preferences_init (XpadPreferences *pref)
 		
 	pref->priv->autostart_xpad = gtk_check_button_new_with_mnemonic (_("_Start Xpad automatically after login"));
 	gtk_box_pack_start (GTK_BOX (autostart_vbox), pref->priv->autostart_xpad, FALSE, FALSE, 0);
-
-	/* Verify and correct the autostart setting if an external application has added the xpad.desktop file to the autostart folder */
-	const gchar *filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
-	if (g_file_test (filename, G_FILE_TEST_EXISTS))
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), TRUE);
-	else
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), FALSE);	
-	
-
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), xpad_settings_get_autostart_xpad (xpad_global_settings));
 
 	pref->priv->autostart_wait_systray = gtk_check_button_new_with_mnemonic (_("_Wait for systray"));
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
@@ -433,7 +423,6 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
 	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (notify_back_color), pref);
 
-	pref->priv->notify_autostart_xpad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_xpad", G_CALLBACK (notify_autostart_xpad), pref);
 	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_wait_systray", G_CALLBACK (notify_autostart_wait_systray), pref);
 	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_new_pad", G_CALLBACK (notify_autostart_new_pad), pref);
 	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_sticky", G_CALLBACK (notify_autostart_sticky), pref);
@@ -606,10 +595,6 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 				gtk_toggle_button_set_active (button, FALSE);
 			}
 			else {
-				g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
-				xpad_settings_set_autostart_xpad (xpad_global_settings, TRUE);			
-				g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
-				
 				g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
 				gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
 				change_autostart_wait_systray (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), pref);				
@@ -637,10 +622,6 @@ change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 			gtk_toggle_button_set_active (button, TRUE);
 		}
 		else {
-			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
-			xpad_settings_set_autostart_xpad (xpad_global_settings, FALSE);
-			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_xpad_handler);
-
 			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
 			gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
 			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
@@ -812,14 +793,6 @@ notify_back_color (XpadPreferences *pref)
 	
 	g_signal_handler_unblock (pref->priv->colorcheck, pref->priv->colorcheck_handler);
 	g_signal_handler_unblock (pref->priv->backbutton, pref->priv->back_handler);
-}
-
-static void
-notify_autostart_xpad (XpadPreferences *pref)
-{
-	g_signal_handler_block (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), xpad_settings_get_autostart_xpad (xpad_global_settings));
-	g_signal_handler_unblock (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
 }
 
 static void

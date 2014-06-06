@@ -38,7 +38,6 @@ struct XpadSettingsPrivate
 	GdkRGBA *text;
 	gchar *fontname;
 	GSList *toolbar_buttons;
-	gboolean autostart_xpad;
 	gboolean autostart_wait_systray;
 	gboolean autostart_new_pad;
 	gboolean autostart_sticky;	
@@ -70,7 +69,6 @@ enum
   PROP_BACK_COLOR,
   PROP_TEXT_COLOR,
   PROP_FONTNAME,
-  PROP_AUTOSTART_XPAD,
   PROP_AUTOSTART_WAIT_SYSTRAY,
   PROP_AUTOSTART_NEW_PAD,
   PROP_AUTOSTART_STICKY,
@@ -204,14 +202,6 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                                     G_PARAM_READWRITE));
 
 	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOSTART_XPAD,
-	                                 g_param_spec_boolean ("autostart_xpad",
-	                                                       "Autostart Xpad",
-	                                                       "Whether to start xpad automatically after login",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
 	                                 PROP_AUTOSTART_WAIT_SYSTRAY,
 	                                 g_param_spec_boolean ("autostart_wait_systray",
 	                                                       "Autostart Xpad wait for systray",
@@ -286,7 +276,6 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Undo"));
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Redo"));	
 
-	settings->priv->autostart_xpad = FALSE;
 	settings->priv->autostart_wait_systray = TRUE;
 	settings->priv->autostart_new_pad = FALSE;
 	settings->priv->autostart_display_pads = 2;
@@ -583,19 +572,11 @@ const gchar *xpad_settings_get_fontname (XpadSettings *settings)
 	return settings->priv->fontname;
 }
 
-void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean conf)
-{
-	if (settings->priv->autostart_xpad == conf)
-		return;
-	
-	settings->priv->autostart_xpad = conf;
-	save_to_file (settings, DEFAULTS_FILENAME);
-	g_object_notify (G_OBJECT (settings), "autostart_xpad");
-}
-
 gboolean xpad_settings_get_autostart_xpad (XpadSettings *settings)
 {
-	return settings->priv->autostart_xpad;
+	/* The existence of the xpad.desktop file in the autostart folder defines if autostarting is enabled or disabled */
+	const gchar *filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+	return g_file_test (filename, G_FILE_TEST_EXISTS);
 }
 
 void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean conf)
@@ -718,10 +699,6 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		xpad_settings_set_fontname (settings, g_value_get_string (value));
 		break;
 
-	case PROP_AUTOSTART_XPAD:
-		xpad_settings_set_autostart_xpad (settings, g_value_get_boolean (value));
-		break;
-
 	case PROP_AUTOSTART_STICKY:
 		xpad_settings_set_autostart_sticky (settings, g_value_get_boolean (value));
 		break;
@@ -789,10 +766,6 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		g_value_set_string (value, xpad_settings_get_fontname (settings));
 		break;
 
-	case PROP_AUTOSTART_XPAD:
-		g_value_set_boolean (value, xpad_settings_get_autostart_xpad (settings));
-		break;
-	
 	case PROP_AUTOSTART_STICKY:
 		g_value_set_boolean (value, xpad_settings_get_autostart_sticky (settings));
 		break;
@@ -848,7 +821,6 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|auto_hide_toolbar", &settings->priv->autohide_toolbar,
 		"b|scrollbar", &settings->priv->has_scrollbar,
 		"s|buttons", &buttons,
-		"b|autostart_xpad", &settings->priv->autostart_xpad,
 		"b|autostart_wait_systray", &settings->priv->autostart_wait_systray,
 		"b|autostart_new_pad", &settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", &settings->priv->autostart_display_pads,
@@ -971,7 +943,6 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|auto_hide_toolbar", settings->priv->autohide_toolbar,
 		"b|scrollbar", settings->priv->has_scrollbar,
 		"s|buttons", buttons,
-		"b|autostart_xpad", settings->priv->autostart_xpad,
 		"b|autostart_wait_systray", settings->priv->autostart_wait_systray,
 		"b|autostart_new_pad", settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", settings->priv->autostart_display_pads,
