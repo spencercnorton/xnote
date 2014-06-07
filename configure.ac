@@ -20,19 +20,12 @@ AC_PATH_XTRA
 # Checks for GTK+ 3.0
 PKG_CHECK_MODULES(GTK, gtk+-3.0 gio-2.0)
 AM_CONDITIONAL(GTK, test -n "$GTK_LIBS")
-# ensure that only allowed headers are included
-GTK_CFLAGS+="-DGTK_DISABLE_SINGLE_INCLUDES "
-# ensure that no gtk deprecated symbols are used
-GTK_CFLAGS+="-DGDK_DISABLE_DEPRECATED "
-GTK_CFLAGS+="-DGTK_DISABLE_DEPRECATED "
-# ensure use of accessors
-GTK_CFLAGS+="-DGSEAL_ENABLE "
-AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+AC_SUBST(GTK_CFLAGS)
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.38)
-AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
+AC_SUBST(GLIB_CFLAGS)
 
 PKG_CHECK_MODULES(PANGO, pango >= 1.32)
 AC_SUBST(PANGO_LIBS)
@@ -45,6 +38,9 @@ AC_SUBST(PIXBUF_CFLAGS)
 PKG_CHECK_MODULES(ATK, atk >= 2.8 atk-bridge-2.0)
 AC_SUBST(ATK_LIBS)
 AC_SUBST(ATK_CFLAGS)
+
+# Force the use of GNU libraries, for the special case of the function readlink
+AC_GNU_SOURCE
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -71,7 +67,7 @@ AC_ARG_ENABLE(debug,
   enable_debug="$enableval",
   enable_debug=no)
 if test "$enable_debug" = "yes"; then
-  DEBUG_CFLAGS="-ansi -Wall -Werror -g -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGTK_MULTIHEAD_SAFE"
+  DEBUG_CFLAGS="-ansi -Wall -Werror -g -O0 -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGTK_MULTIHEAD_SAFE -DGTK_DISABLE_SINGLE_INCLUDES -DGSEAL_ENABLE"
 else
   DEBUG_CFLAGS=""
 fi
@@ -80,4 +76,3 @@ AC_SUBST(DEBUG_CFLAGS)
 # Sets up output files.
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/Makefile autopackage/default.apspec])
 AC_OUTPUT
-

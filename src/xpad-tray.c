@@ -38,15 +38,15 @@ enum
 	LIST_OF_PADS,
 	NEW_PAD
 };
-// tray icon left click handler
+/* tray icon left click handler */
 static void xpad_tray_activate_cb (GtkStatusIcon *icon);
-// tray icon right click handler
+/* tray icon right click handler */
 static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
-// "toggle show all" menu item handler
+/* "toggle show all" menu item handler */
 static void xpad_tray_show_hide_all (void);
-// "show pads" menu item handler
+/* "show pads" menu item handler */
 static void xpad_tray_show_windows_list (GtkStatusIcon *icon);
-// helper function to append pad window title as item to menu
+/* helper function to append pad window title as item to menu */
 static void xpad_tray_append_pad_window_titles_to_menu (GtkWidget *menu);
 
 static GtkStatusIcon  *docklet = NULL;
@@ -126,7 +126,7 @@ static void
 xpad_tray_show_hide_all (void)
 {
 	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
-	// find if any pad is visible
+	/* find if any pad is visible */
 	gboolean open = FALSE;
 	GSList *i;
 	for(i = pads; i != NULL; i = i->next)
@@ -161,7 +161,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 		no_any_pad = TRUE;
 	g_slist_free (pads);
 	
-	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, NULL);
+	item = gtk_menu_item_new_with_mnemonic (_("_New"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), xpad_app_get_pad_group ());
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
@@ -177,7 +177,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	if (no_any_pad)
 		gtk_widget_set_sensitive (item, FALSE);
 	
-	item = gtk_image_menu_item_new_with_mnemonic (_("_Close All"));
+	item = gtk_menu_item_new_with_mnemonic (_("_Close All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_pad_group_close_all), xpad_app_get_pad_group ());
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
@@ -188,15 +188,19 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
-	// append window titles
+	/* append window titles */
 	xpad_tray_append_pad_window_titles_to_menu (menu);
+
+	item = gtk_separator_menu_item_new ();
+	gtk_container_add (GTK_CONTAINER (menu), item);
+	gtk_widget_show (item);
 	
-	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
+	item = gtk_menu_item_new_with_mnemonic (_("_Preferences"));	
 	g_signal_connect (item, "activate", G_CALLBACK (xpad_preferences_open), NULL);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
-	item = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
+	item = gtk_menu_item_new_with_mnemonic (_("_Quit"));	
 	g_signal_connect (item, "activate", G_CALLBACK (xpad_app_quit), NULL);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
@@ -237,9 +241,9 @@ xpad_tray_append_pad_window_titles_to_menu (GtkWidget *menu)
 	gint n;
 
 	pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
-	// Order pads according to title.
+	/* Order pads according to title. */
 	pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
-	// Populate list of windows.
+	/* Populate list of windows. */
 	for (l = pads, n = 1; l; l = l->next, n++)
 	{
 		gchar *title;

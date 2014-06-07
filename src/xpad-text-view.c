@@ -153,8 +153,7 @@ xpad_text_view_realize (XpadTextView *view)
 static gboolean
 xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) event;
 
 	if (xpad_settings_get_edit_lock (xpad_global_settings))
@@ -200,13 +199,17 @@ xpad_text_view_notify_editable (XpadTextView *view)
 {
 	GdkCursor *cursor;
 	gboolean editable;
+	GdkWindow *view_window;
 	
 	editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (view), editable);
 	
 	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
 	
-	gdk_window_set_cursor (gtk_text_view_get_window (GTK_TEXT_VIEW (view), GTK_TEXT_WINDOW_TEXT), cursor);
+	/* Only set for pads which are currently visible */ 
+	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view), GTK_TEXT_WINDOW_TEXT);
+	if (view_window != NULL)
+		gdk_window_set_cursor (view_window, cursor);
 	
 	if (cursor)
 		g_object_unref (cursor);
@@ -224,11 +227,11 @@ xpad_text_view_notify_fontname (XpadTextView *view)
 		pango_font_description_free (fontdesc);
 }
 
-// Update the colors of the textview
+/* Update the colors of the textview */
 static void
 xpad_text_view_notify_colors (XpadTextView *view)
 {
-	// Set the colors of this individual pad to the global setting preference.
+	/* Set the colors of this individual pad to the global setting preference. */
 	const GdkRGBA *text_color = xpad_settings_get_text_color (xpad_global_settings);
 	const GdkRGBA *back_color = xpad_settings_get_back_color (xpad_global_settings);
 
@@ -236,7 +239,7 @@ xpad_text_view_notify_colors (XpadTextView *view)
 	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, text_color);
 	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, back_color);
 
-	// Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors.
+	/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
 	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, back_color);
 	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, text_color);
 }

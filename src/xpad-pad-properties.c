@@ -273,8 +273,7 @@ change_font_check (GtkToggleButton *button, XpadPadProperties *prop)
 static void
 change_text_color (GtkColorButton *button, XpadPadProperties *prop)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) button;
 
 	g_object_notify (G_OBJECT (prop), "text-color");
@@ -283,8 +282,7 @@ change_text_color (GtkColorButton *button, XpadPadProperties *prop)
 static void
 change_back_color (GtkColorButton *button, XpadPadProperties *prop)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) button;
 
 	g_object_notify (G_OBJECT (prop), "back-color");
@@ -293,8 +291,7 @@ change_back_color (GtkColorButton *button, XpadPadProperties *prop)
 static void
 change_font_face (GtkFontButton *button, XpadPadProperties *prop)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) button;
 
 	g_object_notify (G_OBJECT (prop), "fontname");
@@ -333,7 +330,7 @@ xpad_pad_properties_set_back_color (XpadPadProperties *prop, const GdkRGBA *back
 	g_object_notify (G_OBJECT (prop), "back_color");
 }
 
-G_CONST_RETURN GdkRGBA *
+const GdkRGBA *
 xpad_pad_properties_get_back_color (XpadPadProperties *prop)
 {
 	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->backbutton), &prop->priv->backtmp);
@@ -347,7 +344,7 @@ xpad_pad_properties_set_text_color (XpadPadProperties *prop, const GdkRGBA *text
 	g_object_notify (G_OBJECT (prop), "text_color");
 }
 
-G_CONST_RETURN GdkRGBA *
+const GdkRGBA *
 xpad_pad_properties_get_text_color (XpadPadProperties *prop)
 {
 	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->textbutton), &prop->priv->texttmp);
@@ -361,7 +358,7 @@ xpad_pad_properties_set_fontname (XpadPadProperties *prop, const gchar *fontname
 	g_object_notify (G_OBJECT (prop), "fontname");
 }
 
-G_CONST_RETURN gchar *xpad_pad_properties_get_fontname (XpadPadProperties *prop)
+const gchar *xpad_pad_properties_get_fontname (XpadPadProperties *prop)
 {
 	return gtk_font_button_get_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton));
 }

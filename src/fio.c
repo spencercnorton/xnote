@@ -67,7 +67,7 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 		long offset = p - *string;
 		*string = g_realloc (*string, strlen (*string) + diff + 1);
 		p = *string + offset;
-		g_memmove (p + rsize, p + osize, strlen (p + osize) + 1);
+		memmove (p + rsize, p + osize, strlen (p + osize) + 1);
 		
 		memcpy (p, replacement, rsize);
 		
@@ -173,12 +173,14 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	if (!buf)
 		return 1;
 	
-	/* because of the way we look for a matching variable name, which is
-		to look for an endline, the variable name, and a space, we insert a
-		newline at the beginning, so that the first variable name is caught. */
+	/*
+	 * because of the way we look for a matching variable name, which is
+	 * to look for an endline, the variable name, and a space, we insert a
+	 * newline at the beginning, so that the first variable name is caught.
+	 */
 	len = strlen (buf);
 	buf = g_realloc (buf, len + 2);
-	g_memmove (buf + 1, buf, len + 1);
+	memmove (buf + 1, buf, len + 1);
 	buf[0] = '\n';
 	
 	va_start (ap, filename);

@@ -45,7 +45,6 @@
 	#define BR_PTHREADS 0
 #endif /* BR_PTHREADS */
 
-#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>

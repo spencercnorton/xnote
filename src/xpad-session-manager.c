@@ -59,8 +59,7 @@ static gboolean
 xpad_session_manager_cycle (GIOChannel *source, GIOCondition condition,
                             gpointer data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) source;
 	(void) condition;
 	(void) data;
@@ -110,8 +109,7 @@ xpad_session_manager_add_cycle_to_main_loop ()
 static void
 xpad_session_manager_start_interact_callback (SmcConn smc_conn, SmPointer client_data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 	(void) smc_conn;
 
@@ -176,8 +174,7 @@ static void
 xpad_session_manager_ice_connection_watch (IceConn ice_conn,
 	IcePointer client_data, Bool opening, IcePointer *watch_data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 	(void) watch_data;
 
@@ -210,7 +207,7 @@ xpad_session_manager_set_properties (void)
 	};
 	SmProp *props[G_N_ELEMENTS (prop)];
 	struct passwd *pw;
-	uint i;
+	guint i;
 	gchar *pid_str;
 	gchar *command = g_strdup (xpad_app_get_program_path ());
 	size_t string_length = 0;
@@ -227,7 +224,7 @@ xpad_session_manager_set_properties (void)
 	
 	pw = getpwuid (getuid ());
 
-	// While setting all the properties, safe casts are being used.
+	/* While setting all the properties, safe casts are being used. */
 	vals.user->value = pw ? pw->pw_name : "";
 	string_length = strlen (vals.user->value);
 	if (string_length <= INT_MAX)
@@ -354,8 +351,7 @@ xpad_session_manager_shutdown (void)
 static void
 xpad_session_manager_save_global (Bool fast)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) fast;
 
 	/* No need to do anything.  Currently, all xpad pads are always current with
@@ -365,12 +361,10 @@ xpad_session_manager_save_global (Bool fast)
 static void
 xpad_session_manager_save_local (Bool fast)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) fast;
 
 	/* should also save cursor positions and open accessory windows */
-	
 	if (set_props)
 	{
 		xpad_session_manager_set_properties ();
@@ -383,8 +377,7 @@ xpad_session_manager_save_yourself (SmcConn smc_conn, SmPointer client_data,
                                     int save_type, Bool shutdown, int interact_style,
                                     Bool fast)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 
 	RETURN_IF_BAD_CONN (smc_conn);
@@ -417,8 +410,7 @@ xpad_session_manager_save_yourself (SmcConn smc_conn, SmPointer client_data,
 static void
 xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 
 	RETURN_IF_BAD_CONN (smc_conn);
@@ -436,8 +428,7 @@ xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data)
 static void
 xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 
 	RETURN_IF_BAD_CONN (smc_conn);
@@ -454,8 +445,7 @@ xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data
 static void
 xpad_session_manager_save_complete (SmcConn smc_conn, SmPointer client_data)
 {
-	// A dirty way to silence the compiler for these unused variables.
-	// Feel free to implement these variables in the way they are ment to be used.
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) client_data;
 
 	RETURN_IF_BAD_CONN (smc_conn);
