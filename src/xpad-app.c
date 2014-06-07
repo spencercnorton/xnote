@@ -155,6 +155,10 @@ xpad_app_init (int argc, char **argv)
 	
 	/* Read the Xpad configuration file from disk (if exists) */
 	xpad_global_settings = xpad_settings_new ();
+	
+	/* Delay program startup, if user configured it, to wait for example for the loading of the systray. */
+	if (xpad_settings_get_autostart_delay (xpad_global_settings))
+		sleep(xpad_settings_get_autostart_delay (xpad_global_settings));
 
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);

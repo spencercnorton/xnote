@@ -101,6 +101,9 @@ gboolean xpad_settings_get_autostart_xpad (XpadSettings *settings);
 void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_wait_systray (XpadSettings *settings);
 
+void xpad_settings_set_autostart_delay (XpadSettings *settings, guint conf);
+guint xpad_settings_get_autostart_delay (XpadSettings *settings);
+
 void xpad_settings_set_autostart_new_pad (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_new_pad (XpadSettings *settings);
 
