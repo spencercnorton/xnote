@@ -49,6 +49,7 @@ struct XpadPreferencesPrivate
 	GtkWidget *trayconfigbox;
 	GtkWidget *editcheck;
 	GtkWidget *confirmcheck;
+	GtkWidget *dock;
 
 	gulong fontcheck_handler;	
 	gulong font_handler;
@@ -64,6 +65,7 @@ struct XpadPreferencesPrivate
 	gulong trayclick_handler;
 	gulong editcheck_handler;
 	gulong confirmcheck_handler;
+	gulong dock_handler;
 
 	gulong notify_font_handler;
 	gulong notify_text_handler;
@@ -76,6 +78,7 @@ struct XpadPreferencesPrivate
 	gulong notify_tray_handler;
 	gulong notify_edit_handler;
 	gulong notify_confirm_handler;
+	gulong notify_dock_handler;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
@@ -94,6 +97,7 @@ static void change_autostart_display_pads (GtkComboBox *box, XpadPreferences *pr
 static void change_tray_click_configuration (GtkComboBox *box, XpadPreferences *pref);
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
+static void change_dock (GtkToggleButton *button, XpadPreferences *pref);
 
 static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
@@ -107,6 +111,7 @@ static void notify_autostart_display_pads (XpadPreferences *pref);
 static void notify_tray_click (XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
+static void notify_dock (XpadPreferences *pref);
 
 static void xpad_preferences_dispose (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
@@ -406,12 +411,15 @@ xpad_preferences_init (XpadPreferences *pref)
 
 	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Make pads read-only"));
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
+	pref->priv->dock = gtk_check_button_new_with_mnemonic (_("_Prevent pads to minimize / dock (beta)"));
 
 	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->editcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);	
+	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->dock, FALSE, FALSE, 0);
 	
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_global_settings));
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->dock), xpad_settings_get_dock (xpad_global_settings));
 
 	/* Close button and window title */
 	gtk_dialog_add_button (GTK_DIALOG (pref), "gtk-close", GTK_RESPONSE_CLOSE);
@@ -436,6 +444,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->trayclick_handler = g_signal_connect(pref->priv->trayconfigbox, "changed", G_CALLBACK(change_tray_click_configuration), pref);
 	pref->priv->editcheck_handler = g_signal_connect (pref->priv->editcheck, "toggled", G_CALLBACK (change_edit_check), pref);
 	pref->priv->confirmcheck_handler = g_signal_connect (pref->priv->confirmcheck, "toggled", G_CALLBACK (change_confirm_check), pref);
+	pref->priv->dock_handler = g_signal_connect (pref->priv->dock, "toggled", G_CALLBACK (change_dock), pref);
 
 	pref->priv->notify_font_handler = g_signal_connect_swapped (xpad_global_settings, "notify::fontname", G_CALLBACK (notify_fontname), pref);
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
@@ -448,6 +457,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_display_pads", G_CALLBACK (notify_autostart_display_pads), pref);
 	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (notify_edit), pref);
 	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_global_settings, "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
+	pref->priv->notify_dock_handler = g_signal_connect_swapped (xpad_global_settings, "notify::dock", G_CALLBACK (notify_dock), pref);
 	pref->priv->notify_tray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
@@ -750,6 +760,14 @@ change_confirm_check (GtkToggleButton *button, XpadPreferences *pref)
 }
 
 static void
+change_dock (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_dock_handler);
+	xpad_settings_set_dock (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_dock_handler);
+}
+
+static void
 notify_fontname (XpadPreferences *pref)
 {
 	const gchar *fontname = xpad_settings_get_fontname (xpad_global_settings);
@@ -884,4 +902,12 @@ notify_confirm (XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
 	g_signal_handler_unblock (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
+}
+
+static void
+notify_dock (XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->dock, pref->priv->dock_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->dock), xpad_settings_get_dock (xpad_global_settings));
+	g_signal_handler_unblock (pref->priv->dock, pref->priv->dock_handler);
 }

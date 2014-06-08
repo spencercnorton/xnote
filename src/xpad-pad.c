@@ -125,6 +125,7 @@ static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences ();
 static void xpad_pad_quit ();
+static void xpad_pad_show_all (XpadPad *pad);
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group);
@@ -292,8 +293,12 @@ xpad_pad_init (XpadPad *pad)
 	gtk_window_set_gravity (GTK_WINDOW(pad),  GDK_GRAVITY_STATIC); /* static gravity makes saving pad x,y work */
 	gtk_window_set_skip_pager_hint (GTK_WINDOW(pad),xpad_settings_get_has_decorations (xpad_global_settings));
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW(pad), !xpad_settings_get_has_decorations (xpad_global_settings));
-	gtk_window_set_type_hint (GTK_WINDOW(pad), GDK_WINDOW_TYPE_HINT_NORMAL);
 	gtk_window_set_position (GTK_WINDOW(pad), GTK_WIN_POS_MOUSE);
+	if (xpad_settings_get_dock(xpad_global_settings))
+		gtk_window_set_type_hint (GTK_WINDOW(pad), GDK_WINDOW_TYPE_HINT_DOCK);
+	else
+		gtk_window_set_type_hint (GTK_WINDOW(pad), GDK_WINDOW_TYPE_HINT_NORMAL);
+
 
 	g_object_set (G_OBJECT (pad),
 		"child", vbox,
@@ -338,6 +343,7 @@ xpad_pad_init (XpadPad *pad)
 	g_signal_connect_swapped (xpad_global_settings, "notify::has-toolbar", G_CALLBACK (xpad_pad_notify_has_toolbar), pad);
 	g_signal_connect_swapped (xpad_global_settings, "notify::autohide-toolbar", G_CALLBACK (xpad_pad_notify_autohide_toolbar), pad);
 	g_signal_connect_swapped (xpad_global_settings, "notify::has-scrollbar", G_CALLBACK (xpad_pad_notify_has_scrollbar), pad);
+	g_signal_connect_swapped (xpad_global_settings, "notify::dock", G_CALLBACK (xpad_pad_show_all), pad);
 	g_signal_connect_swapped (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)), "notify::has-selection", G_CALLBACK (xpad_pad_notify_has_selection), pad);
 	g_signal_connect_swapped (pad->priv->clipboard, "owner-change", G_CALLBACK (xpad_pad_notify_clipboard_owner_changed), pad);
 
@@ -1560,6 +1566,15 @@ menu_show_all (XpadPad *pad)
 	g_slist_free (i);
 	pads = NULL;
 	i = NULL;
+}
+
+static void
+xpad_pad_show_all (XpadPad *pad)
+{
+	if (!pad->priv->group)
+		return;
+
+	xpad_pad_group_show_all (pad->priv->group);
 }
 
 static void
