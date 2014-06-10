@@ -24,8 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <gtk/gtk.h>
 
-void     xpad_tray_open    (void);
-void     xpad_tray_close   (void);
-gboolean xpad_tray_is_open (void);
+void xpad_tray_init ();
+void xpad_tray_open ();
+void xpad_tray_close ();
+void xpad_tray_dispose ();
+gboolean xpad_tray_is_open ();
 
 #endif /* __TRAY_H__ */

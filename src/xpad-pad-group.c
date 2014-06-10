@@ -146,7 +146,7 @@ void
 xpad_pad_group_destroy_pads (XpadPadGroup *group)
 {
 	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
-	g_slist_free (group->priv->pads);
+	/* g_slist_free (group->priv->pads); */
 	group->priv->pads = NULL;
 }
 

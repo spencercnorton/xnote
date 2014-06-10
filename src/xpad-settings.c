@@ -30,6 +30,7 @@ struct XpadSettingsPrivate
 	gboolean has_decorations;
 	gboolean confirm_destroy;
 	gboolean edit_lock;
+	gboolean tray_enabled;
 	guint tray_click_configuration;
 	gboolean has_toolbar;
 	gboolean autohide_toolbar;
@@ -43,7 +44,6 @@ struct XpadSettingsPrivate
 	gboolean autostart_new_pad;
 	gboolean autostart_sticky;	
 	guint autostart_display_pads;
-	gboolean dock;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
@@ -64,6 +64,7 @@ enum
   PROP_HAS_DECORATIONS,
   PROP_CONFIRM_DESTROY,
   PROP_EDIT_LOCK,
+  PROP_TRAY_ENABLED,
   PROP_TRAY_CLICK_CONFIGURATION,
   PROP_HAS_TOOLBAR,
   PROP_AUTOHIDE_TOOLBAR,
@@ -76,7 +77,6 @@ enum
   PROP_AUTOSTART_NEW_PAD,
   PROP_AUTOSTART_STICKY,
   PROP_AUTOSTART_DISPLAY_PADS,
-  PROP_DOCK,
   LAST_PROP
 };
 
@@ -148,6 +148,14 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	                                                       "Whether edit lock mode is enabled",
 	                                                       FALSE,
 	                                                       G_PARAM_READWRITE));
+	g_object_class_install_property (gobject_class,
+	                                 PROP_TRAY_ENABLED,
+	                                 g_param_spec_boolean ("tray_enabled",
+	                                                       "Enable the tray icon",
+	                                                       "Whether to enable or disable the systray icon",
+	                                                       TRUE,
+	                                                       G_PARAM_READWRITE));
+
 	g_object_class_install_property (gobject_class,
                                      PROP_TRAY_CLICK_CONFIGURATION,
                                      g_param_spec_uint ("tray_click_configuration",
@@ -249,14 +257,6 @@ xpad_settings_class_init (XpadSettingsClass *klass)
                                                         2,
                                                         G_PARAM_READWRITE));
 
-	g_object_class_install_property (gobject_class,
-	                                 PROP_DOCK,
-	                                 g_param_spec_boolean ("dock",
-	                                                       "Default Stickiness",
-	                                                       "Whether pads should not minimize (behave docked)",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-
 	signals[CHANGE_BUTTONS] = 
 		g_signal_new ("change_buttons",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -286,7 +286,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->has_toolbar = TRUE;
 	settings->priv->autohide_toolbar = TRUE;
 	settings->priv->has_scrollbar = TRUE;
-	settings->priv->dock = FALSE;
+	settings->priv->tray_enabled = TRUE;
 	
 	settings->priv->toolbar_buttons = NULL;
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("New"));
@@ -678,21 +678,6 @@ guint xpad_settings_get_autostart_display_pads(XpadSettings *settings)
 	return settings->priv->autostart_display_pads;
 }
 
-void xpad_settings_set_dock (XpadSettings *settings, gboolean conf)
-{
-	if (settings->priv->dock == conf)
-		return;
-
-	settings->priv->dock = conf;
-	save_to_file (settings, DEFAULTS_FILENAME);
-	g_object_notify (G_OBJECT (settings), "dock");
-}
-
-gboolean xpad_settings_get_dock (XpadSettings *settings)
-{
-	return settings->priv->dock;
-}
-
 static void
 xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -722,6 +707,10 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		xpad_settings_set_edit_lock (settings, g_value_get_boolean (value));
 		break;
 		
+	case PROP_TRAY_ENABLED:
+		settings->priv->tray_enabled = g_value_get_boolean (value);
+		break;
+
 	case PROP_TRAY_CLICK_CONFIGURATION:
 		xpad_settings_set_tray_click_handler(settings, g_value_get_uint(value));
 		break;
@@ -770,14 +759,12 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		xpad_settings_set_autostart_display_pads (settings, g_value_get_uint (value));
 		break;
 		
-	case PROP_DOCK:
-		xpad_settings_set_dock (settings, g_value_get_boolean (value));
-		break;
-
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-		break;
+		return;
 	}
+
+	save_to_file (settings, DEFAULTS_FILENAME);
 }
 
 static void
@@ -853,8 +840,8 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		g_value_set_uint (value, xpad_settings_get_autostart_display_pads (settings));
 		break;
 
-	case PROP_DOCK:
-		g_value_set_boolean (value, xpad_settings_get_dock (settings));
+	case PROP_TRAY_ENABLED:
+		g_value_set_boolean (value, settings->priv->tray_enabled);
 		break;
 	
 	default:
@@ -894,6 +881,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"b|confirm_destroy", &settings->priv->confirm_destroy,
 		"b|edit_lock", &settings->priv->edit_lock,
 		"b|sticky_on_start", &settings->priv->autostart_sticky,
+		"b|tray_enabled", &settings->priv->tray_enabled,
 		"u|tray_click_configuration", &settings->priv->tray_click_configuration,
 		"s|back", &background_color_string,
 		"b|use_back", &use_back,
@@ -908,7 +896,6 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_delay", &settings->priv->autostart_delay,		
 		"b|autostart_new_pad", &settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", &settings->priv->autostart_display_pads,
-		"b|dock", &settings->priv->dock,
 		NULL))
 		return;
 
@@ -1018,6 +1005,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|confirm_destroy", settings->priv->confirm_destroy,
 		"b|edit_lock", settings->priv->edit_lock,
 		"b|sticky_on_start", settings->priv->autostart_sticky,
+		"b|tray_enabled", settings->priv->tray_enabled,
 		"u|tray_click_configuration", settings->priv->tray_click_configuration,
 		"s|back", settings->priv->back ? gdk_rgba_to_string (settings->priv->back) : "NULL",
 		"b|use_back", settings->priv->back ? TRUE : FALSE,
@@ -1032,7 +1020,6 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_delay", settings->priv->autostart_delay,		
 		"b|autostart_new_pad", settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", settings->priv->autostart_display_pads,
-		"b|dock", settings->priv->dock,
 		NULL);
 	
 	g_free (buttons);

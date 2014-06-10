@@ -137,9 +137,14 @@ xpad_text_view_dispose (GObject *object)
 static void
 xpad_text_view_finalize (GObject *object)
 {
-	XpadTextView *view = XPAD_TEXT_VIEW (object);
+	/* XpadTextView *view = XPAD_TEXT_VIEW (object); */
 
-	g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
+	/* g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view); */
+	/*
+	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_text_view_notify_edit_lock, NULL);
+	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_text_view_notify_fontname, NULL);
+	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_text_view_notify_colors, NULL);
+	*/
 
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
