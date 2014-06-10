@@ -1,4 +1,5 @@
 Version 4.3
+* New: Systray - ability to hide the tray icon (#890334) 
 * New: Toolbar - ability to add multiple separators (#351775)
 * New: Toolbar - ability to add paste button on toolbar (#351775)
 * New: Preferences - Ability to set the automatic start of Xpad in the Preferences menu (#405314)
@@ -21,6 +22,7 @@ Version 4.3
 * Fix: Technical - Improve the hiding of pads at Xpad launch (#405314)
 * Fix: Technical - Added thread safe handling of new preferences
 * Fix: Technical - Ensured the use of GNU C libraries, so the readlink function is available
+* Fix: Technical - Prevented dispose functions calling NULL objects leading to errors
 
 Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)

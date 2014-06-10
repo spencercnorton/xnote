@@ -110,9 +110,6 @@ gboolean xpad_settings_get_autostart_new_pad (XpadSettings *settings);
 void xpad_settings_set_autostart_sticky (XpadSettings *settings, gboolean conf);
 gboolean xpad_settings_get_autostart_sticky (XpadSettings *settings);
 
-void xpad_settings_set_autostart_display_pads (XpadSettings *settings, guint conf);
-guint xpad_settings_get_autostart_display_pads (XpadSettings *settings);
-
 G_END_DECLS
 
 #endif /* __XPAD_SETTINGS_H__ */

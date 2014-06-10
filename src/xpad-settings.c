@@ -249,7 +249,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	
 	g_object_class_install_property (gobject_class,
                                      PROP_AUTOSTART_DISPLAY_PADS,
-                                     g_param_spec_uint ("autostart_display_pads",
+                                     g_param_spec_uint ("autostart-display-pads",
                                                         "Autostart display pads",
                                                         "How to show the different pads when Xpad is started",
                                                         0,
@@ -663,21 +663,6 @@ gboolean xpad_settings_get_autostart_sticky (XpadSettings *settings)
 	return settings->priv->autostart_sticky;
 }
 
-void xpad_settings_set_autostart_display_pads (XpadSettings *settings, guint conf)
-{
-	if (settings->priv->autostart_display_pads == conf)
-		return;
-	
-	settings->priv->autostart_display_pads = conf;
-	save_to_file (settings, DEFAULTS_FILENAME);
-	g_object_notify (G_OBJECT (settings), "autostart_display_pads");
-}
-
-guint xpad_settings_get_autostart_display_pads(XpadSettings *settings)
-{
-	return settings->priv->autostart_display_pads;
-}
-
 static void
 xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -756,7 +741,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		break;
 	
 	case PROP_AUTOSTART_DISPLAY_PADS:
-		xpad_settings_set_autostart_display_pads (settings, g_value_get_uint (value));
+		settings->priv->autostart_display_pads = g_value_get_uint (value);
 		break;
 		
 	default:
@@ -770,9 +755,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 static void
 xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
 {
-	XpadSettings *settings;
-	
-	settings = XPAD_SETTINGS (object);
+	XpadSettings *settings = XPAD_SETTINGS (object);
 	
 	switch (prop_id)
 	{
@@ -837,7 +820,7 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		break;
 	
 	case PROP_AUTOSTART_DISPLAY_PADS:
-		g_value_set_uint (value, xpad_settings_get_autostart_display_pads (settings));
+		g_value_set_uint (value, settings->priv->autostart_display_pads);
 		break;
 
 	case PROP_TRAY_ENABLED:
@@ -846,7 +829,7 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 	
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-		break;
+		return;
 	}
 }
 

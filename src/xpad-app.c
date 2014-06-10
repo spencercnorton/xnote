@@ -871,10 +871,8 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 			gtk_widget_show (pad);
 		}
 
-		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 0)
-			option_show = TRUE;
-		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 1)
-			option_hide = TRUE;
+		g_object_get (xpad_settings, "autostart-display-pads", &option_hide, NULL);
+		option_show = !option_hide;
 		
 		if (have_gtk && option_files)
 		{

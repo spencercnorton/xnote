@@ -140,6 +140,7 @@ xpad_text_view_finalize (GObject *object)
 	/* XpadTextView *view = XPAD_TEXT_VIEW (object); */
 
 	/* g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view); */
+
 	/*
 	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_text_view_notify_edit_lock, NULL);
 	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_text_view_notify_fontname, NULL);

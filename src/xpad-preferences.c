@@ -142,6 +142,7 @@ xpad_preferences_class_init (XpadPreferencesClass *klass)
 static void
 xpad_preferences_init (XpadPreferences *pref)
 {
+	gboolean value;
 	GtkWidget *hbox, *font_hbox, *vbox;
 	const GdkRGBA *color;
 	const gchar *fontname;
@@ -342,7 +343,8 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Open all pads") );
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Hide all pads") );
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Restore to previous state") );
-	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->autostart_display_pads ), (guint) xpad_settings_get_autostart_display_pads (xpad_global_settings));
+	g_object_get (xpad_global_settings, "autostart-display-pads", &value, NULL);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), (guint) value);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->autostart_display_pads, TRUE, TRUE, 0);
@@ -453,15 +455,15 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
 	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (notify_back_color), pref);
 
-	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_wait_systray", G_CALLBACK (notify_autostart_wait_systray), pref);
-	pref->priv->notify_autostart_delay_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_delay", G_CALLBACK(notify_autostart_delay), pref);
-	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_new_pad", G_CALLBACK (notify_autostart_new_pad), pref);
-	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_sticky", G_CALLBACK (notify_autostart_sticky), pref);
-	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_display_pads", G_CALLBACK (notify_autostart_display_pads), pref);
+	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-wait-systray", G_CALLBACK (notify_autostart_wait_systray), pref);
+	pref->priv->notify_autostart_delay_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-delay", G_CALLBACK(notify_autostart_delay), pref);
+	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-new-pad", G_CALLBACK (notify_autostart_new_pad), pref);
+	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-sticky", G_CALLBACK (notify_autostart_sticky), pref);
+	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-display-pads", G_CALLBACK (notify_autostart_display_pads), pref);
 	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (notify_edit), pref);
 	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_global_settings, "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
 	pref->priv->notify_tray_enabled_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_enabled", G_CALLBACK (notify_tray_enabled), pref);
-	pref->priv->notify_tray_click_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
+	pref->priv->notify_tray_click_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray-click-configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
 
@@ -734,7 +736,7 @@ static void
 change_autostart_display_pads (GtkComboBox *box, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_display_pads_handler);
-	xpad_settings_set_autostart_display_pads (xpad_global_settings, (guint) gtk_combo_box_get_active(box));
+	g_object_set (G_OBJECT(xpad_global_settings), "autostart-display-pads", (guint) gtk_combo_box_get_active(box), NULL);
 	g_signal_handler_unblock(xpad_global_settings, pref->priv->notify_autostart_display_pads_handler);
 }
 
@@ -879,19 +881,20 @@ notify_autostart_sticky (XpadPreferences *pref)
 static void
 notify_autostart_display_pads (XpadPreferences *pref)
 {
+	gboolean value;
+	g_object_get (xpad_global_settings, "autostart-display-pads", &value, NULL);
 	g_signal_handler_block (pref->priv->autostart_display_pads, pref->priv->autostart_display_pads_handler);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), (guint) xpad_settings_get_autostart_display_pads (xpad_global_settings));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), value);
 	g_signal_handler_unblock (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
 }
 
 static void
 notify_tray_enabled (XpadPreferences *pref)
 {
-	gboolean tray_enabled;
-	g_object_get (pref, "tray-enabled", &tray_enabled, NULL);
-
+	gboolean value;
+	g_object_get (xpad_global_settings, "tray-enabled", &value, NULL);
 	g_signal_handler_block (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->tray_enabled), tray_enabled);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->tray_enabled), value);
 	g_signal_handler_unblock (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
 }
 
