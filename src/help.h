@@ -19,15 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#ifndef __XPAD_SESSION_MANAGER_H__
-#define __XPAD_SESSION_MANAGER_H__
+#ifndef HELP_H
+#define HELP_H
 
-#include <gtk/gtk.h>
+void show_help (void);
 
-gboolean xpad_session_manager_start_interact (gboolean error);
-void     xpad_session_manager_stop_interact (gboolean stop_shutdown);
-void     xpad_session_manager_init (void);
-void     xpad_session_manager_shutdown (void);
-void     xpad_session_manager_set_id (const gchar *id);
-
-#endif /* __XPAD_SESSION_MANAGER_H__ */
+#endif

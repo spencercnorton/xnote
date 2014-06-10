@@ -23,6 +23,8 @@ Version 4.3
 * Fix: Technical - Added thread safe handling of new preferences
 * Fix: Technical - Ensured the use of GNU C libraries, so the readlink function is available
 * Fix: Technical - Prevented dispose functions calling NULL objects leading to errors
+* Fix: Technical - Reducing the amount of functions by using generic setters and getters
+* Fix: Credits - all files use the same credits format
 
 Version 4.2
 * New: Undo functionality such as CTRL-Z (#1121740)

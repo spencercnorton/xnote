@@ -5,7 +5,7 @@ Copyright (c) 2009 Paul Ivanov
 Copyright (c) 2011 Sergei Riaguzov
 Copyright (c) 2011 Dennis Hilmar
 Copyright (c) 2011 OBATA Akio
-Copyright (c) 2013 Arthur Borsboom
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1443,7 +1443,7 @@ menu_about (XpadPad *pad)
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
 	const gchar *authors[] = {"Arthur Borsboom <arthurborsboom@gmail.com>", "Jeroen Vermeulen <jtv@xs4all.nl>", "Michael Terry <mike@mterry.name>", "Paul Ivanov <pivanov@berkeley.edu>", "Sachin Raut <great.sachin@gmail.com>", NULL};
 	const gchar *comments = _("Sticky notes");
-	const gchar *copyright = "© 2001-2013 Michael Terry";
+	const gchar *copyright = "© 2001-2014 Michael Terry";
 	/* Translators: please translate this as your own name and optionally email
 		like so: "Your Name <your@email.com>" */
 	const gchar *translator_credits = _("translator-credits");
