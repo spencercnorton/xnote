@@ -618,8 +618,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		NULL))
 		return;
 
-	if (use_text)
-	{
+	if (use_text) {
 		gdk_rgba_free (settings->priv->text);
 
 		/*
@@ -627,15 +626,12 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		 * (for example due to the migration to the new GdkRGBA colors),
 		 * set the color to the default.
 		 */
-		if (text_color_string == NULL) {
+		if (text_color_string == NULL)
 			text = (GdkRGBA) {0, 0, 0, 1};
-		}
-		else {
+		else
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
-			if (!gdk_rgba_parse (&text, text_color_string)) {
+			if (!gdk_rgba_parse (&text, text_color_string))
 				text = (GdkRGBA) {0, 0, 0, 1};
-			}
-		}
 
 		settings->priv->text = gdk_rgba_copy (&text);
 	}
@@ -647,15 +643,12 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		 * (for example due to the migration to the new GdkRGBA colors),
 		 * set the color to the default.
 		 */
-		if (background_color_string == NULL) {
+		if (background_color_string == NULL)
 			back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
-		}
-		else {
+		else
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
-			if (!gdk_rgba_parse (&back, background_color_string)) {
+			if (!gdk_rgba_parse (&back, background_color_string))
 				back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
-			}
-		}
 
 		settings->priv->back = gdk_rgba_copy (&back);
 	}
@@ -681,11 +674,9 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		}
 		
 		for (i = 0; button_names[i]; ++i)
-		{
 			settings->priv->toolbar_buttons = 
 				g_slist_append (settings->priv->toolbar_buttons,
 				g_strstrip (button_names[i])); /* takes ownership of string */
-		}
 		
 		g_free (button_names);
 		g_free (buttons);
