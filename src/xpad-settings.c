@@ -20,9 +20,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
-#include <string.h>
-#include "xpad-settings.h"
 #include "fio.h"
+#include <string.h>
+#include "xpad-app.h"
+#include "xpad-settings.h"
 
 struct XpadSettingsPrivate
 {
@@ -450,6 +451,51 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		break;
 
 	case PROP_AUTOSTART_XPAD:
+		if (g_value_get_boolean (value)) {
+			/* Copy the xpad.desktop file to the autostart folder and enable/disable the wait for systray preference */
+			gboolean success;
+			char *source_filename, *destination_directory;
+			GFile *source, *destination;
+			GError *error = NULL;
+
+			/* Find the base directory where the application is installed /usr or /usr/local, to find the correct xpad.desktop file. */
+			char buf[1024];
+			ssize_t len = readlink(g_strdup_printf ("/proc/%d/exe", getpid()), buf, sizeof(buf)-1);
+
+			if (len == -1)
+				xpad_app_error (NULL, "Error enabling Xpad autostart", g_strdup_printf ("Could not find the directory where Xpad is installed\n%s", error->message));
+			else {
+				char basedir[len-8];
+				guint i;
+				for (i=0; i<len-8; i++)
+					basedir[i] = buf[i];
+				basedir[len-9] = '\0';
+
+				source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);
+				destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+
+				source = g_file_new_for_path (source_filename);
+				destination = g_file_new_for_path (destination_directory);
+				success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+
+				if (!success)
+					xpad_app_error (NULL, "Error enabling Xpad autostart", g_strdup_printf ("Could not copy %s to %s\n%s", source_filename, destination_directory, error->message));
+			}
+		}
+		else {
+			/* Remove the xpad.desktop file from the autostart folder and enable/disable the wait for systray preference */
+			gboolean success;
+			char *filename;
+			GFile *file;
+			GError *error = NULL;
+
+			filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+			file = g_file_new_for_path (filename);
+			success = g_file_delete (file, NULL, &error);
+
+			if (!success)
+				xpad_app_error (NULL, "Error disabling Xpad autostart", g_strdup_printf ("Could not delete %s\n%s", filename, error->message));
+		}
 		break;
 
 	case PROP_AUTOSTART_WAIT_SYSTRAY:
