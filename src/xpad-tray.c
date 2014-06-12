@@ -39,6 +39,8 @@ enum
 	NEW_PAD
 };
 
+static void xpad_tray_open ();
+static void xpad_tray_close ();
 /* Enable/disable the tray icon */
 static void xpad_tray_toggle (XpadSettings *settings);
 /* tray icon left click handler */
@@ -64,15 +66,15 @@ static void xpad_tray_toggle (XpadSettings *settings) {
 	gboolean tray_enabled;
 	g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
 
-	if (tray_enabled)
-		xpad_tray_open ();
-
+	if (tray_enabled) {
+		if (!docklet)
+			xpad_tray_open ();
+	}
 	else
 		xpad_tray_close ();
 }
 
-void
-xpad_tray_open ()
+static void xpad_tray_open ()
 {
 	GtkIconTheme *theme = gtk_icon_theme_get_default ();
 
@@ -90,8 +92,7 @@ xpad_tray_open ()
 	}
 }
 
-void
-xpad_tray_close ()
+static void xpad_tray_close ()
 {
 	if (docklet) {
 		g_object_unref (docklet);
