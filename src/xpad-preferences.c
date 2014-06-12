@@ -487,7 +487,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_box_set_homogeneous (GTK_BOX (global_vbox), FALSE);
 	gtk_box_pack_start (GTK_BOX (global_vbox), appearance_frame, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (global_vbox), start_frame, FALSE, FALSE, 0);	
-	gtk_box_pack_start (GTK_BOX (global_vbox), tray_frame, FALSE, FALSE, 0);	
+	gtk_box_pack_start (GTK_BOX (global_vbox), tray_frame, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (global_vbox), other_frame, FALSE, FALSE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (global_vbox), 6);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), global_vbox, FALSE, FALSE, 0);	

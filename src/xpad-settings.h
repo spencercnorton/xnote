@@ -60,8 +60,6 @@ gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings);
 gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings);
 const GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings);
 
-void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean conf);
-
 G_END_DECLS
 
 #endif /* __XPAD_SETTINGS_H__ */
