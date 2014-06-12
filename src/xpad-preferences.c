@@ -391,9 +391,6 @@ xpad_preferences_init (XpadPreferences *pref)
 
 	pref->priv->tray_enabled = gtk_check_button_new_with_mnemonic (_("_Enable tray icon"));
 	gtk_box_pack_start (GTK_BOX (tray_vbox), pref->priv->tray_enabled, FALSE, FALSE, 0);
-	gboolean tray_enabled;
-	g_object_get (xpad_global_settings, "tray-enabled", &tray_enabled, NULL);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->tray_enabled), tray_enabled);
 
 	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
 	pref->priv->tray_click_configuration = gtk_combo_box_text_new();
@@ -402,7 +399,6 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("List of Pads") );
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("New Pad") );
 	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->tray_click_configuration), tray_click_configuration);
-	gtk_widget_set_sensitive (pref->priv->tray_click_configuration, tray_enabled);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->tray_click_configuration, TRUE, TRUE, 0);
@@ -478,10 +474,13 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-display-pads", G_CALLBACK (notify_autostart_display_pads), pref);
 	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (notify_edit), pref);
 	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_global_settings, "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
-	pref->priv->notify_tray_enabled_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_enabled", G_CALLBACK (notify_tray_enabled), pref);
+	pref->priv->notify_tray_enabled_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray-enabled", G_CALLBACK (notify_tray_enabled), pref);
 	pref->priv->notify_tray_click_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray-click-configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
+
+	/* Initiliaze the GUI logic */
+	g_object_notify (G_OBJECT (xpad_global_settings), "tray-enabled");
 
 	/* Make the preference dialog visible */
 	global_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
@@ -675,10 +674,7 @@ change_autostart_display_pads (GtkComboBox *box, XpadPreferences *pref)
 static void
 change_tray_enabled (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_global_settings, pref->priv->notify_tray_enabled_handler);
 	g_object_set (xpad_global_settings, "tray-enabled", gtk_toggle_button_get_active (button), NULL);
-	gtk_widget_set_sensitive (pref->priv->tray_click_configuration, gtk_toggle_button_get_active (button));
-	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_tray_enabled_handler);
 }
 
 static void
@@ -851,6 +847,10 @@ notify_tray_enabled (XpadPreferences *pref)
 	g_object_get (xpad_global_settings, "tray-enabled", &value, NULL);
 	g_signal_handler_block (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->tray_enabled), value);
+	gtk_widget_set_sensitive (pref->priv->tray_click_configuration, value);
+	gtk_widget_set_sensitive (pref->priv->autostart_display_pads, value);
+	if (!value)
+		g_object_set (xpad_global_settings, "autostart-display-pads", 0, NULL);
 	g_signal_handler_unblock (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
 }
 
