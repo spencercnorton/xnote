@@ -227,7 +227,9 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 static void
 xpad_tray_activate_cb (GtkStatusIcon *icon)
 {
-	switch (xpad_settings_get_tray_click_handler(xpad_global_settings))
+	guint tray_click_configuration;
+	g_object_get (xpad_global_settings, "tray-click-configuration", &tray_click_configuration, NULL);
+	switch (tray_click_configuration)
 	{
 		case TOGGLE_SHOW_ALL:
 			xpad_tray_show_hide_all();

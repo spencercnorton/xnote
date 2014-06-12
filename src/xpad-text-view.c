@@ -120,7 +120,6 @@ xpad_text_view_init (XpadTextView *view)
 	view->priv->notify_font_handler = g_signal_connect_swapped (xpad_global_settings, "notify::fontname", G_CALLBACK (xpad_text_view_notify_fontname), view);
 	view->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (xpad_text_view_notify_colors), view);
 	view->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (xpad_text_view_notify_colors), view);
-	
 	xpad_text_view_notify_colors (view);
 	xpad_text_view_notify_fontname (view);
 }
@@ -156,7 +155,9 @@ xpad_text_view_finalize (GObject *object)
 static void
 xpad_text_view_realize (XpadTextView *view)
 {
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_global_settings));
+	gboolean edit_lock;
+	g_object_get (xpad_global_settings, "edit-lock", &edit_lock, NULL);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !edit_lock);
 }
 
 static gboolean
@@ -165,7 +166,10 @@ xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 	/* A dirty way to silence the compiler for these unused variables. */
 	(void) event;
 
-	if (xpad_settings_get_edit_lock (xpad_global_settings))
+	gboolean edit_lock;
+	g_object_get (xpad_global_settings, "edit-lock", &edit_lock, NULL);
+
+	if (edit_lock)
 	{
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
 		return TRUE;
@@ -177,8 +181,11 @@ xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event)
 static gboolean
 xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event)
 {
+	gboolean edit_lock;
+	g_object_get (xpad_global_settings, "edit-lock", &edit_lock, NULL);
+
 	if (event->button == 1 &&
-	    xpad_settings_get_edit_lock (xpad_global_settings) &&
+	    edit_lock &&
 	    !gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)))
 	{
 		if (event->type == GDK_2BUTTON_PRESS)
@@ -200,7 +207,9 @@ static void
 xpad_text_view_notify_edit_lock (XpadTextView *view)
 {
 	/* chances are good that they don't have the text view focused while it changed, so make non-editable if edit lock turned on */
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !xpad_settings_get_edit_lock (xpad_global_settings));
+	gboolean edit_lock;
+	g_object_get (xpad_global_settings, "edit-lock", &edit_lock, NULL);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (view), !edit_lock);
 }
 
 static void
@@ -227,7 +236,8 @@ xpad_text_view_notify_editable (XpadTextView *view)
 static void
 xpad_text_view_notify_fontname (XpadTextView *view)
 {
-	const gchar *font = xpad_settings_get_fontname (xpad_global_settings);
+	const gchar *font;
+	g_object_get (xpad_global_settings, "fontname", &font, NULL);
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = font ? pango_font_description_from_string (font) : NULL;
@@ -241,8 +251,8 @@ static void
 xpad_text_view_notify_colors (XpadTextView *view)
 {
 	/* Set the colors of this individual pad to the global setting preference. */
-	const GdkRGBA *text_color = xpad_settings_get_text_color (xpad_global_settings);
-	const GdkRGBA *back_color = xpad_settings_get_back_color (xpad_global_settings);
+	const GdkRGBA *text_color, *back_color;
+	g_object_get (xpad_global_settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
 	gtk_widget_override_cursor (GTK_WIDGET (view), text_color, text_color);
 	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, text_color);

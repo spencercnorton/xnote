@@ -89,8 +89,8 @@ static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboole
 
 static gboolean		config_dir_exists           (void);
 static gchar		*make_config_dir            (void);
-static void		register_stock_icons        (void);
-static gint		xpad_app_load_pads          (void);
+static void			register_stock_icons        (void);
+static gint			xpad_app_load_pads          (void);
 static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
@@ -159,8 +159,11 @@ xpad_app_init (int argc, char **argv)
 	xpad_global_settings = xpad_settings_new ();
 	
 	/* Delay program startup, if user configured it, to wait for example for the loading of the systray. */
-	if (xpad_settings_get_autostart_delay (xpad_global_settings))
-		sleep(xpad_settings_get_autostart_delay (xpad_global_settings));
+	guint autostart_delay;
+	g_object_get (xpad_global_settings, "autostart-delay", &autostart_delay, NULL);
+
+	if (autostart_delay)
+		sleep(autostart_delay);
 
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);
@@ -200,8 +203,7 @@ xpad_app_init (int argc, char **argv)
 }
 
 gint main (gint argc, gchar **argv)
-{
-	xpad_app_init (argc, argv);
+{	xpad_app_init (argc, argv);
 
 	gtk_main ();
 	
@@ -867,7 +869,10 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 		if (have_gtk && option_smid)
 			xpad_session_manager_set_id (option_smid);
 		
-		if (have_gtk && (option_new || xpad_settings_get_autostart_new_pad (xpad_settings)))
+		if (!option_new)
+			g_object_get (xpad_global_settings, "autostart-new-pad", &option_new, NULL);
+
+		if (have_gtk && option_new)
 		{
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
