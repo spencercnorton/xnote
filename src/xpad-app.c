@@ -23,30 +23,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* required by socket stuff */
 /* define _GNU_SOURCE here because that makes our sockets work nice
  Unfortunately, we lose portability... */
-#define _GNU_SOURCE	1
+
 #include "../config.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/un.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <errno.h>
-
-#include <string.h>
-#include <stdlib.h> /* for exit */
-
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
-
-#include "fio.h" /* for fio_get_info_from_file */
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "help.h"
-#include "prefix.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-periodic.h"
 #include "xpad-session-manager.h"
-#include "xpad-settings.h"
 #include "xpad-tray.h"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
@@ -399,9 +391,7 @@ xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *p
 static void
 register_stock_icons (void)
 {
-	GtkIconTheme *theme;
-
-	theme = gtk_icon_theme_get_default ();
+	GtkIconTheme *theme = gtk_icon_theme_get_default ();
 	gtk_icon_theme_prepend_search_path (theme, THEME_DIR);
 }
 

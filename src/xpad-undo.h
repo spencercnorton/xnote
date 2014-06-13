@@ -23,9 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_UNDO_H__
 #define __XPAD_UNDO_H__
 
-#include <gtk/gtk.h>
+#include <glib.h>
 #include "xpad-text-buffer.h"
-#include "xpad-pad.h"
 
 G_BEGIN_DECLS
 

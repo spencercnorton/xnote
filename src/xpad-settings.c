@@ -20,10 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
-#include "fio.h"
+#include <gtk/gtk.h>
 #include <string.h>
-#include "xpad-app.h"
+#include "fio.h"
 #include "xpad-settings.h"
+#include "xpad-app.h"
 
 struct XpadSettingsPrivate
 {

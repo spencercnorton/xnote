@@ -24,9 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
+#include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 #include "fio.h"
 #include "help.h"
 #include "xpad-app.h"
@@ -34,7 +33,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-pad-properties.h"
 #include "xpad-periodic.h"
 #include "xpad-preferences.h"
-#include "xpad-settings.h"
 #include "xpad-text-buffer.h"
 #include "xpad-text-view.h"
 #include "xpad-toolbar.h"

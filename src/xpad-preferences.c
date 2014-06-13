@@ -19,17 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
 #include <glib/gi18n.h>
-#include <string.h>
-#include "xpad-app.h"
+#include <gtk/gtk.h>
 #include "xpad-preferences.h"
-#include "xpad-settings.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "xpad-app.h"
 
 struct XpadPreferencesPrivate 
 {

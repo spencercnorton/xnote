@@ -19,11 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
 #include "xpad-periodic.h"
 
 #ifdef SHOW_DEBUG
@@ -67,7 +64,6 @@ typedef struct {
 static gint xppd_intercept (gpointer);
 static gint gprint_ignore(const char *, ...);
 
-static void xpad_sigref_dump2 (gint);
 static gboolean str_equal (const char *, const char *);
 
 /* global variables */
@@ -170,7 +166,7 @@ gboolean    Xpad_periodic_set_callback (
     }
 
     if (! isdone) {
-        printf("Failed to install signal callback: %s\n", cbname);
+        g_print("Failed to install signal callback: %s\n", cbname);
         exit(1);
     }
 
@@ -257,38 +253,11 @@ gint gprint_ignore (const char * fmt, ...)
     return 0;
 }
 
-void xpad_sigref_dump2 (gint twhich)
-{
-    int tlen = 0, cnt = 0;
-    Xpadsigref * xlist = 0;
-    if (0 == twhich) { xlist = xpptr->template; }
-    if (1 == twhich) { xlist = xpptr->sigs; }
-    if (0 == twhich) { tlen = xpptr->template_len; }
-    if (1 == twhich) { tlen = xpptr->sigs_len; }
-
-    for (cnt = 0; cnt < tlen; ++cnt) {
-        Xpadsigref * xitem = xlist + cnt;
-        if (0 == xitem->signame) { continue; }
-        printf("%3d: %s : %p : %p\n", cnt, xitem->signame,
-            xitem->func_ptr, xitem->data);
-    }
-}
-
 void Xpad_periodic_error_exit (const char * fmt, ...)
 {
     va_list app;
     va_start(app, fmt);
-    vprintf(fmt, app);
+    g_print(fmt, app);
     va_end(app);
     exit(1);
 }
-
-void Xpad_periodic_test (void)
-{
-    puts("Template:");
-    xpad_sigref_dump2(0);
-    exit(0);
-}
-
-
-/* vim: set ts=4 sw=4 :vim */

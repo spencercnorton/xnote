@@ -19,22 +19,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
-#include "xpad-session-manager.h"
-
 #ifndef X_DISPLAY_MISSING
 
+#include <glib.h>
+#include <pwd.h>
+#include <stdlib.h>
+#include <string.h>
 #include <gdk/gdkx.h>
 #include <X11/SM/SMlib.h>
-#include <stdio.h>	/* only for printf */
-#include <sys/types.h> /* for getuid and getpwuid */
-#include <sys/select.h>	/* for select */
-#include <stdlib.h>	/* for free */
-#include <string.h>	/* for strlen */
-#include <unistd.h>	/* for getuid */
-#include <pwd.h>	/* for getpwuid */
-#include <sys/types.h>	/* for getuid and getpwuid */
-#include <sys/time.h>	/* for struct timeval */
+#include "xpad-session-manager.h"
 #include "xpad-app.h"
 
 static SmcConn xpad_session_manager_conn = NULL;

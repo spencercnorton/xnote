@@ -19,10 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
+#include <gtk/gtk.h>
 #include "xpad-text-view.h"
 #include "xpad-text-buffer.h"
-#include "xpad-settings.h"
 #include "xpad-app.h"
 
 struct XpadTextViewPrivate 

@@ -19,14 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
-#include <string.h>
-#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
-#include "xpad-toolbar.h"
-#include "xpad-settings.h"
-#include "xpad-grip-tool-item.h"
 #include "xpad-app.h"
+#include "xpad-grip-tool-item.h"
+#include "xpad-toolbar.h"
 
 struct XpadToolbarPrivate
 {

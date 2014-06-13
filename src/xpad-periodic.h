@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef XPAD_PERIODIC_H
 #define XPAD_PERIODIC_H
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 typedef void (*XpadPeriodicFunc)(void *);
 
