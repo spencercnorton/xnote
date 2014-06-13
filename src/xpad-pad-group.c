@@ -30,8 +30,9 @@ struct XpadPadGroupPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
-static void     xpad_pad_group_dispose           (GObject *object);
-static void     xpad_pad_group_finalize          (GObject *object);
+static void xpad_pad_group_dispose (GObject *object);
+static void xpad_pad_group_finalize (GObject *object);
+static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
 
 enum {
 	PROP_0
@@ -181,9 +182,7 @@ xpad_pad_group_close_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_close, NULL);
 }
 
-void
-xpad_pad_group_save_unsaved_all (XpadPadGroup *group)
-{
+static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group) {
 	if (group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_save_unsaved, NULL);
 }

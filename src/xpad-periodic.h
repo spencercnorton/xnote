@@ -50,13 +50,5 @@ gboolean	Xpad_periodic_set_callback (const char *, XpadPeriodicFunc);
 ************************/
 void	Xpad_periodic_save_content_delayed (void * xpad_pad);
 void	Xpad_periodic_save_info_delayed (void * xpad_pad);
-void	Xpad_periodic_signal (const char * cbname, void * xpad_pad);
-
-void	Xpad_periodic_test (); /* aborts program */
-void	Xpad_periodic_error_exit (const char *, ...); /* ditto */
 
 #endif /* XPAD_PERIODIC_H */
-
-/************************
-************************/
-/* vim: set ts=4 sw=4 :vim */

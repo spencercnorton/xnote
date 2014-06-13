@@ -42,8 +42,6 @@ typedef struct XpadUndo XpadUndo;
 struct XpadUndo
 {
 	GObject parent;
-
-	/* private */
 	XpadUndoPrivate *priv;
 };
 

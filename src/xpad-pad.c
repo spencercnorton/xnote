@@ -835,7 +835,6 @@ pad_properties_destroyed (XpadPad *pad)
 static void
 prop_notify_follow_font (XpadPad *pad)
 {
-	g_print("prop_notify_follow_font\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 
 	gboolean follow_font_style;
@@ -860,7 +859,6 @@ prop_notify_follow_font (XpadPad *pad)
 static void
 prop_notify_colors (XpadPad *pad)
 {
-	g_print("prop_notify_colors\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
 	gboolean follow_color_style;
@@ -902,12 +900,10 @@ prop_notify_colors (XpadPad *pad)
 static void
 prop_notify_font (XpadPad *pad)
 {
-	g_print("prop_notify_font\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
 	const gchar *font;
 	g_object_get (prop, "fontname", &font, NULL);
-	g_print ("font: %s", font);
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = font ? pango_font_description_from_string (font) : NULL;

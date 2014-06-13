@@ -19,7 +19,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <string.h>
@@ -461,16 +460,16 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			GError *error = NULL;
 
 			/* Find the base directory where the application is installed /usr or /usr/local, to find the correct xpad.desktop file. */
-			char buf[1024];
-			ssize_t len = readlink(g_strdup_printf ("/proc/%d/exe", getpid()), buf, sizeof(buf)-1);
+			const char *program_path = xpad_app_get_program_path();
 
-			if (len == -1)
+			if (!program_path)
 				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not find the directory where Xpad is installed\n%s"), error->message));
 			else {
+				size_t len = strlen(program_path);
 				char basedir[len-8];
 				guint i;
 				for (i=0; i<len-8; i++)
-					basedir[i] = buf[i];
+					basedir[i] = program_path[i];
 				basedir[len-9] = '\0';
 
 				source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);

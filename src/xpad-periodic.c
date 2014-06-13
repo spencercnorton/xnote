@@ -63,6 +63,8 @@ typedef struct {
 /* prototypes */
 static gint xppd_intercept (gpointer);
 static gint gprint_ignore(const char *, ...);
+static void Xpad_periodic_signal (const char * cbname, void * xpad_pad);
+static void Xpad_periodic_error_exit (const char *, ...);
 
 static gboolean str_equal (const char *, const char *);
 
@@ -183,8 +185,7 @@ void Xpad_periodic_save_content_delayed (void * xpad_pad)
     Xpad_periodic_signal("save-content", xpad_pad);
 }
 
-void Xpad_periodic_signal (const char * cbname, void * xpad_pad)
-{
+static void Xpad_periodic_signal (const char * cbname, void * xpad_pad) {
     int isdone = 0;
     int tnx=0, snx=0;
     XpadPeriodicFunc func_ptr = 0;
@@ -253,8 +254,7 @@ gint gprint_ignore (const char * fmt, ...)
     return 0;
 }
 
-void Xpad_periodic_error_exit (const char * fmt, ...)
-{
+static void Xpad_periodic_error_exit (const char * fmt, ...) {
     va_list app;
     va_start(app, fmt);
     g_print(fmt, app);
