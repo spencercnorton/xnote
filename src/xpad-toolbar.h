@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_TOOLBAR_H__
 #define __XPAD_TOOLBAR_H__
 
-#include <gtk/gtk.h>
 #include "xpad-pad.h"
 
 G_BEGIN_DECLS
@@ -40,8 +39,6 @@ typedef struct XpadToolbar XpadToolbar;
 struct XpadToolbar
 {
 	GtkToolbar parent;
-	
-	/* private */
 	XpadToolbarPrivate *priv;
 };
 

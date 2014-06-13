@@ -1,8 +1,26 @@
-#include "../config.h"
+/*
+
+Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <stdarg.h>
 #include "xpad-periodic.h"
 
 #ifdef SHOW_DEBUG
@@ -45,8 +63,9 @@ typedef struct {
 /* prototypes */
 static gint xppd_intercept (gpointer);
 static gint gprint_ignore(const char *, ...);
+static void Xpad_periodic_signal (const char * cbname, void * xpad_pad);
+static void Xpad_periodic_error_exit (const char *, ...);
 
-static void xpad_sigref_dump2 (gint);
 static gboolean str_equal (const char *, const char *);
 
 /* global variables */
@@ -149,7 +168,7 @@ gboolean    Xpad_periodic_set_callback (
     }
 
     if (! isdone) {
-        printf("Failed to install signal callback: %s\n", cbname);
+        g_print("Failed to install signal callback: %s\n", cbname);
         exit(1);
     }
 
@@ -166,8 +185,7 @@ void Xpad_periodic_save_content_delayed (void * xpad_pad)
     Xpad_periodic_signal("save-content", xpad_pad);
 }
 
-void Xpad_periodic_signal (const char * cbname, void * xpad_pad)
-{
+static void Xpad_periodic_signal (const char * cbname, void * xpad_pad) {
     int isdone = 0;
     int tnx=0, snx=0;
     XpadPeriodicFunc func_ptr = 0;
@@ -236,38 +254,10 @@ gint gprint_ignore (const char * fmt, ...)
     return 0;
 }
 
-void xpad_sigref_dump2 (gint twhich)
-{
-    int tlen = 0, cnt = 0;
-    Xpadsigref * xlist = 0;
-    if (0 == twhich) { xlist = xpptr->template; }
-    if (1 == twhich) { xlist = xpptr->sigs; }
-    if (0 == twhich) { tlen = xpptr->template_len; }
-    if (1 == twhich) { tlen = xpptr->sigs_len; }
-
-    for (cnt = 0; cnt < tlen; ++cnt) {
-        Xpadsigref * xitem = xlist + cnt;
-        if (0 == xitem->signame) { continue; }
-        printf("%3d: %s : %p : %p\n", cnt, xitem->signame,
-            xitem->func_ptr, xitem->data);
-    }
-}
-
-void Xpad_periodic_error_exit (const char * fmt, ...)
-{
+static void Xpad_periodic_error_exit (const char * fmt, ...) {
     va_list app;
     va_start(app, fmt);
-    vprintf(fmt, app);
+    g_print(fmt, app);
     va_end(app);
     exit(1);
 }
-
-void Xpad_periodic_test (void)
-{
-    puts("Template:");
-    xpad_sigref_dump2(0);
-    exit(0);
-}
-
-
-/* vim: set ts=4 sw=4 :vim */

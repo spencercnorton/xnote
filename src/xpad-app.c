@@ -1,50 +1,44 @@
-/**
- * Copyright (c) 2004-2007 Michael Terry
- * Copyright (c) 2009 Paul Ivanov
- * Copyright (c) 2013 Arthur Borsboom
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/*
+
+Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2009 Paul Ivanov
+Copyright (c) 2013-2014 Arthur Borsboom
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
 
 /* required by socket stuff */
 /* define _GNU_SOURCE here because that makes our sockets work nice
  Unfortunately, we lose portability... */
-#define _GNU_SOURCE	1
+
 #include "../config.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/un.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <errno.h>
-
-#include <string.h>
-#include <stdlib.h> /* for exit */
-
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
-
-#include "fio.h" /* for fio_get_info_from_file */
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "help.h"
-#include "prefix.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-periodic.h"
 #include "xpad-session-manager.h"
-#include "xpad-settings.h"
 #include "xpad-tray.h"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
@@ -87,8 +81,8 @@ static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboole
 
 static gboolean		config_dir_exists           (void);
 static gchar		*make_config_dir            (void);
-static void		register_stock_icons        (void);
-static gint		xpad_app_load_pads          (void);
+static void			register_stock_icons        (void);
+static gint			xpad_app_load_pads          (void);
 static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
@@ -157,13 +151,16 @@ xpad_app_init (int argc, char **argv)
 	xpad_global_settings = xpad_settings_new ();
 	
 	/* Delay program startup, if user configured it, to wait for example for the loading of the systray. */
-	if (xpad_settings_get_autostart_delay (xpad_global_settings))
-		sleep(xpad_settings_get_autostart_delay (xpad_global_settings));
+	guint autostart_delay;
+	g_object_get (xpad_global_settings, "autostart-delay", &autostart_delay, NULL);
+
+	if (autostart_delay)
+		sleep(autostart_delay);
 
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);
 	
-	xpad_tray_open ();
+	xpad_tray_init (xpad_global_settings);
 	xpad_session_manager_init ();
 
 	/* Initialize Xpad-periodic module */
@@ -198,8 +195,7 @@ xpad_app_init (int argc, char **argv)
 }
 
 gint main (gint argc, gchar **argv)
-{
-	xpad_app_init (argc, argv);
+{	xpad_app_init (argc, argv);
 
 	gtk_main ();
 	
@@ -255,12 +251,12 @@ xpad_app_quit (void)
 	/* Free the memory used by group. */
 	g_object_unref (xpad_app_get_pad_group());
 
+	/* Free the memory used by the tray icon and its menu. */
+	xpad_tray_dispose (xpad_global_settings);
+
 	/* Free the memory used by the settings menu. */
 	g_object_unref (xpad_global_settings);
 	xpad_global_settings = NULL; /* This is needed due to the asynchronous finalizing process. */
-
-	/* Free the memory used by the tray icon and its menu. */
-	xpad_tray_close ();
 
 	/* Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind. */
 	g_object_unref (gtk_icon_theme_get_default ());
@@ -395,9 +391,7 @@ xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *p
 static void
 register_stock_icons (void)
 {
-	GtkIconTheme *theme;
-
-	theme = gtk_icon_theme_get_default ();
+	GtkIconTheme *theme = gtk_icon_theme_get_default ();
 	gtk_icon_theme_prepend_search_path (theme, THEME_DIR);
 }
 
@@ -865,17 +859,24 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 		if (have_gtk && option_smid)
 			xpad_session_manager_set_id (option_smid);
 		
-		if (have_gtk && (option_new || xpad_settings_get_autostart_new_pad (xpad_settings)))
+		if (!option_new)
+			g_object_get (xpad_global_settings, "autostart-new-pad", &option_new, NULL);
+
+		if (have_gtk && option_new)
 		{
 			GtkWidget *pad = xpad_pad_new (pad_group);
 			gtk_widget_show (pad);
 		}
-
-		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 0)
-			option_show = TRUE;
-		if (xpad_settings_get_autostart_display_pads (xpad_settings) == 1)
-			option_hide = TRUE;
 		
+		if (!option_hide && !option_show) {
+			guint display_pads;
+			g_object_get (xpad_settings, "autostart-display-pads", &display_pads, NULL);
+			if (display_pads == 0)
+				option_show = TRUE;
+			else if (display_pads == 1)
+				option_hide = TRUE;
+		}
+
 		if (have_gtk && option_files)
 		{
 			int i;

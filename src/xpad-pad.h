@@ -3,6 +3,7 @@
 Copyright (c) 2001-2007 Michael Terry
 Copyright (c) 2009 Paul Ivanov
 Copyright (c) 2011 Sergei Riaguzov
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

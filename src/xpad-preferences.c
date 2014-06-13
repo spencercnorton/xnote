@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,17 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "../config.h"
 #include <glib/gi18n.h>
-#include <string.h>
-#include "xpad-app.h"
+#include <gtk/gtk.h>
 #include "xpad-preferences.h"
-#include "xpad-settings.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "xpad-app.h"
 
 struct XpadPreferencesPrivate 
 {
@@ -46,7 +40,8 @@ struct XpadPreferencesPrivate
 	GtkWidget *autostart_new_pad;
 	GtkWidget *autostart_sticky;
 	GtkWidget *autostart_display_pads;
-	GtkWidget *trayconfigbox;
+	GtkWidget *tray_enabled;
+	GtkWidget *tray_click_configuration;
 	GtkWidget *editcheck;
 	GtkWidget *confirmcheck;
 
@@ -61,19 +56,22 @@ struct XpadPreferencesPrivate
 	gulong autostart_new_pad_handler;
 	gulong autostart_sticky_handler;
 	gulong autostart_display_pads_handler;	
-	gulong trayclick_handler;
+	gulong tray_enabled_handler;
+	gulong tray_click_handler;
 	gulong editcheck_handler;
 	gulong confirmcheck_handler;
 
 	gulong notify_font_handler;
 	gulong notify_text_handler;
 	gulong notify_back_handler;
+	gulong notify_autostart_xpad_handler;
 	gulong notify_autostart_wait_systray_handler;
 	gulong notify_autostart_delay_handler;
 	gulong notify_autostart_new_pad_handler;
 	gulong notify_autostart_sticky_handler;
 	gulong notify_autostart_display_pads_handler;
-	gulong notify_tray_handler;
+	gulong notify_tray_enabled_handler;
+	gulong notify_tray_click_handler;
 	gulong notify_edit_handler;
 	gulong notify_confirm_handler;
 };
@@ -91,19 +89,21 @@ static void change_autostart_delay (GtkComboBox *box, XpadPreferences *pref);
 static void change_autostart_new_pad (GtkToggleButton *button, XpadPreferences *pref);
 static void change_autostart_sticky (GtkToggleButton *button, XpadPreferences *pref);
 static void change_autostart_display_pads (GtkComboBox *box, XpadPreferences *pref);
-static void change_tray_click_configuration (GtkComboBox *box, XpadPreferences *pref);
+static void change_tray_enabled (GtkToggleButton *button, XpadPreferences *pref);
+static void change_tray_click (GtkComboBox *box, XpadPreferences *pref);
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
 
 static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
 static void notify_back_color (XpadPreferences *pref);
-
+static void notify_autostart_xpad (XpadPreferences *pref);
 static void notify_autostart_wait_systray (XpadPreferences *pref);
 static void notify_autostart_delay (XpadPreferences *pref);
 static void notify_autostart_new_pad (XpadPreferences *pref);
 static void notify_autostart_sticky (XpadPreferences *pref);
 static void notify_autostart_display_pads (XpadPreferences *pref);
+static void notify_tray_enabled (XpadPreferences *pref);
 static void notify_tray_click (XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
@@ -139,7 +139,7 @@ static void
 xpad_preferences_init (XpadPreferences *pref)
 {
 	GtkWidget *hbox, *font_hbox, *vbox;
-	const GdkRGBA *color;
+	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
 	GtkWidget *appearance_frame, *start_frame, *tray_frame, *other_frame;
@@ -150,9 +150,26 @@ xpad_preferences_init (XpadPreferences *pref)
 	GtkRequisition req;
 	GdkRGBA theme_text_color = {0, 0, 0, 0};
 	GdkRGBA theme_background_color = {0, 0, 0, 0};
+	guint tray_click_configuration, autostart_delay, autostart_display_pads;
+	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky;
 	
 	pref->priv = xpad_preferences_get_instance_private(pref);
 	
+	g_object_get (xpad_global_settings,
+			"fontname", &fontname,
+			"text-color", &text_color,
+			"back-color", &back_color,
+			"confirm-destroy", &confirm_destroy,
+			"edit-lock", &edit_lock,
+			"tray-click-configuration", &tray_click_configuration,
+			"autostart-xpad", &autostart_xpad,
+			"autostart-wait-systray", &autostart_wait_systray,
+			"autostart-new-pad", &autostart_new_pad,
+			"autostart-sticky", &autostart_sticky,
+			"autostart-delay", &autostart_delay,
+			"autostart-display-pads", &autostart_display_pads,
+			NULL);
+
 	/* Appearance options */
 	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
 	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
@@ -213,7 +230,6 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &theme_text_color);
 	gtk_style_context_get_background_color (style, GTK_STATE_FLAG_NORMAL, &theme_background_color);
 
-	fontname = xpad_settings_get_fontname (xpad_global_settings);
 	if (fontname)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->fontcheck), TRUE);
@@ -231,17 +247,15 @@ xpad_preferences_init (XpadPreferences *pref)
 		pango_font_description_free (font);
 	}
 
-	color = xpad_settings_get_text_color (xpad_global_settings);
-	if (color)
-		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), color);
+	if (text_color)
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), text_color);
 	else
 		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &theme_text_color);
 	
-	color = xpad_settings_get_back_color (xpad_global_settings);
-	if (color)
+	if (back_color)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
-		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), back_color);
 	}
 	else
 	{
@@ -300,15 +314,15 @@ xpad_preferences_init (XpadPreferences *pref)
 		
 	pref->priv->autostart_xpad = gtk_check_button_new_with_mnemonic (_("_Start Xpad automatically after login"));
 	gtk_box_pack_start (GTK_BOX (autostart_vbox), pref->priv->autostart_xpad, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), xpad_settings_get_autostart_xpad (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), autostart_xpad);
 
 	pref->priv->autostart_wait_systray = gtk_check_button_new_with_mnemonic (_("_Wait for systray (if possible)"));
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20);
 	gtk_box_pack_start (GTK_BOX (hbox), gtk_alignment_new (1, 1, 1, 1), FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), pref->priv->autostart_wait_systray, FALSE, FALSE, 0);	
 
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), xpad_settings_get_autostart_wait_systray (xpad_global_settings));
-	if (xpad_settings_get_autostart_xpad (xpad_global_settings))
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), autostart_wait_systray);
+	if (autostart_xpad)
 		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
 	else
 		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
@@ -316,19 +330,19 @@ xpad_preferences_init (XpadPreferences *pref)
 
 	pref->priv->autostart_new_pad = gtk_check_button_new_with_mnemonic (_("_Open a new empty pad"));
 	gtk_box_pack_start (GTK_BOX (autostart_vbox), pref->priv->autostart_new_pad, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), xpad_settings_get_autostart_new_pad (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), autostart_new_pad);
 
 	pref->priv->autostart_sticky = gtk_check_button_new_with_mnemonic (_("_Pads start on all workspaces"));
 	gtk_box_pack_start (GTK_BOX (autostart_vbox), pref->priv->autostart_sticky, FALSE, FALSE, 0);	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), xpad_settings_get_autostart_sticky (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), autostart_sticky);
 
 	label = gtk_label_new (_("Delay in seconds"));
 	pref->priv->autostart_delay = gtk_combo_box_text_new();	
 	guint i;
 	for (i=0; i<15; i++)
-		gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_delay ), g_strdup_printf ("%i", i));
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_delay), (guint) xpad_settings_get_autostart_delay (xpad_global_settings));
-	 hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->autostart_delay), g_strdup_printf ("%i", i));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_delay), autostart_delay);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->autostart_delay, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(autostart_vbox), hbox, TRUE, TRUE, 0);
@@ -338,7 +352,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Open all pads") );
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Hide all pads") );
 	gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( pref->priv->autostart_display_pads ), _("Restore to previous state") );
-	gtk_combo_box_set_active( GTK_COMBO_BOX( pref->priv->autostart_display_pads ), (guint) xpad_settings_get_autostart_display_pads (xpad_global_settings));
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), (guint) autostart_display_pads);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->autostart_display_pads, TRUE, TRUE, 0);
@@ -368,16 +382,19 @@ xpad_preferences_init (XpadPreferences *pref)
 		"child", alignment,
 		NULL));
 
+	pref->priv->tray_enabled = gtk_check_button_new_with_mnemonic (_("_Enable tray icon"));
+	gtk_box_pack_start (GTK_BOX (tray_vbox), pref->priv->tray_enabled, FALSE, FALSE, 0);
+
 	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
-	pref->priv->trayconfigbox = gtk_combo_box_text_new();	
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->trayconfigbox), _("Do Nothing") );
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->trayconfigbox), _("Toggle Show All") );
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->trayconfigbox), _("List of Pads") );
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->trayconfigbox), _("New Pad") );
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->trayconfigbox), (guint) xpad_settings_get_tray_click_handler (xpad_global_settings));
+	pref->priv->tray_click_configuration = gtk_combo_box_text_new();
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("Do Nothing") );
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("Toggle Show All") );
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("List of Pads") );
+	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("New Pad") );
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->tray_click_configuration), tray_click_configuration);
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->trayconfigbox, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox), pref->priv->tray_click_configuration, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(tray_vbox), hbox, TRUE, TRUE, 0);
 
 	/* Other options */
@@ -408,10 +425,10 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
 
 	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->editcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);	
+	gtk_box_pack_start (GTK_BOX (other_vbox), pref->priv->confirmcheck, FALSE, FALSE, 0);
 	
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_global_settings));
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), edit_lock);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), confirm_destroy);
 
 	/* Close button and window title */
 	gtk_dialog_add_button (GTK_DIALOG (pref), "gtk-close", GTK_RESPONSE_CLOSE);
@@ -433,7 +450,8 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->autostart_sticky_handler = g_signal_connect (pref->priv->autostart_sticky, "toggled", G_CALLBACK (change_autostart_sticky), pref);
 	pref->priv->autostart_display_pads_handler = g_signal_connect (pref->priv->autostart_display_pads, "changed", G_CALLBACK (change_autostart_display_pads), pref);
 
-	pref->priv->trayclick_handler = g_signal_connect(pref->priv->trayconfigbox, "changed", G_CALLBACK(change_tray_click_configuration), pref);
+	pref->priv->tray_enabled_handler = g_signal_connect (pref->priv->tray_enabled, "toggled", G_CALLBACK (change_tray_enabled), pref);
+	pref->priv->tray_click_handler = g_signal_connect(pref->priv->tray_click_configuration, "changed", G_CALLBACK(change_tray_click), pref);
 	pref->priv->editcheck_handler = g_signal_connect (pref->priv->editcheck, "toggled", G_CALLBACK (change_edit_check), pref);
 	pref->priv->confirmcheck_handler = g_signal_connect (pref->priv->confirmcheck, "toggled", G_CALLBACK (change_confirm_check), pref);
 
@@ -441,23 +459,28 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->notify_text_handler = g_signal_connect_swapped (xpad_global_settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
 	pref->priv->notify_back_handler = g_signal_connect_swapped (xpad_global_settings, "notify::back-color", G_CALLBACK (notify_back_color), pref);
 
-	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_wait_systray", G_CALLBACK (notify_autostart_wait_systray), pref);
-	pref->priv->notify_autostart_delay_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_delay", G_CALLBACK(notify_autostart_delay), pref);
-	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_new_pad", G_CALLBACK (notify_autostart_new_pad), pref);
-	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_sticky", G_CALLBACK (notify_autostart_sticky), pref);
-	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart_display_pads", G_CALLBACK (notify_autostart_display_pads), pref);
+	pref->priv->notify_autostart_xpad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-xpad", G_CALLBACK (notify_autostart_xpad), pref);
+	pref->priv->notify_autostart_wait_systray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-wait-systray", G_CALLBACK (notify_autostart_wait_systray), pref);
+	pref->priv->notify_autostart_delay_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-delay", G_CALLBACK(notify_autostart_delay), pref);
+	pref->priv->notify_autostart_new_pad_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-new-pad", G_CALLBACK (notify_autostart_new_pad), pref);
+	pref->priv->notify_autostart_sticky_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-sticky", G_CALLBACK (notify_autostart_sticky), pref);
+	pref->priv->notify_autostart_display_pads_handler = g_signal_connect_swapped (xpad_global_settings, "notify::autostart-display-pads", G_CALLBACK (notify_autostart_display_pads), pref);
 	pref->priv->notify_edit_handler = g_signal_connect_swapped (xpad_global_settings, "notify::edit-lock", G_CALLBACK (notify_edit), pref);
 	pref->priv->notify_confirm_handler = g_signal_connect_swapped (xpad_global_settings, "notify::confirm-destroy", G_CALLBACK (notify_confirm), pref);
-	pref->priv->notify_tray_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray_click_configuration", G_CALLBACK(notify_tray_click), pref);
+	pref->priv->notify_tray_enabled_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray-enabled", G_CALLBACK (notify_tray_enabled), pref);
+	pref->priv->notify_tray_click_handler = g_signal_connect_swapped (xpad_global_settings, "notify::tray-click-configuration", G_CALLBACK(notify_tray_click), pref);
 	
 	g_object_unref (size_group_labels);
+
+	/* Initiliaze the GUI logic */
+	g_object_notify (G_OBJECT (xpad_global_settings), "tray-enabled");
 
 	/* Make the preference dialog visible */
 	global_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_box_set_homogeneous (GTK_BOX (global_vbox), FALSE);
 	gtk_box_pack_start (GTK_BOX (global_vbox), appearance_frame, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (global_vbox), start_frame, FALSE, FALSE, 0);	
-	gtk_box_pack_start (GTK_BOX (global_vbox), tray_frame, FALSE, FALSE, 0);	
+	gtk_box_pack_start (GTK_BOX (global_vbox), tray_frame, FALSE, FALSE, 0);
 	gtk_box_pack_start (GTK_BOX (global_vbox), other_frame, FALSE, FALSE, 0);
 	gtk_container_set_border_width (GTK_CONTAINER (global_vbox), 6);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), global_vbox, FALSE, FALSE, 0);	
@@ -497,9 +520,9 @@ change_font_check (GtkToggleButton *button, XpadPreferences *pref)
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_font_handler);
 	
 	if (!gtk_toggle_button_get_active (button))
-		xpad_settings_set_fontname (xpad_global_settings, NULL);
+		g_object_set (xpad_global_settings, "fontname", NULL, NULL);
 	else
-		xpad_settings_set_fontname (xpad_global_settings, gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)));
+		g_object_set (xpad_global_settings, "fontname", gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)), NULL);
 	
 	gtk_widget_set_sensitive (pref->priv->fontbutton, gtk_toggle_button_get_active (button));
 	
@@ -510,142 +533,58 @@ static void
 change_font_face (GtkFontButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_font_handler);
-	xpad_settings_set_fontname (xpad_global_settings, gtk_font_button_get_font_name (button));
+	g_object_set (xpad_global_settings, "fontname", gtk_font_button_get_font_name (button), NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_font_handler);
 }
 
 static void
 change_color_check (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block (xpad_global_settings, pref->priv->notify_back_handler);
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_text_handler);
+	g_signal_handler_block (xpad_global_settings, pref->priv->notify_back_handler);
 	
 	if (!gtk_toggle_button_get_active (button))
-	{
-		xpad_settings_set_text_color (xpad_global_settings, NULL);
-		xpad_settings_set_back_color (xpad_global_settings, NULL);
-	}
+		g_object_set (xpad_global_settings, "text-color", NULL, "back-color", NULL, NULL);
 	else
 	{
-		GdkRGBA color;
-		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &color);
-		xpad_settings_set_text_color (xpad_global_settings, &color);
-		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &color);
-		xpad_settings_set_back_color (xpad_global_settings, &color);
+		GdkRGBA text_color, back_color;
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &text_color);
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &back_color);
+		g_object_set (xpad_global_settings, "text-color", &text_color, "back-color", &back_color, NULL);
 	}
 	
 	gtk_widget_set_sensitive (pref->priv->colorbox, gtk_toggle_button_get_active (button));
 	
-	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_back_handler);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_text_handler);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_back_handler);
 }
 
 static void
 change_text_color (GtkColorChooser *chooser, XpadPreferences *pref)
 {
-	GdkRGBA color = {0, 0, 0, 0};
-	gtk_color_chooser_get_rgba (chooser, &color);
+	GdkRGBA text_color = {0, 0, 0, 0};
+	gtk_color_chooser_get_rgba (chooser, &text_color);
 
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_text_handler);
-	xpad_settings_set_text_color (xpad_global_settings, &color);
+	g_object_set (xpad_global_settings, "text-color", &text_color, NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_text_handler);
 }
 
 static void
 change_back_color (GtkColorChooser *chooser, XpadPreferences *pref)
 {
-	GdkRGBA color = {0, 0, 0, 0};
-	gtk_color_chooser_get_rgba (chooser, &color);
+	GdkRGBA back_color = {0, 0, 0, 0};
+	gtk_color_chooser_get_rgba (chooser, &back_color);
 
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_back_handler);
-	xpad_settings_set_back_color (xpad_global_settings, &color);
+	g_object_set (xpad_global_settings, "back-color", &back_color, NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_back_handler);
 }
 
 static void
 change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref)
 {
-	gboolean autostart;
-	
-	autostart = gtk_toggle_button_get_active (button);
-	
-	if (autostart) {
-		/* Copy the xpad.desktop file to the autostart folder and enable/disable the wait for systray preference */
-		gboolean success;
-		char *source_filename;
-		char *destination_directory;
-		GFile *source, *destination;
-		GError *error = NULL;
-		
-		/* Find the base directory where the application is installed /usr or /usr/local, to find the correct xpad.desktop file. */
-		char *szTmp = g_strdup_printf ("/proc/%d/exe", getpid());
-		enum { BUFFERSIZE = 1024 };
-		char buf[BUFFERSIZE];
-		ssize_t len = readlink(szTmp, buf, sizeof(buf)-1);
-		
-		if (len == -1) {
-			gchar *errtext;
-			errtext = g_strdup_printf (_("Could not find the directory where Xpad is installed\n%s"), error->message);
-			xpad_app_error (NULL, _("Error enabling Xpad autostart"), errtext);
-			g_free (errtext);
-			
-			gtk_toggle_button_set_active (button, FALSE);
-		}
-		else {
-			char basedir[len-8];
-			guint i;
-			for (i=0; i<len-8; i++)
-				basedir[i] = buf[i];
-			basedir[len-9] = '\0';
-
-			source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);
-			destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
-
-			source = g_file_new_for_path (source_filename);
-			destination = g_file_new_for_path (destination_directory);
-			success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
-			
-			if (!success) {
-				gchar *errtext;
-				errtext = g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message);
-				xpad_app_error (NULL, _("Error enabling Xpad autostart"), errtext);
-				g_free (errtext);
-				
-				gtk_toggle_button_set_active (button, FALSE);
-			}
-			else {
-				g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-				gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
-				change_autostart_wait_systray (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), pref);				
-				g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-			}
-		}
-	}
-	else {
-		/* Remove the xpad.desktop file from the autostart folder and enable/disable the wait for systray preference */
-		gboolean success;
-		char *filename;
-		GFile *file;
-		GError *error = NULL;		
-		
-		filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
-		file = g_file_new_for_path (filename);
-		success = g_file_delete (file, NULL, &error);
-
-		if (!success) {
-			gchar *errtext;
-			errtext = g_strdup_printf (_("Could not delete %s\n%s"), filename, error->message);
-			xpad_app_error (NULL, _("Error disabling Xpad autostart"), errtext);
-			g_free (errtext);
-			
-			gtk_toggle_button_set_active (button, TRUE);
-		}
-		else {
-			g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-			gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
-			g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-		}
-	}
+	g_object_set (xpad_global_settings, "autostart-xpad", gtk_toggle_button_get_active (button), NULL);
 }
 
 static void
@@ -689,23 +628,15 @@ change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 	}
 
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-	xpad_settings_set_autostart_wait_systray (xpad_global_settings, wait_systray);
+	g_object_set (xpad_global_settings, "autostart-wait-systray", wait_systray, NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_wait_systray_handler);
-}
-
-static void
-change_autostart_delay (GtkComboBox *box, XpadPreferences *pref)
-{
-	g_signal_handler_block(xpad_global_settings, pref->priv->notify_autostart_delay_handler);
-	xpad_settings_set_autostart_delay (xpad_global_settings, (guint) gtk_combo_box_get_active(box));
-	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_delay_handler);
 }
 
 static void
 change_autostart_new_pad (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_new_pad_handler);
-	xpad_settings_set_autostart_new_pad (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_object_set (xpad_global_settings, "autostart-new-pad", gtk_toggle_button_get_active (button), NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_new_pad_handler);
 }
 
@@ -713,31 +644,45 @@ static void
 change_autostart_sticky (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_sticky_handler);
-	xpad_settings_set_autostart_sticky (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_object_set (xpad_global_settings, "autostart-sticky", gtk_toggle_button_get_active (button), NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_sticky_handler);
+}
+
+static void
+change_autostart_delay (GtkComboBox *box, XpadPreferences *pref)
+{
+	g_signal_handler_block(xpad_global_settings, pref->priv->notify_autostart_delay_handler);
+	g_object_set (xpad_global_settings, "autostart-delay", (guint) gtk_combo_box_get_active (box), NULL);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_autostart_delay_handler);
 }
 
 static void
 change_autostart_display_pads (GtkComboBox *box, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_autostart_display_pads_handler);
-	xpad_settings_set_autostart_display_pads (xpad_global_settings, (guint) gtk_combo_box_get_active(box));
+	g_object_set (xpad_global_settings, "autostart-display-pads", (guint) gtk_combo_box_get_active (box), NULL);
 	g_signal_handler_unblock(xpad_global_settings, pref->priv->notify_autostart_display_pads_handler);
 }
 
 static void
-change_tray_click_configuration (GtkComboBox *box, XpadPreferences *pref)
+change_tray_enabled (GtkToggleButton *button, XpadPreferences *pref)
 {
-	g_signal_handler_block(xpad_global_settings, pref->priv->notify_tray_handler);
-	xpad_settings_set_tray_click_handler (xpad_global_settings, (guint) gtk_combo_box_get_active(box));
-	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_tray_handler);
+	g_object_set (xpad_global_settings, "tray-enabled", gtk_toggle_button_get_active (button), NULL);
+}
+
+static void
+change_tray_click (GtkComboBox *box, XpadPreferences *pref)
+{
+	g_signal_handler_block(xpad_global_settings, pref->priv->notify_tray_click_handler);
+	g_object_set (xpad_global_settings, "tray-click-configuration", (guint) gtk_combo_box_get_active (box), NULL);
+	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_tray_click_handler);
 }
 
 static void
 change_edit_check (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_edit_handler);
-	xpad_settings_set_edit_lock (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_object_set (xpad_global_settings, "edit-lock", gtk_toggle_button_get_active (button), NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_edit_handler);
 }
 
@@ -745,14 +690,15 @@ static void
 change_confirm_check (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (xpad_global_settings, pref->priv->notify_confirm_handler);
-	xpad_settings_set_confirm_destroy (xpad_global_settings, gtk_toggle_button_get_active (button));
+	g_object_set (xpad_global_settings, "confirm-destroy", gtk_toggle_button_get_active (button), NULL);
 	g_signal_handler_unblock (xpad_global_settings, pref->priv->notify_confirm_handler);
 }
 
 static void
 notify_fontname (XpadPreferences *pref)
 {
-	const gchar *fontname = xpad_settings_get_fontname (xpad_global_settings);
+	const gchar *fontname;
+	g_object_get (xpad_global_settings, "fontname", &fontname, NULL);
 	
 	g_signal_handler_block (pref->priv->fontbutton, pref->priv->font_handler);
 	g_signal_handler_block (pref->priv->fontcheck, pref->priv->fontcheck_handler);
@@ -776,16 +722,17 @@ notify_fontname (XpadPreferences *pref)
 static void
 notify_text_color (XpadPreferences *pref)
 {
-	const GdkRGBA *color = xpad_settings_get_text_color (xpad_global_settings);
+	const GdkRGBA *text_color;
+	g_object_get (xpad_global_settings, "text-color", &text_color, NULL);
 	
 	g_signal_handler_block (pref->priv->textbutton, pref->priv->text_handler);
 	g_signal_handler_block (pref->priv->colorcheck, pref->priv->colorcheck_handler);
 	
-	if (color)
+	if (text_color)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->colorbox, TRUE);
-		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), text_color);
 
 	}
 	else
@@ -801,16 +748,17 @@ notify_text_color (XpadPreferences *pref)
 static void
 notify_back_color (XpadPreferences *pref)
 {
-	const GdkRGBA *color = xpad_settings_get_back_color (xpad_global_settings);
-	
+	const GdkRGBA *back_color;
+	g_object_get (xpad_global_settings, "back-color", &back_color, NULL);
+
 	g_signal_handler_block (pref->priv->backbutton, pref->priv->back_handler);
 	g_signal_handler_block (pref->priv->colorcheck, pref->priv->colorcheck_handler);
 	
-	if (color)
+	if (back_color)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->colorcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->colorbox, TRUE);
-		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), color);
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), back_color);
 	}
 	else
 	{
@@ -823,65 +771,108 @@ notify_back_color (XpadPreferences *pref)
 }
 
 static void
-notify_autostart_wait_systray (XpadPreferences *pref)
+notify_autostart_xpad (XpadPreferences *pref)
 {
-	g_signal_handler_block (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), xpad_settings_get_autostart_wait_systray (xpad_global_settings));
-	g_signal_handler_unblock (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
+	gboolean value;
+	g_object_get (xpad_global_settings, "autostart-xpad", &value, NULL);
+	g_signal_handler_block (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), value);
+	gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, value);
+	if (value)
+		change_autostart_wait_systray (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), pref);
+	g_signal_handler_unblock (pref->priv->autostart_xpad, pref->priv->autostart_xpad_handler);
 }
 
-static void 
-notify_autostart_delay (XpadPreferences *pref)
+static void
+notify_autostart_wait_systray (XpadPreferences *pref)
 {
-	g_signal_handler_block (pref->priv->autostart_delay, pref->priv->autostart_delay_handler);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_delay), (guint) xpad_settings_get_autostart_delay (xpad_global_settings));
-	g_signal_handler_unblock (pref->priv->autostart_delay, pref->priv->autostart_delay_handler);
+	gboolean value;
+	g_object_get (xpad_global_settings, "autostart-wait-systray", &value, NULL);
+	g_signal_handler_block (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), value);
+	g_signal_handler_unblock (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
 }
 
 static void
 notify_autostart_new_pad (XpadPreferences *pref)
 {
+	gboolean value;
+	g_object_get (xpad_global_settings, "autostart-new-pad", &value, NULL);
 	g_signal_handler_block (pref->priv->autostart_new_pad, pref->priv->autostart_new_pad_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), xpad_settings_get_autostart_new_pad (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), value);
 	g_signal_handler_unblock (pref->priv->autostart_new_pad, pref->priv->autostart_new_pad_handler);
 }
 
 static void
 notify_autostart_sticky (XpadPreferences *pref)
 {
+	gboolean value;
+	g_object_get (xpad_global_settings, "autostart-sticky", &value, NULL);
 	g_signal_handler_block (pref->priv->autostart_sticky, pref->priv->autostart_sticky_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), xpad_settings_get_autostart_sticky (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), value);
 	g_signal_handler_unblock (pref->priv->autostart_sticky, pref->priv->autostart_sticky_handler);
+}
+
+static void
+notify_autostart_delay (XpadPreferences *pref)
+{
+	guint value;
+	g_object_get (xpad_global_settings, "autostart-delay", &value, NULL);
+	g_signal_handler_block (pref->priv->autostart_delay, pref->priv->autostart_delay_handler);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_delay), value);
+	g_signal_handler_unblock (pref->priv->autostart_delay, pref->priv->autostart_delay_handler);
 }
 
 static void
 notify_autostart_display_pads (XpadPreferences *pref)
 {
+	guint value;
+	g_object_get (xpad_global_settings, "autostart-display-pads", &value, NULL);
 	g_signal_handler_block (pref->priv->autostart_display_pads, pref->priv->autostart_display_pads_handler);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), (guint) xpad_settings_get_autostart_display_pads (xpad_global_settings));
-	g_signal_handler_unblock (pref->priv->autostart_wait_systray, pref->priv->autostart_wait_systray_handler);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), value);
+	g_signal_handler_unblock (pref->priv->autostart_display_pads, pref->priv->autostart_display_pads_handler);
+}
+
+static void
+notify_tray_enabled (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (xpad_global_settings, "tray-enabled", &value, NULL);
+	g_signal_handler_block (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->tray_enabled), value);
+	gtk_widget_set_sensitive (pref->priv->tray_click_configuration, value);
+	gtk_widget_set_sensitive (pref->priv->autostart_display_pads, value);
+	if (!value)
+		g_object_set (xpad_global_settings, "autostart-display-pads", 0, NULL);
+	g_signal_handler_unblock (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
 }
 
 static void 
 notify_tray_click (XpadPreferences *pref)
 {
-	g_signal_handler_block (pref->priv->trayconfigbox, pref->priv->trayclick_handler);
-	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->trayconfigbox), (guint) xpad_settings_get_tray_click_handler(xpad_global_settings));
-	g_signal_handler_unblock (pref->priv->trayconfigbox, pref->priv->trayclick_handler);
+	guint value;
+	g_object_get (xpad_global_settings, "tray-click-configuration", &value, NULL);
+	g_signal_handler_block (pref->priv->tray_click_configuration, pref->priv->tray_click_handler);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->tray_click_configuration), value);
+	g_signal_handler_unblock (pref->priv->tray_click_configuration, pref->priv->tray_click_handler);
 }
 
 static void
 notify_edit (XpadPreferences *pref)
 {
+	gboolean value;
+	g_object_get (xpad_global_settings, "edit-lock", &value, NULL);
 	g_signal_handler_block (pref->priv->editcheck, pref->priv->editcheck_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), xpad_settings_get_edit_lock (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), value);
 	g_signal_handler_unblock (pref->priv->editcheck, pref->priv->editcheck_handler);
 }
 
 static void
 notify_confirm (XpadPreferences *pref)
 {
+	gboolean value;
+	g_object_get (xpad_global_settings, "confirm-destroy", &value, NULL);
 	g_signal_handler_block (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), xpad_settings_get_confirm_destroy (xpad_global_settings));
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), value);
 	g_signal_handler_unblock (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
 }

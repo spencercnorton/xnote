@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,7 +39,6 @@ typedef struct XpadPadProperties XpadPadProperties;
 
 struct XpadPadProperties
 {
-	/* private */
 	GtkDialog parent;
 	XpadPadPropertiesPrivate *priv;
 };
@@ -51,21 +51,6 @@ struct XpadPadPropertiesClass
 GType xpad_pad_properties_get_type (void);
 
 GtkWidget *xpad_pad_properties_new (void);
-
-void xpad_pad_properties_set_follow_font_style (XpadPadProperties *pad_properties, gboolean follow);
-gboolean xpad_pad_properties_get_follow_font_style (XpadPadProperties *pad_properties);
-
-void xpad_pad_properties_set_follow_color_style (XpadPadProperties *pad_properties, gboolean follow);
-gboolean xpad_pad_properties_get_follow_color_style (XpadPadProperties *pad_properties);
-
-void xpad_pad_properties_set_back_color (XpadPadProperties *pad_properties, const GdkRGBA *back);
-const GdkRGBA *xpad_pad_properties_get_back_color (XpadPadProperties *pad_properties);
-
-void xpad_pad_properties_set_text_color (XpadPadProperties *pad_properties, const GdkRGBA *text);
-const GdkRGBA *xpad_pad_properties_get_text_color (XpadPadProperties *pad_properties);
-
-void xpad_pad_properties_set_fontname (XpadPadProperties *pad_properties, const gchar *fontname);
-const gchar *xpad_pad_properties_get_fontname (XpadPadProperties *pad_properties);
 
 G_END_DECLS
 

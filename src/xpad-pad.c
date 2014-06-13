@@ -5,7 +5,7 @@ Copyright (c) 2009 Paul Ivanov
 Copyright (c) 2011 Sergei Riaguzov
 Copyright (c) 2011 Dennis Hilmar
 Copyright (c) 2011 OBATA Akio
-Copyright (c) 2013 Arthur Borsboom
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,9 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
+#include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include <gdk/gdkkeysyms.h>
-#include <string.h>
 #include "fio.h"
 #include "help.h"
 #include "xpad-app.h"
@@ -34,13 +33,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-pad-properties.h"
 #include "xpad-periodic.h"
 #include "xpad-preferences.h"
-#include "xpad-settings.h"
 #include "xpad-text-buffer.h"
 #include "xpad-text-view.h"
 #include "xpad-toolbar.h"
 #include "xpad-tray.h"
 
-struct XpadPadPrivate 
+struct XpadPadPrivate
 {
 	/* saved values */
 	gint x, y;
@@ -125,6 +123,7 @@ static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences ();
 static void xpad_pad_quit ();
+/* static void xpad_pad_show_all (XpadPad *pad); */
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group);
@@ -237,11 +236,8 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->x = 0;
 	pad->priv->y = 0;
 	pad->priv->location_valid = FALSE;
-	pad->priv->width = xpad_settings_get_width (xpad_global_settings);
-	pad->priv->height = xpad_settings_get_height (xpad_global_settings);
 	pad->priv->infoname = NULL;
 	pad->priv->contentname = NULL;
-	pad->priv->sticky = xpad_settings_get_autostart_sticky (xpad_global_settings);
 	pad->priv->textview = NULL;
 	pad->priv->scrollbar = NULL;
 	pad->priv->toolbar = NULL;
@@ -253,6 +249,10 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->unsaved_content = FALSE;
 	pad->priv->unsaved_info = FALSE;
 	pad->priv->group = NULL;
+	g_object_get (xpad_global_settings,
+			"width", &pad->priv->width,
+			"height", &pad->priv->height,
+			"autostart-sticky", &pad->priv->sticky, NULL);
 
 	XpadTextView *text_view = XPAD_TEXT_VIEW (xpad_text_view_new ());
 	xpad_text_view_set_pad (text_view, pad);
@@ -287,12 +287,13 @@ xpad_pad_init (XpadPad *pad)
 
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
 
-	gtk_window_set_decorated (GTK_WINDOW(pad), xpad_settings_get_has_decorations (xpad_global_settings));
-	gtk_window_set_default_size (GTK_WINDOW(pad), (gint) xpad_settings_get_width (xpad_global_settings), (gint) xpad_settings_get_height (xpad_global_settings));
+	gboolean decorations;
+	g_object_get (xpad_global_settings, "has-decorations", &decorations, NULL);
+	gtk_window_set_decorated (GTK_WINDOW(pad), decorations);
+	gtk_window_set_default_size (GTK_WINDOW(pad), (gint) pad->priv->width, (gint) pad->priv->height);
 	gtk_window_set_gravity (GTK_WINDOW(pad),  GDK_GRAVITY_STATIC); /* static gravity makes saving pad x,y work */
-	gtk_window_set_skip_pager_hint (GTK_WINDOW(pad),xpad_settings_get_has_decorations (xpad_global_settings));
-	gtk_window_set_skip_taskbar_hint (GTK_WINDOW(pad), !xpad_settings_get_has_decorations (xpad_global_settings));
-	gtk_window_set_type_hint (GTK_WINDOW(pad), GDK_WINDOW_TYPE_HINT_NORMAL);
+	gtk_window_set_skip_pager_hint (GTK_WINDOW(pad), decorations);
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW(pad), !decorations);
 	gtk_window_set_position (GTK_WINDOW(pad), GTK_WIN_POS_MOUSE);
 
 	g_object_set (G_OBJECT (pad),
@@ -432,11 +433,12 @@ xpad_pad_show (XpadPad *pad)
 static void
 xpad_pad_notify_has_scrollbar (XpadPad *pad)
 {
-	if (xpad_settings_get_has_scrollbar (xpad_global_settings))
-	{
+	gboolean has_scrollbar;
+	g_object_get (xpad_global_settings, "has-scrollbar", &has_scrollbar, NULL);
+
+	if (has_scrollbar)
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar), 
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	}
 	else
 	{
 		GtkAdjustment *v, *h;
@@ -456,7 +458,8 @@ xpad_pad_notify_has_scrollbar (XpadPad *pad)
 static void
 xpad_pad_notify_has_decorations (XpadPad *pad)
 {
-	gboolean decorations = xpad_settings_get_has_decorations (xpad_global_settings);
+	gboolean decorations;
+	g_object_get (xpad_global_settings, "has-decorations", &decorations, NULL);
 	
 	/**
 	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
@@ -564,11 +567,11 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 static void
 xpad_pad_notify_has_toolbar (XpadPad *pad)
 {
-	if (xpad_settings_get_has_toolbar (xpad_global_settings))
-	{
-		if (!xpad_settings_get_autohide_toolbar (xpad_global_settings))
-			xpad_pad_show_toolbar (pad);
-	}
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (has_toolbar && !autohide_toolbar)
+		xpad_pad_show_toolbar (pad);
 	else
 		xpad_pad_hide_toolbar (pad);
 }
@@ -579,9 +582,10 @@ toolbar_timeout (XpadPad *pad)
 	if (!pad || !pad->priv || !pad->priv->toolbar_timeout)
 		return FALSE;
 
-	if (pad->priv->toolbar_timeout &&
-		 xpad_settings_get_autohide_toolbar (xpad_global_settings) &&
-		 xpad_settings_get_has_toolbar (xpad_global_settings))
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (pad->priv->toolbar_timeout && autohide_toolbar && has_toolbar)
 		xpad_pad_hide_toolbar (pad);
 	
 	pad->priv->toolbar_timeout = 0;
@@ -592,7 +596,10 @@ toolbar_timeout (XpadPad *pad)
 static void
 xpad_pad_notify_autohide_toolbar (XpadPad *pad)
 {
-	if (xpad_settings_get_autohide_toolbar (xpad_global_settings))
+	gboolean autohide_toolbar;
+	g_object_get (xpad_global_settings, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (autohide_toolbar)
 	{
 		/* Likely not to be in pad when turning setting on */
 		if (!pad->priv->toolbar_timeout)
@@ -600,7 +607,10 @@ xpad_pad_notify_autohide_toolbar (XpadPad *pad)
 	}
 	else
 	{
-		if (xpad_settings_get_has_toolbar (xpad_global_settings))
+		gboolean has_toolbar;
+		g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, NULL);
+
+		if (has_toolbar)
 			xpad_pad_show_toolbar(pad);
 	}
 }
@@ -660,8 +670,10 @@ xpad_pad_notify_undo_redo_changed (XpadPad *pad)
 static gboolean
 xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *event)
 {
-	if (xpad_settings_get_has_toolbar (xpad_global_settings) &&
-		 xpad_settings_get_autohide_toolbar (xpad_global_settings) &&
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (has_toolbar && autohide_toolbar &&
 		 event->detail != GDK_NOTIFY_INFERIOR &&
 		 event->mode == GDK_CROSSING_NORMAL)
 	{
@@ -675,8 +687,10 @@ xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *event)
 static gboolean
 xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event)
 {
-	if (xpad_settings_get_has_toolbar (xpad_global_settings) &&
-		 xpad_settings_get_autohide_toolbar (xpad_global_settings) &&
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (has_toolbar && autohide_toolbar &&
 		 event->detail != GDK_NOTIFY_INFERIOR &&
 		 event->mode == GDK_CROSSING_NORMAL)
 	{
@@ -741,7 +755,8 @@ should_confirm_delete (XpadPad *pad)
 	gchar *content;
 	gboolean confirm;
 	
-	if (!xpad_settings_get_confirm_destroy (xpad_global_settings))
+	g_object_get (xpad_global_settings, "confirm-destroy", &confirm, NULL);
+	if (!confirm)
 		return FALSE;
 	
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
@@ -821,12 +836,15 @@ static void
 prop_notify_follow_font (XpadPad *pad)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
+
+	gboolean follow_font_style;
+	g_object_get (prop, "follow-font-style", &follow_font_style, NULL);
+	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_font_style);
 	
-	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), xpad_pad_properties_get_follow_font_style (prop));
-	
-	if (!xpad_pad_properties_get_follow_font_style (prop))
+	if (!follow_font_style)
 	{
-		const gchar *font = xpad_pad_properties_get_fontname (prop);
+		const gchar *font;
+		g_object_get (prop, "fontname", &font, NULL);
 		PangoFontDescription *fontdesc;
 		
 		fontdesc = font ? pango_font_description_from_string (font) : NULL;
@@ -843,13 +861,15 @@ prop_notify_colors (XpadPad *pad)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
-	xpad_text_view_set_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview), xpad_pad_properties_get_follow_color_style (prop));
+	gboolean follow_color_style;
+	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+	xpad_text_view_set_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_color_style);
 
-	if (xpad_pad_properties_get_follow_color_style (prop))
+	if (follow_color_style)
 	{
 		/* Set the colors to the global preferences colors */
-		const GdkRGBA *text_color = xpad_settings_get_text_color (xpad_global_settings);
-		const GdkRGBA *back_color = xpad_settings_get_back_color (xpad_global_settings);
+		const GdkRGBA *text_color, *back_color;
+		g_object_get (xpad_global_settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
 		gtk_widget_override_cursor (pad->priv->textview, text_color, text_color);
 		gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, text_color);
@@ -862,8 +882,8 @@ prop_notify_colors (XpadPad *pad)
 	else
 	{
 		/* Set the color to the individual pad properties colors */
-		const GdkRGBA *text_color = xpad_pad_properties_get_text_color (prop);
-		const GdkRGBA *back_color = xpad_pad_properties_get_back_color (prop);
+		const GdkRGBA *text_color, *back_color;
+		g_object_get (prop, "text-color", &text_color, "back-color", &back_color, NULL);
 
 		gtk_widget_override_cursor (pad->priv->textview, text_color, text_color);
 		gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, text_color);
@@ -882,7 +902,8 @@ prop_notify_font (XpadPad *pad)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
-	const gchar *font = xpad_pad_properties_get_fontname (prop);
+	const gchar *font;
+	g_object_get (prop, "fontname", &font, NULL);
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = font ? pango_font_description_from_string (font) : NULL;
@@ -923,8 +944,8 @@ xpad_pad_open_properties (XpadPad *pad)
 	g_object_set (G_OBJECT (pad->priv->properties),
 		"follow-font-style", xpad_text_view_get_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"follow-color-style", xpad_text_view_get_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview)),
-		"back-color", &widget_background_color,
 		"text-color", &widget_text_color,
+		"back-color", &widget_background_color,
 		"fontname", pango_font_description_to_string(font),
 		NULL);
 	pango_font_description_free (font);
@@ -1280,8 +1301,11 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	pad->priv->unsaved_info = FALSE;
 	
 	pad->priv->location_valid = TRUE;
-	if (xpad_settings_get_has_toolbar (xpad_global_settings) &&
-		 !xpad_settings_get_autohide_toolbar (xpad_global_settings))
+
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (xpad_global_settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (has_toolbar && !autohide_toolbar)
 	{
 		pad->priv->toolbar_height = 0;
 		xpad_pad_hide_toolbar (pad);
@@ -1443,7 +1467,7 @@ menu_about (XpadPad *pad)
 	const gchar *artists[] = {"Michael Terry <mike@mterry.name>", NULL};
 	const gchar *authors[] = {"Arthur Borsboom <arthurborsboom@gmail.com>", "Jeroen Vermeulen <jtv@xs4all.nl>", "Michael Terry <mike@mterry.name>", "Paul Ivanov <pivanov@berkeley.edu>", "Sachin Raut <great.sachin@gmail.com>", NULL};
 	const gchar *comments = _("Sticky notes");
-	const gchar *copyright = "© 2001-2013 Michael Terry";
+	const gchar *copyright = "© 2001-2014 Michael Terry";
 	/* Translators: please translate this as your own name and optionally email
 		like so: "Your Name <your@email.com>" */
 	const gchar *translator_credits = _("translator-credits");
@@ -1562,6 +1586,17 @@ menu_show_all (XpadPad *pad)
 	i = NULL;
 }
 
+/*
+static void
+xpad_pad_show_all (XpadPad *pad)
+{
+	if (!pad->priv->group)
+		return;
+
+	xpad_pad_group_show_all (pad->priv->group);
+}
+*/
+
 static void
 xpad_pad_close_all (XpadPad *pad)
 {
@@ -1636,49 +1671,37 @@ menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
 static void
 menu_toolbar (XpadPad *pad, GtkCheckMenuItem *check)
 {
-	/*
-	 * A dirty way to silence the compiler for these unused variables.
-	 * Feel free to implement these variables in the way they are ment to be used.
-	 */
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) pad;
 
-	xpad_settings_set_has_toolbar (xpad_global_settings, gtk_check_menu_item_get_active (check));
+	g_object_set (xpad_global_settings, "has-toolbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
 menu_scrollbar (XpadPad *pad, GtkCheckMenuItem *check)
 {
-	/*
-	 * A dirty way to silence the compiler for these unused variables.
-	 * Feel free to implement these variables in the way they are ment to be used.
-	 */
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) pad;
 
-	xpad_settings_set_has_scrollbar (xpad_global_settings, gtk_check_menu_item_get_active (check));
+	g_object_set (xpad_global_settings, "has-scrollbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
 menu_autohide (XpadPad *pad, GtkCheckMenuItem *check)
 {
-	/*
-	 * A dirty way to silence the compiler for these unused variables.
-	 * Feel free to implement these variables in the way they are ment to be used.
-	 */
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) pad;
 
-	xpad_settings_set_autohide_toolbar (xpad_global_settings, gtk_check_menu_item_get_active (check));
+	g_object_set (xpad_global_settings, "autohide-toolbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
 menu_decorated (XpadPad *pad, GtkCheckMenuItem *check)
 {
-	/*
-	 * A dirty way to silence the compiler for these unused variables.
-	 * Feel free to implement these variables in the way they are ment to be used.
-	 */
+	/* A dirty way to silence the compiler for these unused variables. */
 	(void) pad;
 
-	xpad_settings_set_has_decorations (xpad_global_settings, gtk_check_menu_item_get_active (check));
+	g_object_set (xpad_global_settings, "has-decorations", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static gint
@@ -1731,6 +1754,13 @@ static GtkWidget *
 menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 {
 	GtkWidget *uppermenu, *menu, *item;
+	gboolean has_toolbar, autohide_toolbar, has_scrollbar, decorations;
+
+	g_object_get (xpad_global_settings,
+			"has-toolbar", &has_toolbar,
+			"autohide-toolbar", &autohide_toolbar,
+			"has-decorations", &decorations,
+			"has-scrollbar", &has_scrollbar, NULL);
 	
 	uppermenu = gtk_menu_new ();
 	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
@@ -1769,11 +1799,11 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	MENU_ADD_CHECK (_("_Toolbar"), xpad_settings_get_has_toolbar (xpad_global_settings), menu_toolbar);
-	MENU_ADD_CHECK (_("_Autohide Toolbar"), xpad_settings_get_autohide_toolbar (xpad_global_settings), menu_autohide);
-	gtk_widget_set_sensitive (item, xpad_settings_get_has_toolbar (xpad_global_settings));
-	MENU_ADD_CHECK (_("_Scrollbar"), xpad_settings_get_has_scrollbar (xpad_global_settings), menu_scrollbar);
-	MENU_ADD_CHECK (_("_Window Decorations"), xpad_settings_get_has_decorations (xpad_global_settings), menu_decorated);
+	MENU_ADD_CHECK (_("_Toolbar"), has_toolbar, menu_toolbar);
+	MENU_ADD_CHECK (_("_Autohide Toolbar"), autohide_toolbar, menu_autohide);
+	gtk_widget_set_sensitive (item, has_toolbar);
+	MENU_ADD_CHECK (_("_Scrollbar"), has_scrollbar, menu_scrollbar);
+	MENU_ADD_CHECK (_("_Window Decorations"), decorations, menu_decorated);
 	
 	/* Notes submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
@@ -1843,16 +1873,12 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 		MENU_ADD_SEP ();
 		g_object_set_data (G_OBJECT (menu), "notes-sep", item);
 		
-		/**
-		 * Order pads according to title.
-		 */
+		/* Order pads according to title */
 		pads = xpad_pad_group_get_pads (current_pad->priv->group);
 		
 		pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 		
-		/**
-		 * Populate list of windows.
-		 */
+		/* Populate list of windows */
 		for (l = pads, n = 1; l; l = l->next, n++)
 		{
 			gchar *title;
@@ -1939,10 +1965,7 @@ menu_popdown (GtkWidget *menu, XpadPad *pad)
 
 	cairo_rectangle_int_t rect;
 
-	/**
-	 * We must check if we disabled off of pad and start the timeout if so.
-	 */
-
+	/* We must check if we disabled off of pad and start the timeout if so. */
 	rect.x = 10;
 	rect.y = 10;
 	rect.width = 1;

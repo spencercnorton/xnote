@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef _FIO_H_
 #define _FIO_H_
-
-#include <gtk/gtk.h>
 
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);

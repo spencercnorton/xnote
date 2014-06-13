@@ -1,6 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_SETTINGS_H__
 #define __XPAD_SETTINGS_H__
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
@@ -54,64 +55,10 @@ GType xpad_settings_get_type (void);
 
 XpadSettings *xpad_settings_new (void);
 
-void xpad_settings_set_width (XpadSettings *settings, guint width);
-guint xpad_settings_get_width (XpadSettings *settings);
-
-void xpad_settings_set_height (XpadSettings *settings, guint height);
-guint xpad_settings_get_height (XpadSettings *settings);
-
-void xpad_settings_set_has_decorations (XpadSettings *settings, gboolean decorations);
-gboolean xpad_settings_get_has_decorations (XpadSettings *settings);
-
-void xpad_settings_set_confirm_destroy (XpadSettings *settings, gboolean confirm);
-gboolean xpad_settings_get_confirm_destroy (XpadSettings *settings);
-
-void xpad_settings_set_edit_lock (XpadSettings *settings, gboolean lock);
-gboolean xpad_settings_get_edit_lock (XpadSettings *settings);
-
-void xpad_settings_set_has_toolbar (XpadSettings *settings, gboolean toolbar);
-gboolean xpad_settings_get_has_toolbar (XpadSettings *settings);
-
-void xpad_settings_set_autohide_toolbar (XpadSettings *settings, gboolean hide);
-gboolean xpad_settings_get_autohide_toolbar (XpadSettings *settings);
-
-void xpad_settings_set_has_scrollbar (XpadSettings *settings, gboolean scrollbar);
-gboolean xpad_settings_get_has_scrollbar (XpadSettings *settings);
-
 void xpad_settings_add_toolbar_button (XpadSettings *settings, const gchar *button);
 gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings);
 gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings);
 const GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings);
-
-void xpad_settings_set_back_color (XpadSettings *settings, const GdkRGBA *back);
-const GdkRGBA *xpad_settings_get_back_color (XpadSettings *settings);
-
-void xpad_settings_set_text_color (XpadSettings *settings, const GdkRGBA *text);
-const GdkRGBA *xpad_settings_get_text_color (XpadSettings *settings);
-
-void xpad_settings_set_fontname (XpadSettings *settings, const gchar *fontname);
-const gchar *xpad_settings_get_fontname (XpadSettings *settings);
-
-void xpad_settings_set_tray_click_handler (XpadSettings *settings, guint conf);
-guint xpad_settings_get_tray_click_handler (XpadSettings *settings);
-
-void xpad_settings_set_autostart_xpad (XpadSettings *settings, gboolean conf);
-gboolean xpad_settings_get_autostart_xpad (XpadSettings *settings);
-
-void xpad_settings_set_autostart_wait_systray (XpadSettings *settings, gboolean conf);
-gboolean xpad_settings_get_autostart_wait_systray (XpadSettings *settings);
-
-void xpad_settings_set_autostart_delay (XpadSettings *settings, guint conf);
-guint xpad_settings_get_autostart_delay (XpadSettings *settings);
-
-void xpad_settings_set_autostart_new_pad (XpadSettings *settings, gboolean conf);
-gboolean xpad_settings_get_autostart_new_pad (XpadSettings *settings);
-
-void xpad_settings_set_autostart_sticky (XpadSettings *settings, gboolean conf);
-gboolean xpad_settings_get_autostart_sticky (XpadSettings *settings);
-
-void xpad_settings_set_autostart_display_pads (XpadSettings *settings, guint conf);
-guint xpad_settings_get_autostart_display_pads (XpadSettings *settings);
 
 G_END_DECLS
 

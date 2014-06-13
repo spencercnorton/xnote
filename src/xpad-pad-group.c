@@ -1,25 +1,26 @@
-/**
- * Copyright (c) 2004-2007 Michael Terry
- * Copyright (c) 2009 Paul Ivanov
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/*
 
-#include "../config.h"
+Copyright (c) 2001-2007 Michael Terry
+Copyright (c) 2009 Paul Ivanov
+Copyright (c) 2013-2014 Arthur Borsboom
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+
 #include "xpad-pad-group.h"
-#include "xpad-settings.h"
 #include "xpad-pad.h"
 
 struct XpadPadGroupPrivate
@@ -29,8 +30,9 @@ struct XpadPadGroupPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
-static void     xpad_pad_group_dispose           (GObject *object);
-static void     xpad_pad_group_finalize          (GObject *object);
+static void xpad_pad_group_dispose (GObject *object);
+static void xpad_pad_group_finalize (GObject *object);
+static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
 
 enum {
 	PROP_0
@@ -180,9 +182,7 @@ xpad_pad_group_close_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_close, NULL);
 }
 
-void
-xpad_pad_group_save_unsaved_all (XpadPadGroup *group)
-{
+static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group) {
 	if (group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_save_unsaved, NULL);
 }

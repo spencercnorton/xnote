@@ -2,7 +2,7 @@
 
 Copyright (c) 2002 Jamis Buck
 Copyright (c) 2003-2007 Michael Terry
-Copyright (c) 2013 Arthur Borsboom
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,12 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
-#include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <glib/gi18n.h>
 #include "fio.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
-#include "xpad-pad-group.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
 #include "xpad-tray.h"
@@ -38,12 +37,17 @@ enum
 	LIST_OF_PADS,
 	NEW_PAD
 };
+
+static void xpad_tray_open (XpadSettings *settings);
+static void xpad_tray_close ();
+/* Enable/disable the tray icon */
+static void xpad_tray_toggle (XpadSettings *settings);
 /* tray icon left click handler */
-static void xpad_tray_activate_cb (GtkStatusIcon *icon);
+static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings);
 /* tray icon right click handler */
 static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
 /* "toggle show all" menu item handler */
-static void xpad_tray_show_hide_all (void);
+static void xpad_tray_show_hide_all ();
 /* "show pads" menu item handler */
 static void xpad_tray_show_windows_list (GtkStatusIcon *icon);
 /* helper function to append pad window title as item to menu */
@@ -52,35 +56,42 @@ static void xpad_tray_append_pad_window_titles_to_menu (GtkWidget *menu);
 static GtkStatusIcon  *docklet = NULL;
 static GtkWidget *menu = NULL;
 
-void
-xpad_tray_open ()
-{
-	GtkIconTheme *theme;
+void xpad_tray_init (XpadSettings *settings) {
+	xpad_tray_toggle (settings);
+	g_signal_connect (settings, "notify::tray-enabled", G_CALLBACK (xpad_tray_toggle), NULL);
+}
 
-	theme = gtk_icon_theme_get_default ();
+static void xpad_tray_toggle (XpadSettings *settings) {
+	gboolean tray_enabled;
+	g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
 
-	if (!gtk_icon_theme_has_icon (theme, PACKAGE)) {
-		return;
-	}
-
-	if (gtk_icon_theme_has_icon (theme, "xpad-panel"))
-	{
-		docklet = gtk_status_icon_new_from_icon_name ("xpad-panel");
+	if (tray_enabled) {
+		if (!docklet)
+			xpad_tray_open (settings);
 	}
 	else
-	{
-	    docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
-	}
+		xpad_tray_close ();
+}
 
-	if (docklet)
-	{
+static void xpad_tray_open (XpadSettings *settings)
+{
+	GtkIconTheme *theme = gtk_icon_theme_get_default ();
+
+	if (!gtk_icon_theme_has_icon (theme, PACKAGE))
+		return;
+
+	if (gtk_icon_theme_has_icon (theme, "xpad-panel"))
+		docklet = gtk_status_icon_new_from_icon_name ("xpad-panel");
+	else
+	    docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
+
+	if (docklet) {
 		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
 		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
 	}
 }
 
-void
-xpad_tray_close (void)
+static void xpad_tray_close (XpadSettings *settings)
 {
 	if (docklet) {
 		g_object_unref (docklet);
@@ -91,8 +102,13 @@ xpad_tray_close (void)
 		gtk_widget_destroy(menu);
 }
 
+void xpad_tray_dispose (XpadSettings *settings) {
+	g_signal_handlers_disconnect_by_func(settings, xpad_tray_toggle, NULL);
+	xpad_tray_close (settings);
+}
+
 gboolean
-xpad_tray_is_open (void)
+xpad_tray_is_open ()
 {
 	if (docklet)
 		return gtk_status_icon_is_embedded (docklet);
@@ -123,7 +139,7 @@ menu_show_all (XpadPadGroup *group)
 }
 
 static void 
-xpad_tray_show_hide_all (void)
+xpad_tray_show_hide_all ()
 {
 	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
 	/* find if any pad is visible */
@@ -208,10 +224,10 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gtk_status_icon_position_menu, icon, button, time);
 }
 
-static void
-xpad_tray_activate_cb (GtkStatusIcon *icon)
-{
-	switch (xpad_settings_get_tray_click_handler(xpad_global_settings))
+static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings) {
+	guint tray_click_configuration;
+	g_object_get (settings, "tray-click-configuration", &tray_click_configuration, NULL);
+	switch (tray_click_configuration)
 	{
 		case TOGGLE_SHOW_ALL:
 			xpad_tray_show_hide_all();

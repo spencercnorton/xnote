@@ -2,6 +2,7 @@
 
 Copyright (c) 2002 Jamis Buck
 Copyright (c) 2003-2007 Michael Terry
+Copyright (c) 2013-2014 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,10 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_TRAY_H__
 #define __XPAD_TRAY_H__
 
-#include <gtk/gtk.h>
-
-void     xpad_tray_open    (void);
-void     xpad_tray_close   (void);
-gboolean xpad_tray_is_open (void);
+void xpad_tray_init (XpadSettings *settings);
+void xpad_tray_dispose (XpadSettings *settings);
+gboolean xpad_tray_is_open ();
 
 #endif /* __TRAY_H__ */
