@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <string.h>
 #include "fio.h"
@@ -464,7 +465,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			ssize_t len = readlink(g_strdup_printf ("/proc/%d/exe", getpid()), buf, sizeof(buf)-1);
 
 			if (len == -1)
-				xpad_app_error (NULL, "Error enabling Xpad autostart", g_strdup_printf ("Could not find the directory where Xpad is installed\n%s", error->message));
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not find the directory where Xpad is installed\n%s"), error->message));
 			else {
 				char basedir[len-8];
 				guint i;
@@ -480,7 +481,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 				success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
 
 				if (!success)
-					xpad_app_error (NULL, "Error enabling Xpad autostart", g_strdup_printf ("Could not copy %s to %s\n%s", source_filename, destination_directory, error->message));
+					xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message));
 			}
 		}
 		else {
@@ -495,7 +496,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			success = g_file_delete (file, NULL, &error);
 
 			if (!success)
-				xpad_app_error (NULL, "Error disabling Xpad autostart", g_strdup_printf ("Could not delete %s\n%s", filename, error->message));
+				xpad_app_error (NULL, _("Error disabling Xpad autostart"), g_strdup_printf (_("Could not delete %s\n%s"), filename, error->message));
 		}
 		break;
 
