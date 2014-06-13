@@ -448,7 +448,10 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		break;
 
 	case PROP_FONTNAME:
-		settings->priv->fontname = g_value_get_string (value);
+		if (value)
+			settings->priv->fontname = g_value_dup_string (value);
+		else
+			settings->priv->fontname = NULL;
 		break;
 
 	case PROP_AUTOSTART_XPAD:
@@ -588,7 +591,10 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		break;
 	
 	case PROP_FONTNAME:
-		g_value_set_string (value, settings->priv->fontname);
+		if (settings->priv->fontname)
+			g_value_set_string (value, settings->priv->fontname);
+		else
+			value = NULL;
 		break;
 
 	case PROP_AUTOSTART_XPAD:

@@ -944,8 +944,8 @@ xpad_pad_open_properties (XpadPad *pad)
 	g_object_set (G_OBJECT (pad->priv->properties),
 		"follow-font-style", xpad_text_view_get_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview)),
 		"follow-color-style", xpad_text_view_get_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview)),
-		"back-color", &widget_background_color,
 		"text-color", &widget_text_color,
+		"back-color", &widget_background_color,
 		"fontname", pango_font_description_to_string(font),
 		NULL);
 	pango_font_description_free (font);
