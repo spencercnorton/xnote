@@ -40,8 +40,6 @@ typedef struct XpadGripToolItem XpadGripToolItem;
 struct XpadGripToolItem
 {
 	GtkToolItem parent;
-	
-	/* private */
 	XpadGripToolItemPrivate *priv;
 };
 

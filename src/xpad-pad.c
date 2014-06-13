@@ -835,13 +835,17 @@ pad_properties_destroyed (XpadPad *pad)
 static void
 prop_notify_follow_font (XpadPad *pad)
 {
+	g_print("prop_notify_follow_font\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
+
+	gboolean follow_font_style;
+	g_object_get (prop, "follow-font-style", &follow_font_style, NULL);
+	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_font_style);
 	
-	xpad_text_view_set_follow_font_style (XPAD_TEXT_VIEW (pad->priv->textview), xpad_pad_properties_get_follow_font_style (prop));
-	
-	if (!xpad_pad_properties_get_follow_font_style (prop))
+	if (!follow_font_style)
 	{
-		const gchar *font = xpad_pad_properties_get_fontname (prop);
+		const gchar *font;
+		g_object_get (prop, "fontname", &font, NULL);
 		PangoFontDescription *fontdesc;
 		
 		fontdesc = font ? pango_font_description_from_string (font) : NULL;
@@ -856,11 +860,14 @@ prop_notify_follow_font (XpadPad *pad)
 static void
 prop_notify_colors (XpadPad *pad)
 {
+	g_print("prop_notify_colors\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
-	xpad_text_view_set_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview), xpad_pad_properties_get_follow_color_style (prop));
+	gboolean follow_color_style;
+	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+	xpad_text_view_set_follow_color_style (XPAD_TEXT_VIEW (pad->priv->textview), follow_color_style);
 
-	if (xpad_pad_properties_get_follow_color_style (prop))
+	if (follow_color_style)
 	{
 		/* Set the colors to the global preferences colors */
 		const GdkRGBA *text_color, *back_color;
@@ -877,8 +884,8 @@ prop_notify_colors (XpadPad *pad)
 	else
 	{
 		/* Set the color to the individual pad properties colors */
-		const GdkRGBA *text_color = xpad_pad_properties_get_text_color (prop);
-		const GdkRGBA *back_color = xpad_pad_properties_get_back_color (prop);
+		const GdkRGBA *text_color, *back_color;
+		g_object_get (prop, "text-color", &text_color, "back-color", &back_color, NULL);
 
 		gtk_widget_override_cursor (pad->priv->textview, text_color, text_color);
 		gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, text_color);
@@ -895,9 +902,12 @@ prop_notify_colors (XpadPad *pad)
 static void
 prop_notify_font (XpadPad *pad)
 {
+	g_print("prop_notify_font\n");
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	
-	const gchar *font = xpad_pad_properties_get_fontname (prop);
+	const gchar *font;
+	g_object_get (prop, "fontname", &font, NULL);
+	g_print ("font: %s", font);
 	PangoFontDescription *fontdesc;
 	
 	fontdesc = font ? pango_font_description_from_string (font) : NULL;

@@ -259,7 +259,7 @@ static void
 change_color_check (GtkToggleButton *button, XpadPadProperties *prop)
 {
 	gtk_widget_set_sensitive (prop->priv->colorbox, gtk_toggle_button_get_active (button));
-	
+
 	g_object_notify (G_OBJECT (prop), "follow-color-style");
 }
 
@@ -267,7 +267,7 @@ static void
 change_font_check (GtkToggleButton *button, XpadPadProperties *prop)
 {
 	gtk_widget_set_sensitive (prop->priv->fontbutton, gtk_toggle_button_get_active (button));
-	
+
 	g_object_notify (G_OBJECT (prop), "follow-font-style");
 }
 
@@ -298,99 +298,31 @@ change_font_face (GtkFontButton *button, XpadPadProperties *prop)
 	g_object_notify (G_OBJECT (prop), "fontname");
 }
 
-void
-xpad_pad_properties_set_follow_font_style (XpadPadProperties *prop, gboolean follow)
-{
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prop->priv->fontcheck), !follow);
-	g_object_notify (G_OBJECT (prop), "follow_font_style");
-}
-
-gboolean
-xpad_pad_properties_get_follow_font_style (XpadPadProperties *prop)
-{
-	return !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prop->priv->fontcheck));
-}
-
-void
-xpad_pad_properties_set_follow_color_style (XpadPadProperties *prop, gboolean follow)
-{
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prop->priv->colorcheck), !follow);
-	g_object_notify (G_OBJECT (prop), "follow_color_style");
-}
-
-gboolean
-xpad_pad_properties_get_follow_color_style (XpadPadProperties *prop)
-{
-	return !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prop->priv->colorcheck));
-}
-
-void
-xpad_pad_properties_set_back_color (XpadPadProperties *prop, const GdkRGBA *back)
-{
-	gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (prop->priv->backbutton), back);
-	g_object_notify (G_OBJECT (prop), "back_color");
-}
-
-const GdkRGBA *
-xpad_pad_properties_get_back_color (XpadPadProperties *prop)
-{
-	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->backbutton), &prop->priv->backtmp);
-	return &prop->priv->backtmp;
-}
-
-void
-xpad_pad_properties_set_text_color (XpadPadProperties *prop, const GdkRGBA *text)
-{
-	gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (prop->priv->textbutton), text);
-	g_object_notify (G_OBJECT (prop), "text_color");
-}
-
-const GdkRGBA *
-xpad_pad_properties_get_text_color (XpadPadProperties *prop)
-{
-	gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->textbutton), &prop->priv->texttmp);
-	return &prop->priv->texttmp;
-}
-
-void
-xpad_pad_properties_set_fontname (XpadPadProperties *prop, const gchar *fontname)
-{
-	gtk_font_button_set_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton), fontname);
-	g_object_notify (G_OBJECT (prop), "fontname");
-}
-
-const gchar *xpad_pad_properties_get_fontname (XpadPadProperties *prop)
-{
-	return gtk_font_button_get_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton));
-}
-
 static void
 xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
-	XpadPadProperties *prop;
-	
-	prop = XPAD_PAD_PROPERTIES (object);
+	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (object);
 	
 	switch (prop_id)
 	{
 	case PROP_FOLLOW_FONT_STYLE:
-		xpad_pad_properties_set_follow_font_style (prop, g_value_get_boolean (value));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prop->priv->fontcheck), !g_value_get_boolean (value));
 		break;
 	
 	case PROP_FOLLOW_COLOR_STYLE:
-		xpad_pad_properties_set_follow_color_style (prop, g_value_get_boolean (value));
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (prop->priv->colorcheck), !g_value_get_boolean (value));
 		break;
 	
 	case PROP_BACK_COLOR:
-		xpad_pad_properties_set_back_color (prop, g_value_get_boxed (value));
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (prop->priv->backbutton), g_value_get_boxed (value));
 		break;
 	
 	case PROP_TEXT_COLOR:
-		xpad_pad_properties_set_text_color (prop, g_value_get_boxed (value));
+		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (prop->priv->textbutton), g_value_get_boxed (value));
 		break;
 	
 	case PROP_FONTNAME:
-		xpad_pad_properties_set_fontname (prop, g_value_get_string (value));
+		gtk_font_button_set_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton), g_value_get_string (value));
 		break;
 	
 	default:
@@ -402,30 +334,30 @@ xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *
 static void
 xpad_pad_properties_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
 {
-	XpadPadProperties *prop;
-	
-	prop = XPAD_PAD_PROPERTIES (object);
+	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (object);
 	
 	switch (prop_id)
 	{
 	case PROP_FOLLOW_FONT_STYLE:
-		g_value_set_boolean (value, xpad_pad_properties_get_follow_font_style (prop));
+		g_value_set_boolean (value, !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prop->priv->fontcheck)));
 		break;
 	
 	case PROP_FOLLOW_COLOR_STYLE:
-		g_value_set_boolean (value, xpad_pad_properties_get_follow_color_style (prop));
+		g_value_set_boolean (value, !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (prop->priv->colorcheck)));
 		break;
 	
 	case PROP_BACK_COLOR:
-		g_value_set_static_boxed (value, xpad_pad_properties_get_back_color (prop));
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->backbutton), &prop->priv->backtmp);
+		g_value_set_static_boxed (value, &prop->priv->backtmp);
 		break;
 	
 	case PROP_TEXT_COLOR:
-		g_value_set_static_boxed (value, xpad_pad_properties_get_text_color (prop));
+		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (prop->priv->textbutton), &prop->priv->texttmp);
+		g_value_set_static_boxed (value, &prop->priv->texttmp);
 		break;
 	
 	case PROP_FONTNAME:
-		g_value_set_string (value, xpad_pad_properties_get_fontname (prop));
+		g_value_set_string (value, gtk_font_button_get_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton)));
 		break;
 	
 	default:
