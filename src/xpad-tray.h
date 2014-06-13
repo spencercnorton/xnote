@@ -23,8 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_TRAY_H__
 #define __XPAD_TRAY_H__
 
-void xpad_tray_init ();
-void xpad_tray_dispose ();
+void xpad_tray_init (XpadSettings *settings);
+void xpad_tray_dispose (XpadSettings *settings);
 gboolean xpad_tray_is_open ();
 
 #endif /* __TRAY_H__ */

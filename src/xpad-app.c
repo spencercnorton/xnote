@@ -160,7 +160,7 @@ xpad_app_init (int argc, char **argv)
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);
 	
-	xpad_tray_init ();
+	xpad_tray_init (xpad_global_settings);
 	xpad_session_manager_init ();
 
 	/* Initialize Xpad-periodic module */
@@ -245,21 +245,21 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
-	/* Free the memory used by the tray icon and its menu. */
-	xpad_tray_dispose ();
-
 	/* Free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (xpad_app_get_pad_group());
 
 	/* Free the memory used by group. */
-	/* g_object_unref (xpad_app_get_pad_group()); */
+	g_object_unref (xpad_app_get_pad_group());
+
+	/* Free the memory used by the tray icon and its menu. */
+	xpad_tray_dispose (xpad_global_settings);
 
 	/* Free the memory used by the settings menu. */
-	/* g_object_unref (xpad_global_settings); */
+	g_object_unref (xpad_global_settings);
 	xpad_global_settings = NULL; /* This is needed due to the asynchronous finalizing process. */
 
 	/* Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind. */
-	/* g_object_unref (gtk_icon_theme_get_default ()); */
+	g_object_unref (gtk_icon_theme_get_default ());
 
 	/* Give GTK the signal to clean the rest and quit the application. */
 	gtk_main_quit ();

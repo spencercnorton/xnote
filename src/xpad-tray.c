@@ -38,12 +38,12 @@ enum
 	NEW_PAD
 };
 
-static void xpad_tray_open ();
+static void xpad_tray_open (XpadSettings *settings);
 static void xpad_tray_close ();
 /* Enable/disable the tray icon */
 static void xpad_tray_toggle (XpadSettings *settings);
 /* tray icon left click handler */
-static void xpad_tray_activate_cb (GtkStatusIcon *icon);
+static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings);
 /* tray icon right click handler */
 static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
 /* "toggle show all" menu item handler */
@@ -56,9 +56,9 @@ static void xpad_tray_append_pad_window_titles_to_menu (GtkWidget *menu);
 static GtkStatusIcon  *docklet = NULL;
 static GtkWidget *menu = NULL;
 
-void xpad_tray_init () {
-	xpad_tray_toggle (xpad_global_settings);
-	g_signal_connect (xpad_global_settings, "notify::tray-enabled", G_CALLBACK (xpad_tray_toggle), NULL);
+void xpad_tray_init (XpadSettings *settings) {
+	xpad_tray_toggle (settings);
+	g_signal_connect (settings, "notify::tray-enabled", G_CALLBACK (xpad_tray_toggle), NULL);
 }
 
 static void xpad_tray_toggle (XpadSettings *settings) {
@@ -67,13 +67,13 @@ static void xpad_tray_toggle (XpadSettings *settings) {
 
 	if (tray_enabled) {
 		if (!docklet)
-			xpad_tray_open ();
+			xpad_tray_open (settings);
 	}
 	else
 		xpad_tray_close ();
 }
 
-static void xpad_tray_open ()
+static void xpad_tray_open (XpadSettings *settings)
 {
 	GtkIconTheme *theme = gtk_icon_theme_get_default ();
 
@@ -91,7 +91,7 @@ static void xpad_tray_open ()
 	}
 }
 
-static void xpad_tray_close ()
+static void xpad_tray_close (XpadSettings *settings)
 {
 	if (docklet) {
 		g_object_unref (docklet);
@@ -102,9 +102,9 @@ static void xpad_tray_close ()
 		gtk_widget_destroy(menu);
 }
 
-void xpad_tray_dispose () {
-	g_signal_handlers_disconnect_by_func(xpad_global_settings, xpad_tray_toggle, NULL);
-	xpad_tray_close ();
+void xpad_tray_dispose (XpadSettings *settings) {
+	g_signal_handlers_disconnect_by_func(settings, xpad_tray_toggle, NULL);
+	xpad_tray_close (settings);
 }
 
 gboolean
@@ -224,11 +224,9 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gtk_status_icon_position_menu, icon, button, time);
 }
 
-static void
-xpad_tray_activate_cb (GtkStatusIcon *icon)
-{
+static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings) {
 	guint tray_click_configuration;
-	g_object_get (xpad_global_settings, "tray-click-configuration", &tray_click_configuration, NULL);
+	g_object_get (settings, "tray-click-configuration", &tray_click_configuration, NULL);
 	switch (tray_click_configuration)
 	{
 		case TOGGLE_SHOW_ALL:
