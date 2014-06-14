@@ -385,7 +385,7 @@ xpad_preferences_init (XpadPreferences *pref)
 	pref->priv->tray_enabled = gtk_check_button_new_with_mnemonic (_("_Enable tray icon"));
 	gtk_box_pack_start (GTK_BOX (tray_vbox), pref->priv->tray_enabled, FALSE, FALSE, 0);
 
-	label = gtk_label_new_with_mnemonic(_("Tray click behaviour"));
+	label = gtk_label_new_with_mnemonic(_("Tray left mouse click behaviour"));
 	pref->priv->tray_click_configuration = gtk_combo_box_text_new();
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("Do Nothing") );
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("Toggle Show All") );
