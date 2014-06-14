@@ -476,7 +476,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 				basedir[len-9] = '\0';
 
 				source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);
-				destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));
+				destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir());
 
 				source = g_file_new_for_path (source_filename);
 				destination = g_file_new_for_path (destination_directory);

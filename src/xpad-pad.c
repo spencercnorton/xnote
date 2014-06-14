@@ -402,7 +402,7 @@ xpad_pad_finalize (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 
-	if (xpad_global_settings != NULL)
+	if (xpad_global_settings)
 		g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 
 	g_free (pad->priv->infoname);

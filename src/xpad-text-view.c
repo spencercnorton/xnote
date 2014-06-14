@@ -140,7 +140,8 @@ xpad_text_view_finalize (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
-	g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
+	if (xpad_global_settings)
+		g_signal_handlers_disconnect_matched (xpad_global_settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
 
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
