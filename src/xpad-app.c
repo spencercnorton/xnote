@@ -246,10 +246,11 @@ void
 xpad_app_quit (void)
 {
 	/* Free the memory used by the pads belonging to this group */
-	xpad_pad_group_destroy_pads (xpad_app_get_pad_group());
+	xpad_pad_group_destroy_pads (pad_group);
 
 	/* Free the memory used by group. */
-	g_object_unref (xpad_app_get_pad_group());
+	if (pad_group && G_IS_OBJECT (pad_group))
+		g_object_unref (pad_group);
 
 	/* Free the memory used by the tray icon and its menu. */
 	xpad_tray_dispose (xpad_global_settings);
