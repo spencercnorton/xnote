@@ -39,7 +39,7 @@ enum
 };
 
 static void xpad_tray_open (XpadSettings *settings);
-static void xpad_tray_close ();
+static void xpad_tray_close (XpadSettings *settings);
 /* Enable/disable the tray icon */
 static void xpad_tray_toggle (XpadSettings *settings);
 /* tray icon left click handler */
