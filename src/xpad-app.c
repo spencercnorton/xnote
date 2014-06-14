@@ -258,7 +258,7 @@ xpad_app_quit (void)
 	g_object_unref (xpad_global_settings);
 	xpad_global_settings = NULL; /* This is needed due to the asynchronous finalizing process. */
 
-	/* Free the theme reference. Unfortunately GTK3 leaves about 1000 objects behind. */
+	/* Free the theme reference. Unfortunately GTK3 leaves about 600 objects behind. */
 	g_object_unref (gtk_icon_theme_get_default ());
 
 	/* Give GTK the signal to clean the rest and quit the application. */
