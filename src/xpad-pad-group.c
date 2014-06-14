@@ -30,8 +30,6 @@ struct XpadPadGroupPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
-static void xpad_pad_group_dispose (GObject *object);
-static void xpad_pad_group_finalize (GObject *object);
 static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
 
 enum {
@@ -66,9 +64,6 @@ xpad_pad_group_class_init (XpadPadGroupClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
-	object_class->dispose = xpad_pad_group_dispose;
-	object_class->finalize = xpad_pad_group_finalize;
-	
 	signals[PAD_ADDED] =
 		g_signal_new ("pad_added",
 		              G_OBJECT_CLASS_TYPE (object_class),
@@ -90,28 +85,6 @@ xpad_pad_group_class_init (XpadPadGroupClass *klass)
 		              G_TYPE_NONE,
 		              1,
 		              GTK_TYPE_WIDGET);
-}
-
-static void
-xpad_pad_group_dispose (GObject *object)
-{
-	XpadPadGroup *group = XPAD_PAD_GROUP (object);
-
-	/* Save all pads of this group */
-	xpad_pad_group_save_unsaved_all(group);
-
-	G_OBJECT_CLASS (xpad_pad_group_parent_class)->dispose (object);
-}
-
-static void
-xpad_pad_group_finalize (GObject *object)
-{
-	XpadPadGroup *group = XPAD_PAD_GROUP (object);
-
-	g_slist_free (group->priv->pads);
-	group->priv->pads = NULL;
-
-	G_OBJECT_CLASS (xpad_pad_group_parent_class)->finalize (object);
 }
 
 GSList *
@@ -147,8 +120,9 @@ xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 void
 xpad_pad_group_destroy_pads (XpadPadGroup *group)
 {
+	xpad_pad_group_save_unsaved_all(group);
+
 	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
-	g_slist_free (group->priv->pads);
 	group->priv->pads = NULL;
 }
 

@@ -1586,17 +1586,6 @@ menu_show_all (XpadPad *pad)
 	i = NULL;
 }
 
-/*
-static void
-xpad_pad_show_all (XpadPad *pad)
-{
-	if (!pad->priv->group)
-		return;
-
-	xpad_pad_group_show_all (pad->priv->group);
-}
-*/
-
 static void
 xpad_pad_close_all (XpadPad *pad)
 {
@@ -2044,10 +2033,8 @@ void xpad_pad_save_info_delayed (XpadPad *pad)
 }
 void xpad_pad_save_unsaved (XpadPad *pad)
 {
-   if(pad->priv->unsaved_content == TRUE) {
+   if (pad->priv->unsaved_content)
       xpad_pad_save_content(pad);
-   }
-   if(pad->priv->unsaved_info == TRUE) {
+   if (pad->priv->unsaved_info)
 	   xpad_pad_save_info(pad);
-   }
 }
