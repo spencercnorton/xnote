@@ -86,7 +86,7 @@ static void xpad_tray_open (XpadSettings *settings)
 	    docklet = gtk_status_icon_new_from_icon_name (PACKAGE);
 
 	if (docklet) {
-		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), NULL);
+		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), settings);
 		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
 	}
 }
