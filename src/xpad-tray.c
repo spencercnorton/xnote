@@ -70,7 +70,7 @@ static void xpad_tray_toggle (XpadSettings *settings) {
 			xpad_tray_open (settings);
 	}
 	else
-		xpad_tray_close ();
+		xpad_tray_close (settings);
 }
 
 static void xpad_tray_open (XpadSettings *settings)

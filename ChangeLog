@@ -2,11 +2,11 @@ Version 4.3
 * New: Systray - ability to hide the tray icon (#890334) 
 * New: Toolbar - ability to add multiple separators (#351775)
 * New: Toolbar - ability to add paste button on toolbar (#351775)
-* New: Preferences - Ability to set the automatic start of Xpad in the Preferences menu (#405314)
-* New: Preferences - Ability to set the wait for systray option in the Preferences menu (#405314)
-* New: Preferences - Ability to delay the start of Xpad in the Preferences menu (#405314)
-* New: Preferences - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
-* New: Preferences - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu (#405314)
+* New: Autostart - Ability to set the automatic start of Xpad in the Preferences menu (#405314)
+* New: Autostart - Ability to set the wait for systray option in the Preferences menu (#405314)
+* New: Autostart - Ability to delay the start of Xpad in the Preferences menu (#405314)
+* New: Autostart - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
+* New: Autostart - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu (#405314)
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
