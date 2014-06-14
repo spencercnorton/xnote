@@ -1775,7 +1775,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	MENU_ADD (_("_Undo"), "edit-undo", GDK_KEY_Z, GDK_CONTROL_MASK, menu_undo);
 	g_object_set_data (G_OBJECT (uppermenu), "undo", item);
-	MENU_ADD (_("_Redo"), "edit-redo", GDK_KEY_R, GDK_CONTROL_MASK, menu_redo);
+	MENU_ADD (_("_Redo"), "edit-redo", GDK_KEY_Y, GDK_CONTROL_MASK, menu_redo);
 	g_object_set_data (G_OBJECT (uppermenu), "redo", item);
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, menu_paste);
