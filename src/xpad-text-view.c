@@ -213,14 +213,15 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	GdkCursor *cursor;
 	gboolean editable;
 	GdkWindow *view_window;
+	GtkTextView *view_tv = GTK_TEXT_VIEW (view);
 	
-	editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view));
-	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (view), editable);
+	editable = gtk_text_view_get_editable (view_tv);
+	gtk_text_view_set_cursor_visible (view_tv, editable);
 	
 	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
 	
 	/* Only set for pads which are currently visible */ 
-	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view), GTK_TEXT_WINDOW_TEXT);
+	view_window = gtk_text_view_get_window (view_tv, GTK_TEXT_WINDOW_TEXT);
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
 	
@@ -245,17 +246,18 @@ xpad_text_view_notify_fontname (XpadTextView *view)
 static void
 xpad_text_view_notify_colors (XpadTextView *view)
 {
+	GtkWidget *view_widget = GTK_WIDGET (view);
 	/* Set the colors of this individual pad to the global setting preference. */
 	const GdkRGBA *text_color, *back_color;
 	g_object_get (xpad_global_settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
-	gtk_widget_override_cursor (GTK_WIDGET (view), text_color, text_color);
-	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, text_color);
-	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_NORMAL, back_color);
+	gtk_widget_override_cursor (view_widget, text_color, text_color);
+	gtk_widget_override_color (view_widget, GTK_STATE_FLAG_NORMAL, text_color);
+	gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_NORMAL, back_color);
 
 	/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
-	gtk_widget_override_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, back_color);
-	gtk_widget_override_background_color (GTK_WIDGET (view), GTK_STATE_FLAG_SELECTED, text_color);
+	gtk_widget_override_color (view_widget, GTK_STATE_FLAG_SELECTED, back_color);
+	gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_SELECTED, text_color);
 }
 
 void

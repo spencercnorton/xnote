@@ -501,11 +501,8 @@ xpad_undo_redo_available (XpadUndo *undo)
 static void
 xpad_undo_get_start_end_iter (XpadUndo *undo, UserAction *action, GtkTextIter *start, GtkTextIter *end)
 {
-	gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-			start, action->start);
-
-	gtk_text_buffer_get_iter_at_offset ( GTK_TEXT_BUFFER (undo->priv->buffer),
-			end, action->end);
+	gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (undo->priv->buffer), start, action->start);
+	gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (undo->priv->buffer), end, action->end);
 }
 
 void
@@ -516,7 +513,7 @@ xpad_undo_exec_undo (XpadUndo *undo)
 
 	UserAction *action = undo->priv->history_curr->data;
 
-	GtkTextTagTable *table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (undo->priv->buffer));
+	GtkTextTagTable *table = gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER (undo->priv->buffer));
 
 	GtkTextIter start;
 	GtkTextIter end;

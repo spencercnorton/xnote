@@ -125,9 +125,9 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 static void
 xpad_pad_properties_init (XpadPadProperties *prop)
 {
-	GtkWidget *font_radio, *color_radio, *hbox, *font_hbox, *vbox = NULL;
-	GtkWidget *label, *appearance_frame, *alignment, *appearance_vbox;
 	gchar *text;
+	GtkBox *hbox, *font_hbox, *vbox, *appearance_vbox;
+	GtkWidget *font_radio, *color_radio, *label, *appearance_frame, *alignment;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	
 	prop->priv = xpad_pad_properties_get_instance_private(prop);
@@ -140,8 +140,8 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 		NULL));
 	g_free (text);
 
-	appearance_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
-	gtk_box_set_homogeneous (GTK_BOX (appearance_vbox), FALSE);
+	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 18));
+	gtk_box_set_homogeneous (appearance_vbox, FALSE);
 
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
@@ -165,27 +165,27 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	color_radio = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from xpad preferences"));
 	prop->priv->colorcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (color_radio), _("Use these colors:"));
 	
-	font_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+	font_hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6));
 
-	gtk_box_pack_start (GTK_BOX (font_hbox), prop->priv->fontcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (font_hbox), prop->priv->fontbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (font_hbox, prop->priv->fontcheck, FALSE, FALSE, 0);
+	gtk_box_pack_start (font_hbox, prop->priv->fontbutton, TRUE, TRUE, 0);
 	
 	prop->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
 	label = gtk_label_new_with_mnemonic (_("Background:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), prop->priv->backbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, prop->priv->backbutton, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
 	
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	label = gtk_label_new_with_mnemonic (_("Foreground:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (hbox), prop->priv->textbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, prop->priv->textbutton, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
 	
 	alignment = gtk_alignment_new (1, 1, 1, 1);
@@ -203,19 +203,19 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (prop->priv->backbutton), _("Set Background Color"));
 	gtk_font_button_set_title (GTK_FONT_BUTTON (prop->priv->fontbutton), _("Set Font"));
 	
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
-	gtk_box_pack_start (GTK_BOX (vbox), font_radio, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), font_hbox, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (appearance_vbox), vbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, font_radio, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, GTK_WIDGET (font_hbox), FALSE, FALSE, 0);
+	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 
-	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 
-	gtk_box_pack_start (GTK_BOX (vbox), color_radio, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), prop->priv->colorcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), alignment, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (appearance_vbox), vbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, color_radio, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, prop->priv->colorcheck, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, alignment, FALSE, FALSE, 0);
+	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 	
 	g_signal_connect (prop->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), prop);
 	g_signal_connect (prop->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), prop);

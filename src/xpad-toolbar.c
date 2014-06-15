@@ -345,9 +345,8 @@ xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name)
 static GtkToolItem *
 xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button)
 {
-	GtkToolItem *item;
+	GtkToolItem *item = GTK_TOOL_ITEM (g_object_get_data (G_OBJECT (toolbar), button->name));
 
-	item = GTK_TOOL_ITEM (g_object_get_data (G_OBJECT (toolbar), button->name));
 	if (item)
 		return item;
 
@@ -489,15 +488,10 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	(void) x;
 	(void) y;
 
-	GtkWidget *menu;
-	const GSList *current_buttons;
 	guint i;
-	
-	menu = gtk_menu_new ();
-	
-	current_buttons = xpad_settings_get_toolbar_buttons (xpad_global_settings);
-
 	gboolean is_button = FALSE;
+	const GSList *current_buttons = xpad_settings_get_toolbar_buttons (xpad_global_settings);
+	GtkMenu *menu = GTK_MENU (gtk_menu_new ());
 	
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 	{
@@ -516,7 +510,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		
 		item = gtk_menu_item_new_with_mnemonic (buttons[i].menu_desc);
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_add_button), (gpointer) buttons[i].name);
-		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
+		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}
 
@@ -526,20 +520,20 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 		item = gtk_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), NULL);		
-		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
+		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 
 		i++;
 		
 		item = gtk_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), NULL);
-		gtk_menu_attach (GTK_MENU (menu), item, 0, 1, i, i + 1);
+		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}
 	
 	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
 	
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, (guint) ((button < 0) ? 0 : button), gtk_get_current_event_time ());
+	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (guint) ((button < 0) ? 0 : button), gtk_get_current_event_time ());
 	
 	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 	
