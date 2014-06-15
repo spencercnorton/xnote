@@ -39,7 +39,6 @@ typedef struct XpadPreferences XpadPreferences;
 
 struct XpadPreferences
 {
-	/* private */
 	GtkDialog parent;
 	XpadPreferencesPrivate *priv;
 };

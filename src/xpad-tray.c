@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
+#include "xpad-tray.h"
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include "fio.h"
@@ -28,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-pad.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
-#include "xpad-tray.h"
 
 enum
 {
@@ -103,7 +103,7 @@ static void xpad_tray_close (XpadSettings *settings)
 }
 
 void xpad_tray_dispose (XpadSettings *settings) {
-	if (xpad_global_settings)
+	if (settings)
 		g_signal_handlers_disconnect_by_func(settings, xpad_tray_toggle, NULL);
 	xpad_tray_close (settings);
 }

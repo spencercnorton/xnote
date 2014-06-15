@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _FIO_H_
 #define _FIO_H_
 
+#include <glib.h>
+
 gchar *fio_get_file (const gchar *name);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 void fio_remove_file (const gchar *filename);
@@ -34,13 +36,3 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement);
 gchar *fio_unique_name (const gchar *prefix);
 
 #endif /* _FIO_H_ */
-
-
-
-
-
-
-
-
-
-

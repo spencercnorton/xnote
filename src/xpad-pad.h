@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_PAD_H__
 #define __XPAD_PAD_H__
 
-#include <gtk/gtk.h>
 #include "xpad-pad-group.h"
 
 G_BEGIN_DECLS
@@ -42,7 +41,6 @@ typedef struct XpadPad XpadPad;
 
 struct XpadPad
 {
-   /* private */
    GtkWindow parent;
    XpadPadPrivate *priv;
 };

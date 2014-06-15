@@ -40,8 +40,6 @@ typedef struct XpadPadGroupPrivate XpadPadGroupPrivate;
 struct XpadPadGroup
 {
 	GObject parent;
-	
-	/*< private >*/
 	XpadPadGroupPrivate *priv;
 };
 

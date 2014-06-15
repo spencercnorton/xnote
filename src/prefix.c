@@ -38,18 +38,17 @@
 #ifndef _PREFIX_C_
 #define _PREFIX_C_
 
-#include "../config.h"
-
 #ifndef BR_PTHREADS
 	/* Change 1 to 0 if you don't want pthread support */
 	#define BR_PTHREADS 0
 #endif /* BR_PTHREADS */
 
+#include "../config.h"
+#include "prefix.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
-#include "prefix.h"
 
 #ifdef __cplusplus
 extern "C" {
