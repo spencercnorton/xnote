@@ -1698,9 +1698,8 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 		gtk_container_add (GTK_CONTAINER (hbox), gtk_label_new_with_mnemonic (mnemonic));\
 		gtk_container_add (GTK_CONTAINER (item), hbox);\
 	}\
-	else {\
+	else\
 		item = gtk_menu_item_new_with_mnemonic (mnemonic);\
-	}\
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (callback), pad);\
 	if (key)\
 		gtk_widget_add_accelerator (item, "activate", accel_group, key, mask, GTK_ACCEL_VISIBLE);\
@@ -1739,14 +1738,14 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	MENU_ADD (_("_New"), "document-new", 0, 0, xpad_pad_spawn);
+	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
 	MENU_ADD_SEP ();
 	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
 	g_object_set_data (G_OBJECT (uppermenu), "sticky", item);
 	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
 	MENU_ADD_SEP ();
 	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
-	MENU_ADD (_("_Delete"), "edit-delete", 0, 0, xpad_pad_delete);
+	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
