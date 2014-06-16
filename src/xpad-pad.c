@@ -70,6 +70,7 @@ struct XpadPadPrivate
 	gboolean unsaved_info;
 
 	GtkClipboard *clipboard;
+	GtkAccelGroup *accel_group;
 	
 	XpadPadGroup *group;
 };
@@ -123,7 +124,6 @@ static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences ();
 static void xpad_pad_quit ();
-/* static void xpad_pad_show_all (XpadPad *pad); */
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_set_group (XpadPad *pad, XpadPadGroup *group);
@@ -229,7 +229,6 @@ static void
 xpad_pad_init (XpadPad *pad)
 {
 	GtkBox *vbox;
-	GtkAccelGroup *accel_group;
 
 	pad->priv = xpad_pad_get_instance_private(pad);
 
@@ -249,6 +248,7 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->unsaved_content = FALSE;
 	pad->priv->unsaved_info = FALSE;
 	pad->priv->group = NULL;
+
 	g_object_get (xpad_global_settings,
 			"width", &pad->priv->width,
 			"height", &pad->priv->height,
@@ -270,17 +270,13 @@ xpad_pad_init (XpadPad *pad)
 		"child", pad->priv->textview,
 		NULL));
 
-	pad->priv->toolbar = GTK_WIDGET ( xpad_toolbar_new (pad));
+	pad->priv->toolbar = GTK_WIDGET (xpad_toolbar_new (pad));
 
-	accel_group = gtk_accel_group_new ();
-	gtk_window_add_accel_group (pad_window, accel_group);
-
-	pad->priv->menu = menu_get_popup_no_highlight (pad, accel_group);
-	pad->priv->highlight_menu = menu_get_popup_highlight (pad, accel_group);
-
-	gtk_accel_group_connect (accel_group, GDK_KEY_Q, GDK_CONTROL_MASK, 0,
-									 g_cclosure_new_swap (G_CALLBACK (xpad_app_quit), pad, NULL));
-	g_object_unref (G_OBJECT (accel_group));
+	pad->priv->accel_group = gtk_accel_group_new ();
+	gtk_window_add_accel_group (pad_window, pad->priv->accel_group);
+	pad->priv->menu = menu_get_popup_no_highlight (pad, pad->priv->accel_group);
+	pad->priv->highlight_menu = menu_get_popup_highlight (pad, pad->priv->accel_group);
+	gtk_accel_group_connect (pad->priv->accel_group, GDK_KEY_Q, GDK_CONTROL_MASK, 0, g_cclosure_new_swap (G_CALLBACK (xpad_app_quit), pad, NULL));
 
 	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
 	gtk_box_set_homogeneous (vbox, FALSE);
@@ -298,9 +294,7 @@ xpad_pad_init (XpadPad *pad)
 	gtk_window_set_skip_taskbar_hint (pad_window, !decorations);
 	gtk_window_set_position (pad_window, GTK_WIN_POS_MOUSE);
 
-	g_object_set (G_OBJECT (pad),
-		"child", vbox,
-		NULL);
+	g_object_set (G_OBJECT (pad), "child", vbox, NULL);
 
 	xpad_pad_notify_has_scrollbar (pad);
 	xpad_pad_notify_has_selection (pad);
@@ -396,6 +390,11 @@ xpad_pad_dispose (GObject *object)
 		pad->priv->toolbar = NULL;
 	}
 	
+	if (GTK_IS_ACCEL_GROUP (pad->priv->accel_group)) {
+		g_object_unref (pad->priv->accel_group);
+		pad->priv->accel_group = NULL;
+	}
+
 	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
 }
 

@@ -82,8 +82,11 @@ enum
   PROP_AUTOSTART_NEW_PAD,
   PROP_AUTOSTART_STICKY,
   PROP_AUTOSTART_DISPLAY_PADS,
-  LAST_PROP
+  N_PROPERTIES
 };
+
+static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
+static guint signals[LAST_SIGNAL] = { 0 };
 
 static void load_from_file (XpadSettings *settings, const gchar *filename);
 static void save_to_file (XpadSettings *settings, const gchar *filename);
@@ -91,8 +94,6 @@ static void xpad_settings_set_property (GObject *object, guint prop_id, const GV
 static void xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_settings_dispose (GObject *object);
 static void xpad_settings_finalize (GObject *object);
-
-static guint signals[LAST_SIGNAL] = { 0 };
 
 XpadSettings *
 xpad_settings_new (void)
@@ -110,183 +111,61 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	gobject_class->set_property = xpad_settings_set_property;
 	gobject_class->get_property = xpad_settings_get_property;
 	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_WIDTH,
-	                                 g_param_spec_uint ("width",
-	                                                    "Default Width of Pads",
-	                                                    "Window width of pads on creation",
-	                                                    0,
-	                                                    G_MAXUINT,
-	                                                    200,
-	                                                    G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_HEIGHT,
-	                                 g_param_spec_uint ("height",
-	                                                    "Default Height of Pads",
-	                                                    "Window height of pads on creation",
-	                                                    0,
-	                                                    G_MAXUINT,
-	                                                    200,
-	                                                    G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_HAS_DECORATIONS,
-	                                 g_param_spec_boolean ("has-decorations",
-	                                                       "Has Decorations",
-	                                                       "Whether pads have window decorations",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_CONFIRM_DESTROY,
-	                                 g_param_spec_boolean ("confirm-destroy",
-	                                                       "Confirm Destroy",
-	                                                       "Whether destroying a pad requires user confirmation",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_EDIT_LOCK,
-	                                 g_param_spec_boolean ("edit-lock",
-	                                                       "Edit Lock",
-	                                                       "Whether edit lock mode is enabled",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-	g_object_class_install_property (gobject_class,
-	                                 PROP_TRAY_ENABLED,
-	                                 g_param_spec_boolean ("tray-enabled",
-	                                                       "Enable the tray icon",
-	                                                       "Whether to enable or disable the systray icon",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
+	obj_prop[PROP_WIDTH]					= g_param_spec_uint ("width", "Default width of pads", "Window width of pads on creation", 0, G_MAXUINT, 200, G_PARAM_READWRITE);
+	obj_prop[PROP_HEIGHT]					= g_param_spec_uint ("height", "Default height of pads", "Window height of pads on creation", 0, G_MAXUINT, 200, G_PARAM_READWRITE);
+	obj_prop[PROP_HAS_DECORATIONS]			= g_param_spec_boolean ("has-decorations", "Has decorations", "Whether pads have window decorations", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_CONFIRM_DESTROY]			= g_param_spec_boolean ("confirm-destroy", "Confirm destroy", "Ask for delete confirmation", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_EDIT_LOCK]				= g_param_spec_boolean ("edit-lock", "Edit lock", "Toggle read-only mode", FALSE, G_PARAM_READWRITE);
+	obj_prop[PROP_TRAY_ENABLED]				= g_param_spec_boolean ("tray-enabled", "Enable tray icon", "Enable or disable the systray icon", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_TRAY_CLICK_CONFIGURATION]	= g_param_spec_uint ("tray-click-configuration", "Tray click configuration", "Configure tray left click", 0, G_MAXUINT, 0, G_PARAM_READWRITE);
+	obj_prop[PROP_HAS_TOOLBAR]				= g_param_spec_boolean ("has-toolbar", "Has toolbar", "Whether pads have toolbars", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOHIDE_TOOLBAR]			= g_param_spec_boolean ("autohide-toolbar", "Autohide toolbar", "Hide toolbars when not used", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_HAS_SCROLLBAR]			= g_param_spec_boolean ("has-scrollbar", "Has scrollbar", "Whether pads have scrollbars", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_FONTNAME]					= g_param_spec_string ("fontname", "Font Name", "Default name of pad font", NULL, G_PARAM_READWRITE);
+	obj_prop[PROP_TEXT_COLOR]				= g_param_spec_boxed ("text-color", "Text color", "Default color of pad text", GDK_TYPE_RGBA, G_PARAM_READWRITE);
+	obj_prop[PROP_BACK_COLOR]				= g_param_spec_boxed ("back-color", "Back color", "Default color of pad background", GDK_TYPE_RGBA, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_XPAD]			= g_param_spec_boolean ("autostart-xpad", "Automatically start xpad", "Start Xpad after login", FALSE, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_WAIT_SYSTRAY]	= g_param_spec_boolean ("autostart-wait-systray", "Wait for systray", "Whether to wait for the systray after login", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_NEW_PAD]		= g_param_spec_boolean ("autostart-new-pad", "Start a new pad", "Whether to create a new pad on startup", FALSE, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_STICKY]			= g_param_spec_boolean ("autostart-sticky", "Stick to desktop", "Whether pads are sticky on creation", FALSE, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_DELAY]			= g_param_spec_uint ("autostart-delay", "Delay autostart of Xpad", "Number of seconds to wait before start of Xpad", 0, G_MAXUINT, 0, G_PARAM_READWRITE);
+	obj_prop[PROP_AUTOSTART_DISPLAY_PADS]	= g_param_spec_uint ("autostart-display-pads", "Autostart display pads", "Show/hide/restore pads at start", 0, G_MAXUINT, 2, G_PARAM_READWRITE);
 
-	g_object_class_install_property (gobject_class,
-                                     PROP_TRAY_CLICK_CONFIGURATION,
-                                     g_param_spec_uint ("tray-click-configuration",
-                                                        "Tray click configuration",
-                                                        "What configuration is selected on tray click",
-                                                        0,
-                                                        G_MAXUINT,
-                                                        0,
-                                                        G_PARAM_READWRITE));
-	g_object_class_install_property (gobject_class,
-	                                 PROP_HAS_TOOLBAR,
-	                                 g_param_spec_boolean ("has-toolbar",
-	                                                       "Each pad has a toolbar",
-	                                                       "Whether pads have toolbars",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
+	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOHIDE_TOOLBAR,
-	                                 g_param_spec_boolean ("autohide-toolbar",
-	                                                       "Autohide Toolbar",
-	                                                       "Whether toolbars hide when not used",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_HAS_SCROLLBAR,
-	                                 g_param_spec_boolean ("has-scrollbar",
-	                                                       "Has Scrollbar",
-	                                                       "Whether pads have scrollbars",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_FONTNAME,
-	                                 g_param_spec_string ("fontname",
-	                                                      "Font Name",
-	                                                      "Default name of pad font",
-	                                                      NULL,
-	                                                      G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_TEXT_COLOR,
-	                                 g_param_spec_boxed ("text-color",
-	                                                     "Text Color",
-	                                                     "Default color of pad text",
-	                                                     GDK_TYPE_RGBA,
-	                                                     G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_BACK_COLOR,
-	                                 g_param_spec_boxed ("back-color",
-	                                                     "Back Color",
-	                                                     "Default color of pad background",
-	                                                     GDK_TYPE_RGBA,
-	                                                     G_PARAM_READWRITE));
-
-	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOSTART_XPAD,
-	                                 g_param_spec_boolean ("autostart-xpad",
-	                                                       "Automatically start xpad",
-	                                                       "Whether to start xpad after login",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-
-	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOSTART_WAIT_SYSTRAY,
-	                                 g_param_spec_boolean ("autostart-wait-systray",
-	                                                       "Autostart Xpad wait for systray",
-	                                                       "Whether to wait for the systray before starting xpad automatically after login",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-
-	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOSTART_NEW_PAD,
-	                                 g_param_spec_boolean ("autostart-new-pad",
-	                                                       "Autostart a new pad",
-	                                                       "Whether to create a new pad on startup",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_AUTOSTART_STICKY,
-	                                 g_param_spec_boolean ("autostart-sticky",
-	                                                       "Default Stickiness",
-	                                                       "Whether pads are sticky on creation",
-	                                                       FALSE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-                                     PROP_AUTOSTART_DELAY,
-                                     g_param_spec_uint ("autostart-delay",
-                                                        "Delay autostart of Xpad",
-                                                        "How many seconds will Xpad wait before continuing startup",
-                                                        0,
-                                                        G_MAXUINT,
-                                                        0,
-                                                        G_PARAM_READWRITE));
-
-	g_object_class_install_property (gobject_class,
-                                     PROP_AUTOSTART_DISPLAY_PADS,
-                                     g_param_spec_uint ("autostart-display-pads",
-                                                        "Autostart display pads",
-                                                        "How to show the different pads when Xpad is started",
-                                                        0,
-                                                        G_MAXUINT,
-                                                        2,
-                                                        G_PARAM_READWRITE));
-
-	signals[CHANGE_BUTTONS] = 
-		g_signal_new ("change_buttons",
-		              G_OBJECT_CLASS_TYPE (gobject_class),
-		              G_SIGNAL_RUN_LAST,
-		              G_STRUCT_OFFSET (XpadSettingsClass, change_buttons),
-		              NULL, NULL,
-		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+	signals[CHANGE_BUTTONS] = g_signal_new ("change_buttons", G_OBJECT_CLASS_TYPE (gobject_class), G_SIGNAL_RUN_LAST, G_STRUCT_OFFSET (XpadSettingsClass, change_buttons), NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 }
 
 static void
 xpad_settings_init (XpadSettings *settings)
 {
-	settings->priv = xpad_settings_get_instance_private(settings);
+	settings->priv = xpad_settings_get_instance_private (settings);
 
+	/*
+	 * FIXME: Although the default values below have been set in the xpad_settings_class_init above,
+	 * these default values are not applied to the private variables of this instance.
+	 * I haven't found a way to resolve this yet. So, for now we have a double
+	 * administration of defaults values. It would be awesome to reduce this to 1 administration.
+	 */
+	settings->priv->width = 200;
+	settings->priv->height = 200;
+	settings->priv->has_decorations = TRUE;
+	settings->priv->confirm_destroy = TRUE;
+	settings->priv->edit_lock = FALSE;
+	settings->priv->tray_enabled = TRUE;
+	settings->priv->tray_click_configuration = 1;
+	settings->priv->has_toolbar = TRUE;
+	settings->priv->autohide_toolbar = TRUE;
+	settings->priv->has_scrollbar = TRUE;
+	settings->priv->fontname = NULL;
 	/* A pleasant light yellow background color, similar to commercial sticky notes, with black text. */
 	settings->priv->text = gdk_rgba_copy(&(GdkRGBA) {0, 0, 0, 1});
 	settings->priv->back = gdk_rgba_copy(&(GdkRGBA) {1, 0.933334350586, 0.6, 1});
+	settings->priv->autostart_wait_systray = TRUE;
+	settings->priv->autostart_new_pad = FALSE;
+	settings->priv->autostart_sticky = FALSE;
+	settings->priv->autostart_delay = 0;
+	settings->priv->autostart_display_pads = 2;
 
 	settings->priv->toolbar_buttons = NULL;
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("New"));
@@ -390,10 +269,11 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 	
 	switch (prop_id)
 	{
+
 	case PROP_WIDTH:
 		settings->priv->width = g_value_get_uint (value);
 		break;
-	
+
 	case PROP_HEIGHT:
 		settings->priv->height = g_value_get_uint (value);
 		break;
@@ -537,10 +417,11 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 	
 	switch (prop_id)
 	{
+
 	case PROP_WIDTH:
 		g_value_set_uint (value, settings->priv->width);
 		break;
-	
+
 	case PROP_HEIGHT:
 		g_value_set_uint (value, settings->priv->height);
 		break;
@@ -631,20 +512,17 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 static void
 load_from_file (XpadSettings *settings, const gchar *filename)
 {
-	gchar *buttons = NULL;
-	gchar *text_color_string = NULL;
-	gchar *background_color_string = NULL;
-	GdkRGBA text = {0, 0, 0, 0};
-	GdkRGBA back = {0, 0, 0, 0};
+	gchar *buttons = NULL, *text_color_string = NULL, *background_color_string = NULL;
+	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};
 	gboolean use_text, use_back;
 	
 	use_text = settings->priv->text ? TRUE : FALSE;
 	if (settings->priv->text)
-		text = *settings->priv->text;
+		text_color = *settings->priv->text;
 
 	use_back = settings->priv->back ? TRUE : FALSE;
 	if (settings->priv->back)
-		back = *settings->priv->back;
+		back_color = *settings->priv->back;
 
 	/* get all the values from the default-style text file in the forms of booleans, ints or strings. */
 	if (fio_get_values_from_file (filename, 
@@ -681,13 +559,13 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		 * set the color to the default.
 		 */
 		if (text_color_string == NULL)
-			text = (GdkRGBA) {0, 0, 0, 1};
+			text_color = (GdkRGBA) {0, 0, 0, 1};
 		else
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
-			if (!gdk_rgba_parse (&text, text_color_string))
-				text = (GdkRGBA) {0, 0, 0, 1};
+			if (!gdk_rgba_parse (&text_color, text_color_string))
+				text_color = (GdkRGBA) {0, 0, 0, 1};
 
-		settings->priv->text = gdk_rgba_copy (&text);
+		settings->priv->text = gdk_rgba_copy (&text_color);
 	}
 
 	gdk_rgba_free (settings->priv->back);
@@ -698,13 +576,13 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		 * set the color to the default.
 		 */
 		if (background_color_string == NULL)
-			back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
 		else
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
-			if (!gdk_rgba_parse (&back, background_color_string))
-				back = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			if (!gdk_rgba_parse (&back_color, background_color_string))
+				back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
 
-		settings->priv->back = gdk_rgba_copy (&back);
+		settings->priv->back = gdk_rgba_copy (&back_color);
 	}
 	else
 		settings->priv->back = NULL;

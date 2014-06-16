@@ -138,7 +138,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 }
 
 
-/**
+/*
  * Returned gchar * must be g_free'd.
  */
 gchar *fio_get_file (const gchar *name)
@@ -154,10 +154,10 @@ gchar *fio_get_file (const gchar *name)
 }
 
 
-/* list is a variable number of (gchar *) / (gchar ** or gint *) groups, 
-	terminated by a NULL variable */
-/**
- * each gchar ** pointer will hereafter point to memory that must be g_free'd.
+/*
+ * list is a variable number of (gchar *) / (gchar ** or gint *) groups,
+ * terminated by a NULL variable. Each gchar ** pointer will hereafter
+ * point to memory that must be g_free'd.
  */
 gint fio_get_values_from_file (const gchar *filename, ...)
 {
