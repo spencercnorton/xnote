@@ -415,13 +415,15 @@ xpad_pad_finalize (GObject *object)
 static void
 xpad_pad_show (XpadPad *pad)
 {
-	/* Some wm's might not acknowledge our request for a specific
-		location before we are shown.  What we do here is a little gimpy
-		and not very respectful of wms' sovereignty, but it has the effect
-		of making pads' locations very dependable.  We just move the pad
-		again here after being shown.  This may create a visual effect if
-		the wm did ignore us, but is better than being in the wrong
-		place, I guess. */
+	/*
+	 * Some wm's might not acknowledge our request for a specific
+	 * location before we are shown.  What we do here is a little gimpy
+	 * and not very respectful of wms' sovereignty, but it has the effect
+	 * of making pads' locations very dependable.  We just move the pad
+	 * again here after being shown.  This may create a visual effect if
+	 * the wm did ignore us, but is better than being in the wrong
+	 * place, I guess.
+	 */
 	if (pad->priv->location_valid)
 		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 
@@ -464,7 +466,7 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	gboolean decorations;
 	g_object_get (xpad_global_settings, "has-decorations", &decorations, NULL);
 	
-	/**
+	/*
 	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
 	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
 	 */
@@ -472,9 +474,11 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	gtk_window_set_skip_taskbar_hint (pad_window, !decorations);
 	gtk_window_set_skip_pager_hint (pad_window, !decorations);
 	
-	/* reshow_with_initial_size() seems to set the window back to a never-shown state.
-		This is good, as some WMs don't like us changing the above parameters mid-run,
-		even if we do a hide/show cycle. */
+	/*
+	 * reshow_with_initial_size() seems to set the window back to a never-shown state.
+	 * This is good, as some WMs don't like us changing the above parameters mid-run,
+	 * even if we do a hide/show cycle.
+	 */
 	gtk_window_set_default_size (pad_window, (gint) pad->priv->width, (gint) pad->priv->height);
 	gtk_widget_hide(pad_widget);
 	gtk_widget_unrealize(pad_widget);
@@ -726,9 +730,11 @@ xpad_pad_close (XpadPad *pad)
 {
 	gtk_widget_hide (GTK_WIDGET (pad));
 	
-	/* If no tray and this is the last pad, we don't want to record this
-		pad as closed, we want to start with just this pad next open.  So
-		quit before we record. */
+	/*
+	 * If no tray and this is the last pad, we don't want to record this
+	 * pad as closed, we want to start with just this pad next open.  So
+	 * quit before we record.
+	 */
 	if (!xpad_tray_is_open () &&
 		 xpad_pad_group_num_visible_pads (pad->priv->group) == 0)
 	{
@@ -1033,9 +1039,11 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 	
 	xpad_pad_save_info_delayed(pad);
 	
-	/* Sometimes when moving, if the toolbar tries to hide itself,
-		the window manager will not resize it correctly.  So, we make
-		sure not to end the timeout while moving. */
+	/*
+	 * Sometimes when moving, if the toolbar tries to hide itself,
+	 * the window manager will not resize it correctly.  So, we make
+	 * sure not to end the timeout while moving.
+	 */
 	if (pad->priv->toolbar_timeout)
 	{
 		g_source_remove (pad->priv->toolbar_timeout);
@@ -1562,7 +1570,7 @@ xpad_pad_close_all (XpadPad *pad)
 	if (!pad->priv->group)
 		return;
 	
-	/**
+	/*
 	 * The logic is different here depending on whether the tray is open.
 	 * If it is open, we just close each pad individually.  If it isn't
 	 * open, we do a quit.  This way, when xpad is run again, only the
@@ -1614,8 +1622,10 @@ menu_strikethrough (XpadPad *pad)
 	menu_toggle_tag (pad, "strikethrough");
 }
 
-/* Make the pad visually stick to the workspace and save this setting to the individual pad info file,
- * because this function has been probably been called, because of a menu toggle. */
+/*
+ * Make the pad visually stick to the workspace and save this setting to the individual pad info file,
+ * because this function has been probably been called, because of a menu toggle.
+ */
 static void
 menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
 {
