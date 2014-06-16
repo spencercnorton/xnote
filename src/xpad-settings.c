@@ -480,7 +480,7 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		break;
 
 	case PROP_AUTOSTART_XPAD:
-		g_value_set_boolean (value, g_file_test (g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME")), G_FILE_TEST_EXISTS));
+		g_value_set_boolean (value, g_file_test (g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir()), G_FILE_TEST_EXISTS));
 		break;
 
 	case PROP_AUTOSTART_WAIT_SYSTRAY:
@@ -614,7 +614,6 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		g_free (buttons);
 	}
 }
-
 
 static void
 save_to_file (XpadSettings *settings, const gchar *filename)
