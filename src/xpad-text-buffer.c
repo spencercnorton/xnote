@@ -48,7 +48,6 @@ enum
 static void xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_dispose (GObject *object);
-static void xpad_text_buffer_finalize (GObject *object);
 
 XpadTextBuffer *
 xpad_text_buffer_new (void)
@@ -63,7 +62,6 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->dispose = xpad_text_buffer_dispose;
-	gobject_class->finalize = xpad_text_buffer_finalize;
 	gobject_class->set_property = xpad_text_buffer_set_property;
 	gobject_class->get_property = xpad_text_buffer_get_property;
 
@@ -101,12 +99,6 @@ xpad_text_buffer_dispose (GObject *object)
 	g_object_unref(gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(buffer)));
 
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
-}
-
-static void
-xpad_text_buffer_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->finalize (object);
 }
 
 static void

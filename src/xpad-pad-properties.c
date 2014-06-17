@@ -41,8 +41,6 @@ struct XpadPadPropertiesPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadPadProperties, xpad_pad_properties, GTK_TYPE_DIALOG)
 
-static void xpad_pad_properties_dispose (GObject *object);
-static void xpad_pad_properties_finalize (GObject *object);
 static void xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_response (GtkDialog *dialog, gint response);
@@ -74,8 +72,6 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	
-	gobject_class->dispose = xpad_pad_properties_dispose;
-	gobject_class->finalize = xpad_pad_properties_finalize;
 	gobject_class->set_property = xpad_pad_properties_set_property;
 	gobject_class->get_property = xpad_pad_properties_get_property;
 	
@@ -171,21 +167,21 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_box_pack_start (font_hbox, prop->priv->fontbutton, TRUE, TRUE, 0);
 	
 	prop->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
-	label = gtk_label_new_with_mnemonic (_("Background:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_size_group_add_widget (size_group_labels, label);
-	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start (hbox, prop->priv->backbutton, TRUE, TRUE, 0);
-	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
-	
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	label = gtk_label_new_with_mnemonic (_("Foreground:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, prop->priv->textbutton, TRUE, TRUE, 0);
+	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
+	
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
+	label = gtk_label_new_with_mnemonic (_("Background:"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_size_group_add_widget (size_group_labels, label);
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, prop->priv->backbutton, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
 	
 	alignment = gtk_alignment_new (1, 1, 1, 1);
@@ -235,18 +231,6 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), appearance_frame);
 
 	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (prop)));
-}
-
-static void
-xpad_pad_properties_dispose (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_pad_properties_parent_class)->dispose (object);
-}
-
-static void
-xpad_pad_properties_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_pad_properties_parent_class)->finalize (object);
 }
 
 static void

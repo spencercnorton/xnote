@@ -92,7 +92,6 @@ static void load_from_file (XpadSettings *settings, const gchar *filename);
 static void save_to_file (XpadSettings *settings, const gchar *filename);
 static void xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
-static void xpad_settings_dispose (GObject *object);
 static void xpad_settings_finalize (GObject *object);
 
 XpadSettings *
@@ -106,7 +105,6 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-	gobject_class->dispose = xpad_settings_dispose;
 	gobject_class->finalize = xpad_settings_finalize;
 	gobject_class->set_property = xpad_settings_set_property;
 	gobject_class->get_property = xpad_settings_get_property;
@@ -182,12 +180,6 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("Redo"));	
 
 	load_from_file (settings, DEFAULTS_FILENAME);
-}
-
-static void
-xpad_settings_dispose (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_settings_parent_class)->dispose (object);
 }
 
 static void
