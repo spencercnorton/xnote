@@ -89,17 +89,17 @@ static const XpadToolbarButton buttons[] =
 	{"Separator", NULL, 0, XPAD_BUTTON_TYPE_SEPARATOR, NULL, N_("Add Se_parator")}
 };
 
+static void xpad_toolbar_constructed (GObject *object);
+static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
+static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_toolbar_dispose (GObject *object);
 static const XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name);
 static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button);
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
-static void xpad_toolbar_dispose (GObject *object);
-static void xpad_toolbar_finalize (GObject *object);
-static void xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
-static void xpad_toolbar_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
-static void xpad_toolbar_remove_all_buttons ();
-static void xpad_toolbar_remove_last_button ();
-static void xpad_toolbar_add_button (const gchar *button_name);
+static void xpad_toolbar_remove_all_buttons (XpadSettings *settings);
+static void xpad_toolbar_remove_last_button (XpadSettings *settings);
+static void xpad_toolbar_add_button (GtkMenuItem *menu_item, XpadSettings *settings);
 static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -123,11 +123,11 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	GtkToolbarClass *gtktoolbar_class = GTK_TOOLBAR_CLASS (klass);
 	
-	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
+	gobject_class->constructed = xpad_toolbar_constructed;
 	gobject_class->set_property = xpad_toolbar_set_property;
 	gobject_class->get_property = xpad_toolbar_get_property;
 	gobject_class->dispose = xpad_toolbar_dispose;
-	gobject_class->finalize = xpad_toolbar_finalize;
+	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
 	
 	signals[ACTIVATE_NEW] = 
 		g_signal_new ("activate-new",
@@ -244,7 +244,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 	g_object_class_install_property (gobject_class,
 					 PROP_PAD,
 					 g_param_spec_pointer ("pad",
-									"Pad ",
+									"Pad",
 									"Pad associated with this toolbar",
 									G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
@@ -257,16 +257,23 @@ xpad_toolbar_init (XpadToolbar *toolbar)
 	toolbar->priv->move_motion_handler = 0;
 	toolbar->priv->move_button_release_handler = 0;
 	toolbar->priv->move_key_press_handler = 0;
-	
-	g_object_set (G_OBJECT (toolbar),
+
+	g_object_set (toolbar,
 	              "icon-size", GTK_ICON_SIZE_MENU,
 	              "show-arrow", FALSE,
 	              "toolbar-style", GTK_TOOLBAR_ICONS,
 	              NULL);
-	
-	g_signal_connect_swapped (xpad_global_settings, "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
-	
+}
+
+static void xpad_toolbar_constructed (GObject *object)
+{
+	XpadSettings *settings;
+	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
+
 	xpad_toolbar_change_buttons (toolbar);
+
+	g_object_get (toolbar->priv->pad, "settings", &settings, NULL);
+	g_signal_connect_swapped (settings, "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
 }
 
 static void
@@ -280,12 +287,6 @@ xpad_toolbar_dispose (GObject *object)
 	}
 
 	G_OBJECT_CLASS (xpad_toolbar_parent_class)->dispose (object);
-}
-
-static void
-xpad_toolbar_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_toolbar_parent_class)->finalize (object);
 }
 
 void
@@ -400,6 +401,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	guint i = 0;
 	guint j = 0;
 	GtkToolItem *item;
+	XpadSettings *settings;
 	
 	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
 	
@@ -412,14 +414,16 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	for (j = 0; j < G_N_ELEMENTS (buttons); j++)
 		g_object_set_data (G_OBJECT (toolbar), buttons[j].name, NULL);
 	
-	slist = xpad_settings_get_toolbar_buttons (xpad_global_settings);
+	g_object_get (toolbar->priv->pad, "settings", &settings, NULL);
+
+	slist = xpad_settings_get_toolbar_buttons (settings);
 	
 	for (stemp = slist; stemp; stemp = stemp->next)
 	{
 		const XpadToolbarButton *button;
 
 		button = xpad_toolbar_button_lookup (toolbar, stemp->data);
-				
+
 		if (button->type == XPAD_BUTTON_TYPE_SEPARATOR)
 			item = gtk_separator_tool_item_new ();
 		else if (button->type == XPAD_BUTTON_TYPE_BUTTON)
@@ -458,21 +462,21 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 }
 
 static void
-xpad_toolbar_remove_all_buttons ()
+xpad_toolbar_remove_all_buttons (XpadSettings *settings)
 {
-	xpad_settings_remove_all_toolbar_buttons (xpad_global_settings);
+	xpad_settings_remove_all_toolbar_buttons (settings);
 }
 
 static void
-xpad_toolbar_remove_last_button ()
+xpad_toolbar_remove_last_button (XpadSettings *settings)
 {
-	xpad_settings_remove_last_toolbar_button (xpad_global_settings);
+	xpad_settings_remove_last_toolbar_button (settings);
 }
 
 static void
-xpad_toolbar_add_button (const gchar *name)
+xpad_toolbar_add_button (GtkMenuItem *menu_item, XpadSettings *settings)
 {
-	xpad_settings_add_toolbar_button (xpad_global_settings, name);
+	xpad_settings_add_toolbar_button (settings, gtk_menu_item_get_accel_path (menu_item) + 2);
 }
 
 static void
@@ -490,7 +494,10 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 	guint i;
 	gboolean is_button = FALSE;
-	const GSList *current_buttons = xpad_settings_get_toolbar_buttons (xpad_global_settings);
+	XpadSettings *settings;
+
+	g_object_get (XPAD_TOOLBAR (toolbar)->priv->pad, "settings", &settings, NULL);
+	const GSList *current_buttons = xpad_settings_get_toolbar_buttons (settings);
 	GtkMenu *menu = GTK_MENU (gtk_menu_new ());
 	
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
@@ -509,7 +516,9 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		}
 		
 		item = gtk_menu_item_new_with_mnemonic (buttons[i].menu_desc);
-		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_add_button), (gpointer) buttons[i].name);
+		/* Ugly workaround by abusing the accel_path to get the variable passed to the next function */
+		gtk_menu_item_set_accel_path (GTK_MENU_ITEM (item), g_strdup_printf ("</%s", buttons[i].name));
+		g_signal_connect (item, "activate", G_CALLBACK (xpad_toolbar_add_button), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}
@@ -519,14 +528,14 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		GtkWidget *item;
 
 		item = gtk_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
-		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), NULL);		
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 
 		i++;
 		
 		item = gtk_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
-		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), NULL);
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}

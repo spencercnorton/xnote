@@ -50,12 +50,7 @@ struct XpadTextViewClass
 
 GType xpad_text_view_get_type (void);
 
-GtkWidget *xpad_text_view_new (void);
-
-void xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow);
-gboolean xpad_text_view_get_follow_font_style (XpadTextView *view);
-void xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow);
-gboolean xpad_text_view_get_follow_color_style (XpadTextView *view);
+GtkWidget *xpad_text_view_new (XpadSettings *settings);
 
 XpadPad *xpad_text_view_get_pad (XpadTextView *view);
 void xpad_text_view_set_pad (XpadTextView *view, XpadPad *pad);

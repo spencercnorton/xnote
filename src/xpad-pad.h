@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_PAD_H__
 
 #include "xpad-pad-group.h"
+#include "xpad-settings.h"
 
 G_BEGIN_DECLS
 
@@ -54,9 +55,9 @@ struct XpadPadClass
 
 GType xpad_pad_get_type (void);
 
-GtkWidget *xpad_pad_new (XpadPadGroup *group);
-GtkWidget *xpad_pad_new_with_info (XpadPadGroup *group, const gchar *info_filename, gboolean *show);
-GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, const gchar *filename);
+GtkWidget *xpad_pad_new (XpadPadGroup *group, XpadSettings *settings);
+GtkWidget *xpad_pad_new_with_info (XpadPadGroup *group, XpadSettings *settings, const gchar *info_filename, gboolean *show);
+GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, XpadSettings *settings, const gchar *filename);
 void xpad_pad_close (XpadPad *pad);
 void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);

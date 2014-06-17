@@ -146,6 +146,9 @@ xpad_settings_init (XpadSettings *settings)
 	 * these default values are not applied to the private variables of this instance.
 	 * I haven't found a way to resolve this yet. So, for now we have a double
 	 * administration of defaults values. It would be awesome to reduce this to 1 administration.
+	 *
+	 * Found the explanation, but not a solution:
+	 * http://blogs.gnome.org/desrt/2012/02/26/a-gentle-introduction-to-gobject-construction/
 	 */
 	settings->priv->width = 200;
 	settings->priv->height = 200;

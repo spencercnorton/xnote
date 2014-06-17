@@ -159,9 +159,9 @@ xpad_tray_show_hide_all ()
 }
 
 static void
-menu_spawn (XpadPadGroup *group)
+menu_spawn (XpadPadGroup *group, XpadSettings *settings)
 {
-	GtkWidget *pad = xpad_pad_new (group);
+	GtkWidget *pad = xpad_pad_new (group, settings);
 	gtk_widget_show (pad);
 }
 
@@ -237,7 +237,7 @@ static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings) 
 			xpad_tray_show_windows_list(icon);
 			break;
 		case NEW_PAD:
-			menu_spawn(xpad_app_get_pad_group());
+			menu_spawn(xpad_app_get_pad_group(), settings);
 			break;
 	}
 }
