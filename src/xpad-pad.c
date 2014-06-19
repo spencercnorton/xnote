@@ -131,7 +131,6 @@ static void xpad_pad_paste (XpadPad *pad);
 static void xpad_pad_delete (XpadPad *pad);
 static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences (XpadPad *pad);
-static void xpad_pad_quit ();
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
@@ -293,7 +292,6 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->properties = NULL;
 	pad->priv->unsaved_content = FALSE;
 	pad->priv->unsaved_info = FALSE;
-	pad->priv->group = NULL;
 }
 
 static void xpad_pad_constructed (GObject *object)
@@ -543,9 +541,9 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	 * even if we do a hide/show cycle.
 	 */
 	gtk_window_set_default_size (pad_window, (gint) pad->priv->width, (gint) pad->priv->height);
-	gtk_widget_hide(pad_widget);
-	gtk_widget_unrealize(pad_widget);
-	gtk_widget_show(pad_widget);
+	gtk_widget_hide (pad_widget);
+	gtk_widget_unrealize (pad_widget);
+	gtk_widget_show (pad_widget);
 }
 
 static guint
@@ -797,7 +795,7 @@ xpad_pad_close (XpadPad *pad)
 	if (!xpad_tray_is_open () &&
 		 xpad_pad_group_num_visible_pads (pad->priv->group) == 0)
 	{
-		xpad_pad_quit (pad);
+		xpad_app_quit ();
 		return;
 	}
 	
@@ -1039,12 +1037,6 @@ static void
 xpad_pad_open_preferences (XpadPad *pad)
 {
 	xpad_preferences_open (pad->priv->settings);
-}
-
-static void
-xpad_pad_quit ()
-{
-	xpad_app_quit ();
 }
 
 static void
@@ -1586,7 +1578,7 @@ xpad_pad_close_all (XpadPad *pad)
 	if (xpad_tray_is_open ())
 		xpad_pad_group_close_all (pad->priv->group);
 	else
-		xpad_pad_quit (pad);
+		xpad_app_quit ();
 }
 
 static void
