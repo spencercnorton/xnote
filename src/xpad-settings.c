@@ -119,7 +119,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	obj_prop[PROP_HAS_TOOLBAR]				= g_param_spec_boolean ("has-toolbar", "Has toolbar", "Whether pads have toolbars", TRUE, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOHIDE_TOOLBAR]			= g_param_spec_boolean ("autohide-toolbar", "Autohide toolbar", "Hide toolbars when not used", TRUE, G_PARAM_READWRITE);
 	obj_prop[PROP_HAS_SCROLLBAR]			= g_param_spec_boolean ("has-scrollbar", "Has scrollbar", "Whether pads have scrollbars", TRUE, G_PARAM_READWRITE);
-	obj_prop[PROP_FONTNAME]					= g_param_spec_string ("fontname", "Font Name", "Default name of pad font", NULL, G_PARAM_READWRITE);
+	obj_prop[PROP_FONTNAME]					= g_param_spec_string ("fontname", "Font name", "Default name of pad font", NULL, G_PARAM_READWRITE);
 	obj_prop[PROP_TEXT_COLOR]				= g_param_spec_boxed ("text-color", "Text color", "Default color of pad text", GDK_TYPE_RGBA, G_PARAM_READWRITE);
 	obj_prop[PROP_BACK_COLOR]				= g_param_spec_boxed ("back-color", "Back color", "Default color of pad background", GDK_TYPE_RGBA, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOSTART_XPAD]			= g_param_spec_boolean ("autostart-xpad", "Automatically start xpad", "Start Xpad after login", FALSE, G_PARAM_READWRITE);

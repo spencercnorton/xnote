@@ -120,10 +120,10 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 		"border-width", 6,
 		NULL));
 	
+	prop->priv->fontbutton = gtk_font_button_new ();
 	prop->priv->textbutton = gtk_color_button_new ();
 	prop->priv->backbutton = gtk_color_button_new ();
-	prop->priv->fontbutton = gtk_font_button_new ();
-	
+
 	font_radio = gtk_radio_button_new_with_mnemonic (NULL, _("Use font from xpad preferences"));
 	prop->priv->fontcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (font_radio), _("Use this font:"));
 	color_radio = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from xpad preferences"));
@@ -181,14 +181,13 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_box_pack_start (vbox, alignment, FALSE, FALSE, 0);
 	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 	
-	g_signal_connect (prop->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), prop);
 	g_signal_connect (prop->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), prop);
+	g_signal_connect (prop->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), prop);
+	g_signal_connect_swapped (prop->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), prop);
 	g_signal_connect_swapped (prop->priv->textbutton, "color-set", G_CALLBACK (change_text_color), prop);
 	g_signal_connect_swapped (prop->priv->backbutton, "color-set", G_CALLBACK (change_back_color), prop);
-	g_signal_connect_swapped (prop->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), prop);
 	
-	/* Setup initial state, which should never be seen, but just in case client doesn't set them
-	   itself, we'll be consistent. */
+	/* Setup initial state, which should never be seen, but just in case client doesn't set them itself, we'll be consistent. */
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (font_radio), TRUE);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (color_radio), TRUE);
 	gtk_widget_set_sensitive (prop->priv->colorbox, FALSE);
@@ -209,19 +208,19 @@ xpad_pad_properties_response (GtkDialog *dialog, gint response)
 }
 
 static void
-change_color_check (GtkToggleButton *button, XpadPadProperties *prop)
-{
-	gtk_widget_set_sensitive (prop->priv->colorbox, gtk_toggle_button_get_active (button));
-
-	g_object_notify (G_OBJECT (prop), "follow-color-style");
-}
-
-static void
 change_font_check (GtkToggleButton *button, XpadPadProperties *prop)
 {
 	gtk_widget_set_sensitive (prop->priv->fontbutton, gtk_toggle_button_get_active (button));
 
 	g_object_notify (G_OBJECT (prop), "follow-font-style");
+}
+
+static void
+change_color_check (GtkToggleButton *button, XpadPadProperties *prop)
+{
+	gtk_widget_set_sensitive (prop->priv->colorbox, gtk_toggle_button_get_active (button));
+
+	g_object_notify (G_OBJECT (prop), "follow-color-style");
 }
 
 static void
