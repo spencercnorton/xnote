@@ -97,9 +97,9 @@ enum
 static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 static guint signals[LAST_SIGNAL] = { 0 };
 
-static void xpad_pad_constructed (GObject *object);
 static void xpad_pad_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_pad_constructed (GObject *object);
 static void xpad_pad_dispose (GObject *object);
 static void xpad_pad_finalize (GObject *object);
 static void xpad_pad_load_info (XpadPad *pad, gboolean *show);
@@ -1637,38 +1637,26 @@ menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
 }
 
 static void
-menu_toolbar (XpadPad *pad, GtkCheckMenuItem *check)
+menu_toolbar (GtkCheckMenuItem *check, XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) pad;
-
 	g_object_set (pad->priv->settings, "has-toolbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
-menu_scrollbar (XpadPad *pad, GtkCheckMenuItem *check)
+menu_scrollbar (GtkCheckMenuItem *check, XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) pad;
-
 	g_object_set (pad->priv->settings, "has-scrollbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
-menu_autohide (XpadPad *pad, GtkCheckMenuItem *check)
+menu_autohide (GtkCheckMenuItem *check, XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) pad;
-
 	g_object_set (pad->priv->settings, "autohide-toolbar", gtk_check_menu_item_get_active (check), NULL);
 }
 
 static void
-menu_decorated (XpadPad *pad, GtkCheckMenuItem *check)
+menu_decorated (GtkCheckMenuItem *check, XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) pad;
-
 	g_object_set (pad->priv->settings, "has-decorations", gtk_check_menu_item_get_active (check), NULL);
 }
 
@@ -1708,7 +1696,7 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 #define MENU_ADD_CHECK(mnemonic, active, callback) {\
 	item = gtk_check_menu_item_new_with_mnemonic (mnemonic);\
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), active);\
-	g_signal_connect_swapped (item, "toggled", G_CALLBACK (callback), pad);\
+	g_signal_connect (item, "toggled", G_CALLBACK (callback), pad);\
 	gtk_container_add (GTK_CONTAINER (menu), item);\
 	}
 
@@ -1772,7 +1760,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_CHECK (_("_Scrollbar"), has_scrollbar, menu_scrollbar);
 	MENU_ADD_CHECK (_("_Window Decorations"), decorations, menu_decorated);
 	
-	/* Notes submenu */
+	/* Notes submenu - The list of notes will get added in the prep function below */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
 	menu = gtk_menu_new ();
@@ -1795,13 +1783,13 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 }
 
 static void
-menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
+menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 {
 	GtkWidget *menu, *item;
 
 	GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
-	XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (current_pad->priv->textview)));
+	XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	
 	item = g_object_get_data (G_OBJECT (uppermenu), "paste");
 	if (item)
@@ -1820,6 +1808,7 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 	{
 		gint n = 1;
 		gchar *key;
+		GSList *pads, *l;
 		
 		/* Remove old menu */
 		item = g_object_get_data (G_OBJECT (menu), "notes-sep");
@@ -1830,18 +1819,14 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 			item = g_object_get_data (G_OBJECT (menu), key);
 			g_free (key);
 		}
-	}
-	if (menu && current_pad->priv->group)
-	{
-		GSList *pads, *l;
-		gint n;
+
 		GtkAccelGroup *accel_group = gtk_menu_get_accel_group (GTK_MENU (uppermenu));
 		
 		MENU_ADD_SEP ();
 		g_object_set_data (G_OBJECT (menu), "notes-sep", item);
-		
+
 		/* Order pads according to title */
-		pads = xpad_pad_group_get_pads (current_pad->priv->group);
+		pads = xpad_pad_group_get_pads (pad->priv->group);
 		
 		pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 		
@@ -1873,6 +1858,7 @@ menu_prep_popup_no_highlight (XpadPad *current_pad, GtkWidget *uppermenu)
 		pads = NULL;
 		l = NULL;
 	}
+	gtk_widget_show_all (menu);
 }
 
 static GtkWidget *
@@ -1986,10 +1972,10 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 		menu = pad->priv->menu;
 		menu_prep_popup_no_highlight (pad, menu);
 	}
-	
+
 	if (!menu)
 		return;
-	
+
 	menu_popup (GTK_WIDGET (menu), pad);
 	
 	if (event)
