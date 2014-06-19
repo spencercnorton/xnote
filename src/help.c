@@ -19,26 +19,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
+#include "help.h"
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-GtkWidget *help_window = NULL;
+GtkWindow *help_window = NULL;
 
 static void help_close (void)
 {
 	help_window = NULL;
 }
 
-
 static void show_help_at_page (gint page);
 
-static GtkWidget *create_help (gint page)
+static GtkWindow *create_help (gint page)
 {
-	GtkWidget *dialog, *helptext, *button;
+	GtkWindow *dialog;
+	GtkWidget *helptext, *button;
 	gchar *helptextbuf;
 	
 	/* Create the widgets */
-	dialog = gtk_dialog_new ();
+	dialog = GTK_WINDOW (gtk_dialog_new ());
 	helptext = gtk_label_new ("");
 	
 	if (page == 0) {
@@ -71,21 +73,19 @@ static GtkWidget *create_help (gint page)
 	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 	
-	gtk_window_set_title (GTK_WINDOW (dialog), _("Help"));
+	gtk_window_set_title (dialog, _("Help"));
 	
 	/* Add the label, and show everything we've added to the dialog. */
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), helptext);
-	button = gtk_dialog_add_button (GTK_DIALOG(dialog), "gtk-close", 1);
+	button = gtk_dialog_add_button (GTK_DIALOG (dialog), "gtk-close", 1);
 	
-	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+	gtk_window_set_position (dialog, GTK_WIN_POS_CENTER);
 	
-	g_signal_connect (GTK_WINDOW (dialog), "destroy",
-		G_CALLBACK (help_close), NULL);
-	g_signal_connect_swapped (GTK_BUTTON (button), "clicked",
-		G_CALLBACK (gtk_widget_destroy), dialog);
+	g_signal_connect (dialog, "destroy", G_CALLBACK (help_close), NULL);
+	g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), dialog);
 	
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	gtk_widget_show_all (dialog);
+	gtk_window_set_resizable (dialog, FALSE);
+	gtk_widget_show_all (GTK_WIDGET (dialog));
 	
 	return dialog;
 }
@@ -100,5 +100,5 @@ static void show_help_at_page (gint page)
 	if (help_window == NULL)
 		help_window = create_help (page);
 	else
-		gtk_window_present (GTK_WINDOW (help_window));
+		gtk_window_present (help_window);
 }

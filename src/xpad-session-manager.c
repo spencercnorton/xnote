@@ -21,7 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef X_DISPLAY_MISSING
 
-#include <glib.h>
+#include "../config.h"
+#include "xpad-session-manager.h"
 #include <pwd.h>
 #include <stdlib.h>
 #include <string.h>

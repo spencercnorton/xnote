@@ -51,7 +51,7 @@ struct XpadTextBufferClass
 
 GType xpad_text_buffer_get_type (void);
 
-XpadTextBuffer *xpad_text_buffer_new (void);
+XpadTextBuffer *xpad_text_buffer_new (XpadPad *pad);
 
 void xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text);
 gchar *xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer);
@@ -67,8 +67,10 @@ void xpad_text_buffer_redo (XpadTextBuffer *buffer);
 void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer);
 void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer);
 
+/*
 XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer);
 void xpad_text_buffer_set_pad (XpadTextBuffer *buffer, XpadPad *pad);
+*/
 
 G_END_DECLS
 

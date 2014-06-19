@@ -29,26 +29,26 @@ typedef void (*XpadPeriodicFunc)(void *);
 /* Callback function codes: save-content, save-info */
 
 /************************
-	Xpad_periodic_init():	initializes this module
-	Xpad_periodic_close():	frees resources of this module
+	xpad_periodic_init():	initializes this module
+	xpad_periodic_close():	frees resources of this module
 ************************/
-gboolean	Xpad_periodic_init(void);
-void		Xpad_periodic_close(void);
+gboolean	xpad_periodic_init(void);
+void		xpad_periodic_close(void);
 
 /************************
-	Xpad_periodic_set_callback():
+	xpad_periodic_set_callback():
 	Sets up a callback function for a signal name.
 	The signal names are "save-info" and "save-content"
 ************************/
-gboolean	Xpad_periodic_set_callback (const char *, XpadPeriodicFunc);
+gboolean	xpad_periodic_set_callback (const char *, XpadPeriodicFunc);
 
 /************************
-	Xpad_periodic_save_content_delayed:
-	Xpad_periodic_save_info_delayed:
+	xpad_periodic_save_content_delayed:
+	xpad_periodic_save_info_delayed:
 	These functions prepare either the pad's content
 	or info to be saved later.
 ************************/
-void	Xpad_periodic_save_content_delayed (void * xpad_pad);
-void	Xpad_periodic_save_info_delayed (void * xpad_pad);
+void	xpad_periodic_save_content_delayed (void * xpad_pad);
+void	xpad_periodic_save_info_delayed (void * xpad_pad);
 
 #endif /* XPAD_PERIODIC_H */

@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  Unfortunately, we lose portability... */
 
 #include "../config.h"
+#include "xpad-app.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
@@ -34,7 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <stdlib.h>
 #include "help.h"
-#include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-periodic.h"
@@ -74,7 +74,7 @@ static gint server_fd;
 static FILE *output;
 static XpadPadGroup *pad_group;
 static gint pads_loaded_on_start = 0;
-XpadSettings *xpad_global_settings;
+static XpadSettings *settings;
 
 static gboolean		process_local_args          (gint *argc, gchar **argv[]);
 static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings *xpad_settings);
@@ -121,7 +121,7 @@ xpad_app_init (int argc, char **argv)
 		process_local_args (&xpad_argc, &xpad_argv);
 		if (!xpad_app_pass_args ())
 		{
-			process_remote_args (&xpad_argc, &xpad_argv, FALSE, xpad_global_settings);
+			process_remote_args (&xpad_argc, &xpad_argv, FALSE, settings);
 			fprintf (output, "%s\n", _("Xpad is a graphical program.  Please run it from your desktop."));
 		}
 		exit (0);
@@ -148,31 +148,31 @@ xpad_app_init (int argc, char **argv)
 	gtk_window_set_default_icon_name (PACKAGE);
 	
 	/* Read the Xpad configuration file from disk (if exists) */
-	xpad_global_settings = xpad_settings_new ();
-	
+	settings = xpad_settings_new ();
+
 	/* Delay program startup, if user configured it, to wait for example for the loading of the systray. */
 	guint autostart_delay;
-	g_object_get (xpad_global_settings, "autostart-delay", &autostart_delay, NULL);
+	g_object_get (settings, "autostart-delay", &autostart_delay, NULL);
 
 	if (autostart_delay)
 		sleep(autostart_delay);
 
 	pad_group = xpad_pad_group_new();
-	process_remote_args (&xpad_argc, &xpad_argv, TRUE, xpad_global_settings);
+	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
 	
-	xpad_tray_init (xpad_global_settings);
+	xpad_tray_init (settings);
 	xpad_session_manager_init ();
 
 	/* Initialize Xpad-periodic module */
-	Xpad_periodic_init();
-	Xpad_periodic_set_callback("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
-	Xpad_periodic_set_callback("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
+	xpad_periodic_init ();
+	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 	
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
 	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
-			GtkWidget *pad = xpad_pad_new (pad_group);
+			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 			gtk_widget_show (pad);
 		}
 	}
@@ -253,12 +253,12 @@ xpad_app_quit (void)
 		g_object_unref (pad_group);
 
 	/* Free the memory used by the tray icon and its menu. */
-	xpad_tray_dispose (xpad_global_settings);
+	xpad_tray_dispose (settings);
 
 	/* Free the memory used by the settings menu. */
-	if (G_IS_OBJECT (xpad_global_settings))
-		g_object_unref (xpad_global_settings);
-	xpad_global_settings = NULL; /* This is needed due to the asynchronous finalizing process. */
+	if (G_IS_OBJECT (settings))
+		g_object_unref (settings);
+	settings = NULL; /* This is needed due to the asynchronous finalizing process. */
 
 	/* Free the theme reference. Unfortunately GTK3 leaves about 600 objects behind. */
 	if (G_IS_OBJECT (gtk_icon_theme_get_default ()))
@@ -482,7 +482,7 @@ xpad_app_load_pads (void)
 		    name[strlen (name) - 1] != '~')
 		{
 			gboolean show = TRUE;
-			GtkWidget *pad = xpad_pad_new_with_info (pad_group, name, &show);
+			GtkWidget *pad = xpad_pad_new_with_info (pad_group, settings, name, &show);
 			if ((show || option_show) && !option_hide)
 				gtk_widget_show (pad);
 		  else if (show) /* pad thought it would show, we should save that it didn't */
@@ -635,7 +635,7 @@ xpad_app_read_from_proc_file (void)
 	/* here we redirect singleton->priv->output to the socket */
 	output = fdopen (client_fd, "w");
 	
-	if (!process_remote_args (&argc, &argv, TRUE, xpad_global_settings))
+	if (!process_remote_args (&argc, &argv, TRUE, settings))
 	{
 		/* if there were no non-local arguments, insert --new as argument */
 		gint c = 2;
@@ -647,7 +647,7 @@ xpad_app_read_from_proc_file (void)
 		v[0] = PACKAGE;
 		v[1] = "--new";
 		
-		process_remote_args (&c, &v, TRUE, xpad_global_settings);
+		process_remote_args (&c, &v, TRUE, settings);
 		
 		g_free (v);
 	}
@@ -863,11 +863,11 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 			xpad_session_manager_set_id (option_smid);
 		
 		if (!option_new)
-			g_object_get (xpad_global_settings, "autostart-new-pad", &option_new, NULL);
+			g_object_get (settings, "autostart-new-pad", &option_new, NULL);
 
 		if (have_gtk && option_new)
 		{
-			GtkWidget *pad = xpad_pad_new (pad_group);
+			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 			gtk_widget_show (pad);
 		}
 		
@@ -885,7 +885,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 			int i;
 			for (i = 0; option_files[i]; i++)
 			{
-				GtkWidget *pad = xpad_pad_new_from_file (pad_group, option_files[i]);
+				GtkWidget *pad = xpad_pad_new_from_file (pad_group, settings, option_files[i]);
 				if (pad)
 					gtk_widget_show (pad);
 			}

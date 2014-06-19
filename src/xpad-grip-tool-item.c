@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
 #include "xpad-grip-tool-item.h"
 
 struct XpadGripToolItemPrivate
@@ -27,9 +28,6 @@ struct XpadGripToolItemPrivate
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(XpadGripToolItem, xpad_grip_tool_item, GTK_TYPE_TOOL_ITEM)
-
-static void xpad_grip_tool_item_dispose (GObject *object);
-static void xpad_grip_tool_item_finalize (GObject *object);
 
 static gboolean xpad_grip_tool_item_event_box_draw (GtkWidget *widget, cairo_t *cr);
 static void xpad_grip_tool_item_event_box_realize (GtkWidget *widget);
@@ -44,10 +42,6 @@ xpad_grip_tool_item_new (void)
 static void
 xpad_grip_tool_item_class_init (XpadGripToolItemClass *klass)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
-	
-	gobject_class->dispose = xpad_grip_tool_item_dispose;
-	gobject_class->finalize = xpad_grip_tool_item_finalize;
 }
 
 static void
@@ -71,19 +65,6 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	gtk_container_add (GTK_CONTAINER (alignment), grip->priv->drawbox);
 	gtk_container_add (GTK_CONTAINER (grip), alignment);
 }
-
-static void
-xpad_grip_tool_item_dispose (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_grip_tool_item_parent_class)->dispose (object);
-}
-
-static void
-xpad_grip_tool_item_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_grip_tool_item_parent_class)->finalize (object);
-}
-
 
 static gboolean
 xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *event)

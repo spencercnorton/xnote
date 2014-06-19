@@ -19,9 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
+#include "xpad-periodic.h"
+#include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
-#include "xpad-periodic.h"
 
 #ifdef SHOW_DEBUG
 #   define G_PRINT_DBG g_print
@@ -63,8 +65,8 @@ typedef struct {
 /* prototypes */
 static gint xppd_intercept (gpointer);
 static gint gprint_ignore(const char *, ...);
-static void Xpad_periodic_signal (const char * cbname, void * xpad_pad);
-static void Xpad_periodic_error_exit (const char *, ...);
+static void xpad_periodic_signal (const char * cbname, void * xpad_pad);
+static void xpad_periodic_error_exit (const char *, ...);
 
 static gboolean str_equal (const char *, const char *);
 
@@ -73,7 +75,7 @@ static XpadPeriodic xpptr [1];
 
 /* Functions start here */
 
-gboolean Xpad_periodic_init (void)
+gboolean xpad_periodic_init (void)
 {
     memset(xpptr, 0, sizeof(*xpptr));
     xpptr->after_id = (gint) g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
@@ -87,7 +89,7 @@ gboolean Xpad_periodic_init (void)
     return TRUE;
 }
 
-void    Xpad_periodic_close (void)
+void    xpad_periodic_close (void)
 {
     if (xpptr->after_id) { g_source_remove((guint) xpptr->after_id); }
     /* Free the signal references memory. */
@@ -143,7 +145,7 @@ gint xppd_intercept (gpointer cdata)
 
     Returns true if a callback was registered.
 ************************/
-gboolean    Xpad_periodic_set_callback (
+gboolean    xpad_periodic_set_callback (
     const char * cbname,
     XpadPeriodicFunc func)
 {
@@ -175,17 +177,17 @@ gboolean    Xpad_periodic_set_callback (
     return isdone;
 }
 
-void Xpad_periodic_save_info_delayed (void * xpad_pad)
+void xpad_periodic_save_info_delayed (void * xpad_pad)
 {
-    Xpad_periodic_signal("save-info", xpad_pad);
+    xpad_periodic_signal("save-info", xpad_pad);
 }
 
-void Xpad_periodic_save_content_delayed (void * xpad_pad)
+void xpad_periodic_save_content_delayed (void * xpad_pad)
 {
-    Xpad_periodic_signal("save-content", xpad_pad);
+    xpad_periodic_signal("save-content", xpad_pad);
 }
 
-static void Xpad_periodic_signal (const char * cbname, void * xpad_pad) {
+static void xpad_periodic_signal (const char * cbname, void * xpad_pad) {
     int isdone = 0;
     int tnx=0, snx=0;
     XpadPeriodicFunc func_ptr = 0;
@@ -204,7 +206,7 @@ static void Xpad_periodic_signal (const char * cbname, void * xpad_pad) {
 
     /* If there is no callback address, we can't continue. */
     if (! func_ptr) {
-        Xpad_periodic_error_exit("Can't find signal function address: %s\n", cbname);
+        xpad_periodic_error_exit("Can't find signal function address: %s\n", cbname);
     }
 
     /* Check that this event is not already present. 
@@ -236,7 +238,7 @@ static void Xpad_periodic_signal (const char * cbname, void * xpad_pad) {
     }
 
     if (! isdone) {
-        Xpad_periodic_error_exit("Could not schedule event: %s\n", cbname);
+        xpad_periodic_error_exit("Could not schedule event: %s\n", cbname);
     }
 }
 
@@ -254,7 +256,7 @@ gint gprint_ignore (const char * fmt, ...)
     return 0;
 }
 
-static void Xpad_periodic_error_exit (const char * fmt, ...) {
+static void xpad_periodic_error_exit (const char * fmt, ...) {
     va_list app;
     va_start(app, fmt);
     g_print(fmt, app);

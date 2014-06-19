@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
+#include "../config.h"
+#include "xpad-text-buffer.h"
 #include "xpad-pad.h"
 #include "xpad-undo.h"
 
@@ -29,7 +31,7 @@ struct XpadTextBufferPrivate
 	XpadPad *pad;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
 
 /* Unicode chars in the Private Use Area. */
 static gunichar TAG_CHAR = 0xe000;
@@ -46,12 +48,10 @@ enum
 static void xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_dispose (GObject *object);
-static void xpad_text_buffer_finalize (GObject *object);
 
 XpadTextBuffer *
-xpad_text_buffer_new (void)
+xpad_text_buffer_new (XpadPad *pad)
 {
-	XpadPad *pad = NULL;
 	return g_object_new (XPAD_TYPE_TEXT_BUFFER, "tag_table", create_tag_table(), "pad", pad, NULL);
 }
 
@@ -61,7 +61,6 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->dispose = xpad_text_buffer_dispose;
-	gobject_class->finalize = xpad_text_buffer_finalize;
 	gobject_class->set_property = xpad_text_buffer_set_property;
 	gobject_class->get_property = xpad_text_buffer_get_property;
 
@@ -76,7 +75,7 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 static void
 xpad_text_buffer_init (XpadTextBuffer *buffer)
 {
-	buffer->priv = xpad_text_buffer_get_instance_private(buffer);
+	buffer->priv = xpad_text_buffer_get_instance_private (buffer);
 
 	buffer->priv->undo = xpad_undo_new (buffer);
 }
@@ -96,15 +95,9 @@ xpad_text_buffer_dispose (GObject *object)
 		buffer->priv->undo = NULL;
 	}
 
-	g_object_unref(gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(buffer)));
+	g_object_unref (gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER (buffer)));
 
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
-}
-
-static void
-xpad_text_buffer_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->finalize (object);
 }
 
 static void
@@ -114,7 +107,9 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 
 	switch (prop_id)
 	{
+	/*
 	case PROP_PAD:
+
 		if (buffer->priv->pad && G_IS_OBJECT (buffer->priv->pad))
 			g_object_unref (buffer->priv->pad);
 		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
@@ -122,6 +117,10 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 			buffer->priv->pad = g_value_get_pointer (value);
 			g_object_ref (buffer->priv->pad);
 		}
+		*/
+	case PROP_PAD:
+		buffer->priv->pad = g_value_get_pointer (value);
+		g_object_ref (buffer->priv->pad);
 		break;
 
 	default:
@@ -159,11 +158,13 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 	if (!text)
 		return;
 	
-	gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
+	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
+
+	gtk_text_buffer_begin_user_action (buffer_tb);
 	
-	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
-	gtk_text_buffer_delete (GTK_TEXT_BUFFER (buffer), &start, &end);
-	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+	gtk_text_buffer_get_bounds (buffer_tb, &start, &end);
+	gtk_text_buffer_delete (buffer_tb, &start, &end);
+	gtk_text_buffer_get_bounds (buffer_tb, &start, &end);
 	
 	g_unichar_to_utf8 (TAG_CHAR, tag_char_utf8);
 	
@@ -177,12 +178,12 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 			GList *j;
 			
 			offset = gtk_text_iter_get_offset (&end);
-			gtk_text_buffer_insert (GTK_TEXT_BUFFER (buffer), &end, tokens[count], -1);
-			gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER (buffer), &start, offset);
+			gtk_text_buffer_insert (buffer_tb, &end, tokens[count], -1);
+			gtk_text_buffer_get_iter_at_offset (buffer_tb, &start, offset);
 			
 			for (j = tags; j; j = j->next)
 			{
-				gtk_text_buffer_apply_tag_by_name (GTK_TEXT_BUFFER (buffer), j->data, &start, &end);
+				gtk_text_buffer_apply_tag_by_name (buffer_tb, j->data, &start, &end);
 			}
 		}
 		else
@@ -203,7 +204,7 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 		}
 	}
 	
-	gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
+	gtk_text_buffer_end_user_action (buffer_tb);
 	
 	g_strfreev (tokens);
 }
@@ -217,8 +218,10 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 	gchar tag_char_utf8[7] = {0};
 	gchar *text = g_strdup (""), *oldtext = NULL, *tmp;
 	gboolean done = FALSE;
+	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
+
 	
-	gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (buffer), &start);
+	gtk_text_buffer_get_start_iter (buffer_tb, &start);
 	
 	g_unichar_to_utf8 (TAG_CHAR, tag_char_utf8);
 	
@@ -226,7 +229,7 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 	
 	while (!done)
 	{
-		tmp = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buffer), &prev, &start, TRUE);
+		tmp = gtk_text_buffer_get_text (buffer_tb, &prev, &start, TRUE);
 		oldtext = text;
 		text = g_strconcat (text, tmp, NULL);
 		g_free (oldtext);
@@ -301,10 +304,11 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 	GtkTextTag *tag;
 	GtkTextIter start, end, i;
 	gboolean all_tagged;
+	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
 	
-	table = gtk_text_buffer_get_tag_table ( GTK_TEXT_BUFFER (buffer));
+	table = gtk_text_buffer_get_tag_table (buffer_tb);
 	tag = gtk_text_tag_table_lookup (table, name);
-	gtk_text_buffer_get_selection_bounds ( GTK_TEXT_BUFFER (buffer), &start, &end);
+	gtk_text_buffer_get_selection_bounds (buffer_tb, &start, &end);
 	
 	if (!tag)
 	{
@@ -323,12 +327,12 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 	
 	if (all_tagged)
 	{
-		gtk_text_buffer_remove_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
+		gtk_text_buffer_remove_tag (buffer_tb, tag, &start, &end);
 		xpad_undo_remove_tag (buffer->priv->undo, name, &start, &end);
 	}
 	else
 	{
-		gtk_text_buffer_apply_tag ( GTK_TEXT_BUFFER (buffer), tag, &start, &end);
+		gtk_text_buffer_apply_tag (buffer_tb, tag, &start, &end);
 		xpad_undo_apply_tag (buffer->priv->undo, name, &start, &end);
 	}
 }
