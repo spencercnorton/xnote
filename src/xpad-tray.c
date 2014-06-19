@@ -153,12 +153,9 @@ xpad_tray_show_hide_all ()
 }
 
 static void
-menu_spawn (XpadPadGroup *group)
+menu_spawn (XpadSettings *settings)
 {
-	GSList *pads = xpad_pad_group_get_pads (group);
-	XpadSettings *settings;
-	g_object_get (g_slist_nth_data (pads, 0), "settings", &settings, NULL);
-	GtkWidget *pad = xpad_pad_new (group, settings);
+	GtkWidget *pad = xpad_pad_new (xpad_app_get_pad_group (), settings);
 	gtk_widget_show (pad);
 }
 
@@ -179,7 +176,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSett
 	g_slist_free (pads);
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_New"));
-	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), group);
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), settings);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	
 	item = gtk_separator_menu_item_new ();
@@ -231,7 +228,7 @@ static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings) 
 			xpad_tray_show_windows_list (icon);
 			break;
 		case NEW_PAD:
-			menu_spawn(xpad_app_get_pad_group ());
+			menu_spawn (xpad_app_get_pad_group ());
 			break;
 	}
 }
