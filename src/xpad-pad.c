@@ -494,39 +494,34 @@ xpad_pad_show (XpadPad *pad)
 		gtk_window_unstick (GTK_WINDOW (pad));
 }
 
-static void
-xpad_pad_notify_has_scrollbar (XpadPad *pad)
+static gboolean toolbar_timeout (XpadPad *pad)
 {
-	gboolean has_scrollbar;
-	g_object_get (pad->priv->settings, "has-scrollbar", &has_scrollbar, NULL);
+	if (!pad || !pad->priv || !pad->priv->toolbar_timeout)
+		return FALSE;
 
-	if (has_scrollbar)
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar), 
-			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	else
-	{
-		GtkAdjustment *v, *h;
-		
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar), 
-			GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-		
-		/* now we need to adjust view so that user can see whole pad */
-		h = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->priv->scrollbar));
-		v = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->priv->scrollbar));
-		
-		gtk_adjustment_set_value (h, 0);
-		gtk_adjustment_set_value (v, 0);
-	}
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	if (pad->priv->toolbar_timeout && autohide_toolbar && has_toolbar)
+		xpad_pad_hide_toolbar (pad);
+
+	pad->priv->toolbar_timeout = 0;
+
+	return FALSE;
 }
 
 static void
 xpad_pad_notify_has_decorations (XpadPad *pad)
 {
-	GtkWindow *pad_window = GTK_WINDOW (pad);
 	GtkWidget *pad_widget = GTK_WIDGET (pad);
+	GtkWindow *pad_window = GTK_WINDOW (pad);
 	gboolean decorations;
 	g_object_get (pad->priv->settings, "has-decorations", &decorations, NULL);
 	
+	/* Update pad menu with the new status */
+	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-decorations");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), decorations);
+
 	/*
 	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
 	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
@@ -544,6 +539,79 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	gtk_widget_hide (pad_widget);
 	gtk_widget_unrealize (pad_widget);
 	gtk_widget_show (pad_widget);
+}
+
+static void
+xpad_pad_notify_has_toolbar (XpadPad *pad)
+{
+	gboolean has_toolbar, autohide_toolbar;
+	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	/* Update pad menu with the new status */
+	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-toolbar");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), has_toolbar);
+	menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-autohide-toolbar");
+	gtk_widget_set_sensitive (menu_item, has_toolbar);
+
+	if (has_toolbar && !autohide_toolbar)
+		xpad_pad_show_toolbar (pad);
+	else
+		xpad_pad_hide_toolbar (pad);
+}
+
+static void
+xpad_pad_notify_autohide_toolbar (XpadPad *pad)
+{
+	gboolean autohide_toolbar;
+	g_object_get (pad->priv->settings, "autohide-toolbar", &autohide_toolbar, NULL);
+
+	/* Update pad menu with the new status */
+	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-autohide-toolbar");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), autohide_toolbar);
+
+	if (autohide_toolbar)
+	{
+		/* Likely not to be in pad when turning setting on */
+		if (!pad->priv->toolbar_timeout)
+			pad->priv->toolbar_timeout = g_timeout_add (1000, (GSourceFunc) toolbar_timeout, pad);
+	}
+	else
+	{
+		gboolean has_toolbar;
+		g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, NULL);
+
+		if (has_toolbar)
+			xpad_pad_show_toolbar(pad);
+	}
+}
+
+static void
+xpad_pad_notify_has_scrollbar (XpadPad *pad)
+{
+	gboolean has_scrollbar;
+	g_object_get (pad->priv->settings, "has-scrollbar", &has_scrollbar, NULL);
+
+	/* Update pad menu with the new status */
+	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-scrollbar");
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), has_scrollbar);
+
+	if (has_scrollbar)
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar),
+			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	else
+	{
+		GtkAdjustment *v, *h;
+
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar),
+			GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+		/* now we need to adjust view so that user can see whole pad */
+		h = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (pad->priv->scrollbar));
+		v = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (pad->priv->scrollbar));
+
+		gtk_adjustment_set_value (h, 0);
+		gtk_adjustment_set_value (v, 0);
+	}
 }
 
 static guint
@@ -632,57 +700,6 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 		}
 		if (gtk_widget_get_window (pad_widget))
 			gdk_window_thaw_updates (gtk_widget_get_window (pad_widget));
-	}
-}
-
-static void
-xpad_pad_notify_has_toolbar (XpadPad *pad)
-{
-	gboolean has_toolbar, autohide_toolbar;
-	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
-
-	if (has_toolbar && !autohide_toolbar)
-		xpad_pad_show_toolbar (pad);
-	else
-		xpad_pad_hide_toolbar (pad);
-}
-
-static gboolean
-toolbar_timeout (XpadPad *pad)
-{
-	if (!pad || !pad->priv || !pad->priv->toolbar_timeout)
-		return FALSE;
-
-	gboolean has_toolbar, autohide_toolbar;
-	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
-
-	if (pad->priv->toolbar_timeout && autohide_toolbar && has_toolbar)
-		xpad_pad_hide_toolbar (pad);
-	
-	pad->priv->toolbar_timeout = 0;
-	
-	return FALSE;
-}
-
-static void
-xpad_pad_notify_autohide_toolbar (XpadPad *pad)
-{
-	gboolean autohide_toolbar;
-	g_object_get (pad->priv->settings, "autohide-toolbar", &autohide_toolbar, NULL);
-
-	if (autohide_toolbar)
-	{
-		/* Likely not to be in pad when turning setting on */
-		if (!pad->priv->toolbar_timeout)
-			pad->priv->toolbar_timeout = g_timeout_add (1000, (GSourceFunc) toolbar_timeout, pad);
-	}
-	else
-	{
-		gboolean has_toolbar;
-		g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, NULL);
-
-		if (has_toolbar)
-			xpad_pad_show_toolbar(pad);
 	}
 }
 
@@ -1755,10 +1772,14 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	MENU_ADD_CHECK (_("_Toolbar"), has_toolbar, menu_toolbar);
+	g_object_set_data (G_OBJECT (uppermenu), "has-toolbar", item);
 	MENU_ADD_CHECK (_("_Autohide Toolbar"), autohide_toolbar, menu_autohide);
+	g_object_set_data (G_OBJECT (uppermenu), "has-autohide-toolbar", item);
 	gtk_widget_set_sensitive (item, has_toolbar);
 	MENU_ADD_CHECK (_("_Scrollbar"), has_scrollbar, menu_scrollbar);
+	g_object_set_data (G_OBJECT (uppermenu), "has-scrollbar", item);
 	MENU_ADD_CHECK (_("_Window Decorations"), decorations, menu_decorated);
+	g_object_set_data (G_OBJECT (uppermenu), "has-decorations", item);
 	
 	/* Notes submenu - The list of notes will get added in the prep function below */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
