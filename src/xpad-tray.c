@@ -45,7 +45,7 @@ static void xpad_tray_toggle (XpadSettings *settings);
 /* tray icon left click handler */
 static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings);
 /* tray icon right click handler */
-static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time);
+static void xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSettings *settings);
 /* "toggle show all" menu item handler */
 static void xpad_tray_show_hide_all ();
 /* "show pads" menu item handler */
@@ -87,7 +87,7 @@ static void xpad_tray_open (XpadSettings *settings)
 
 	if (docklet) {
 		g_signal_connect (docklet, "activate", G_CALLBACK (xpad_tray_activate_cb), settings);
-		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), NULL);
+		g_signal_connect (docklet, "popup-menu", G_CALLBACK (xpad_tray_popup_menu_cb), settings);
 	}
 }
 
@@ -159,14 +159,17 @@ xpad_tray_show_hide_all ()
 }
 
 static void
-menu_spawn (XpadPadGroup *group, XpadSettings *settings)
+menu_spawn (XpadPadGroup *group)
 {
+	GSList *pads = xpad_pad_group_get_pads (group);
+	XpadSettings *settings;
+	g_object_get (g_slist_nth_data (pads, 0), "settings", &settings, NULL);
 	GtkWidget *pad = xpad_pad_new (group, settings);
 	gtk_widget_show (pad);
 }
 
 static void
-xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
+xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSettings *settings)
 {
 	GtkWidget *item;
 	GSList *pads;
@@ -213,7 +216,7 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time)
 	gtk_widget_show (item);
 	
 	item = gtk_menu_item_new_with_mnemonic (_("_Preferences"));	
-	g_signal_connect (item, "activate", G_CALLBACK (xpad_preferences_open), NULL);
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_preferences_open), settings);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	gtk_widget_show (item);
 	
@@ -237,7 +240,7 @@ static void xpad_tray_activate_cb (GtkStatusIcon *icon, XpadSettings *settings) 
 			xpad_tray_show_windows_list(icon);
 			break;
 		case NEW_PAD:
-			menu_spawn(xpad_app_get_pad_group(), settings);
+			menu_spawn(xpad_app_get_pad_group());
 			break;
 	}
 }

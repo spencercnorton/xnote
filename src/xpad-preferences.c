@@ -79,7 +79,7 @@ struct XpadPreferencesPrivate
 	gulong notify_confirm_handler;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
 
 static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
@@ -165,17 +165,15 @@ static void xpad_preferences_constructed (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
-	GtkBox *font_hbox, *vbox, *hbox, *global_vbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;;
+	GtkWidget *appearance_frame, *start_frame, *tray_frame, *other_frame, *label, *alignment;
+	GtkBox *font_hbox, *vbox, *hbox, *global_vbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
-	GtkWidget *appearance_frame, *start_frame, *tray_frame, *other_frame;
-	GtkWidget *label, *alignment;	
 	gchar *text;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	GtkRequisition req;
-	GdkRGBA theme_text_color = {0, 0, 0, 0};
-	GdkRGBA theme_background_color = {0, 0, 0, 0};
+	GdkRGBA theme_text_color = {0, 0, 0, 0}, theme_background_color = {0, 0, 0, 0};
 	guint tray_click_configuration, autostart_delay, autostart_display_pads;
 	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky;
 

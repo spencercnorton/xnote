@@ -50,10 +50,12 @@ struct XpadTextViewClass
 
 GType xpad_text_view_get_type (void);
 
-GtkWidget *xpad_text_view_new (XpadSettings *settings);
+GtkWidget *xpad_text_view_new (XpadSettings *settings, XpadPad *pad);
 
+/*
 XpadPad *xpad_text_view_get_pad (XpadTextView *view);
 void xpad_text_view_set_pad (XpadTextView *view, XpadPad *pad);
+*/
 
 G_END_DECLS
 

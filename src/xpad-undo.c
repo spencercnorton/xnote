@@ -29,21 +29,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 struct XpadUndoPrivate
 {
 	XpadTextBuffer *buffer;
-	/* We always redo the next element in the list but undo the current one.
-		We insert this guard with NULL data in the beginning to ease coding all of this */
+	/*
+	 * We always redo the next element in the list but undo the current one.
+	 * We insert this guard with NULL data in the beginning to ease coding all of this.
+	 */
 	GList *history_start;
 	GList *history_curr;
 	guint user_action;
 	gboolean frozen;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadUndo, xpad_undo, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadUndo, xpad_undo, G_TYPE_OBJECT)
 
-static GObject* xpad_undo_constructor(GType gtype, guint n_properties, GObjectConstructParam *properties);
-static void xpad_undo_dispose (GObject *object);
-static void xpad_undo_finalize (GObject *object);
 static void xpad_undo_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_undo_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_undo_constructed (GObject *object);
+static void xpad_undo_finalize (GObject *object);
 
 enum UserActionType
 {
@@ -90,16 +91,15 @@ xpad_undo_class_init (XpadUndoClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-	gobject_class->dispose = xpad_undo_dispose;
-	gobject_class->finalize = xpad_undo_finalize;
 	gobject_class->set_property = xpad_undo_set_property;
 	gobject_class->get_property = xpad_undo_get_property;
-	gobject_class->constructor = xpad_undo_constructor;
+	gobject_class->constructed = xpad_undo_constructed;
+	gobject_class->finalize = xpad_undo_finalize;
 
 	g_object_class_install_property (gobject_class,
 					 PROP_BUFFER,
 					 g_param_spec_pointer ("buffer",
-									"Pad Buffer",
+									"Pad buffer",
 									"Pad buffer connected to this undo",
 									G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 }
@@ -107,7 +107,7 @@ xpad_undo_class_init (XpadUndoClass *klass)
 static void
 xpad_undo_init (XpadUndo *undo)
 {
-	undo->priv = xpad_undo_get_instance_private(undo);
+	undo->priv = xpad_undo_get_instance_private (undo);
 
 	undo->priv->buffer = NULL;
 	undo->priv->history_start = g_list_append (NULL, NULL);
@@ -116,54 +116,14 @@ xpad_undo_init (XpadUndo *undo)
 	undo->priv->frozen = FALSE;
 }
 
-static GObject*
-xpad_undo_constructor(GType gtype, guint n_properties, GObjectConstructParam *properties)
-{
-	GObjectClass *parent_class = G_OBJECT_CLASS (xpad_undo_parent_class);
-	GObject *obj = parent_class->constructor (gtype, n_properties, properties);
-
-	XpadUndo *undo = XPAD_UNDO (obj);
-
-	/* Assert user passed buffer and pad as construct parameter */
-	guint i;
-	gboolean found_buffer = FALSE;
-	for (i = 0; i < n_properties; i++)
-	{
-		if (!g_strcmp0 (properties[i].pspec->name, "buffer") &&
-			G_VALUE_HOLDS_POINTER (properties[i].value) &&
-			G_IS_OBJECT (g_value_get_pointer (properties[i].value)))
-		{
-			found_buffer = TRUE;
-		}
-	}
-
-	if (!found_buffer)
-	{
-		undo->priv->buffer = NULL;
-		g_warning ("XpadTextBuffer is not passed to XpadUndo constructor, undo will not work!\n");
-	}
-	else
-	{
-		/* Set up signals */
-		g_signal_connect (G_OBJECT (undo->priv->buffer), "insert-text", G_CALLBACK (xpad_undo_insert_text), undo);
-		g_signal_connect (G_OBJECT (undo->priv->buffer), "delete-range", G_CALLBACK (xpad_undo_delete_range), undo);
-		g_signal_connect (G_OBJECT (undo->priv->buffer), "begin-user-action", G_CALLBACK (xpad_undo_begin_user_action), undo);
-		g_signal_connect (G_OBJECT (undo->priv->buffer), "end-user-action", G_CALLBACK (xpad_undo_end_user_action), undo);
-	}
-
-	return obj;
-}
-
-static void
-xpad_undo_dispose (GObject *object)
+static void xpad_undo_constructed (GObject *object)
 {
 	XpadUndo *undo = XPAD_UNDO (object);
 
-	if (undo->priv->buffer) {
-		undo->priv->buffer = NULL;
-	}
-
-	G_OBJECT_CLASS (xpad_undo_parent_class)->dispose (object);
+	g_signal_connect (G_OBJECT (undo->priv->buffer), "insert-text", G_CALLBACK (xpad_undo_insert_text), undo);
+	g_signal_connect (G_OBJECT (undo->priv->buffer), "delete-range", G_CALLBACK (xpad_undo_delete_range), undo);
+	g_signal_connect (G_OBJECT (undo->priv->buffer), "begin-user-action", G_CALLBACK (xpad_undo_begin_user_action), undo);
+	g_signal_connect (G_OBJECT (undo->priv->buffer), "end-user-action", G_CALLBACK (xpad_undo_end_user_action), undo);
 }
 
 static void
@@ -175,7 +135,7 @@ xpad_undo_finalize (GObject *object)
 	xpad_undo_clear_history (undo);
 
 	/* remove left guard */
-	g_list_free(undo->priv->history_start);
+	g_list_free (undo->priv->history_start);
 
 	G_OBJECT_CLASS (xpad_undo_parent_class)->finalize (object);
 }
@@ -188,13 +148,16 @@ xpad_undo_set_property (GObject *object, guint prop_id, const GValue *value, GPa
 	switch (prop_id)
 	{
 	case PROP_BUFFER:
+		/*
 		if (undo->priv->buffer && G_IS_OBJECT (undo->priv->buffer))
 			g_object_unref (undo->priv->buffer);
 		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
 		{
 			undo->priv->buffer = g_value_get_pointer (value);
 			g_object_ref (undo->priv->buffer);
-		}
+		}*/
+		undo->priv->buffer = g_value_get_pointer (value);
+		g_object_ref (undo->priv->buffer);
 		break;
 
 	default:
@@ -291,6 +254,7 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 
 	if (undo->priv->user_action)
 	{
+		XpadPad *pad;
 		gint n_utf8_chars = 0;
 		glong string_length = 0;
 
@@ -358,7 +322,8 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 
 		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
-		xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+		g_object_get (undo->priv->buffer, "pad", &pad, NULL);
+		xpad_pad_notify_undo_redo_changed (pad);
 	}
 }
 
@@ -373,6 +338,7 @@ xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *
 
 	if (undo->priv->user_action)
 	{
+		XpadPad *pad;
 		gint n_utf8_chars = 0;
 		glong string_length = 0;
 
@@ -406,7 +372,8 @@ xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *
 
 		undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
-		xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+		g_object_get (undo->priv->buffer, "pad", &pad, NULL);
+		xpad_pad_notify_undo_redo_changed (pad);
 	}
 }
 
@@ -415,6 +382,8 @@ xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkT
 {
 	if (undo->priv->frozen)
 		return;
+
+	XpadPad *pad;
 
 	xpad_undo_clear_redo_history (undo);
 
@@ -435,7 +404,8 @@ xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkT
 
 	undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
-	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+	g_object_get (undo->priv->buffer, "pad", &pad, NULL);
+	xpad_pad_notify_undo_redo_changed (pad);
 }
 
 void
@@ -444,6 +414,7 @@ xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, Gtk
 	if (undo->priv->frozen)
 		return;
 
+	XpadPad *pad;
 	xpad_undo_clear_redo_history (undo);
 
 	gint start_offset = gtk_text_iter_get_offset (start);
@@ -463,7 +434,8 @@ xpad_undo_remove_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, Gtk
 
 	undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
-	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+	g_object_get (undo->priv->buffer, "pad", &pad, NULL);
+	xpad_pad_notify_undo_redo_changed (pad);
 }
 
 gboolean
@@ -511,6 +483,9 @@ xpad_undo_exec_undo (XpadUndo *undo)
 	if (!xpad_undo_undo_available (undo))
 		return;
 
+	XpadPad *pad;
+	g_object_get (undo->priv->buffer, "pad", &pad, NULL);
+
 	UserAction *action = undo->priv->history_curr->data;
 
 	GtkTextTagTable *table = gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER (undo->priv->buffer));
@@ -543,7 +518,7 @@ xpad_undo_exec_undo (XpadUndo *undo)
 						tag,
 						&start,
 						&end);
-				xpad_pad_save_content (xpad_text_buffer_get_pad (undo->priv->buffer));
+				xpad_pad_save_content (pad);
 			}
 			break;
 		case USER_ACTION_REMOVE_TAG:
@@ -553,14 +528,14 @@ xpad_undo_exec_undo (XpadUndo *undo)
 						tag,
 						&start,
 						&end);
-				xpad_pad_save_content (xpad_text_buffer_get_pad (undo->priv->buffer));
+				xpad_pad_save_content (pad);
 			}
 			break;
 	}
 
 	undo->priv->history_curr = g_list_previous (undo->priv->history_curr);
 
-	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+	xpad_pad_notify_undo_redo_changed (pad);
 }
 
 void
@@ -568,6 +543,9 @@ xpad_undo_exec_redo (XpadUndo *undo)
 {
 	if (!xpad_undo_redo_available (undo))
 		return;
+
+	XpadPad *pad;
+	g_object_get (undo->priv->buffer, "pad", &pad, NULL);
 
 	UserAction *action = undo->priv->history_curr->next->data;
 
@@ -601,7 +579,7 @@ xpad_undo_exec_redo (XpadUndo *undo)
 						tag,
 						&start,
 						&end);
-				xpad_pad_save_content (xpad_text_buffer_get_pad (undo->priv->buffer));
+				xpad_pad_save_content (pad);
 			}
 			break;
 		case USER_ACTION_REMOVE_TAG:
@@ -611,14 +589,14 @@ xpad_undo_exec_redo (XpadUndo *undo)
 						tag,
 						&start,
 						&end);
-				xpad_pad_save_content (xpad_text_buffer_get_pad (undo->priv->buffer));
+				xpad_pad_save_content (pad);
 			}
 			break;
 	}
 
 	undo->priv->history_curr = g_list_next (undo->priv->history_curr);
 
-	xpad_pad_notify_undo_redo_changed (xpad_text_buffer_get_pad (undo->priv->buffer));
+	xpad_pad_notify_undo_redo_changed (pad);
 }
 
 void

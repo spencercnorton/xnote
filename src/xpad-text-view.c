@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-text-view.h"
 #include <gtk/gtk.h>
 #include "xpad-text-buffer.h"
+#include "xpad-pad.h"
+#include "xpad-toolbar.h"
 
 struct XpadTextViewPrivate 
 {
@@ -33,13 +35,14 @@ struct XpadTextViewPrivate
 	gulong notify_font_handler;
 	XpadTextBuffer *buffer;
 	XpadSettings *settings;
+	XpadPad *pad;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadTextView, xpad_text_view, GTK_TYPE_TEXT_VIEW)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadTextView, xpad_text_view, GTK_TYPE_TEXT_VIEW)
 
-static void xpad_text_view_constructed (GObject *object);
 static void xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_text_view_constructed (GObject *object);
 static void xpad_text_view_dispose (GObject *object);
 static void xpad_text_view_finalize (GObject *object);
 static void xpad_text_view_realize (XpadTextView *widget);
@@ -54,6 +57,7 @@ enum
 {
 	PROP_0,
 	PROP_SETTINGS,
+	PROP_PAD,
 	PROP_FOLLOW_FONT_STYLE,
 	PROP_FOLLOW_COLOR_STYLE,
 	N_PROPERTIES
@@ -62,9 +66,9 @@ enum
 static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 
 GtkWidget *
-xpad_text_view_new (XpadSettings *settings)
+xpad_text_view_new (XpadSettings *settings, XpadPad *pad)
 {
-	return GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW, "settings", settings, "follow-font-style", TRUE, "follow-color-style", TRUE, NULL));
+	return GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW, "settings", settings, "pad", pad, "follow-font-style", TRUE, "follow-color-style", TRUE, NULL));
 }
 
 static void
@@ -79,8 +83,9 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 	gobject_class->get_property = xpad_text_view_get_property;
 	
 	obj_prop[PROP_SETTINGS] = g_param_spec_pointer ("settings", "Xpad settings", "Xpad global settings", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow Font Style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow Color Style", "Whether to use the default xpad color style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_PAD] = g_param_spec_pointer ("pad", "Pad", "Pad connected to this textview", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow color style", "Whether to use the default xpad color style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 
 	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 }
@@ -88,14 +93,14 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 static void
 xpad_text_view_init (XpadTextView *view)
 {
-	view->priv = xpad_text_view_get_instance_private(view);
+	view->priv = xpad_text_view_get_instance_private (view);
 }
 
 static void xpad_text_view_constructed (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 	
-	view->priv->buffer = xpad_text_buffer_new();
+	view->priv->buffer = xpad_text_buffer_new (view->priv->pad);
 
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
@@ -122,10 +127,14 @@ xpad_text_view_dispose (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
-	if (view->priv->buffer) {
+	if (view->priv->buffer)
 		g_object_unref (view->priv->buffer);
+
+	if (view->priv->pad) {
+		g_object_unref(view->priv->pad);
+		view->priv->pad = NULL;
 	}
-	
+
 	if (view->priv->settings) {
 		g_object_unref(view->priv->settings);
 		view->priv->settings = NULL;
@@ -165,6 +174,11 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		g_object_ref (view->priv->settings);
 		break;
 
+	case PROP_PAD:
+		view->priv->pad = g_value_get_pointer (value);
+		g_object_ref (view->priv->pad);
+		break;
+
 	case PROP_FOLLOW_FONT_STYLE:
 		view->priv->follow_font_style = g_value_get_boolean (value);
 		if (view->priv->follow_font_style) {
@@ -181,7 +195,7 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		view->priv->follow_color_style = g_value_get_boolean (value);
 		if (view->priv->follow_color_style) {
 			xpad_text_view_notify_colors (view);
-			if (view->priv->notify_font_handler != 0) {
+			if (view->priv->notify_text_handler != 0 && view->priv->notify_back_handler != 0) {
 				g_signal_handler_unblock (view->priv->settings, view->priv->notify_text_handler);
 				g_signal_handler_unblock (view->priv->settings, view->priv->notify_back_handler);
 			}
@@ -207,6 +221,10 @@ xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GPar
 	{
 	case PROP_SETTINGS:
 		g_value_set_pointer (value, view->priv->settings);
+		break;
+
+	case PROP_PAD:
+		g_value_set_pointer (value, view->priv->pad);
 		break;
 
 	case PROP_FOLLOW_FONT_STYLE:
@@ -324,86 +342,4 @@ xpad_text_view_notify_colors (XpadTextView *view)
 	/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
 	gtk_widget_override_color (view_widget, GTK_STATE_FLAG_SELECTED, back_color);
 	gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_SELECTED, text_color);
-}
-
-/*
-void
-xpad_text_view_set_follow_font_style (XpadTextView *view, gboolean follow)
-{
-	g_return_if_fail (view);
-
-	if (view->priv->follow_font_style)
-		g_print("view->priv is null");
-	else
-		g_print("view->priv is notnull: %i", view->priv->follow_font_style);
-
-	if (follow != view->priv->follow_font_style)
-	{
-		if (follow)
-		{
-			g_signal_handler_unblock (view->priv->settings, view->priv->notify_font_handler);
-			xpad_text_view_notify_fontname (view);
-		}
-		else
-		{
-			g_signal_handler_block (view->priv->settings, view->priv->notify_font_handler);
-		}
-	}
-	
-	view->priv->follow_font_style = follow;
-	
-	g_object_notify (G_OBJECT (view), "follow_font_style");
-}
-
-gboolean
-xpad_text_view_get_follow_font_style (XpadTextView *view)
-{
-	if (view == NULL)
-		return TRUE;
-	else
-		return view->priv->follow_font_style;
-}
-
-void
-xpad_text_view_set_follow_color_style (XpadTextView *view, gboolean follow)
-{
-	g_return_if_fail (view);
-
-	if (follow != view->priv->follow_color_style)
-	{
-		if (follow)
-		{
-			xpad_text_view_notify_colors (view);
-			g_signal_handler_unblock (view->priv->settings, view->priv->notify_text_handler);
-			g_signal_handler_unblock (view->priv->settings, view->priv->notify_back_handler);
-		}
-		else
-		{
-			g_signal_handler_block (view->priv->settings, view->priv->notify_text_handler);
-			g_signal_handler_block (view->priv->settings, view->priv->notify_back_handler);
-		}
-
-		view->priv->follow_color_style = follow;
-	}
-
-	g_object_notify (G_OBJECT (view), "follow_color_style");
-}
-
-gboolean
-xpad_text_view_get_follow_color_style (XpadTextView *view)
-{
-	if (view == NULL)
-		return TRUE;
-	else
-		return view->priv->follow_color_style;
-}
-*/
-XpadPad *xpad_text_view_get_pad (XpadTextView *view)
-{
-	return xpad_text_buffer_get_pad (view->priv->buffer);
-}
-
-void xpad_text_view_set_pad (XpadTextView *view, XpadPad *pad)
-{
-	xpad_text_buffer_set_pad (view->priv->buffer, pad);
 }

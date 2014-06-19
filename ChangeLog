@@ -7,10 +7,11 @@ Version 4.3
 * New: Autostart - Ability to delay the start of Xpad in the Preferences menu (#405314)
 * New: Autostart - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
 * New: Autostart - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu (#405314)
+* New: Shortcuts - Added shortcuts keys for New pad (CTRL-N) and Delete (SHIFT-DEL) and changed Redo from (CTRL-R) to (CTRL-Y)
 * Fix: Toolbar - improved default toolbar items to the commonly used items
 * Fix: Toolbar - improved item names
 * Fix: Toolbar - prevented a crash when erasing toolbar items
-* Fix: Preferences - Changed description of Edit Lock into Make pads read-only
+* Fix: Preferences - Changed descriptions of the options in the preferences menu in more understandable language.
 * Fix: Preferences - Make sure that the preference window is always presented up front to the user, when requested.
 * Fix: Technical - Migrated Xpad from GTK2 to GTK3 (#1242424)
 * Fix: Technical - Replaced deprecated Glib and GTK statements
@@ -22,9 +23,12 @@ Version 4.3
 * Fix: Technical - Improve the hiding of pads at Xpad launch (#405314)
 * Fix: Technical - Added thread safe handling of new preferences
 * Fix: Technical - Ensured the use of GNU C libraries, so the readlink function is available
-* Fix: Technical - Prevented dispose functions calling NULL objects leading to errors
 * Fix: Technical - Reduced the amount of functions by using generic setters and getters
 * Fix: Technical - Reduced the number of includes
+* Fix: Technical - Got rid of the global variable xpad_global_settings
+* Fix: Technical - Improved performance by reducing the amount of GTK_ casts, as suggested in the GTK best practices
+* Fix: Technical - Applied GTK best practices for inclusion of 1st config.h and 2nd its header file in each c-file
+* Fix: Technical - Reduced errors when exiting the application
 * Fix: Credits - all files use the same credits format
 
 Version 4.2

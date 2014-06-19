@@ -50,7 +50,7 @@ struct XpadSettingsPrivate
 	guint autostart_display_pads;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadSettings, xpad_settings, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadSettings, xpad_settings, G_TYPE_OBJECT)
 
 #define DEFAULTS_FILENAME	"default-style"
 

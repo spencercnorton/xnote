@@ -35,7 +35,7 @@ struct XpadToolbarPrivate
 	XpadPad *pad;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadToolbar, xpad_toolbar, GTK_TYPE_TOOLBAR)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadToolbar, xpad_toolbar, GTK_TYPE_TOOLBAR)
 
 enum {
 	XPAD_BUTTON_TYPE_SEPARATOR,

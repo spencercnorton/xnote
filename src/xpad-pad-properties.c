@@ -39,16 +39,16 @@ struct XpadPadPropertiesPrivate
 	GtkWidget *fontbutton;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadPadProperties, xpad_pad_properties, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadPadProperties, xpad_pad_properties, GTK_TYPE_DIALOG)
 
 static void xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_pad_properties_response (GtkDialog *dialog, gint response);
 static void change_color_check (GtkToggleButton *button, XpadPadProperties *prop);
 static void change_font_check (GtkToggleButton *button, XpadPadProperties *prop);
-static void change_text_color (GtkColorButton *button, XpadPadProperties *prop);
-static void change_back_color (GtkColorButton *button, XpadPadProperties *prop);
-static void change_font_face (GtkFontButton *button, XpadPadProperties *prop);
+static void change_text_color (XpadPadProperties *prop);
+static void change_back_color (XpadPadProperties *prop);
+static void change_font_face (XpadPadProperties *prop);
 
 enum
 {
@@ -58,8 +58,10 @@ enum
   PROP_BACK_COLOR,
   PROP_TEXT_COLOR,
   PROP_FONTNAME,
-  LAST_PROP
+  N_PROPERTIES
 };
+
+static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 
 GtkWidget *
 xpad_pad_properties_new (void)
@@ -75,47 +77,13 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 	gobject_class->set_property = xpad_pad_properties_set_property;
 	gobject_class->get_property = xpad_pad_properties_get_property;
 	
-	/* Properties */
+	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow color style", "Whether to use the default xpad color style", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_TEXT_COLOR] = g_param_spec_boxed ("text-color", "Text color", "The color of text in this pad", GDK_TYPE_RGBA, G_PARAM_READWRITE);
+	obj_prop[PROP_BACK_COLOR] = g_param_spec_boxed ("back-color", "Back color", "The color of the background in this pad", GDK_TYPE_RGBA, G_PARAM_READWRITE);
+	obj_prop[PROP_FONTNAME] = g_param_spec_string ("fontname", "Font name", "The name of the font for this pad", NULL, G_PARAM_READWRITE);
 	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_FOLLOW_FONT_STYLE,
-	                                 g_param_spec_boolean ("follow-font-style",
-	                                                       "Follow Font Style",
-	                                                       "Whether to use the default xpad font style",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_FOLLOW_COLOR_STYLE,
-	                                 g_param_spec_boolean ("follow-color-style",
-	                                                       "Follow Color Style",
-	                                                       "Whether to use the default xpad color style",
-	                                                       TRUE,
-	                                                       G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_TEXT_COLOR,
-	                                 g_param_spec_boxed ("text-color",
-	                                                     "Text Color",
-	                                                     "The color of text in the pad",
-	                                                     GDK_TYPE_RGBA,
-	                                                     G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_BACK_COLOR,
-	                                 g_param_spec_boxed ("back-color",
-	                                                     "Back Color",
-	                                                     "The color of the background in the pad",
-	                                                     GDK_TYPE_RGBA,
-	                                                     G_PARAM_READWRITE));
-	
-	g_object_class_install_property (gobject_class,
-	                                 PROP_FONTNAME,
-	                                 g_param_spec_string ("fontname",
-	                                                      "Font Name",
-	                                                      "The name of the font for the pad",
-	                                                      NULL,
-	                                                      G_PARAM_READWRITE));
+	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 }
 
 static void
@@ -126,7 +94,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	GtkWidget *font_radio, *color_radio, *label, *appearance_frame, *alignment;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	
-	prop->priv = xpad_pad_properties_get_instance_private(prop);
+	prop->priv = xpad_pad_properties_get_instance_private (prop);
 	
 	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
 	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
@@ -215,9 +183,9 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	
 	g_signal_connect (prop->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), prop);
 	g_signal_connect (prop->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), prop);
-	g_signal_connect (prop->priv->textbutton, "color-set", G_CALLBACK (change_text_color), prop);
-	g_signal_connect (prop->priv->backbutton, "color-set", G_CALLBACK (change_back_color), prop);
-	g_signal_connect (prop->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), prop);
+	g_signal_connect_swapped (prop->priv->textbutton, "color-set", G_CALLBACK (change_text_color), prop);
+	g_signal_connect_swapped (prop->priv->backbutton, "color-set", G_CALLBACK (change_back_color), prop);
+	g_signal_connect_swapped (prop->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), prop);
 	
 	/* Setup initial state, which should never be seen, but just in case client doesn't set them
 	   itself, we'll be consistent. */
@@ -257,29 +225,20 @@ change_font_check (GtkToggleButton *button, XpadPadProperties *prop)
 }
 
 static void
-change_text_color (GtkColorButton *button, XpadPadProperties *prop)
+change_text_color (XpadPadProperties *prop)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) button;
-
 	g_object_notify (G_OBJECT (prop), "text-color");
 }
 
 static void
-change_back_color (GtkColorButton *button, XpadPadProperties *prop)
+change_back_color (XpadPadProperties *prop)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) button;
-
 	g_object_notify (G_OBJECT (prop), "back-color");
 }
 
 static void
-change_font_face (GtkFontButton *button, XpadPadProperties *prop)
+change_font_face (XpadPadProperties *prop)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) button;
-
 	g_object_notify (G_OBJECT (prop), "fontname");
 }
 

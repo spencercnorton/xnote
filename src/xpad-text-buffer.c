@@ -31,7 +31,7 @@ struct XpadTextBufferPrivate
 	XpadPad *pad;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadTextBuffer, xpad_text_buffer, GTK_TYPE_TEXT_BUFFER)
 
 /* Unicode chars in the Private Use Area. */
 static gunichar TAG_CHAR = 0xe000;
@@ -50,9 +50,8 @@ static void xpad_text_buffer_get_property (GObject *object, guint prop_id, GValu
 static void xpad_text_buffer_dispose (GObject *object);
 
 XpadTextBuffer *
-xpad_text_buffer_new (void)
+xpad_text_buffer_new (XpadPad *pad)
 {
-	XpadPad *pad = NULL;
 	return g_object_new (XPAD_TYPE_TEXT_BUFFER, "tag_table", create_tag_table(), "pad", pad, NULL);
 }
 
@@ -76,7 +75,7 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 static void
 xpad_text_buffer_init (XpadTextBuffer *buffer)
 {
-	buffer->priv = xpad_text_buffer_get_instance_private(buffer);
+	buffer->priv = xpad_text_buffer_get_instance_private (buffer);
 
 	buffer->priv->undo = xpad_undo_new (buffer);
 }
@@ -96,7 +95,7 @@ xpad_text_buffer_dispose (GObject *object)
 		buffer->priv->undo = NULL;
 	}
 
-	g_object_unref(gtk_text_buffer_get_tag_table(GTK_TEXT_BUFFER(buffer)));
+	g_object_unref (gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER (buffer)));
 
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
 }
@@ -108,7 +107,9 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 
 	switch (prop_id)
 	{
+	/*
 	case PROP_PAD:
+
 		if (buffer->priv->pad && G_IS_OBJECT (buffer->priv->pad))
 			g_object_unref (buffer->priv->pad);
 		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
@@ -116,6 +117,10 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 			buffer->priv->pad = g_value_get_pointer (value);
 			g_object_ref (buffer->priv->pad);
 		}
+		*/
+	case PROP_PAD:
+		buffer->priv->pad = g_value_get_pointer (value);
+		g_object_ref (buffer->priv->pad);
 		break;
 
 	default:

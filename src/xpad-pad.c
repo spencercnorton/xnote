@@ -78,7 +78,7 @@ struct XpadPadPrivate
 	XpadPadGroup *group;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadPad, xpad_pad, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadPad, xpad_pad, GTK_TYPE_WINDOW)
 
 enum
 {
@@ -300,6 +300,7 @@ static void xpad_pad_constructed (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 
+	gboolean decorations;
 	GtkBox *vbox;
 
 	g_object_get (pad->priv->settings,
@@ -309,9 +310,7 @@ static void xpad_pad_constructed (GObject *object)
 
 	GtkWindow *pad_window = GTK_WINDOW (pad);
 
-	XpadTextView *text_view = XPAD_TEXT_VIEW (xpad_text_view_new (pad->priv->settings));
-	xpad_text_view_set_pad (text_view, pad);
-	pad->priv->textview = GTK_WIDGET (text_view);
+	pad->priv->textview = GTK_WIDGET (XPAD_TEXT_VIEW (xpad_text_view_new (pad->priv->settings, pad)));
 
 	pad->priv->scrollbar = GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 		"hadjustment", NULL,
@@ -337,7 +336,6 @@ static void xpad_pad_constructed (GObject *object)
 
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
 
-	gboolean decorations;
 	g_object_get (pad->priv->settings, "has-decorations", &decorations, NULL);
 	gtk_window_set_decorated (pad_window, decorations);
 	gtk_window_set_default_size (pad_window, (gint) pad->priv->width, (gint) pad->priv->height);
@@ -430,10 +428,19 @@ xpad_pad_dispose (GObject *object)
 		pad->priv->highlight_menu = NULL;
 	}
 
+	if (XPAD_IS_PAD_PROPERTIES (pad->priv->properties)) {
+		gtk_widget_destroy (pad->priv->properties);
+		pad->priv->properties = NULL;
+	}
+
+	gtk_clipboard_clear (pad->priv->clipboard);
+
 	/* For some reason the clipboard handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error. */
+	/*
 	if (GTK_IS_CLIPBOARD (pad->priv->clipboard)) {
 		g_signal_handlers_disconnect_matched (pad->priv->clipboard, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
 	}
+	*/
 
 	/* For some reason the toolbar handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error. */
 	if (XPAD_IS_TOOLBAR (pad->priv->toolbar)) {
@@ -441,17 +448,13 @@ xpad_pad_dispose (GObject *object)
 		gtk_widget_destroy(pad->priv->toolbar);
 		pad->priv->toolbar = NULL;
 	}
-	
+
+	/*
 	if (GTK_IS_ACCEL_GROUP (pad->priv->accel_group)) {
 		g_object_unref (pad->priv->accel_group);
 		pad->priv->accel_group = NULL;
 	}
-
-	if (pad->priv->settings) {
-		g_object_unref(pad->priv->settings);
-		pad->priv->settings = NULL;
-	}
-
+	 */
 	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
 }
 
@@ -460,8 +463,11 @@ xpad_pad_finalize (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 
-	if (pad->priv->settings)
+	if (pad->priv->settings) {
 		g_signal_handlers_disconnect_matched (pad->priv->settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
+		g_object_unref(pad->priv->settings);
+		pad->priv->settings = NULL;
+	}
 
 	g_free (pad->priv->infoname);
 	g_free (pad->priv->contentname);
@@ -928,6 +934,7 @@ prop_notify_colors (XpadPad *pad)
 	
 	gboolean follow_color_style;
 	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+
 	g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-color-style", follow_color_style, NULL);
 
 	if (follow_color_style)
@@ -1494,7 +1501,7 @@ menu_about (XpadPad *pad)
 		NULL);
 }
 
-void
+static void
 xpad_pad_cut (XpadPad *pad)
 {
 	gtk_text_buffer_cut_clipboard (
@@ -1503,7 +1510,7 @@ xpad_pad_cut (XpadPad *pad)
 		TRUE);
 }
 
-void
+static void
 xpad_pad_copy (XpadPad *pad)
 {
 	gtk_text_buffer_copy_clipboard (
@@ -1511,7 +1518,7 @@ xpad_pad_copy (XpadPad *pad)
 		gtk_clipboard_get (GDK_SELECTION_CLIPBOARD));
 }
 
-void
+static void
 xpad_pad_paste (XpadPad *pad)
 {
 	gtk_text_buffer_paste_clipboard (
@@ -1521,7 +1528,7 @@ xpad_pad_paste (XpadPad *pad)
 		TRUE);
 }
 
-void
+static void
 xpad_pad_undo (XpadPad *pad)
 {
 	g_return_if_fail (pad->priv->textview);
@@ -1531,7 +1538,7 @@ xpad_pad_undo (XpadPad *pad)
 	xpad_text_buffer_undo (buffer);
 }
 
-void
+static void
 xpad_pad_redo (XpadPad *pad)
 {
 	g_return_if_fail (pad->priv->textview);

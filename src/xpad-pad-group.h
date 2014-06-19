@@ -47,9 +47,7 @@ struct XpadPadGroupClass
 {
 	GObjectClass parent_class;
 	
-	/* Signals */
-	void (* pad_added)      (XpadPadGroup *group,
-	                         GtkWidget *pad);
+	void (* pad_added)      (XpadPadGroup *group, GtkWidget *pad);
 };
 
 GType    xpad_pad_group_get_type (void);
