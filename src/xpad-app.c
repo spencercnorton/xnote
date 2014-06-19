@@ -164,9 +164,9 @@ xpad_app_init (int argc, char **argv)
 	xpad_session_manager_init ();
 
 	/* Initialize Xpad-periodic module */
-	Xpad_periodic_init();
-	Xpad_periodic_set_callback("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
-	Xpad_periodic_set_callback("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
+	xpad_periodic_init ();
+	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 	
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();

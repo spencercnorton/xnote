@@ -1988,17 +1988,17 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 void xpad_pad_save_content_delayed (XpadPad *pad)
 {
    pad->priv->unsaved_content = TRUE;
-   Xpad_periodic_save_content_delayed(pad);
+   xpad_periodic_save_content_delayed (pad);
 }
 void xpad_pad_save_info_delayed (XpadPad *pad)
 {
    pad->priv->unsaved_info = TRUE;
-   Xpad_periodic_save_info_delayed(pad);
+   xpad_periodic_save_info_delayed (pad);
 }
 void xpad_pad_save_unsaved (XpadPad *pad)
 {
    if (pad->priv->unsaved_content)
-      xpad_pad_save_content(pad);
+      xpad_pad_save_content (pad);
    if (pad->priv->unsaved_info)
-	   xpad_pad_save_info(pad);
+	   xpad_pad_save_info (pad);
 }
