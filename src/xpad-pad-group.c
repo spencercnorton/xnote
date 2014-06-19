@@ -29,7 +29,7 @@ struct XpadPadGroupPrivate
 	GSList *pads;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE(XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
 static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
 
@@ -55,7 +55,7 @@ xpad_pad_group_new (void)
 static void
 xpad_pad_group_init (XpadPadGroup *group)
 {
-	group->priv = xpad_pad_group_get_instance_private(group);
+	group->priv = xpad_pad_group_get_instance_private (group);
 
 	group->priv->pads = NULL;
 }

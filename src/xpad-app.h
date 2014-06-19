@@ -32,8 +32,8 @@ GtkWidget *xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, con
 
 const gchar *xpad_app_get_config_dir (void);
 const gchar *xpad_app_get_program_path (void);
-XpadPadGroup         *xpad_app_get_pad_group (void);
-void                  xpad_app_quit (void);
+XpadPadGroup *xpad_app_get_pad_group (void);
+void xpad_app_quit (void);
 
 G_END_DECLS
 
