@@ -148,14 +148,6 @@ xpad_undo_set_property (GObject *object, guint prop_id, const GValue *value, GPa
 	switch (prop_id)
 	{
 	case PROP_BUFFER:
-		/*
-		if (undo->priv->buffer && G_IS_OBJECT (undo->priv->buffer))
-			g_object_unref (undo->priv->buffer);
-		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
-		{
-			undo->priv->buffer = g_value_get_pointer (value);
-			g_object_ref (undo->priv->buffer);
-		}*/
 		undo->priv->buffer = g_value_get_pointer (value);
 		g_object_ref (undo->priv->buffer);
 		break;

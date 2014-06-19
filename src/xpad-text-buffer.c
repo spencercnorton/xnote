@@ -107,17 +107,6 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 
 	switch (prop_id)
 	{
-	/*
-	case PROP_PAD:
-
-		if (buffer->priv->pad && G_IS_OBJECT (buffer->priv->pad))
-			g_object_unref (buffer->priv->pad);
-		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
-		{
-			buffer->priv->pad = g_value_get_pointer (value);
-			g_object_ref (buffer->priv->pad);
-		}
-		*/
 	case PROP_PAD:
 		buffer->priv->pad = g_value_get_pointer (value);
 		g_object_ref (buffer->priv->pad);

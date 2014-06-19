@@ -433,13 +433,6 @@ xpad_pad_dispose (GObject *object)
 
 	gtk_clipboard_clear (pad->priv->clipboard);
 
-	/* For some reason the clipboard handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error. */
-	/*
-	if (GTK_IS_CLIPBOARD (pad->priv->clipboard)) {
-		g_signal_handlers_disconnect_matched (pad->priv->clipboard, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
-	}
-	*/
-
 	/* For some reason the toolbar handler does not get automatically disconnected (or not at the right moment), leading to errors after deleting a pad. This manual disconnect prevents this error. */
 	if (XPAD_IS_TOOLBAR (pad->priv->toolbar)) {
 		g_signal_handlers_disconnect_matched (pad->priv->toolbar, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
@@ -447,12 +440,6 @@ xpad_pad_dispose (GObject *object)
 		pad->priv->toolbar = NULL;
 	}
 
-	/*
-	if (GTK_IS_ACCEL_GROUP (pad->priv->accel_group)) {
-		g_object_unref (pad->priv->accel_group);
-		pad->priv->accel_group = NULL;
-	}
-	 */
 	G_OBJECT_CLASS (xpad_pad_parent_class)->dispose (object);
 }
 

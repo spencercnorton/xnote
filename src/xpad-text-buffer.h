@@ -67,11 +67,6 @@ void xpad_text_buffer_redo (XpadTextBuffer *buffer);
 void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer);
 void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer);
 
-/*
-XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer);
-void xpad_text_buffer_set_pad (XpadTextBuffer *buffer, XpadPad *pad);
-*/
-
 G_END_DECLS
 
 #endif /* __XPAD_TEXT_BUFFER_H__ */
