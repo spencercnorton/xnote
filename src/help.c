@@ -84,7 +84,7 @@ static GtkWindow *create_help (gint page)
 	g_signal_connect (dialog, "destroy", G_CALLBACK (help_close), NULL);
 	g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), dialog);
 	
-	gtk_window_set_resizable (dialog, FALSE);
+	gtk_window_set_resizable (dialog, TRUE);
 	gtk_widget_show_all (GTK_WIDGET (dialog));
 	
 	return dialog;

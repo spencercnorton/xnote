@@ -97,7 +97,7 @@ xpad_app_init (int argc, char **argv)
 	/* Set up support different languages */
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
@@ -245,6 +245,9 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
+	/* Give GTK the signal to clean the rest and quit the application. */
+	gtk_main_quit ();
+
 	/* Free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (pad_group);
 
@@ -264,8 +267,6 @@ xpad_app_quit (void)
 	if (G_IS_OBJECT (gtk_icon_theme_get_default ()))
 		g_object_unref (gtk_icon_theme_get_default ());
 
-	/* Give GTK the signal to clean the rest and quit the application. */
-	gtk_main_quit ();
 }
 
 static gboolean
