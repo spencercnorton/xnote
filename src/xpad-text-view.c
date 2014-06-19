@@ -118,8 +118,6 @@ static void xpad_text_view_constructed (GObject *object)
 	view->priv->notify_back_handler = g_signal_connect_swapped (view->priv->settings, "notify::back-color", G_CALLBACK (xpad_text_view_notify_colors), view);
 
 	g_signal_handler_block (view->priv->settings, view->priv->notify_font_handler);
-	g_signal_handler_block (view->priv->settings, view->priv->notify_text_handler);
-	g_signal_handler_block (view->priv->settings, view->priv->notify_back_handler);
 }
 
 static void
@@ -193,17 +191,7 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 
 	case PROP_FOLLOW_COLOR_STYLE:
 		view->priv->follow_color_style = g_value_get_boolean (value);
-		if (view->priv->follow_color_style) {
-			xpad_text_view_notify_colors (view);
-			if (view->priv->notify_text_handler != 0 && view->priv->notify_back_handler != 0) {
-				g_signal_handler_unblock (view->priv->settings, view->priv->notify_text_handler);
-				g_signal_handler_unblock (view->priv->settings, view->priv->notify_back_handler);
-			}
-		}
-		else {
-			g_signal_handler_block (view->priv->settings, view->priv->notify_text_handler);
-			g_signal_handler_block (view->priv->settings, view->priv->notify_back_handler);
-		}
+		xpad_text_view_notify_colors (view);
 		break;
 
 	default:
@@ -333,13 +321,18 @@ xpad_text_view_notify_colors (XpadTextView *view)
 	GtkWidget *view_widget = GTK_WIDGET (view);
 	/* Set the colors of this individual pad to the global setting preference. */
 	const GdkRGBA *text_color, *back_color;
-	g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
-	gtk_widget_override_cursor (view_widget, text_color, text_color);
-	gtk_widget_override_color (view_widget, GTK_STATE_FLAG_NORMAL, text_color);
-	gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_NORMAL, back_color);
+	if (view->priv->follow_color_style) {
+		/* Set the colors to the global preferences colors */
+		g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
-	/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
-	gtk_widget_override_color (view_widget, GTK_STATE_FLAG_SELECTED, back_color);
-	gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_SELECTED, text_color);
+		gtk_widget_override_cursor (view_widget, text_color, text_color);
+		gtk_widget_override_color (view_widget, GTK_STATE_FLAG_NORMAL, text_color);
+		gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_NORMAL, back_color);
+
+		/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
+		gtk_widget_override_color (view_widget, GTK_STATE_FLAG_SELECTED, back_color);
+		gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_SELECTED, text_color);
+
+	}
 }
