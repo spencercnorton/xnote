@@ -835,9 +835,9 @@ process_local_args (gint *argc, gchar **argv[])
 	}
 	
 	g_option_context_free (context);
-	g_strfreev(argv_copy);
+	g_strfreev (argv_copy);
 	
-	return(option_version || option_nonew);
+	return (option_version || option_nonew);
 }
 
 static gboolean
