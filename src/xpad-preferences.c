@@ -81,9 +81,9 @@ struct XpadPreferencesPrivate
 
 G_DEFINE_TYPE_WITH_PRIVATE (XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
 
-static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_preferences_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
 static void xpad_preferences_response (GtkDialog *dialog, gint response);
 
@@ -158,7 +158,7 @@ xpad_preferences_class_init (XpadPreferencesClass *klass)
 static void
 xpad_preferences_init (XpadPreferences *pref)
 {
-	pref->priv = xpad_preferences_get_instance_private(pref);
+	pref->priv = xpad_preferences_get_instance_private (pref);
 }
 
 static void xpad_preferences_constructed (GObject *object)
@@ -649,9 +649,8 @@ change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 
 	/* Create a new GKeyFile object and a bitwise list of flags. */
 	keyfile = g_key_file_new ();
-	filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_getenv ("HOME"));	
+	filename = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir());
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
-	error = NULL;
 	
 	/* Load the GKeyFile from xpad.desktop or show an error message. */
 	if (!g_key_file_load_from_file (keyfile, filename, flags, &error)) {
