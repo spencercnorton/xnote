@@ -112,7 +112,6 @@ static gboolean xpad_pad_delete_event (XpadPad *pad, GdkEvent *event);
 static gboolean xpad_pad_popup_menu (XpadPad *pad);
 static void xpad_pad_popup_deactivate (GtkWidget *menu, XpadPad *pad);
 static gboolean xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event);
-static gboolean xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad);
 static void xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer);
 static void xpad_pad_notify_has_scrollbar (XpadPad *pad);
 static void xpad_pad_notify_has_decorations (XpadPad *pad);
@@ -366,7 +365,7 @@ static void xpad_pad_constructed (GObject *object)
 	/* Set up signals */
 	gtk_widget_add_events (GTK_WIDGET (pad), GDK_BUTTON_PRESS_MASK | GDK_PROPERTY_CHANGE_MASK);
 	gtk_widget_add_events (pad->priv->toolbar, GDK_ALL_EVENTS_MASK);
-	g_signal_connect (pad->priv->textview, "button-press-event", G_CALLBACK (xpad_pad_text_view_button_press_event), pad);
+	g_signal_connect_swapped (pad->priv->textview, "button-press-event", G_CALLBACK (xpad_pad_button_press_event), pad);
 	g_signal_connect_swapped (pad->priv->textview, "popup-menu", G_CALLBACK (xpad_pad_popup_menu), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "size-allocate", G_CALLBACK (xpad_pad_toolbar_size_allocate), pad);
 	g_signal_connect (pad, "button-press-event", G_CALLBACK (xpad_pad_button_press_event), NULL);
@@ -1118,11 +1117,8 @@ xpad_pad_popup_menu (XpadPad *pad)
 }
 
 static gboolean
-xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad)
+xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) text_view;
-
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		switch (event->button)
@@ -1134,51 +1130,17 @@ xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *eve
 				return TRUE;
 			}
 			break;
-		
-		case 3:
-			if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
-			{
-				GdkWindowEdge edge;
-				
-				if (gtk_widget_get_direction (GTK_WIDGET (pad)) == GTK_TEXT_DIR_LTR)
-					edge = GDK_WINDOW_EDGE_SOUTH_EAST;
-				else
-					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-				
-				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-			}
-			else
-			{
-				xpad_pad_popup (pad, event);
-			}
-			return TRUE;
-		}
-	}
-	
-	return FALSE;
-}
 
-static gboolean
-xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
-{
-	if (event->type == GDK_BUTTON_PRESS)
-	{
-		switch (event->button)
-		{
-		case 1:
-			gtk_window_begin_move_drag (GTK_WINDOW (pad), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-			return TRUE;
-		
 		case 3:
 			if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
 			{
 				GdkWindowEdge edge;
-				
+
 				if (gtk_widget_get_direction (GTK_WIDGET (pad)) == GTK_TEXT_DIR_LTR)
 					edge = GDK_WINDOW_EDGE_SOUTH_EAST;
 				else
 					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-				
+
 				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			}
 			else
@@ -1188,7 +1150,7 @@ xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
