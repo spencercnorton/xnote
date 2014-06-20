@@ -904,7 +904,7 @@ pad_properties_destroyed (XpadPad *pad)
 }
 
 static void
-prop_notify_follow_font (XpadPad *pad)
+prop_notify_font (XpadPad *pad)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 
@@ -957,23 +957,6 @@ prop_notify_colors (XpadPad *pad)
 }
 
 static void
-prop_notify_font (XpadPad *pad)
-{
-	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
-	
-	const gchar *font;
-	g_object_get (prop, "fontname", &font, NULL);
-	PangoFontDescription *fontdesc;
-	
-	fontdesc = font ? pango_font_description_from_string (font) : NULL;
-	gtk_widget_override_font (pad->priv->textview, fontdesc);
-	if (fontdesc)
-		pango_font_description_free (fontdesc);
-	
-	xpad_pad_save_info_delayed (pad);
-}
-
-static void
 xpad_pad_open_properties (XpadPad *pad)
 {
 	gboolean follow_font_style, follow_color_style;
@@ -1011,7 +994,7 @@ xpad_pad_open_properties (XpadPad *pad)
 		NULL);
 	pango_font_description_free (font);
 	
-	g_signal_connect_swapped (pad->priv->properties, "notify::follow-font-style", G_CALLBACK (prop_notify_follow_font), pad);
+	g_signal_connect_swapped (pad->priv->properties, "notify::follow-font-style", G_CALLBACK (prop_notify_font), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::follow-color-style", G_CALLBACK (prop_notify_colors), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::text-color", G_CALLBACK (prop_notify_colors), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::back-color", G_CALLBACK (prop_notify_colors), pad);
