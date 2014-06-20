@@ -23,82 +23,68 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "help.h"
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include "xpad-app.h"
 
 GtkWindow *help_window = NULL;
 
-static void help_close (void)
+static void help_close ()
 {
 	help_window = NULL;
 }
 
-static void show_help_at_page (gint page);
-
-static GtkWindow *create_help (gint page)
+void show_help ()
 {
-	GtkWindow *dialog;
-	GtkWidget *helptext, *button;
-	gchar *helptextbuf;
-	
-	/* Create the widgets */
-	dialog = GTK_WINDOW (gtk_dialog_new ());
-	helptext = gtk_label_new ("");
-	
-	if (page == 0) {
-		/* we use g_strdup_printf because C89 has size limits on static strings */
-		helptextbuf = g_strdup_printf ("%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
-		_("Each xpad session consists of one or more open pads.  "
-		"These pads are basically sticky notes on your desktop in which "
-		"you can write memos."),
-		_("<b>To move a pad</b>, left drag on the toolbar, right drag "
-		"on the resizer in the bottom right, or hold down CTRL "
-		"while left dragging anywhere on the pad."),
-		_("<b>To resize a pad</b>, left drag on the resizer or hold down "
-		"CTRL while right dragging anywhere on the pad."),
-		_("<b>To change color settings</b>, right click on a pad "
-		"and choose Edit->Preferences."),
-		_("Most actions are available throught the popup menu "
-		"that appears when you right click on a pad.  Try it out and "
-		"enjoy."),
-		_("Please send ideas or bug reports to\n"
-		"https://bugs.launchpad.net/xpad/+filebug"));
+	if (help_window == NULL) {
+
+		GtkWidget *helptext, *scrolled_window, *button;
+		GtkBox *vbox;
+		gchar *helptextbuf = NULL;
+		gboolean success;
+		const gchar *help_filename;
+		GError *error = NULL;
+
+		/* Load help text from file */
+		help_filename = "/home/arthur/Development/xpad/xpad-4.3/help.txt";
+		success = g_file_get_contents (help_filename, &helptextbuf, NULL, &error);
+
+		if (!success) {
+			xpad_app_error (NULL, _("Error showing the help"), g_strdup_printf (_("Could not find the help file %s\n%s"), help_filename, error->message));
+			return;
+		}
+
+		/* Set layout of help text */
+		helptext = gtk_label_new ("");
+		gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
+		g_free (helptextbuf);
+		gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
+		gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
+		gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
+
+		/* Create a box and stuff the text and buttons in */
+		vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 18));
+		gtk_box_set_homogeneous (vbox, FALSE);
+		gtk_box_pack_start (vbox, helptext, TRUE, TRUE, 10);
+		button = gtk_button_new_from_icon_name ("gtk-close", GTK_ICON_SIZE_BUTTON);
+		gtk_button_set_label (GTK_BUTTON (button), _("Close"));
+		gtk_box_pack_start (vbox, button, FALSE, FALSE, 5);
+
+		/* Initiliaze help window */
+		help_window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
+		gtk_window_set_title (help_window, _("Help"));
+		gtk_window_set_position (help_window, GTK_WIN_POS_CENTER);
+		gtk_window_resize (help_window, 800, 1000);
+
+		/* Add scrollbars */
+		scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+		gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (vbox));
+		gtk_container_add (GTK_CONTAINER (help_window), scrolled_window);
+		gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window), 0);
+
+		g_signal_connect (help_window, "destroy", G_CALLBACK (help_close), NULL);
+		g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), help_window);
+
+		gtk_widget_show_all (GTK_WIDGET (help_window));
 	}
-	else
-		helptextbuf = g_strdup_printf("Unknown help page requested");
-	
-	gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
-	
-	g_free (helptextbuf);
-	
-	gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
-	gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
-	gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
-	
-	gtk_window_set_title (dialog, _("Help"));
-	
-	/* Add the label, and show everything we've added to the dialog. */
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), helptext);
-	button = gtk_dialog_add_button (GTK_DIALOG (dialog), "gtk-close", 1);
-	
-	gtk_window_set_position (dialog, GTK_WIN_POS_CENTER);
-	
-	g_signal_connect (dialog, "destroy", G_CALLBACK (help_close), NULL);
-	g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), dialog);
-	
-	gtk_window_set_resizable (dialog, TRUE);
-	gtk_widget_show_all (GTK_WIDGET (dialog));
-	
-	return dialog;
-}
-
-void show_help (void)
-{
-	show_help_at_page (0);
-}
-
-static void show_help_at_page (gint page)
-{
-	if (help_window == NULL)
-		help_window = create_help (page);
 	else
 		gtk_window_present (help_window);
 }

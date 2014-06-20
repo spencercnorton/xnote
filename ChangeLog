@@ -13,6 +13,7 @@ Version 4.3
 * Fix: Toolbar - prevented a crash when erasing toolbar items
 * Fix: Preferences - Changed descriptions of the options in the preferences menu in more understandable language.
 * Fix: Preferences - Make sure that the preference window is always presented up front to the user, when requested.
+* Fix: Help - updated help
 * Fix: Technical - Migrated Xpad from GTK2 to GTK3 (#1242424)
 * Fix: Technical - Replaced deprecated Glib and GTK statements
 * Fix: Technical - Improved configure.ac for better debugging and code quality
