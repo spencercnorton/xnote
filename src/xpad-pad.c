@@ -110,9 +110,9 @@ static gboolean xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event
 static gboolean xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event);
 static gboolean xpad_pad_delete_event (XpadPad *pad, GdkEvent *event);
 static gboolean xpad_pad_popup_menu (XpadPad *pad);
-static void xpad_pad_popup_deactivate (GtkWidget *menu, XpadPad *pad);
+static void menu_popup (XpadPad *pad);
+static void menu_popdown (XpadPad *pad);
 static gboolean xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event);
-static gboolean xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad);
 static void xpad_pad_text_changed (XpadPad *pad, GtkTextBuffer *buffer);
 static void xpad_pad_notify_has_scrollbar (XpadPad *pad);
 static void xpad_pad_notify_has_decorations (XpadPad *pad);
@@ -135,8 +135,6 @@ static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
 static gboolean xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *event);
-static void xpad_pad_toolbar_popup (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad);
-static void xpad_pad_toolbar_popdown (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad);
 
 /* Create a new empty pad. */
 GtkWidget *
@@ -366,7 +364,7 @@ static void xpad_pad_constructed (GObject *object)
 	/* Set up signals */
 	gtk_widget_add_events (GTK_WIDGET (pad), GDK_BUTTON_PRESS_MASK | GDK_PROPERTY_CHANGE_MASK);
 	gtk_widget_add_events (pad->priv->toolbar, GDK_ALL_EVENTS_MASK);
-	g_signal_connect (pad->priv->textview, "button-press-event", G_CALLBACK (xpad_pad_text_view_button_press_event), pad);
+	g_signal_connect_swapped (pad->priv->textview, "button-press-event", G_CALLBACK (xpad_pad_button_press_event), pad);
 	g_signal_connect_swapped (pad->priv->textview, "popup-menu", G_CALLBACK (xpad_pad_popup_menu), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "size-allocate", G_CALLBACK (xpad_pad_toolbar_size_allocate), pad);
 	g_signal_connect (pad, "button-press-event", G_CALLBACK (xpad_pad_button_press_event), NULL);
@@ -399,11 +397,11 @@ static void xpad_pad_constructed (GObject *object)
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-preferences", G_CALLBACK (xpad_pad_open_preferences), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-quit", G_CALLBACK (xpad_pad_close_all), pad);
 
-	g_signal_connect (pad->priv->toolbar, "popup", G_CALLBACK (xpad_pad_toolbar_popup), pad);
-	g_signal_connect (pad->priv->toolbar, "popdown", G_CALLBACK (xpad_pad_toolbar_popdown), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "popup", G_CALLBACK (menu_popup), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "popdown", G_CALLBACK (menu_popdown), pad);
 
-	g_signal_connect (pad->priv->menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
-	g_signal_connect (pad->priv->highlight_menu, "deactivate", G_CALLBACK (xpad_pad_popup_deactivate), pad);
+	g_signal_connect_swapped (pad->priv->menu, "deactivate", G_CALLBACK (menu_popdown), pad);
+	g_signal_connect_swapped (pad->priv->highlight_menu, "deactivate", G_CALLBACK (menu_popdown), pad);
 }
 
 static void
@@ -906,7 +904,7 @@ pad_properties_destroyed (XpadPad *pad)
 }
 
 static void
-prop_notify_follow_font (XpadPad *pad)
+prop_notify_font (XpadPad *pad)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 
@@ -959,23 +957,6 @@ prop_notify_colors (XpadPad *pad)
 }
 
 static void
-prop_notify_font (XpadPad *pad)
-{
-	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
-	
-	const gchar *font;
-	g_object_get (prop, "fontname", &font, NULL);
-	PangoFontDescription *fontdesc;
-	
-	fontdesc = font ? pango_font_description_from_string (font) : NULL;
-	gtk_widget_override_font (pad->priv->textview, fontdesc);
-	if (fontdesc)
-		pango_font_description_free (fontdesc);
-	
-	xpad_pad_save_info_delayed (pad);
-}
-
-static void
 xpad_pad_open_properties (XpadPad *pad)
 {
 	gboolean follow_font_style, follow_color_style;
@@ -1013,7 +994,7 @@ xpad_pad_open_properties (XpadPad *pad)
 		NULL);
 	pango_font_description_free (font);
 	
-	g_signal_connect_swapped (pad->priv->properties, "notify::follow-font-style", G_CALLBACK (prop_notify_follow_font), pad);
+	g_signal_connect_swapped (pad->priv->properties, "notify::follow-font-style", G_CALLBACK (prop_notify_font), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::follow-color-style", G_CALLBACK (prop_notify_colors), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::text-color", G_CALLBACK (prop_notify_colors), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::back-color", G_CALLBACK (prop_notify_colors), pad);
@@ -1118,11 +1099,8 @@ xpad_pad_popup_menu (XpadPad *pad)
 }
 
 static gboolean
-xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *event, XpadPad *pad)
+xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) text_view;
-
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		switch (event->button)
@@ -1134,51 +1112,17 @@ xpad_pad_text_view_button_press_event (GtkWidget *text_view, GdkEventButton *eve
 				return TRUE;
 			}
 			break;
-		
-		case 3:
-			if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
-			{
-				GdkWindowEdge edge;
-				
-				if (gtk_widget_get_direction (GTK_WIDGET (pad)) == GTK_TEXT_DIR_LTR)
-					edge = GDK_WINDOW_EDGE_SOUTH_EAST;
-				else
-					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-				
-				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-			}
-			else
-			{
-				xpad_pad_popup (pad, event);
-			}
-			return TRUE;
-		}
-	}
-	
-	return FALSE;
-}
 
-static gboolean
-xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
-{
-	if (event->type == GDK_BUTTON_PRESS)
-	{
-		switch (event->button)
-		{
-		case 1:
-			gtk_window_begin_move_drag (GTK_WINDOW (pad), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-			return TRUE;
-		
 		case 3:
 			if ((event->state & gtk_accelerator_get_default_mod_mask ()) == GDK_CONTROL_MASK)
 			{
 				GdkWindowEdge edge;
-				
+
 				if (gtk_widget_get_direction (GTK_WIDGET (pad)) == GTK_TEXT_DIR_LTR)
 					edge = GDK_WINDOW_EDGE_SOUTH_EAST;
 				else
 					edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-				
+
 				gtk_window_begin_resize_drag (GTK_WINDOW (pad), edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
 			}
 			else
@@ -1188,7 +1132,7 @@ xpad_pad_button_press_event (XpadPad *pad, GdkEventButton *event)
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -1791,8 +1735,6 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 			g_free (key);
 		}
 
-		GtkAccelGroup *accel_group = gtk_menu_get_accel_group (GTK_MENU (uppermenu));
-		
 		MENU_ADD_SEP ();
 		g_object_set_data (G_OBJECT (menu), "notes-sep", item);
 
@@ -1877,21 +1819,15 @@ menu_prep_popup_highlight (XpadPad *pad, GtkWidget *menu)
 }
 
 static void
-menu_popup (GtkWidget *menu, XpadPad *pad)
+menu_popup (XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) menu;
-
 	g_signal_handlers_block_matched (pad, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) xpad_pad_leave_notify_event, NULL);
 	pad->priv->toolbar_timeout = 0;
 }
 
 static void
-menu_popdown (GtkWidget *menu, XpadPad *pad)
+menu_popdown (XpadPad *pad)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) menu;
-
 	cairo_rectangle_int_t rect;
 
 	/* We must check if we disabled off of pad and start the timeout if so. */
@@ -1904,30 +1840,6 @@ menu_popdown (GtkWidget *menu, XpadPad *pad)
 		pad->priv->toolbar_timeout = g_timeout_add (1000, (GSourceFunc) toolbar_timeout, pad);
 
 	g_signal_handlers_unblock_matched (pad, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) xpad_pad_leave_notify_event, NULL);
-}
-
-static void
-xpad_pad_popup_deactivate (GtkWidget *menu, XpadPad *pad)
-{
-	menu_popdown (GTK_WIDGET (menu), pad);
-}
-
-static void
-xpad_pad_toolbar_popup (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad)
-{
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) toolbar;
-
-	menu_popup (GTK_WIDGET (menu), pad);
-}
-
-static void
-xpad_pad_toolbar_popdown (GtkWidget *toolbar, GtkMenu *menu, XpadPad *pad)
-{
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) toolbar;
-
-	menu_popdown (GTK_WIDGET (menu), pad);
 }
 
 static void
@@ -1952,7 +1864,7 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 	if (!menu)
 		return;
 
-	menu_popup (GTK_WIDGET (menu), pad);
+	menu_popup (pad);
 	
 	if (event)
 		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);

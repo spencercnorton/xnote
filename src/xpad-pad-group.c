@@ -133,10 +133,10 @@ xpad_pad_group_num_pads (XpadPadGroup *group)
 	return g_slist_length (group->priv->pads);
 }
 
-gint
+guint
 xpad_pad_group_num_visible_pads (XpadPadGroup *group)
 {
-	gint num = 0;
+	guint num = 0;
 	if (group)
 	{
 		GSList *i;
