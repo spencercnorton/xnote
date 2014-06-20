@@ -1538,7 +1538,7 @@ menu_strikethrough (XpadPad *pad)
  * because this function has been probably been called, because of a menu toggle.
  */
 static void
-menu_sticky (XpadPad *pad, GtkCheckMenuItem *check)
+menu_sticky (GtkCheckMenuItem *check, XpadPad *pad)
 {
 	pad->priv->sticky = gtk_check_menu_item_get_active (check);
 	if (pad->priv->sticky)

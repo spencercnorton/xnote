@@ -117,6 +117,8 @@ static void notify_tray_click (XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
 
+static GtkWidget * create_label (const gchar *label_text);
+
 static GtkWidget *_xpad_preferences = NULL;
 
 enum
@@ -170,7 +172,6 @@ static void xpad_preferences_constructed (GObject *object)
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
-	gchar *text;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 	GtkRequisition req;
 	GdkRGBA theme_text_color = {0, 0, 0, 0}, theme_background_color = {0, 0, 0, 0};
@@ -193,13 +194,8 @@ static void xpad_preferences_constructed (GObject *object)
 			NULL);
 
 	/* Appearance options */
-	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
-	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
-		"label", text,
-		"use-markup", TRUE,
-		"xalign", 0.0,
-		NULL));
-	g_free (text);
+	label = create_label (_("Appearance"));
+
 	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 18));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
 
@@ -311,13 +307,7 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_font_button_set_title (GTK_FONT_BUTTON (pref->priv->fontbutton), _("Set Font"));
 	
 	/* Start options */
-	text = g_strconcat ("<b>", _("Startup"), "</b>", NULL);
-	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
-		"label", text,
-		"use-markup", TRUE,
-		"xalign", 0.0,
-		NULL));
-	g_free (text);
+	label = create_label (_("Startup"));
 
 	autostart_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 	gtk_box_set_homogeneous (autostart_vbox, FALSE);
@@ -381,13 +371,7 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start(autostart_vbox, GTK_WIDGET (hbox), TRUE, TRUE, 0);
 	
 	/* Tray options */
-	text = g_strconcat ("<b>", _("Tray"), "</b>", NULL);
-	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
-		"label", text,
-		"use-markup", TRUE,
-		"xalign", 0.0,
-		NULL));
-	g_free (text);
+	label = create_label (_("Tray"));
 
 	tray_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 	gtk_box_set_homogeneous (tray_vbox, FALSE);
@@ -420,13 +404,7 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start(tray_vbox, GTK_WIDGET (hbox), TRUE, TRUE, 0);
 
 	/* Other options */
-	text = g_strconcat ("<b>", _("Other"), "</b>", NULL);
-	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
-		"label", text,
-		"use-markup", TRUE,
-		"xalign", 0.0,
-		NULL));
-	g_free (text);
+	label = create_label (_("Other"));
 
 	other_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 	gtk_box_set_homogeneous (other_vbox, FALSE);
@@ -511,6 +489,15 @@ static void xpad_preferences_constructed (GObject *object)
 	/* Make the preference window not so squished */
 	gtk_widget_get_preferred_size (GTK_WIDGET (pref), &req, NULL);
 	g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height * 0.8), NULL);
+}
+
+static GtkWidget * create_label (const gchar *label_text) {
+	GtkWidget *label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
+		"label", g_strconcat ("<b>", label_text, "</b>", NULL),
+		"use-markup", TRUE,
+		"xalign", 0.0,
+		NULL));
+	return label;
 }
 
 static void
