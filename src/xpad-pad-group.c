@@ -130,7 +130,7 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 guint
 xpad_pad_group_num_pads (XpadPadGroup *group)
 {
-	return g_slist_length(group->priv->pads);
+	return g_slist_length (group->priv->pads);
 }
 
 gint
@@ -150,16 +150,16 @@ xpad_pad_group_num_visible_pads (XpadPadGroup *group)
 	return num;
 }
 
+static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group) {
+	if (group)
+		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_save_unsaved, NULL);
+}
+
 void
 xpad_pad_group_close_all (XpadPadGroup *group)
 {
 	if (group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_close, NULL);
-}
-
-static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group) {
-	if (group)
-		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_save_unsaved, NULL);
 }
 
 void
@@ -170,7 +170,7 @@ xpad_pad_group_show_all (XpadPadGroup *group)
 }
 
 void
-xpad_pad_group_toggle_hide(XpadPadGroup *group)
+xpad_pad_group_toggle_hide (XpadPadGroup *group)
 {
 	if (group)
 		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_toggle, NULL);

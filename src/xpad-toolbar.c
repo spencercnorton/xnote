@@ -97,8 +97,6 @@ static const XpadToolbarButton *xpad_toolbar_button_lookup (XpadToolbar *toolbar
 static GtkToolItem *xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *button);
 static void xpad_toolbar_button_activated (GtkToolButton *button);
 static void xpad_toolbar_change_buttons (XpadToolbar *toolbar);
-static void xpad_toolbar_remove_all_buttons (XpadSettings *settings);
-static void xpad_toolbar_remove_last_button (XpadSettings *settings);
 static void xpad_toolbar_add_button (GtkMenuItem *menu_item, XpadSettings *settings);
 static gboolean xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint button);
 
@@ -398,8 +396,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 {
 	GList *list, *temp;
 	const GSList *slist, *stemp;
-	guint i = 0;
-	guint j = 0;
+	guint i = 0, j = 0;
 	GtkToolItem *item;
 	XpadSettings *settings;
 	
@@ -462,18 +459,6 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 }
 
 static void
-xpad_toolbar_remove_all_buttons (XpadSettings *settings)
-{
-	xpad_settings_remove_all_toolbar_buttons (settings);
-}
-
-static void
-xpad_toolbar_remove_last_button (XpadSettings *settings)
-{
-	xpad_settings_remove_last_toolbar_button (settings);
-}
-
-static void
 xpad_toolbar_add_button (GtkMenuItem *menu_item, XpadSettings *settings)
 {
 	xpad_settings_add_toolbar_button (settings, gtk_menu_item_get_accel_path (menu_item) + 2);
@@ -528,14 +513,14 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		GtkWidget *item;
 
 		item = gtk_menu_item_new_with_mnemonic (N_("Remove All _Buttons"));
-		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_all_buttons), settings);
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_settings_remove_all_toolbar_buttons), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 
 		i++;
 		
 		item = gtk_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
-		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_toolbar_remove_last_button), settings);
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_settings_remove_last_toolbar_button), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}

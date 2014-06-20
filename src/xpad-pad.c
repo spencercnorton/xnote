@@ -1532,26 +1532,9 @@ xpad_pad_redo (XpadPad *pad)
 }
 
 static void
-menu_show_all (XpadPad *pad)
+xpad_pad_show_all (XpadPad *pad)
 {
-	GSList *pads, *i;
-	
-	if (!pad->priv->group)
-		return;
-	
-	pads = xpad_pad_group_get_pads (pad->priv->group);
-	
-	for (i = pads; i; i = i->next)
-	{
-		if (XPAD_PAD (i->data) != pad)
-			gtk_window_present (GTK_WINDOW (i->data));
-	}
-	gtk_window_present (GTK_WINDOW (pad));
-	
-	g_slist_free (pads);
-	g_slist_free (i);
-	pads = NULL;
-	i = NULL;
+	xpad_pad_group_show_all (pad->priv->group);
 }
 
 static void
@@ -1570,12 +1553,6 @@ xpad_pad_close_all (XpadPad *pad)
 		xpad_pad_group_close_all (pad->priv->group);
 	else
 		xpad_app_quit ();
-}
-
-static void
-menu_show (XpadPad *pad)
-{
-	gtk_window_present (GTK_WINDOW (pad));
 }
 
 static void
@@ -1761,7 +1738,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
-	MENU_ADD (_("_Show All"), NULL, 0, 0, menu_show_all);
+	MENU_ADD (_("_Show All"), NULL, 0, 0, xpad_pad_show_all);
 	MENU_ADD (_("_Close All"), NULL, 0, 0, xpad_pad_close_all);
 
 	/* Help submenu */
@@ -1803,9 +1780,8 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 	{
 		gint n = 1;
 		gchar *key;
-		GSList *pads, *l;
 		
-		/* Remove old menu */
+		/* Remove old notes */
 		item = g_object_get_data (G_OBJECT (menu), "notes-sep");
 		while (item)
 		{
@@ -1820,40 +1796,45 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 		MENU_ADD_SEP ();
 		g_object_set_data (G_OBJECT (menu), "notes-sep", item);
 
-		/* Order pads according to title */
-		pads = xpad_pad_group_get_pads (pad->priv->group);
-		
-		pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
-		
-		/* Populate list of windows */
-		for (l = pads, n = 1; l; l = l->next, n++)
-		{
-			gchar *title;
-			gchar *tmp_title;
-			gchar *key;
-			GtkWidget *pad = GTK_WIDGET (l->data);
-			
-			key = g_strdup_printf ("notes-%i", n);
-			tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (pad)));
-			str_replace_tokens (&tmp_title, '_', "__");
-			if (n < 10)
-				title = g_strdup_printf ("_%i. %s", n, tmp_title);
-			else
-				title = g_strdup_printf ("%i. %s", n, tmp_title);
-			g_free (tmp_title);
-			
-			MENU_ADD (title, NULL, 0, 0, menu_show);
-			g_object_set_data (G_OBJECT (menu), key, item);
-			
-			g_free (title);
-			g_free (key);
-		}
-		g_slist_free (pads);
-		g_slist_free (l);
-		pads = NULL;
-		l = NULL;
+		/* Add new notes */
+		xpad_pad_append_pad_titles_to_menu (menu);
 	}
 	gtk_widget_show_all (menu);
+}
+
+void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
+{
+	GSList *pads, *l;
+	GtkWidget *item;
+	gint n;
+
+	pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
+	/* Order pads according to title. */
+	pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
+	/* Populate list of windows. */
+	for (l = pads, n = 1; l; l = l->next, n++)
+	{
+		gchar *title;
+		gchar *tmp_title;
+		gchar *key;
+
+		key = g_strdup_printf ("notes-%i", n);
+		tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (l->data)));
+		str_replace_tokens (&tmp_title, '_', "__");
+		if (n < 10)
+			title = g_strdup_printf ("_%i. %s", n, tmp_title);
+		else
+			title = g_strdup_printf ("%i. %s", n, tmp_title);
+		g_free (tmp_title);
+
+		item = gtk_menu_item_new_with_mnemonic (title);
+		g_signal_connect_swapped (item, "activate", G_CALLBACK (gtk_window_present), l->data);
+		gtk_container_add (GTK_CONTAINER (menu), item);
+		g_object_set_data (G_OBJECT (menu), key, item);
+
+		g_free (title);
+	}
+	g_slist_free (pads);
 }
 
 static GtkWidget *

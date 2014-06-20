@@ -213,54 +213,54 @@ xpad_session_manager_set_properties (void)
 	prop[3].vals = vals.user;
 	prop[4].vals = vals.process;
 	
-	for (i = 0; i < G_N_ELEMENTS (prop); i++) {
+	for (i = 0; i < G_N_ELEMENTS (prop); i++)
 		props[i] = &prop[i];
-	}
 	
 	pw = getpwuid (getuid ());
 
 	/* While setting all the properties, safe casts are being used. */
+	const gchar *casting_warning = "Casting problem occured in the session manager. Xpad might not function as expected. Please send a bugreport.";
 	vals.user->value = pw ? pw->pw_name : "";
 	string_length = strlen (vals.user->value);
 	if (string_length <= INT_MAX)
 		vals.user->length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 	
 	vals.program->value = command;
 	string_length = strlen (vals.program->value);
 	if (string_length <= INT_MAX)
 		vals.program->length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 	
 	vals.clone->value = command;
 	string_length = strlen (vals.clone->value);
 	if (string_length <= INT_MAX)
 		vals.clone->length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 	
 	vals.restart[0].value = command;
 	string_length = strlen (vals.restart[0].value);
 	if (string_length <= INT_MAX)
 		vals.restart[0].length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 
 	vals.restart[1].value = "--sm-client-id";
 	string_length = strlen (vals.restart[1].value);
 	if (string_length <= INT_MAX)
 		vals.restart[1].length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 
 	vals.restart[2].value = client_id;
 	string_length = strlen (vals.restart[2].value);
 	if (string_length <= INT_MAX)
 		vals.restart[2].length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 	
 	pid_str = g_strdup_printf ("%i", getpid ());
 	vals.process->value = pid_str;
@@ -268,7 +268,7 @@ xpad_session_manager_set_properties (void)
 	if (string_length <= INT_MAX)
 		vals.process->length = (int) string_length;
 	else
-		g_warning("While setting the session manager properties a casting problem has occured. Xpad might not function as expected. Please send a bugreport.");
+		g_warning(casting_warning);
 	
 	SmcSetProperties (xpad_session_manager_conn, 4, (SmProp **) &props);
 	
@@ -344,16 +344,6 @@ xpad_session_manager_shutdown (void)
 }
 
 static void
-xpad_session_manager_save_global (Bool fast)
-{
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) fast;
-
-	/* No need to do anything.  Currently, all xpad pads are always current with
-	hard drive. */
-}
-
-static void
 xpad_session_manager_save_local (Bool fast)
 {
 	/* A dirty way to silence the compiler for these unused variables. */
@@ -387,11 +377,9 @@ xpad_session_manager_save_yourself (SmcConn smc_conn, SmPointer client_data,
 		break;
 	
 	case SmSaveGlobal:
-		xpad_session_manager_save_global (fast);
 		break;
 	
 	case SmSaveBoth:
-		xpad_session_manager_save_global (fast);
 		xpad_session_manager_save_local (fast);
 		break;
 	}
