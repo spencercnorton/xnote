@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "fio.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
+#include "xpad-pad-group.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
 
@@ -120,7 +121,6 @@ static void
 xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSettings *settings)
 {
 	GtkWidget *item;
-	GSList *pads;
 	gboolean no_pads = FALSE;
 	XpadPadGroup *group;
 
