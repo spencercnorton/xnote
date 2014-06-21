@@ -338,29 +338,15 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			GFile *source, *destination;
 			GError *error = NULL;
 
-			/* Find the base directory where the application is installed /usr or /usr/local, to find the correct xpad.desktop file. */
-			const char *program_path = xpad_app_get_program_path();
+			source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", BASE_DIR);
+			destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir());
 
-			if (!program_path)
-				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not find the directory where Xpad is installed\n%s"), error->message));
-			else {
-				size_t len = strlen(program_path);
-				char basedir[len-8];
-				guint i;
-				for (i=0; i<len-8; i++)
-					basedir[i] = program_path[i];
-				basedir[len-9] = '\0';
+			source = g_file_new_for_path (source_filename);
+			destination = g_file_new_for_path (destination_directory);
+			success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
 
-				source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", basedir);
-				destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir());
-
-				source = g_file_new_for_path (source_filename);
-				destination = g_file_new_for_path (destination_directory);
-				success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
-
-				if (!success)
-					xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message));
-			}
+			if (!success)
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message));
 		}
 		else {
 			/* Remove the xpad.desktop file from the autostart folder and enable/disable the wait for systray preference */
