@@ -60,6 +60,8 @@ else
 fi
 AC_DEFINE_UNQUOTED(LOCALE_DIR, "${PREFIX}/${DATADIRNAME}/locale",[Locale directory])
 AC_DEFINE_UNQUOTED(THEME_DIR, "${PREFIX}/${DATADIRNAME}/icons",[Icon directory])
+AC_DEFINE_UNQUOTED(HELP_FILE, "${PREFIX}/lib/xpad/help/xpad-user-help.txt",[Help file])
+AC_DEFINE_UNQUOTED(BASE_DIR, "${PREFIX}",[Base directory])
 
 # Determines if we're debugging.
 AC_ARG_ENABLE(debug,

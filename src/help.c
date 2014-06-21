@@ -40,15 +40,13 @@ void show_help ()
 		GtkBox *vbox;
 		gchar *helptextbuf = NULL;
 		gboolean success;
-		const gchar *help_filename;
 		GError *error = NULL;
 
 		/* Load help text from file */
-		help_filename = "/home/arthur/Development/xpad/xpad-4.3/help.txt";
-		success = g_file_get_contents (help_filename, &helptextbuf, NULL, &error);
+		success = g_file_get_contents (HELP_FILE, &helptextbuf, NULL, &error);
 
 		if (!success) {
-			xpad_app_error (NULL, _("Error showing the help"), g_strdup_printf (_("Could not find the help file %s\n%s"), help_filename, error->message));
+			xpad_app_error (NULL, _("Error showing the help"), g_strdup_printf (_("Could not find the help file %s\n%s"), HELP_FILE, error->message));
 			return;
 		}
 
