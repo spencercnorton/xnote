@@ -77,8 +77,8 @@ void show_help ()
 		/* Add scrollbars */
 		scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 		gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (vbox));
-		gtk_container_add (GTK_CONTAINER (help_window), scrolled_window);
 		gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window), 0);
+		gtk_container_add (GTK_CONTAINER (help_window), scrolled_window);
 
 		g_signal_connect (help_window, "destroy", G_CALLBACK (help_close), NULL);
 		g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), help_window);
