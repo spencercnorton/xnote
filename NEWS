@@ -1,3 +1,15 @@
+Version 4.3
+* New: Systray - ability to hide the tray icon
+* New: Toolbar - ability to add multiple separators
+* New: Toolbar - ability to add paste button on toolbar
+* New: Autostart - Ability to set the automatic start of Xpad in the Preferences menu
+* New: Autostart - Ability to set the wait for systray option in the Preferences menu
+* New: Autostart - Ability to delay the start of Xpad in the Preferences menu
+* New: Autostart - Ability to set the automatic creation of a new pad at the start of Xpad in the Preferences menu
+* New: Autostart - Ability to set the automatic open/hide/restore of all pads at the start of Xpad in the Preferences menu
+* New: Shortcuts - Added shortcuts keys for New pad (CTRL-N) and Delete (SHIFT-DEL) and changed Redo from (CTRL-R) to (CTRL-Y)
+* Many bugfixes: see Changelog
+
 Version 4.2
 * New: Undo/redo functionality such as CTRL-Z
 * New: ability to reconfigure the left-right click behaviour of the tray icon
