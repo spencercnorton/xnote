@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-06-27 06:10+0000\n"
-"X-Generator: Launchpad (build 17077)\n"
+"X-Launchpad-Export-Date: 2014-07-28 06:15+0000\n"
+"X-Generator: Launchpad (build 17131)\n"
 "Language: pt\n"
 
 #: ../src/fio.c:129
@@ -168,7 +168,8 @@ msgstr "Notas colantes"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Luis Rascão https://launchpad.net/~lrascao"
+"  Luis Rascão https://launchpad.net/~lrascao\n"
+"  Pedro Albuquerque https://launchpad.net/~palbuquerque73"
 
 #: ../src/xpad-pad.c:1742
 msgid "_Pad"
