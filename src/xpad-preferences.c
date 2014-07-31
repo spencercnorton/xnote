@@ -29,6 +29,8 @@ struct XpadPreferencesPrivate
 {
 	XpadSettings *settings;
 
+	GtkWidget *notebook;
+
 	GtkWidget *fontcheck;
 	GtkWidget *antifontcheck;
 	GtkWidget *fontbutton;
@@ -168,7 +170,7 @@ static void xpad_preferences_constructed (GObject *object)
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
 	GtkWidget *appearance_frame, *start_frame, *tray_frame, *other_frame, *label, *alignment;
-	GtkBox *font_hbox, *vbox, *hbox, *global_vbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
+	GtkBox *font_hbox, *vbox, *hbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
@@ -193,10 +195,13 @@ static void xpad_preferences_constructed (GObject *object)
 			"autostart-display-pads", &autostart_display_pads,
 			NULL);
 
+	/* create notebook to add pages */
+	pref->priv->notebook = gtk_notebook_new ();
+
 	/* Appearance options */
 	label = create_label (_("Appearance"));
 
-	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 18));
+	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
 
 	alignment = gtk_alignment_new (1, 1, 1, 1);
@@ -206,11 +211,13 @@ static void xpad_preferences_constructed (GObject *object)
 		"child", appearance_vbox,
 		NULL);
 	appearance_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", label,
+		"label-widget", NULL,
 		"shadow-type", GTK_SHADOW_NONE,
 		"child", alignment,
 		NULL));
-	
+
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (appearance_frame), label);
+
 	pref->priv->textbutton = gtk_color_button_new ();
 	pref->priv->fontbutton = gtk_font_button_new ();
 	pref->priv->backbutton = gtk_color_button_new ();
@@ -219,12 +226,12 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->fontcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->antifontcheck), _("Use this font:"));
 	pref->priv->anticolorcheck = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from theme"));
 	pref->priv->colorcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->anticolorcheck), _("Use these colors:"));
-	
+
 	font_hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6));
 
-	gtk_box_pack_start (font_hbox, pref->priv->fontcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (font_hbox, pref->priv->fontbutton, TRUE, TRUE, 0);
-	
+	gtk_box_pack_start (font_hbox, pref->priv->fontcheck, FALSE, TRUE, 0);
+	gtk_box_pack_start (font_hbox, pref->priv->fontbutton, FALSE, TRUE, 0);
+
 	pref->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
@@ -232,7 +239,7 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start (hbox, pref->priv->textbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (hbox, pref->priv->textbutton, FALSE, TRUE, 0);
 	g_object_set (G_OBJECT (pref->priv->colorbox), "child", hbox, NULL);
 
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
@@ -241,7 +248,7 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start (hbox, pref->priv->backbutton, TRUE, TRUE, 0);
+	gtk_box_pack_start (hbox, pref->priv->backbutton, FALSE, TRUE, 0);
 	g_object_set (G_OBJECT (pref->priv->colorbox), "child", hbox, NULL);
 
 	style = gtk_widget_get_style_context (GTK_WIDGET(pref));
@@ -298,14 +305,14 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start (vbox, pref->priv->colorcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (vbox, alignment, FALSE, FALSE, 0);
 	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
-	
+
 	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (pref->priv->textbutton), FALSE);
 	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (pref->priv->backbutton), TRUE);
-	
+
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->textbutton), _("Set Foreground Color"));
 	gtk_color_button_set_title (GTK_COLOR_BUTTON (pref->priv->backbutton), _("Set Background Color"));
 	gtk_font_button_set_title (GTK_FONT_BUTTON (pref->priv->fontbutton), _("Set Font"));
-	
+
 	/* Start options */
 	label = create_label (_("Startup"));
 
@@ -319,11 +326,13 @@ static void xpad_preferences_constructed (GObject *object)
 		"child", autostart_vbox,
 		NULL);
 	start_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", label,
+		"label-widget", NULL,
 		"shadow-type", GTK_SHADOW_NONE,
 		"child", alignment,
 		NULL));
-		
+
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (start_frame), label);
+
 	pref->priv->autostart_xpad = gtk_check_button_new_with_mnemonic (_("_Start Xpad automatically after login"));
 	gtk_box_pack_start (autostart_vbox, pref->priv->autostart_xpad, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), autostart_xpad);
@@ -355,9 +364,9 @@ static void xpad_preferences_constructed (GObject *object)
 		gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->autostart_delay), g_strdup_printf ("%i", i));
 	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_delay), autostart_delay);
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
-	gtk_box_pack_start(hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start(hbox, pref->priv->autostart_delay, TRUE, TRUE, 0);
-	gtk_box_pack_start(autostart_vbox, GTK_WIDGET (hbox), TRUE, TRUE, 0);
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, pref->priv->autostart_delay, FALSE, TRUE, 0);
+	gtk_box_pack_start (autostart_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
 	label = gtk_label_new_with_mnemonic(_("Display pads"));
 	pref->priv->autostart_display_pads = gtk_combo_box_text_new();
@@ -366,10 +375,10 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->autostart_display_pads), _("Restore to previous state") );
 	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->autostart_display_pads), (guint) autostart_display_pads);
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
-	gtk_box_pack_start(hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start(hbox, pref->priv->autostart_display_pads, TRUE, TRUE, 0);
-	gtk_box_pack_start(autostart_vbox, GTK_WIDGET (hbox), TRUE, TRUE, 0);
-	
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, pref->priv->autostart_display_pads, FALSE, TRUE, 0);
+	gtk_box_pack_start (autostart_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+
 	/* Tray options */
 	label = create_label (_("Tray"));
 
@@ -383,10 +392,12 @@ static void xpad_preferences_constructed (GObject *object)
 		"child", tray_vbox,
 		NULL);
 	tray_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", label,
+		"label-widget", NULL,
 		"shadow-type", GTK_SHADOW_NONE,
 		"child", alignment,
 		NULL));
+
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (tray_frame), label);
 
 	pref->priv->tray_enabled = gtk_check_button_new_with_mnemonic (_("_Enable tray icon"));
 	gtk_box_pack_start (tray_vbox, pref->priv->tray_enabled, FALSE, FALSE, 0);
@@ -398,10 +409,10 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("List of Pads") );
 	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (pref->priv->tray_click_configuration), _("New Pad") );
 	gtk_combo_box_set_active (GTK_COMBO_BOX (pref->priv->tray_click_configuration), tray_click_configuration);
-	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
-	gtk_box_pack_start(hbox, label, FALSE, FALSE, 0);
-	gtk_box_pack_start(hbox, pref->priv->tray_click_configuration, TRUE, TRUE, 0);
-	gtk_box_pack_start(tray_vbox, GTK_WIDGET (hbox), TRUE, TRUE, 0);
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6));
+	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, pref->priv->tray_click_configuration, FALSE, TRUE, 0);
+	gtk_box_pack_start (tray_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
 	/* Other options */
 	label = create_label (_("Other"));
@@ -416,17 +427,19 @@ static void xpad_preferences_constructed (GObject *object)
 		"child", other_vbox,
 		NULL);
 	other_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", label,
+		"label-widget", NULL,
 		"shadow-type", GTK_SHADOW_NONE,
 		"child", alignment,
 		NULL));
+
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (other_frame), label);
 
 	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Make pads read-only"));
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
 
 	gtk_box_pack_start (other_vbox, pref->priv->editcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (other_vbox, pref->priv->confirmcheck, FALSE, FALSE, 0);
-	
+
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->editcheck), edit_lock);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), confirm_destroy);
 
@@ -476,16 +489,10 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_notify (G_OBJECT (pref->priv->settings), "tray-enabled");
 
 	/* Make the preference dialog visible */
-	global_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
-	gtk_box_set_homogeneous (global_vbox, FALSE);
-	gtk_box_pack_start (global_vbox, appearance_frame, FALSE, FALSE, 0);
-	gtk_box_pack_start (global_vbox, start_frame, FALSE, FALSE, 0);
-	gtk_box_pack_start (global_vbox, tray_frame, FALSE, FALSE, 0);
-	gtk_box_pack_start (global_vbox, other_frame, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (global_vbox), 6);
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), GTK_WIDGET (global_vbox), FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), GTK_WIDGET (pref->priv->notebook), FALSE, FALSE, 0);
 	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (pref)));
-	
+	gtk_window_set_resizable (GTK_WINDOW (pref), FALSE);
+
 	/* Make the preference window not so squished */
 	gtk_widget_get_preferred_size (GTK_WIDGET (pref), &req, NULL);
 	g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height * 0.8), NULL);
