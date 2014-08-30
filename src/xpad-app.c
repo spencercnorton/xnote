@@ -245,15 +245,13 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
-	/* Give GTK the signal to clean the rest and quit the application. */
-	gtk_main_quit ();
-
 	/* Free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (pad_group);
 
 	/* Free the memory used by group. */
 	if (G_IS_OBJECT (pad_group))
 		g_object_unref (pad_group);
+	pad_group = NULL;
 
 	/* Free the memory used by the tray icon and its menu. */
 	xpad_tray_dispose (settings);
@@ -263,10 +261,8 @@ xpad_app_quit (void)
 		g_object_unref (settings);
 	settings = NULL; /* This is needed due to the asynchronous finalizing process. */
 
-	/* Free the theme reference. Unfortunately GTK3 leaves about 600 objects behind. */
-	if (G_IS_OBJECT (gtk_icon_theme_get_default ()))
-		g_object_unref (gtk_icon_theme_get_default ());
-
+	/* Give GTK the signal to clean the rest and quit the application. */
+	gtk_main_quit ();
 }
 
 static gboolean
