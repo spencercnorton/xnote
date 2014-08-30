@@ -176,6 +176,9 @@ xpad_pad_new_from_file (XpadPadGroup *group, XpadSettings *settings, const gchar
 	{
 		GtkTextBuffer *buffer;
 		
+		xpad_periodic_init ();
+               xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+		
 		pad = xpad_pad_new (group, settings);
 		buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (XPAD_PAD (pad)->priv->textview));
 
