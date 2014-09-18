@@ -21,13 +21,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "../config.h"
+
 #include "fio.h"
+#include "xpad-app.h"
+
 #include <stdlib.h>
 #include <string.h>
+
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
-#include "xpad-app.h"
+
 
 /* Sets filename to full path of filename (prepends xpad_app_get_config_dir ()
    to it).  Returns a GFile representing the file. */

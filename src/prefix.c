@@ -44,7 +44,9 @@
 #endif /* BR_PTHREADS */
 
 #include "../config.h"
+
 #include "prefix.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
