@@ -19,10 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#ifndef XPAD_PERIODIC_H
-#define XPAD_PERIODIC_H
+#ifndef __XPAD_PERIODIC_H__
+#define __XPAD_PERIODIC_H__
 
 #include <glib.h>
+
+G_BEGIN_DECLS
 
 typedef void (*XpadPeriodicFunc)(void *);
 
@@ -51,4 +53,6 @@ gboolean	xpad_periodic_set_callback (const char *, XpadPeriodicFunc);
 void	xpad_periodic_save_content_delayed (void * xpad_pad);
 void	xpad_periodic_save_info_delayed (void * xpad_pad);
 
-#endif /* XPAD_PERIODIC_H */
+G_END_DECLS
+
+#endif /* __XPAD_PERIODIC_H__ */

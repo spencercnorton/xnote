@@ -25,8 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad-settings.h"
 
+G_BEGIN_DECLS
+
 void xpad_tray_init (XpadSettings *settings);
 void xpad_tray_dispose (XpadSettings *settings);
 gboolean xpad_tray_is_open ();
+
+G_END_DECLS
 
 #endif /* __TRAY_H__ */
