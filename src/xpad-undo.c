@@ -68,10 +68,10 @@ typedef struct
 static GList* xpad_undo_remove_action_elem (GList *curr);
 static void xpad_undo_clear_redo_history (XpadUndo *undo);
 static void xpad_undo_clear_history (XpadUndo *undo);
-static void xpad_undo_begin_user_action (GtkTextBuffer *buffer, XpadUndo *undo);
-static void xpad_undo_end_user_action (GtkTextBuffer *buffer, XpadUndo *undo);
-static void xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text, gint len, XpadUndo *undo);
-static void xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo);
+static void xpad_undo_begin_user_action (GtkSourceBuffer *buffer, XpadUndo *undo);
+static void xpad_undo_end_user_action (GtkSourceBuffer *buffer, XpadUndo *undo);
+static void xpad_undo_insert_text (GtkSourceBuffer *buffer, GtkTextIter *location, gchar *text, gint len, XpadUndo *undo);
+static void xpad_undo_delete_range (GtkSourceBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo);
 
 enum
 {
@@ -176,7 +176,7 @@ xpad_undo_get_property (GObject *object, guint prop_id, GValue *value, GParamSpe
 }
 
 static void
-xpad_undo_begin_user_action (GtkTextBuffer *buffer, XpadUndo *undo)
+xpad_undo_begin_user_action (GtkSourceBuffer *buffer, XpadUndo *undo)
 {
 	/* A dirty way to silence the compiler for these unused variables. */
 	(void) buffer;
@@ -185,7 +185,7 @@ xpad_undo_begin_user_action (GtkTextBuffer *buffer, XpadUndo *undo)
 }
 
 static void
-xpad_undo_end_user_action (GtkTextBuffer *buffer, XpadUndo *undo)
+xpad_undo_end_user_action (GtkSourceBuffer *buffer, XpadUndo *undo)
 {
 	/* A dirty way to silence the compiler for these unused variables. */
 	(void) buffer;
@@ -236,7 +236,7 @@ xpad_undo_clear_history (XpadUndo *undo)
 }
 
 static void
-xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text, gint len, XpadUndo *undo)
+xpad_undo_insert_text (GtkSourceBuffer *buffer, GtkTextIter *location, gchar *text, gint len, XpadUndo *undo)
 {
 	/* A dirty way to silence the compiler for these unused variables. */
 	(void) buffer;
@@ -320,7 +320,7 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 }
 
 static void
-xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo)
+xpad_undo_delete_range (GtkSourceBuffer *buffer, GtkTextIter *start, GtkTextIter *end, XpadUndo *undo)
 {
 	/* A dirty way to silence the compiler for these unused variables. */
 	(void) buffer;

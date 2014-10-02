@@ -38,7 +38,7 @@ struct XpadTextViewPrivate
 	XpadPad *pad;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (XpadTextView, xpad_text_view, GTK_TYPE_TEXT_VIEW)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadTextView, xpad_text_view, GTK_SOURCE_TYPE_VIEW)
 
 static void xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
@@ -287,15 +287,15 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	GdkCursor *cursor;
 	gboolean editable;
 	GdkWindow *view_window;
-	GtkTextView *view_tv = GTK_TEXT_VIEW (view);
+	GtkSourceView *view_tv = GTK_SOURCE_VIEW (view);
 
-	editable = gtk_text_view_get_editable (view_tv);
-	gtk_text_view_set_cursor_visible (view_tv, editable);
+	editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view_tv));
+	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (view_tv), editable);
 
 	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
 
 	/* Only set for pads which are currently visible */ 
-	view_window = gtk_text_view_get_window (view_tv, GTK_TEXT_WINDOW_TEXT);
+	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view_tv), GTK_TEXT_WINDOW_TEXT);
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
 
