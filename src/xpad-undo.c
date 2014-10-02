@@ -155,7 +155,7 @@ xpad_undo_set_property (GObject *object, guint prop_id, const GValue *value, GPa
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
-	 }
+	}
 }
 
 static void
@@ -308,7 +308,7 @@ xpad_undo_insert_text (GtkTextBuffer *buffer, GtkTextIter *location, gchar *text
 		 * history_start won't change since it is a left guard - not NULL
 		 */
 		GList *dummy_start = g_list_append (undo->priv->history_curr, action);
-		
+
 		/* A dirty way to silence the compiler for these unused variables. */
 		(void) dummy_start;
 
@@ -358,7 +358,7 @@ xpad_undo_delete_range (GtkTextBuffer *buffer, GtkTextIter *start, GtkTextIter *
 		action->merged = FALSE;
 
 		GList *dummy_start = g_list_append (undo->priv->history_curr, action);
-		
+
 		/* A dirty way to silence the compiler for these unused variables. */
 		(void) dummy_start;
 
@@ -386,7 +386,7 @@ xpad_undo_apply_tag (XpadUndo *undo, const gchar *name, GtkTextIter *start, GtkT
 	action->action_type = USER_ACTION_APPLY_TAG;
 	action->text = g_strdup (name);
 	action->start = start_offset;
-	action->end = end_offset;	
+	action->end = end_offset;
 	action->merged = FALSE;
 
 	GList *dummy_start = g_list_append (undo->priv->history_curr, action);

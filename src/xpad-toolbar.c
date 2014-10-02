@@ -120,13 +120,13 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 {
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 	GtkToolbarClass *gtktoolbar_class = GTK_TOOLBAR_CLASS (klass);
-	
+
 	gobject_class->constructed = xpad_toolbar_constructed;
 	gobject_class->set_property = xpad_toolbar_set_property;
 	gobject_class->get_property = xpad_toolbar_get_property;
 	gobject_class->dispose = xpad_toolbar_dispose;
 	gtktoolbar_class->popup_context_menu = xpad_toolbar_popup_context_menu;
-	
+
 	signals[ACTIVATE_NEW] = 
 		g_signal_new ("activate-new",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -134,7 +134,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_new),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[ACTIVATE_CLOSE] = 
 		g_signal_new ("activate-close",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -182,7 +182,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_paste),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[ACTIVATE_QUIT] = 
 		g_signal_new ("activate-quit",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -190,7 +190,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_quit),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[ACTIVATE_CLEAR] = 
 		g_signal_new ("activate-clear",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -206,7 +206,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_properties),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[ACTIVATE_PREFERENCES] = 
 		g_signal_new ("activate-preferences",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -214,7 +214,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_preferences),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[ACTIVATE_DELETE] = 
 		g_signal_new ("activate-delete",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -222,7 +222,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, activate_delete),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	
+
 	signals[POPUP] = 
 		g_signal_new ("popup",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -230,7 +230,7 @@ xpad_toolbar_class_init (XpadToolbarClass *klass)
 		              G_STRUCT_OFFSET (XpadToolbarClass, popup),
 		              NULL, NULL,
 		              g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1, GTK_TYPE_MENU);
-	
+
 	signals[POPDOWN] = 
 		g_signal_new ("popdown",
 		              G_OBJECT_CLASS_TYPE (gobject_class),
@@ -337,7 +337,7 @@ xpad_toolbar_button_lookup (XpadToolbar *toolbar, const gchar *name)
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 		if (!g_ascii_strcasecmp (name, buttons[i].name))
 			return &buttons[i];
-	
+
 	return NULL;
 }
 
@@ -367,12 +367,12 @@ xpad_toolbar_button_to_item (XpadToolbar *toolbar, const XpadToolbarButton *butt
 	default:
 		return NULL;
 	}
-	
+
 	g_object_set_data (G_OBJECT (item), "xpad-toolbar", toolbar);
 	g_object_set_data (G_OBJECT (item), "xpad-tb", (gpointer) button);
 
 	g_object_set_data (G_OBJECT (toolbar), button->name, item);
-	
+
 	if (button->desc)
 		gtk_tool_item_set_tooltip_text (item, _(button->desc));
 
@@ -384,10 +384,10 @@ xpad_toolbar_button_activated (GtkToolButton *button)
 {
 	XpadToolbar *toolbar;
 	const XpadToolbarButton *tb;
-	
+
 	toolbar = XPAD_TOOLBAR (g_object_get_data (G_OBJECT (button), "xpad-toolbar"));
 	tb = (const XpadToolbarButton *) g_object_get_data (G_OBJECT (button), "xpad-tb");
-	
+
 	g_signal_emit (toolbar, signals[tb->signal], 0);
 }
 
@@ -399,22 +399,22 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	guint i = 0, j = 0;
 	GtkToolItem *item;
 	XpadSettings *settings;
-	
+
 	list = gtk_container_get_children (GTK_CONTAINER (toolbar));
-	
+
 	for (temp = list; temp; temp = temp->next)
 		gtk_widget_destroy (temp->data);
-	
+
 	g_list_free (list);
 	g_list_free (temp);
 
 	for (j = 0; j < G_N_ELEMENTS (buttons); j++)
 		g_object_set_data (G_OBJECT (toolbar), buttons[j].name, NULL);
-	
+
 	g_object_get (toolbar->priv->pad, "settings", &settings, NULL);
 
 	slist = xpad_settings_get_toolbar_buttons (settings);
-	
+
 	for (stemp = slist; stemp; stemp = stemp->next)
 	{
 		const XpadToolbarButton *button;
@@ -427,7 +427,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 			item = xpad_toolbar_button_to_item (toolbar, button);
 		else
 			continue;
-		
+
 		if (item)
 		{
 			g_object_set_data (G_OBJECT (item), "xpad-button-num", GINT_TO_POINTER (i));
@@ -436,7 +436,7 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 			i++;
 		}
 	}
-	
+
 	item = gtk_separator_tool_item_new ();
 	g_object_set_data (G_OBJECT (item), "xpad-button-num", GINT_TO_POINTER (i));
 	gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM (item), FALSE);
@@ -444,13 +444,13 @@ xpad_toolbar_change_buttons (XpadToolbar *toolbar)
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 	gtk_widget_show_all (GTK_WIDGET (item));
 	i++;
-	
+
 	item = xpad_grip_tool_item_new ();
 	g_object_set_data (G_OBJECT (item), "xpad-button-num", GINT_TO_POINTER (i));
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 	gtk_widget_show_all (GTK_WIDGET (item));
 	i++;
-	
+
 	if (toolbar->priv->pad)
 	{
 		xpad_pad_notify_has_selection (toolbar->priv->pad);
@@ -484,7 +484,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 	g_object_get (XPAD_TOOLBAR (toolbar)->priv->pad, "settings", &settings, NULL);
 	const GSList *current_buttons = xpad_settings_get_toolbar_buttons (settings);
 	GtkMenu *menu = GTK_MENU (gtk_menu_new ());
-	
+
 	for (i = 0; i < G_N_ELEMENTS (buttons); i++)
 	{
 		const GSList *j;
@@ -493,13 +493,13 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		for (j = current_buttons; j; j = j->next)
 			if (g_ascii_strcasecmp (j->data, "Separator") && !g_ascii_strcasecmp (j->data, buttons[i].name))
 				break;
-		
+
 		if (j)
 		{
 			is_button = TRUE;
 			continue;
 		}
-		
+
 		item = gtk_menu_item_new_with_mnemonic (buttons[i].menu_desc);
 		/* Ugly workaround by abusing the accel_path to get the variable passed to the next function */
 		gtk_menu_item_set_accel_path (GTK_MENU_ITEM (item), g_strdup_printf ("</%s", buttons[i].name));
@@ -518,19 +518,19 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 		gtk_widget_show (item);
 
 		i++;
-		
+
 		item = gtk_menu_item_new_with_mnemonic (N_("Remo_ve Last Button"));
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_settings_remove_last_toolbar_button), settings);
 		gtk_menu_attach (menu, item, 0, 1, i, i + 1);
 		gtk_widget_show (item);
 	}
-	
+
 	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
-	
+
 	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (guint) ((button < 0) ? 0 : button), gtk_get_current_event_time ());
-	
+
 	g_signal_emit (toolbar, signals[POPUP], 0, menu);
-	
+
 	return TRUE;
 }
 

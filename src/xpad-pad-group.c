@@ -64,7 +64,7 @@ static void
 xpad_pad_group_class_init (XpadPadGroupClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	
+
 	signals[PAD_ADDED] =
 		g_signal_new ("pad_added",
 		              G_OBJECT_CLASS_TYPE (object_class),
@@ -75,7 +75,7 @@ xpad_pad_group_class_init (XpadPadGroupClass *klass)
 		              G_TYPE_NONE,
 		              1,
 		              GTK_TYPE_WIDGET);
-	
+
 	signals[PAD_REMOVED] =
 		g_signal_new ("pad_removed",
 		              G_OBJECT_CLASS_TYPE (object_class),
@@ -99,10 +99,10 @@ void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
 	g_object_ref(pad);
-	
+
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);
-	
+
 	g_signal_emit (group, signals[PAD_ADDED], 0, pad);
 }
 

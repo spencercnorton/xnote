@@ -105,14 +105,14 @@ xpad_app_init (int argc, char **argv)
 	xpad_argc = argc;
 	xpad_argv = argv;
 	output = stdout;
-	
+
 	/* Set up config directory. */
 	first_time = !config_dir_exists ();
 	config_dir = make_config_dir ();
-	
+
 	/* create master socket name */
 	server_filename = g_build_filename (xpad_app_get_config_dir (), "server", NULL);
-	
+
 	if (!have_gtk)
 	{
 		/* We don't have GTK+, but we can still do
@@ -126,7 +126,7 @@ xpad_app_init (int argc, char **argv)
 		}
 		exit (0);
 	}
-	
+
 	g_set_application_name (_("Xpad"));
 	gdk_set_program_class (PACKAGE);
 
@@ -135,18 +135,18 @@ xpad_app_init (int argc, char **argv)
 		program_path = g_find_program_in_path (xpad_argv[0]);
 	else
 		program_path = NULL;
-	
+
 	process_local_args (&xpad_argc, &xpad_argv);
-	
+
 	if (xpad_app_pass_args ())
 		exit (0);
 
 	/* Race condition here, between calls */
 	xpad_app_open_proc_file ();
-	
+
 	register_stock_icons ();
 	gtk_window_set_default_icon_name (PACKAGE);
-	
+
 	/* Read the Xpad configuration file from disk (if exists) */
 	settings = xpad_settings_new ();
 
@@ -159,7 +159,7 @@ xpad_app_init (int argc, char **argv)
 
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
-	
+
 	xpad_tray_init (settings);
 	xpad_session_manager_init ();
 
@@ -167,7 +167,7 @@ xpad_app_init (int argc, char **argv)
 	xpad_periodic_init ();
 	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
 	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
-	
+
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
 	if (pads_loaded_on_start == 0 && !option_new) {
@@ -184,21 +184,22 @@ xpad_app_init (int argc, char **argv)
 		xpad_pad_group_close_all (pad_group);
 	if (have_gtk && option_toggle)
 		xpad_pad_group_toggle_hide (pad_group);
-	
+
 	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
-	
+
 	if (first_time)
 		show_help ();
-	
+
 	g_free (server_filename);
 	server_filename = NULL;
 }
 
 gint main (gint argc, gchar **argv)
-{	xpad_app_init (argc, argv);
+{
+	xpad_app_init (argc, argv);
 
 	gtk_main ();
-	
+
 	return 0;
 }
 
@@ -209,17 +210,17 @@ void
 xpad_app_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
 {
 	GtkWidget *dialog;
-	
+
 	if (!xpad_session_manager_start_interact (TRUE))
 		return;
-	
+
 	g_printerr ("%s\n", primary);
-	
-	dialog = xpad_app_alert_dialog (parent, "dialog-error", primary, secondary);	
+
+	dialog = xpad_app_alert_dialog (parent, "dialog-error", primary, secondary);
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("_Ok"), GTK_RESPONSE_OK, NULL);
 	gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
-	
+
 	xpad_session_manager_stop_interact (FALSE);
 }
 
@@ -324,23 +325,23 @@ make_config_dir (void)
 	make_path (g_get_user_config_dir ());
 
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
-	
+
 	if (!g_file_test (dir, G_FILE_TEST_EXISTS))
 	{
 		gchar *olddir;
-		
+
 		/* For backwards-compatibility, we see if the old location for
 		   configuration files exists.  If so, we move it. */
 		olddir = g_build_filename (g_get_home_dir (), "." PACKAGE, NULL);
-		
+
 		if (g_file_test (olddir, G_FILE_TEST_EXISTS))
 			g_rename (olddir, dir);
 		else
 			g_mkdir (dir, 0700); /* give user all rights */
-		
+
 		g_free (olddir);
 	}
-	
+
 	return dir;
 }
 
@@ -353,38 +354,38 @@ xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *p
 {
 	GtkWidget *dialog, *hbox, *image, *label;
 	gchar *buf;
-	
+
 	dialog = gtk_dialog_new ();
 	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
 	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 12);
-	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);	
+	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);
 	label = gtk_label_new (NULL);
-	
+
 	if (secondary)
 		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s\n</span>\n%s", primary, secondary);
 	else
 		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>", primary);
-	
+
 	gtk_label_set_markup (GTK_LABEL (label), buf);
 	g_free (buf);
-	
+
 	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 12);
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), hbox);
 	gtk_container_add (GTK_CONTAINER (hbox), image);
 	gtk_container_add (GTK_CONTAINER (hbox), label);
-	
+
 	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-	
+
 	gtk_widget_show_all (hbox);
-	
+
 	return dialog;
 }
 
@@ -409,7 +410,7 @@ xpad_app_quit_if_no_pads (XpadPadGroup *group)
 				exit (0);
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -435,7 +436,7 @@ xpad_app_first_idle_check (XpadPadGroup *group)
 				exit (0);
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -454,24 +455,24 @@ xpad_app_load_pads (void)
 	gint opened = 0;
 	GDir *dir;
 	const gchar *name;
-	
+
 	g_signal_connect (pad_group, "pad-added", G_CALLBACK (xpad_app_pad_added), NULL);
-	
+
 	dir = g_dir_open (xpad_app_get_config_dir (), 0, NULL);
-	
+
 	if (!dir)
 	{
 		gchar *errtext;
-		
+
 		errtext = g_strdup_printf (_("Could not open directory %s."), xpad_app_get_config_dir ());
-		
+
 		xpad_app_error (NULL, errtext,
 			_("This directory is needed to store preference and pad information.  Xpad will close now."));
 		g_free (errtext);
-		
+
 		exit (1);
 	}
-	
+
 	while ((name = g_dir_read_name (dir)))
 	{
 		/* if it's an info file, but not a backup info file... */
@@ -482,15 +483,15 @@ xpad_app_load_pads (void)
 			GtkWidget *pad = xpad_pad_new_with_info (pad_group, settings, name, &show);
 			if ((show || option_show) && !option_hide)
 				gtk_widget_show (pad);
-		  else if (show) /* pad thought it would show, we should save that it didn't */
-		    xpad_pad_save_info (XPAD_PAD (pad));
+		else if (show) /* pad thought it would show, we should save that it didn't */
+			xpad_pad_save_info (XPAD_PAD (pad));
 			
 			opened ++;
 		}
 	}
-	
+
 	g_dir_close (dir);
-	
+
 	return opened;
 }
 
@@ -505,8 +506,7 @@ args_to_string (int argc, char **argv, char **dest)
 	guint size = 0;
 	gchar *p = NULL;
 	size_t string_length = 0;
-	
-	
+
 	for (i = 0; i < argc; i++) {
 		string_length = strlen (argv[i]) + 1;
 
@@ -520,9 +520,9 @@ args_to_string (int argc, char **argv, char **dest)
 	}
 
 	*dest = g_malloc (size);
-	
+
 	p = *dest;
-	
+
 	for (i = 0; i < argc; i++)
 	{
 		strcpy (p, argv[i]);
@@ -530,10 +530,10 @@ args_to_string (int argc, char **argv, char **dest)
 		p[0] = ' ';
 		p += 1;
 	}
-	
+
 	p --;
 	p[0] = '\0';
-	
+
 	return size;
 }
 
@@ -546,21 +546,21 @@ string_to_args (const char *string, char ***argv)
 	guint num, i;
 	const gchar *tmp;
 	char **list;
-	
+
 	/* first, find out how many arguments we have */
 	num = 1;
 	for (tmp = strchr (string, ' '); tmp; tmp = strchr (tmp+1, ' '))
-	  num++;
-	
+		num++;
+
 	list = (char **) g_malloc (sizeof (char *) * (num + 1));
-	
+
 	for (i = 0; i < num; i++)
 	{
 		size_t len;
-		
+
 		/* string points to beginning of current arg */
 		tmp = strchr (string, ' '); /* NULL or end of this arg */
-		
+
 		if (tmp) {
 			long int difference = tmp - string;
 			/* safe cast from long int to size_t */
@@ -573,19 +573,19 @@ string_to_args (const char *string, char ***argv)
 		}
 		else
 			len = strlen (string);
-		
+
 		list[i] = g_malloc (len + 1);
 		strncpy (list[i], string, len);
 		list[i][len] = '\0';
-		
+
 		/* make string point to beginning of next arg */
 		string = tmp + 1;
 	}
-	
-	list[i] = NULL;	/* null terminate list */
-	
+
+	list[i] = NULL;  /* null terminate list */
+
 	*argv = list;
-	
+
 	return num;
 }
 
@@ -601,37 +601,37 @@ xpad_app_read_from_proc_file (void)
 	struct sockaddr_un client;
 	socklen_t client_len;
 	ssize_t bytes = -1;
-	
+
 	/* accept waiting connection */
 	client_len = sizeof (client);
 	client_fd = accept (server_fd, (struct sockaddr *) &client, &client_len);
 	if (client_fd == -1)
 		return;
-	
+
 	/* get size of args and verify for errors */
 	bytes = read (client_fd, &size, sizeof (size));
 	if (bytes == -1 || bytes != sizeof(size)) {
 		g_warning("Cannot read proc file correctly");
 		goto close_client_fd;
 	}
-	
+
 	/* alloc memory */
 	args = (gchar *) g_malloc (size);
 	if (!args)
 		goto close_client_fd;
-	
+
 	/* read args */
 	bytes = read (client_fd, args, size);
 	if (bytes < size)
 		goto close_client_fd;
-	
+
 	argc = (gint) string_to_args (args, &argv);
-	
+
 	g_free (args);
-	
+
 	/* here we redirect singleton->priv->output to the socket */
 	output = fdopen (client_fd, "w");
-	
+
 	if (!process_remote_args (&argc, &argv, TRUE, settings))
 	{
 		/* if there were no non-local arguments, insert --new as argument */
@@ -643,19 +643,19 @@ xpad_app_read_from_proc_file (void)
 		v = g_malloc (my_size);
 		v[0] = PACKAGE;
 		v[1] = "--new";
-		
+
 		process_remote_args (&c, &v, TRUE, settings);
 		
 		g_free (v);
 	}
-	
+
 	/* restore standard singleton->priv->output */
 	fclose (output);
 	output = stdout;
-	
+
 	g_strfreev (argv);
 	return;
-	
+
 close_client_fd:
 	close (client_fd);
 }
@@ -669,7 +669,7 @@ can_read_from_server_fd (GIOChannel *source, GIOCondition condition, gpointer da
 	(void) data;
 
 	xpad_app_read_from_proc_file ();
-	
+
 	return TRUE;
 }
 
@@ -678,27 +678,27 @@ xpad_app_open_proc_file (void)
 {
 	GIOChannel *channel;
 	struct sockaddr_un master;
-	
+
 	g_unlink (server_filename);
-	
+
 	/* create the socket */
 	server_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
 	bzero (&master, sizeof (master)); 
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
-	
+
 	if (bind (server_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 		return FALSE;
-	
+
 	/* listen for connections */
 	if (listen (server_fd, 5))
 		return FALSE;
-	
+
 	/* set up input loop, waiting for read */
 	channel = g_io_channel_unix_new (server_fd);
 	g_io_add_watch (channel, G_IO_IN, can_read_from_server_fd, NULL);
 	g_io_channel_unref (channel);
-	
+
 	return TRUE;
 }
 
@@ -715,37 +715,37 @@ xpad_app_pass_args (void)
 	ssize_t bytesRead;
 	gboolean connected = FALSE;
 	ssize_t error = NULL;
-	
+
 	/* create master socket */
 	client_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
-	
+
 	/* connect to master socket */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 		goto done;
 	connected = TRUE;
-	
+
 	size = args_to_string (xpad_argc, xpad_argv, &args) + 1;
-	
+
 	/* first, write length of string */
 	error = write (client_fd, &size, sizeof (size));
 	if (error == -1)
 		g_error("There is a problem writing information to the socket.");
-	
+
 	/* now, write string */
 	error = write (client_fd, args, (size_t) size);
 	if (error == -1)
 		g_error("There is a problem writing information to the socket.");
-	
+
 	do
 	{
 		/* wait for response */
 		FD_ZERO (&fdset);
-		FD_SET (client_fd, &fdset);	
+		FD_SET (client_fd, &fdset);
 		/* block until we are answered, or an error occurs */
 		select (client_fd + 1, &fdset, NULL, &fdset, NULL);
-		
+
 		do
 		{
 			bytesRead = read (client_fd, buf, 128);
@@ -764,9 +764,9 @@ xpad_app_pass_args (void)
 	
 done:
 	close (client_fd);
-	
+
 	g_free (args);
-	
+
 	return connected;
 }
 
@@ -800,16 +800,16 @@ process_local_args (gint *argc, gchar **argv[])
 	GOptionContext *context;
 	gint argc_copy;
 	gchar **argv_copy;
-	
+
 	option_version = FALSE;
 	option_nonew = FALSE;
-	
+
 	/* We make copies of argc and argv because we actually don't want the 
 	   behavior of g_option_context_parse() that removes entries from the
 	   array. */
 	argc_copy = *argc;
 	argv_copy = g_strdupv (*argv);
-	
+
 	context = g_option_context_new (NULL);
 	g_option_context_add_main_entries (context, local_options, GETTEXT_PACKAGE);
 	/* We do remote here as well, because we want --help to pick them up.  It
@@ -829,10 +829,10 @@ process_local_args (gint *argc, gchar **argv[])
 		fprintf (output, "%s\n", error->message);
 		exit (1);
 	}
-	
+
 	g_option_context_free (context);
 	g_strfreev (argv_copy);
-	
+
 	return (option_version || option_nonew);
 }
 
@@ -841,7 +841,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 {
 	GError *error = NULL;
 	GOptionContext *context;
-	
+
 	option_new = FALSE;
 	option_files = NULL;
 	option_quit = FALSE;
@@ -849,7 +849,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	option_hide = FALSE;
 	option_show = FALSE;
 	option_toggle = FALSE;
-	
+
 	context = g_option_context_new (NULL);
 	g_option_context_set_ignore_unknown_options (context, TRUE);
 	g_option_context_set_help_enabled (context, FALSE);
@@ -867,7 +867,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 			gtk_widget_show (pad);
 		}
-		
+
 		if (!option_hide && !option_show) {
 			guint display_pads;
 			g_object_get (xpad_settings, "autostart-display-pads", &display_pads, NULL);
@@ -887,7 +887,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 					gtk_widget_show (pad);
 			}
 		}
-		
+
 		if (option_quit)
 		{
 			if (have_gtk && gtk_main_level () > 0)
@@ -902,9 +902,9 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 		/* Don't quit.  Bad options passed to the main xpad program by other
 		   iterations shouldn't close the main one. */
 	}
-	
+
 	g_option_context_free (context);
-	
+
 	return(option_new || option_quit || option_smid || option_files ||
 	       option_hide || option_show || option_toggle);
 }

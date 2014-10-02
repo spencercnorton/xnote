@@ -125,15 +125,15 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSett
 	XpadPadGroup *group;
 
 	group = xpad_app_get_pad_group ();
-	
+
 	menu = gtk_menu_new ();
 	if (!xpad_pad_group_num_pads (group))
 		no_pads = TRUE;
-	
+
 	item = gtk_menu_item_new_with_mnemonic (_("_New"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (menu_spawn), settings);
 	gtk_container_add (GTK_CONTAINER (menu), item);
-	
+
 	item = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menu), item);
 
@@ -142,29 +142,29 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSett
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	if (no_pads)
 		gtk_widget_set_sensitive (item, FALSE);
-	
+
 	item = gtk_menu_item_new_with_mnemonic (_("_Close All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_pad_group_close_all), group);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 	if (no_pads)
 		gtk_widget_set_sensitive (item, FALSE);
-	
+
 	item = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menu), item);
-	
+
 	xpad_pad_append_pad_titles_to_menu (menu);
 
 	item = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menu), item);
-	
-	item = gtk_menu_item_new_with_mnemonic (_("_Preferences"));	
+
+	item = gtk_menu_item_new_with_mnemonic (_("_Preferences"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_preferences_open), settings);
 	gtk_container_add (GTK_CONTAINER (menu), item);
-	
-	item = gtk_menu_item_new_with_mnemonic (_("_Quit"));	
+
+	item = gtk_menu_item_new_with_mnemonic (_("_Quit"));
 	g_signal_connect (item, "activate", G_CALLBACK (xpad_app_quit), NULL);
 	gtk_container_add (GTK_CONTAINER (menu), item);
-	
+
 	gtk_widget_show_all (menu);
 
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gtk_status_icon_position_menu, icon, button, time);

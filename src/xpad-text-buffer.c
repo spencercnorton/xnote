@@ -115,7 +115,7 @@ xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *val
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
-	 }
+	}
 }
 
 static void
@@ -143,22 +143,22 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 	gchar **tokens;
 	gint count;
 	gchar tag_char_utf8[7] = {0};
-	
+
 	if (!text)
 		return;
-	
+
 	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
 
 	gtk_text_buffer_begin_user_action (buffer_tb);
-	
+
 	gtk_text_buffer_get_bounds (buffer_tb, &start, &end);
 	gtk_text_buffer_delete (buffer_tb, &start, &end);
 	gtk_text_buffer_get_bounds (buffer_tb, &start, &end);
-	
+
 	g_unichar_to_utf8 (TAG_CHAR, tag_char_utf8);
-	
+
 	tokens = g_strsplit (text, tag_char_utf8, 0);
-	
+
 	for (count = 0; tokens[count]; count++)
 	{
 		if (count % 2 == 0)
@@ -192,9 +192,9 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 			}
 		}
 	}
-	
+
 	gtk_text_buffer_end_user_action (buffer_tb);
-	
+
 	g_strfreev (tokens);
 }
 
@@ -209,13 +209,12 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 	gboolean done = FALSE;
 	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
 
-	
 	gtk_text_buffer_get_start_iter (buffer_tb, &start);
-	
+
 	g_unichar_to_utf8 (TAG_CHAR, tag_char_utf8);
-	
+
 	prev = start;
-	
+
 	while (!done)
 	{
 		tmp = gtk_text_buffer_get_text (buffer_tb, &prev, &start, TRUE);
@@ -235,7 +234,7 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 			g_free (name);
 		}
 		g_slist_free (tags);
-		
+
 		tags = gtk_text_iter_get_toggled_tags (&start, FALSE);
 		for (i = tags; i; i = i->next)
 		{
@@ -247,20 +246,20 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 			g_free (name);
 		}
 		g_slist_free (tags);
-		
+
 		if (gtk_text_iter_is_end (&start))
 			done = TRUE;
 		prev = start;
 		gtk_text_iter_forward_to_tag_toggle (&start, NULL);
 	}
-	
+
 	return text;
 }
 
 void
 xpad_text_buffer_insert_text (XpadTextBuffer *buffer, gint pos, const gchar *text, gint len)
 {
-    GtkTextBuffer *parent = (GtkTextBuffer*) buffer;
+	GtkTextBuffer *parent = (GtkTextBuffer*) buffer;
 	GtkTextIter iter;
 	gtk_text_buffer_get_iter_at_offset (parent, &iter, pos);
 	gtk_text_buffer_insert (parent, &iter, text, len);
@@ -294,17 +293,17 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 	GtkTextIter start, end, i;
 	gboolean all_tagged;
 	GtkTextBuffer *buffer_tb = GTK_TEXT_BUFFER (buffer);
-	
+
 	table = gtk_text_buffer_get_tag_table (buffer_tb);
 	tag = gtk_text_tag_table_lookup (table, name);
 	gtk_text_buffer_get_selection_bounds (buffer_tb, &start, &end);
-	
+
 	if (!tag)
 	{
 		g_print ("Tag not found in table %p\n", (void *) table);
 		return;
 	}
-	
+
 	for (all_tagged = TRUE, i = start; !gtk_text_iter_equal (&i, &end); gtk_text_iter_forward_char (&i))
 	{
 		if (!gtk_text_iter_has_tag (&i, tag))
@@ -313,7 +312,7 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 			break;
 		}
 	}
-	
+
 	if (all_tagged)
 	{
 		gtk_text_buffer_remove_tag (buffer_tb, tag, &start, &end);
@@ -331,53 +330,53 @@ create_tag_table (void)
 {
 	GtkTextTagTable *table;
 	GtkTextTag *tag;
-	
+
 	table = gtk_text_tag_table_new ();
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "bold", "weight", PANGO_WEIGHT_BOLD, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "italic", "style", PANGO_STYLE_ITALIC, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "strikethrough", "strikethrough", TRUE, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small-xx", "scale", PANGO_SCALE_XX_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small-x", "scale", PANGO_SCALE_X_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small", "scale", PANGO_SCALE_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "medium", "scale", PANGO_SCALE_MEDIUM, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large", "scale", PANGO_SCALE_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large-x", "scale", PANGO_SCALE_X_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large-xx", "scale", PANGO_SCALE_XX_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
 	g_object_unref (tag);
-	
+
 	return table;
 }
 

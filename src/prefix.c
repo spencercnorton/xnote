@@ -190,7 +190,7 @@ br_locate_prefix (void *symbol)
  * symbol: A symbol that belongs to the app/library you want to locate.
  * path: The path that you want to prepend the prefix to.
  * Returns: The new path, or NULL on error. This string should be freed when no
- *	    longer needed.
+ * longer needed.
  *
  * Gets the prefix of the app/library that symbol belongs to. Prepend that prefix to path.
  * Note that symbol cannot be a pointer to a function. That will not work.

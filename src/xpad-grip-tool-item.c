@@ -49,19 +49,19 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 {
 	GtkWidget *alignment;
 	gboolean right;
-	
+
 	grip->priv = xpad_grip_tool_item_get_instance_private(grip);
-	
+
 	grip->priv->drawbox = gtk_drawing_area_new ();
 	gtk_widget_add_events (grip->priv->drawbox, GDK_BUTTON_PRESS_MASK | GDK_EXPOSURE_MASK);
 	g_signal_connect (grip->priv->drawbox, "button-press-event", G_CALLBACK (xpad_grip_tool_item_button_pressed_event), NULL);
 	g_signal_connect (grip->priv->drawbox, "realize", G_CALLBACK (xpad_grip_tool_item_event_box_realize), NULL);
 	g_signal_connect (grip->priv->drawbox, "draw", G_CALLBACK (xpad_grip_tool_item_event_box_draw), NULL);
 	gtk_widget_set_size_request (grip->priv->drawbox, 18, 18);
-	
-	right =	gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR;
+
+	right = gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR;
 	alignment = gtk_alignment_new (right ? 1 : 0, 1, 0, 0);
-	
+
 	gtk_container_add (GTK_CONTAINER (alignment), grip->priv->drawbox);
 	gtk_container_add (GTK_CONTAINER (grip), alignment);
 }
@@ -72,18 +72,18 @@ xpad_grip_tool_item_button_pressed_event (GtkWidget *widget, GdkEventButton *eve
 	if (event->button == 1)
 	{
 		GdkWindowEdge edge;
-		
+
 		if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
 			edge = GDK_WINDOW_EDGE_SOUTH_EAST;
 		else
 			edge = GDK_WINDOW_EDGE_SOUTH_WEST;
-	
+
 		gtk_window_begin_resize_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
 			edge, (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-		
+
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -93,12 +93,12 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 	GdkDisplay *display = gtk_widget_get_display (widget);
 	GdkCursorType cursor_type;
 	GdkCursor *cursor;
-	
+
 	if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
 		cursor_type = GDK_BOTTOM_RIGHT_CORNER;
 	else
 		cursor_type = GDK_BOTTOM_LEFT_CORNER;
-	
+
 	cursor = gdk_cursor_new_for_display (display, cursor_type);
 	gdk_window_set_cursor (gtk_widget_get_window(widget), cursor);
 	g_object_unref (cursor);

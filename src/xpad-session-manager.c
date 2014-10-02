@@ -400,7 +400,7 @@ xpad_session_manager_die (SmcConn smc_conn, SmPointer client_data)
 	xpad_shutdown = True;
 
 	if (blocking)
-	  gtk_main_quit ();
+		gtk_main_quit ();
 	blocking = FALSE;
 	xpad_saving = FALSE;
 	xpad_interact_style = SmInteractStyleAny;
@@ -419,7 +419,7 @@ xpad_session_manager_shutdown_cancelled (SmcConn smc_conn, SmPointer client_data
 	xpad_shutdown = False;
 
 	if (blocking)
-	  gtk_main_quit ();
+		gtk_main_quit ();
 	blocking = FALSE;
 	xpad_saving = FALSE;
 	xpad_interact_style = SmInteractStyleAny;
@@ -435,7 +435,7 @@ xpad_session_manager_save_complete (SmcConn smc_conn, SmPointer client_data)
 	RETURN_IF_NOT_SAVING ();
 
 	if (blocking)
-	  gtk_main_quit ();
+		gtk_main_quit ();
 	blocking = FALSE;
 	xpad_saving = FALSE;
 	xpad_interact_style = SmInteractStyleAny;

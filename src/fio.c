@@ -39,10 +39,10 @@ fio_fill_filename (const gchar *filename)
 	else {
 		gchar *full_path;
 		GFile *file;
-		
+
 		full_path = g_build_filename (xpad_app_get_config_dir (), filename, NULL);
 		file = g_file_new_for_path (full_path);
-		
+
 		g_free (full_path);
 		return file;
 	}
@@ -58,7 +58,7 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 	gsize rsize = strlen (replacement);
 	gsize osize = 1;
 	gsize diff = rsize - osize;
-	
+
 	p = *string;
 	while ((p = strchr (p, obj)))
 	{
@@ -66,12 +66,12 @@ gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement)
 		*string = g_realloc (*string, strlen (*string) + diff + 1);
 		p = *string + offset;
 		memmove (p + rsize, p + osize, strlen (p + osize) + 1);
-		
+
 		memcpy (p, replacement, rsize);
-		
+
 		p = p + rsize;
 	}
-	
+
 	return *string;
 }
 
@@ -80,7 +80,7 @@ fio_unique_name (const gchar *prefix)
 {
 	int fd;
 	gchar *name, *base, *pattern;
-	
+
 	pattern = g_strconcat (prefix, "XXXXXX", NULL);
 	name = g_build_filename (xpad_app_get_config_dir (), pattern, NULL);
 	g_free (pattern);
@@ -90,12 +90,12 @@ fio_unique_name (const gchar *prefix)
 		g_free (name);
 		return NULL;
 	}
-	
+
 	close (fd);
 	base = g_path_get_basename (name);
-	
+
 	g_free (name);
-	
+
 	return base;
 }
 
@@ -106,33 +106,33 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	GFile *file;
 	GFileOutputStream *stream;
 	GError *error = NULL;
-	
+
 	file = fio_fill_filename (name);
-	
+
 	stream = g_file_replace (file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, &error);
-	
+
 	if (stream)
 	{
 		g_output_stream_write_all (G_OUTPUT_STREAM (stream), value, strlen (value),
 		                           NULL, NULL, &error);
 		g_object_unref (stream);
 	}
-	
+
 	if (error)
 	{
 		gchar *usertext;
 		gchar *parse_name;
-		
+
 		parse_name = g_file_get_parse_name (file);
 		usertext = g_strdup_printf (_("Could not write to file %s: %s"), parse_name, error->message);
-		
+
 		xpad_app_error (NULL, usertext, NULL);
-		
+
 		g_error_free (error);
 		g_free (usertext);
 		g_free (parse_name);
 	}
-	
+
 	g_object_unref (file);
 	return !error;
 }
@@ -145,11 +145,11 @@ gchar *fio_get_file (const gchar *name)
 {
 	GFile *file;
 	gchar *contents = NULL;
-	
+
 	file = fio_fill_filename (name);
 	g_file_load_contents (file, NULL, &contents, NULL, NULL, NULL);
 	g_object_unref (file);
-	
+
 	return contents;
 }
 
@@ -165,12 +165,12 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	const gchar *item;
 	va_list ap;
 	size_t len;
-	
+
 	buf = fio_get_file (filename);
-	
+
 	if (!buf)
 		return 1;
-	
+
 	/*
 	 * because of the way we look for a matching variable name, which is
 	 * to look for an endline, the variable name, and a space, we insert a
@@ -180,7 +180,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	buf = g_realloc (buf, len + 2);
 	memmove (buf + 1, buf, len + 1);
 	buf[0] = '\n';
-	
+
 	va_start (ap, filename);
 
 	while ((item = va_arg (ap, gchar *)))
@@ -190,24 +190,24 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 		gchar *where;
 		gsize size;
 		gchar type;
-		
+
 		type = item[0];
 		item = &item[2]; /* skip type and '|' */
 		fullitem = g_strdup_printf ("\n%s ", item);
 		value = va_arg (ap, void *);
 		where  = strstr (buf, fullitem);
-		
+
 		if (where)
 		{
 			gchar *temp;
 
 			where = strstr (where, " ") + 1;
 			size = strcspn (where, "\n");
-		
+
 			temp = g_malloc (size + 1);
 			strncpy (temp, where, size);
 			temp[size] = '\0';
-			
+
 			switch (type)
 			{
 			case 'i':
@@ -230,7 +230,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 				g_warning ("Bad type to fio_get_values_from_file: %c\n", type);
 				break;
 			}
-		
+
 			g_free (temp);
 		}
 		g_free (fullitem);
@@ -249,19 +249,19 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 	gchar *buf, *tmpbuf;
 	const gchar *item;
 	va_list ap;
-	
+
 	va_start (ap, filename);
-	
+
 	buf = g_strdup ("");
 	while ((item = va_arg (ap, gchar *)))
 	{
 		gchar *final_string;
 		gchar *value_string;
 		gchar type;
-		
+
 		type = item[0];
 		item = &item[2]; /* skip type and '|' */
-		
+
 		/* translate our types to printf types */
 		switch (type)
 		{
@@ -283,28 +283,28 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 			value_string = g_strdup ("");
 			break;
 		}
-		
+
 		final_string = g_strdup_printf ("%s%s %s", (buf[0] == 0) ? "" : "\n", item, value_string);
 		g_free (value_string);
-		
+
 		tmpbuf = buf;
 		buf = g_strconcat (buf, final_string, NULL);
 		g_free (tmpbuf);
 		g_free (final_string);
 	}
-	
+
 	va_end (ap);
-	
+
 	tmpbuf = buf;
 	buf = g_strconcat (buf, "\n", NULL);
 	g_free (tmpbuf);
-	
+
 	if (!fio_set_file (filename, buf))
 	{
 		g_free (buf);
 		return 1;
 	}
-	
+
 	g_free (buf);
 	return 0;
 }

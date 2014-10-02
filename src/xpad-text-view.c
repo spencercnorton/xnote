@@ -81,7 +81,7 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 	gobject_class->finalize = xpad_text_view_finalize;
 	gobject_class->set_property = xpad_text_view_set_property;
 	gobject_class->get_property = xpad_text_view_get_property;
-	
+
 	obj_prop[PROP_SETTINGS] = g_param_spec_pointer ("settings", "Xpad settings", "Xpad global settings", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_PAD] = g_param_spec_pointer ("pad", "Pad", "Pad connected to this textview", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
@@ -99,14 +99,14 @@ xpad_text_view_init (XpadTextView *view)
 static void xpad_text_view_constructed (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
-	
+
 	view->priv->buffer = xpad_text_buffer_new (view->priv->pad);
 
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
 	gtk_container_set_border_width (GTK_CONTAINER (view), 5);
 	gtk_widget_set_name (GTK_WIDGET (view), g_strdup_printf ("%p", (void *) view));
-	
+
 	g_signal_connect (view, "button-press-event", G_CALLBACK (xpad_text_view_button_press_event), view->priv->settings);
 	g_signal_connect_after (view, "focus-out-event", G_CALLBACK (xpad_text_view_focus_out_event), view->priv->settings);
 	g_signal_connect (view, "realize", G_CALLBACK (xpad_text_view_realize), NULL);
@@ -243,7 +243,7 @@ xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event, XpadSet
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -268,7 +268,7 @@ xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event, Xpa
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -288,17 +288,17 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	gboolean editable;
 	GdkWindow *view_window;
 	GtkTextView *view_tv = GTK_TEXT_VIEW (view);
-	
+
 	editable = gtk_text_view_get_editable (view_tv);
 	gtk_text_view_set_cursor_visible (view_tv, editable);
-	
+
 	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
-	
+
 	/* Only set for pads which are currently visible */ 
 	view_window = gtk_text_view_get_window (view_tv, GTK_TEXT_WINDOW_TEXT);
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
-	
+
 	if (cursor)
 		g_object_unref (cursor);
 }
