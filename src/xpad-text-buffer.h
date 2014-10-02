@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_TEXT_BUFFER_H__
 
 #include "xpad-pad.h"
+#include <gtksourceview/gtksource.h>
+#include <gtksourceview/gtksourcebuffer.h>
 
 G_BEGIN_DECLS
 
@@ -40,13 +42,13 @@ typedef struct XpadTextBuffer XpadTextBuffer;
 
 struct XpadTextBuffer
 {
-	GtkTextBuffer parent;
+	GtkSourceBuffer parent;
 	XpadTextBufferPrivate *priv;
 };
 
 struct XpadTextBufferClass
 {
-	GtkTextBufferClass parent_class;
+	GtkSourceBufferClass parent_class;
 };
 
 GType xpad_text_buffer_get_type (void);

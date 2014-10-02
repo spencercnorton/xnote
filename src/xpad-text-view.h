@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_TEXT_VIEW_H__
 
 #include "xpad-pad.h"
+#include <gtksourceview/gtksource.h>
 
 G_BEGIN_DECLS
 
@@ -39,13 +40,13 @@ typedef struct XpadTextView XpadTextView;
 
 struct XpadTextView
 {
-	GtkTextView parent;
+	GtkSourceView parent;
 	XpadTextViewPrivate *priv;
 };
 
 struct XpadTextViewClass
 {
-	GtkTextViewClass parent_class;
+	GtkSourceViewClass parent_class;
 };
 
 GType xpad_text_view_get_type (void);

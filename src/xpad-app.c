@@ -195,7 +195,8 @@ xpad_app_init (int argc, char **argv)
 }
 
 gint main (gint argc, gchar **argv)
-{	xpad_app_init (argc, argv);
+{
+	xpad_app_init (argc, argv);
 
 	gtk_main ();
 	
