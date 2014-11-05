@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-periodic.h"
 #include "xpad-session-manager.h"
 #include "xpad-tray.h"
+#include "xpad-debug.h"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
    These were provided by Alan Mizrahi <alan@cesma.usb.ve>.
@@ -93,6 +94,9 @@ xpad_app_init (int argc, char **argv)
 {
 	gboolean first_time;
 	gboolean have_gtk;
+
+	xpad_debug_init();
+	xpad_debug_message (DEBUG_APP, "Startup");
 
 	/* Set up support different languages */
 #ifdef ENABLE_NLS
