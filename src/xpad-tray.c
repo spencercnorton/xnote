@@ -98,7 +98,7 @@ static void xpad_tray_close ()
 void xpad_tray_dispose (XpadSettings *settings) {
 	if (settings)
 		g_signal_handlers_disconnect_by_func (settings, xpad_tray_toggle, NULL);
-	xpad_tray_close (settings);
+	xpad_tray_close ();
 }
 
 gboolean
