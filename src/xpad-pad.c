@@ -1350,7 +1350,7 @@ void
 xpad_pad_save_info (XpadPad *pad)
 {
 	gboolean follow_font_style, follow_color_style;
-	guint height = NULL;
+	guint height = 0;
 	GtkStyleContext *style = NULL;
 	PangoFontDescription *font = NULL;
 	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};

@@ -714,7 +714,7 @@ xpad_app_pass_args (void)
 	guint size;
 	ssize_t bytesRead;
 	gboolean connected = FALSE;
-	ssize_t error = NULL;
+	ssize_t error;
 	
 	/* create master socket */
 	client_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
