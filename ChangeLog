@@ -1,9 +1,12 @@
 Version 4.4
-* Fix: Preferences - redesign of preferences box to make sure it fits on small screens (#1333636)
-* Fix: Seg Fault - Seg fault on closing the xpad (#1333727)
-* Fix: CLI - Can't find signal function address when using CLI parameter -f by Jaya Tiwari (#1332971)
-* Fix: Code cleanup - Spaces and indentions by Ankita Patil (#1366510)
-* Fix: Replace GtkTextBuffer with GtkSourceBuffer in preparation of the search functionality by Sagar Ghuge (#1349838)
+* Fix: Preferences - Redesign of preferences box to make sure it fits on small screens (#1333636)
+* Fix: Command line - Can't find signal function address when using CLI parameter -f by Jaya Tiwari (#1332971)
+* Fix: Technical - Clang compiler warning due to two incorrect variable initializations (#1395227)
+* Fix: Technical - Clang compiler warning due to incorrect parameter usage (#1395227)
+* Fix: Techincal - Added GTK minimum version requirement v3.10 (#1395227)
+* Fix: Technical - Seg fault on closing the xpad (#1333727)
+* Fix: Technical - Code cleanup - Spaces and indentions by Ankita Patil (#1366510)
+* Fix: Technical - Replace GtkTextBuffer with GtkSourceBuffer in preparation of the search functionality by Sagar Ghuge (#1349838)
 
 Version 4.3
 * New: Systray - ability to hide the tray icon (#890334) 
