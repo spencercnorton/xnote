@@ -1,3 +1,6 @@
+Version 4.5
+* 
+
 Version 4.4
 * Fix: Preferences - Redesign of preferences box to make sure it fits on small screens (#1333636)
 * Fix: Command line - Can't find signal function address when using CLI parameter -f by Jaya Tiwari (#1332971)
