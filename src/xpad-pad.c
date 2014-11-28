@@ -1633,22 +1633,13 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 			"has-decorations", &decorations,
 			"has-scrollbar", &has_scrollbar, NULL);
 
+	/* Upper menu */
 	uppermenu = gtk_menu_new ();
 	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
-
-	/* Pad submenu */
-	item = gtk_menu_item_new_with_mnemonic (_("_Pad"));
-	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	menu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+	menu = uppermenu;
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
-	MENU_ADD_SEP ();
-	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
-	g_object_set_data (G_OBJECT (uppermenu), "sticky", item);
-	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
-	MENU_ADD_SEP ();
 	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
-	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+	MENU_ADD_SEP();
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
@@ -1662,23 +1653,13 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, xpad_pad_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
-	MENU_ADD_SEP ();
-	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
+	MENU_ADD_SEP();
+	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
 
-	/* View submenu */
-	item = gtk_menu_item_new_with_mnemonic (_("_View"));
-	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	menu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	MENU_ADD_CHECK (_("_Toolbar"), has_toolbar, menu_toolbar);
-	g_object_set_data (G_OBJECT (uppermenu), "has-toolbar", item);
-	MENU_ADD_CHECK (_("_Autohide Toolbar"), autohide_toolbar, menu_autohide);
-	g_object_set_data (G_OBJECT (uppermenu), "has-autohide-toolbar", item);
-	gtk_widget_set_sensitive (item, has_toolbar);
-	MENU_ADD_CHECK (_("_Scrollbar"), has_scrollbar, menu_scrollbar);
-	g_object_set_data (G_OBJECT (uppermenu), "has-scrollbar", item);
-	MENU_ADD_CHECK (_("_Window Decorations"), decorations, menu_decorated);
-	g_object_set_data (G_OBJECT (uppermenu), "has-decorations", item);
+	/* Upper menu */
+	menu = uppermenu;
+	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+	MENU_ADD_SEP ();
 
 	/* Notes submenu - The list of notes will get added in the prep function below */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
@@ -1688,6 +1669,11 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	g_object_set_data (G_OBJECT (uppermenu), "notes-menu", menu);
 	MENU_ADD (_("_Show All"), NULL, 0, 0, xpad_pad_show_all);
 	MENU_ADD (_("_Close All"), NULL, 0, 0, xpad_pad_close_all);
+
+	/* Upper menu */
+	menu = uppermenu;
+	MENU_ADD_SEP ();
+	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
 
 	/* Help submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
