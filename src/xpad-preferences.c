@@ -198,8 +198,8 @@ static void xpad_preferences_constructed (GObject *object)
 	/* create notebook to add pages */
 	pref->priv->notebook = gtk_notebook_new ();
 
-	/* Appearance options */
-	label = create_label (_("Appearance"));
+	/* Layout options */
+	label = create_label (_("Layout"));
 
 	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
