@@ -1542,8 +1542,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
 	menu = uppermenu;
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
-	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
-	MENU_ADD_SEP();
+	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
@@ -1559,7 +1558,10 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
-	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+
+	menu = uppermenu;
+	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
+	MENU_ADD_SEP();
 
 	/* Notes submenu - The list of notes will get added in the prep function below */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
@@ -1570,11 +1572,6 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD (_("_Show All"), NULL, 0, 0, xpad_pad_show_all);
 	MENU_ADD (_("_Close All"), NULL, 0, 0, xpad_pad_close_all);
 
-	/* Upper menu */
-	menu = uppermenu;
-	MENU_ADD_SEP ();
-	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
-
 	/* Help submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
 	gtk_container_add (GTK_CONTAINER (uppermenu), item);
@@ -1582,6 +1579,11 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	MENU_ADD (_("_Help"), "help-browser", GDK_KEY_F1, 0, show_help);
 	MENU_ADD (_("_About"), "help-about", 0, 0, menu_about);
+
+	/* Upper menu */
+	menu = uppermenu;
+	MENU_ADD_SEP ();
+	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
 
 	gtk_widget_show_all (uppermenu);
 
