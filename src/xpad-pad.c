@@ -892,7 +892,7 @@ pad_properties_sync_title (XpadPad *pad)
 	if (!pad->priv->properties)
 		return;
 
-	title = g_strdup_printf (_("'%s' Properties"), gtk_window_get_title (GTK_WINDOW (pad)));
+	title = g_strdup_printf (_("'%s' Layout"), gtk_window_get_title (GTK_WINDOW (pad)));
 	gtk_window_set_title (GTK_WINDOW (pad->priv->properties), title);
 	g_free (title);
 }
@@ -1654,7 +1654,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, xpad_pad_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
 	MENU_ADD_SEP();
-	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
+	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
 	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
 
 	/* Notes submenu - The list of notes will get added in the prep function below */
