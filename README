@@ -7,10 +7,21 @@ Xpad is a virtual sticky pad system using GTK+ 3.
 --------------------------------------------------------------------------
 INSTALLATION NOTES
 --------------------------------------------------------------------------
-     To compile, just type "./configure", "make", and "make install".
-     Type "xpad" now to run.
+     Xpad needs a GTK 3 icon theme. A commonly used theme is the
+     gnome-icon-theme, but any will suffice. If Xpad does not show icons,
+     verify that an icon theme is installed.
 
-     Read the INSTALL file for more information.
+     To compile, type the commands "./configure" and "make". Finally, run
+     "make install" as root to deploy the application on your system.
+
+     Type "xpad" to run the program.
+
+     Read the INSTALL file for detailed information.
+
+     Note for developers: if you got the source code straight from
+                          launchpad by using bazaar, you have to run
+                          "./autogen.sh", which will give you all files 
+                          to start "./configure"
 
 
 --------------------------------------------------------------------------
