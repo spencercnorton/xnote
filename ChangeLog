@@ -1,4 +1,5 @@
 Version 4.5
+* New: Debug - ability to use built-in debugging functionality for bug solving and code improvements by Sagar Ghuge (#1389334)
 * Fix: Menu - Use a more intuitive menu order and menu items by Merlijn Sebrechts (#1395889)
 * Fix: Technical - Use standard autotools commands for deploying the help file by Julien Lavergne (#1402235)
 * Fix: Documentation - Improved the installation section of the README file with the input of Merlijn Sebrechts and Jason Helfman (#1399294)
