@@ -1543,6 +1543,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = uppermenu;
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
 	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
@@ -1560,7 +1561,6 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
 
 	menu = uppermenu;
-	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
 	MENU_ADD_SEP();
 
 	/* Notes submenu - The list of notes will get added in the prep function below */
