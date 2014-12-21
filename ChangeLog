@@ -1,5 +1,6 @@
 Version 4.5
-* Fix: Technical - Use standard autotools commds for deploying the help file by Julien Lavergne (#1402235)
+* Fix: Menu - Use a more intuitive menu order and menu items by Merlijn Sebrechts (#1395889)
+* Fix: Technical - Use standard autotools commands for deploying the help file by Julien Lavergne (#1402235)
 
 Version 4.4
 * Fix: Preferences - Redesign of preferences box to make sure it fits on small screens (#1333636)

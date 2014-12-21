@@ -506,10 +506,6 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	gboolean decorations;
 	g_object_get (pad->priv->settings, "has-decorations", &decorations, NULL);
 
-	/* Update pad menu with the new status */
-	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-decorations");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), decorations);
-
 	/*
 	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
 	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
@@ -535,12 +531,6 @@ xpad_pad_notify_has_toolbar (XpadPad *pad)
 	gboolean has_toolbar, autohide_toolbar;
 	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
 
-	/* Update pad menu with the new status */
-	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-toolbar");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), has_toolbar);
-	menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-autohide-toolbar");
-	gtk_widget_set_sensitive (menu_item, has_toolbar);
-
 	if (has_toolbar && !autohide_toolbar)
 		xpad_pad_show_toolbar (pad);
 	else
@@ -552,10 +542,6 @@ xpad_pad_notify_autohide_toolbar (XpadPad *pad)
 {
 	gboolean autohide_toolbar;
 	g_object_get (pad->priv->settings, "autohide-toolbar", &autohide_toolbar, NULL);
-
-	/* Update pad menu with the new status */
-	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-autohide-toolbar");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), autohide_toolbar);
 
 	if (autohide_toolbar)
 	{
@@ -578,10 +564,6 @@ xpad_pad_notify_has_scrollbar (XpadPad *pad)
 {
 	gboolean has_scrollbar;
 	g_object_get (pad->priv->settings, "has-scrollbar", &has_scrollbar, NULL);
-
-	/* Update pad menu with the new status */
-	GtkWidget *menu_item = g_object_get_data (G_OBJECT (pad->priv->menu), "has-scrollbar");
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menu_item), has_scrollbar);
 
 	if (has_scrollbar)
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (pad->priv->scrollbar),
@@ -892,7 +874,7 @@ pad_properties_sync_title (XpadPad *pad)
 	if (!pad->priv->properties)
 		return;
 
-	title = g_strdup_printf (_("'%s' Properties"), gtk_window_get_title (GTK_WINDOW (pad)));
+	title = g_strdup_printf (_("'%s' Layout"), gtk_window_get_title (GTK_WINDOW (pad)));
 	gtk_window_set_title (GTK_WINDOW (pad->priv->properties), title);
 	g_free (title);
 }
@@ -1304,38 +1286,6 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 		gtk_widget_override_background_color (pad->priv->textview, GTK_STATE_FLAG_SELECTED, &text_color);
 	}
 
-	/*
-	 * Find the sticky notes menu setting for this pad (which is on the global default),
-	 * and change its setting to the setting from the info file (pad specific default).
-	 */
-	if (GTK_IS_CONTAINER (pad->priv->menu)) {
-		GObject *obj;
-		GList *elem, *children;
-		children = gtk_container_get_children (GTK_CONTAINER (pad->priv->menu));
-
-		for (elem = children; elem; elem = elem->next) {
-			obj = (GObject *) elem->data;
-
-			if (GTK_IS_BIN (obj) && GTK_IS_MENU_ITEM (obj)) {
-				GList *elem2, *children2;
-				children2 = gtk_container_get_children (GTK_CONTAINER (gtk_menu_item_get_submenu (GTK_MENU_ITEM(obj))));
-				for(elem2 = children2; elem2; elem2 = elem2->next) {
-					obj = (GObject *) elem2->data;
-					if (GTK_IS_CHECK_MENU_ITEM (obj)) {
-						if (!g_strcmp0(gtk_menu_item_get_label (GTK_MENU_ITEM (obj)), "Show on _All Workspaces")) {
-							gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (obj), pad->priv->sticky);
-							break;
-						}
-					}
-				}
-				g_list_free(elem2);
-			}
-		}
-		g_list_free(elem);
-	}
-	else
-		g_warning("For some reason the variable pad->priv->menu is not a container. This results in not having a unique sticky setting for this pad. Falling back to the global sticky setting. Please send a bugreport.");
-
 	if (pad->priv->sticky)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
@@ -1537,45 +1487,6 @@ menu_strikethrough (XpadPad *pad)
 	menu_toggle_tag (pad, "strikethrough");
 }
 
-/*
- * Make the pad visually stick to the workspace and save this setting to the individual pad info file,
- * because this function has been probably been called, because of a menu toggle.
- */
-static void
-menu_sticky (GtkCheckMenuItem *check, XpadPad *pad)
-{
-	pad->priv->sticky = gtk_check_menu_item_get_active (check);
-	if (pad->priv->sticky)
-		gtk_window_stick (GTK_WINDOW (pad));
-	else
-		gtk_window_unstick (GTK_WINDOW (pad));
-	xpad_pad_save_info_delayed (pad);
-}
-
-static void
-menu_toolbar (GtkCheckMenuItem *check, XpadPad *pad)
-{
-	g_object_set (pad->priv->settings, "has-toolbar", gtk_check_menu_item_get_active (check), NULL);
-}
-
-static void
-menu_scrollbar (GtkCheckMenuItem *check, XpadPad *pad)
-{
-	g_object_set (pad->priv->settings, "has-scrollbar", gtk_check_menu_item_get_active (check), NULL);
-}
-
-static void
-menu_autohide (GtkCheckMenuItem *check, XpadPad *pad)
-{
-	g_object_set (pad->priv->settings, "autohide-toolbar", gtk_check_menu_item_get_active (check), NULL);
-}
-
-static void
-menu_decorated (GtkCheckMenuItem *check, XpadPad *pad)
-{
-	g_object_set (pad->priv->settings, "has-decorations", gtk_check_menu_item_get_active (check), NULL);
-}
-
 static gint
 menu_title_compare (GtkWindow *a, GtkWindow *b)
 {
@@ -1625,30 +1536,14 @@ static GtkWidget *
 menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 {
 	GtkWidget *uppermenu, *menu, *item;
-	gboolean has_toolbar, autohide_toolbar, has_scrollbar, decorations;
 
-	g_object_get (pad->priv->settings,
-			"has-toolbar", &has_toolbar,
-			"autohide-toolbar", &autohide_toolbar,
-			"has-decorations", &decorations,
-			"has-scrollbar", &has_scrollbar, NULL);
-
+	/* Upper menu */
 	uppermenu = gtk_menu_new ();
 	gtk_menu_set_accel_group (GTK_MENU (uppermenu), accel_group);
-
-	/* Pad submenu */
-	item = gtk_menu_item_new_with_mnemonic (_("_Pad"));
-	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	menu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
+	menu = uppermenu;
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
-	MENU_ADD_SEP ();
-	MENU_ADD_CHECK (_("Show on _All Workspaces"), pad->priv->sticky, menu_sticky);
-	g_object_set_data (G_OBJECT (uppermenu), "sticky", item);
-	MENU_ADD (_("_Properties"), "document-properties", 0, 0, xpad_pad_open_properties);
-	MENU_ADD_SEP ();
-	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
 	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));
@@ -1662,23 +1557,11 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, xpad_pad_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
-	MENU_ADD_SEP ();
-	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
+	MENU_ADD_SEP();
+	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
 
-	/* View submenu */
-	item = gtk_menu_item_new_with_mnemonic (_("_View"));
-	gtk_container_add (GTK_CONTAINER (uppermenu), item);
-	menu = gtk_menu_new ();
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
-	MENU_ADD_CHECK (_("_Toolbar"), has_toolbar, menu_toolbar);
-	g_object_set_data (G_OBJECT (uppermenu), "has-toolbar", item);
-	MENU_ADD_CHECK (_("_Autohide Toolbar"), autohide_toolbar, menu_autohide);
-	g_object_set_data (G_OBJECT (uppermenu), "has-autohide-toolbar", item);
-	gtk_widget_set_sensitive (item, has_toolbar);
-	MENU_ADD_CHECK (_("_Scrollbar"), has_scrollbar, menu_scrollbar);
-	g_object_set_data (G_OBJECT (uppermenu), "has-scrollbar", item);
-	MENU_ADD_CHECK (_("_Window Decorations"), decorations, menu_decorated);
-	g_object_set_data (G_OBJECT (uppermenu), "has-decorations", item);
+	menu = uppermenu;
+	MENU_ADD_SEP();
 
 	/* Notes submenu - The list of notes will get added in the prep function below */
 	item = gtk_menu_item_new_with_mnemonic (_("_Notes"));
@@ -1696,6 +1579,11 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu);
 	MENU_ADD (_("_Help"), "help-browser", GDK_KEY_F1, 0, show_help);
 	MENU_ADD (_("_About"), "help-about", 0, 0, menu_about);
+
+	/* Upper menu */
+	menu = uppermenu;
+	MENU_ADD_SEP ();
+	MENU_ADD (_("_Preferences"), "preferences-system", 0, 0, xpad_pad_open_preferences);
 
 	gtk_widget_show_all (uppermenu);
 

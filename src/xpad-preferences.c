@@ -49,6 +49,10 @@ struct XpadPreferencesPrivate
 	GtkWidget *tray_click_configuration;
 	GtkWidget *editcheck;
 	GtkWidget *confirmcheck;
+	GtkWidget *has_decorations;
+	GtkWidget *has_toolbar;
+	GtkWidget *autohide_toolbar;
+	GtkWidget *has_scrollbar;
 
 	gulong fontcheck_handler;
 	gulong font_handler;
@@ -65,6 +69,10 @@ struct XpadPreferencesPrivate
 	gulong tray_click_handler;
 	gulong editcheck_handler;
 	gulong confirmcheck_handler;
+	gulong has_decorations_handler;
+	gulong has_toolbar_handler;
+	gulong autohide_toolbar_handler;
+	gulong has_scrollbar_handler;
 
 	gulong notify_font_handler;
 	gulong notify_text_handler;
@@ -79,6 +87,10 @@ struct XpadPreferencesPrivate
 	gulong notify_tray_click_handler;
 	gulong notify_edit_handler;
 	gulong notify_confirm_handler;
+	gulong notify_has_decorations_handler;
+	gulong notify_has_toolbar_handler;
+	gulong notify_autohide_toolbar_handler;
+	gulong notify_has_scrollbar_handler;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
@@ -104,6 +116,10 @@ static void change_tray_enabled (GtkToggleButton *button, XpadPreferences *pref)
 static void change_tray_click (GtkComboBox *box, XpadPreferences *pref);
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
+static void change_has_decorations (GtkToggleButton *button, XpadPreferences *pref);
+static void change_has_toolbar (GtkToggleButton *button, XpadPreferences *pref);
+static void change_autohide_toolbar (GtkToggleButton *button, XpadPreferences *pref);
+static void change_has_scrollbar (GtkToggleButton *button, XpadPreferences *pref);
 
 static void notify_fontname (XpadPreferences *pref);
 static void notify_text_color (XpadPreferences *pref);
@@ -118,6 +134,10 @@ static void notify_tray_enabled (XpadPreferences *pref);
 static void notify_tray_click (XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
+static void notify_has_decorations(XpadPreferences *pref);
+static void notify_has_toolbar(XpadPreferences *pref);
+static void notify_autohide_toolbar(XpadPreferences *pref);
+static void notify_has_scrollbar(XpadPreferences *pref);
 
 static GtkWidget * create_label (const gchar *label_text);
 
@@ -169,8 +189,8 @@ static void xpad_preferences_constructed (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
-	GtkWidget *appearance_frame, *start_frame, *tray_frame, *other_frame, *label, *alignment;
-	GtkBox *font_hbox, *vbox, *hbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
+	GtkWidget *view_frame, *appearance_frame, *start_frame, *tray_frame, *other_frame, *label, *alignment;
+	GtkBox *font_hbox, *vbox, *hbox, *view_vbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
@@ -178,7 +198,7 @@ static void xpad_preferences_constructed (GObject *object)
 	GtkRequisition req;
 	GdkRGBA theme_text_color = {0, 0, 0, 0}, theme_background_color = {0, 0, 0, 0};
 	guint tray_click_configuration, autostart_delay, autostart_display_pads;
-	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky;
+	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky, has_decorations, has_toolbar, autohide_toolbar, has_scrollbar;
 
 	g_object_get (pref->priv->settings,
 			"fontname", &fontname,
@@ -193,13 +213,61 @@ static void xpad_preferences_constructed (GObject *object)
 			"autostart-sticky", &autostart_sticky,
 			"autostart-delay", &autostart_delay,
 			"autostart-display-pads", &autostart_display_pads,
+			"has-decorations", &has_decorations,
+			"has-toolbar", &has_toolbar,
+			"autohide-toolbar", &autohide_toolbar,
+			"has-scrollbar", &has_scrollbar,
 			NULL);
 
 	/* create notebook to add pages */
 	pref->priv->notebook = gtk_notebook_new ();
 
-	/* Appearance options */
-	label = create_label (_("Appearance"));
+	/* View options */
+	label = create_label (_("View"));
+
+	view_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
+	gtk_box_set_homogeneous (view_vbox, FALSE);
+
+	alignment = gtk_alignment_new (1, 1, 1, 1);
+	g_object_set (G_OBJECT (alignment),
+		"left-padding", 12,
+		"top-padding", 12,
+		"child", view_vbox,
+		NULL);
+	view_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
+		"label-widget", NULL,
+		"shadow-type", GTK_SHADOW_NONE,
+		"child", alignment,
+		NULL));
+
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (view_frame), label);
+
+	pref->priv->has_toolbar = gtk_check_button_new_with_mnemonic (_("_Show toolbar"));
+	gtk_box_pack_start (view_vbox, pref->priv->has_toolbar, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_toolbar), has_toolbar);
+
+	pref->priv->autohide_toolbar = gtk_check_button_new_with_mnemonic (_("_Autohide toolbar"));
+	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20));
+	gtk_box_pack_start (hbox, gtk_alignment_new (1, 1, 1, 1), FALSE, FALSE, 0);
+	gtk_box_pack_start (hbox, pref->priv->autohide_toolbar, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autohide_toolbar), autohide_toolbar);
+	gtk_widget_set_sensitive (pref->priv->autohide_toolbar, has_toolbar);
+	gtk_box_pack_start (view_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+
+	pref->priv->has_scrollbar = gtk_check_button_new_with_mnemonic (_("_Show scrollbar"));
+	gtk_box_pack_start (view_vbox, pref->priv->has_scrollbar, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_scrollbar), has_scrollbar);
+
+	pref->priv->autostart_sticky = gtk_check_button_new_with_mnemonic (_("_Show notes on all workspaces"));
+	gtk_box_pack_start (view_vbox, pref->priv->autostart_sticky, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), autostart_sticky);
+
+	pref->priv->has_decorations = gtk_check_button_new_with_mnemonic (_("_Show window decorations"));
+	gtk_box_pack_start (view_vbox, pref->priv->has_decorations, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_decorations), has_decorations);
+
+	/* Layout options */
+	label = create_label (_("Layout"));
 
 	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
@@ -353,10 +421,6 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start (autostart_vbox, pref->priv->autostart_new_pad, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), autostart_new_pad);
 
-	pref->priv->autostart_sticky = gtk_check_button_new_with_mnemonic (_("_Pads start on all workspaces"));
-	gtk_box_pack_start (autostart_vbox, pref->priv->autostart_sticky, FALSE, FALSE, 0);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_sticky), autostart_sticky);
-
 	label = gtk_label_new (_("Delay in seconds"));
 	pref->priv->autostart_delay = gtk_combo_box_text_new();
 	guint i;
@@ -450,6 +514,11 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_window_set_title (GTK_WINDOW (pref), _("Xpad Preferences"));
 
 	/* Activate all handlers */
+	pref->priv->has_decorations_handler = g_signal_connect (pref->priv->has_decorations, "toggled", G_CALLBACK (change_has_decorations), pref);
+	pref->priv->has_toolbar_handler = g_signal_connect (pref->priv->has_toolbar, "toggled", G_CALLBACK (change_has_toolbar), pref);
+	pref->priv->autohide_toolbar_handler = g_signal_connect (pref->priv->autohide_toolbar, "toggled", G_CALLBACK (change_autohide_toolbar), pref);
+	pref->priv->has_scrollbar_handler = g_signal_connect (pref->priv->has_scrollbar, "toggled", G_CALLBACK (change_has_scrollbar), pref);
+
 	pref->priv->fontcheck_handler = g_signal_connect (pref->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), pref);
 	pref->priv->font_handler = g_signal_connect (pref->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), pref);
 	pref->priv->colorcheck_handler = g_signal_connect (pref->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), pref);
@@ -467,6 +536,11 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->tray_click_handler = g_signal_connect(pref->priv->tray_click_configuration, "changed", G_CALLBACK(change_tray_click), pref);
 	pref->priv->editcheck_handler = g_signal_connect (pref->priv->editcheck, "toggled", G_CALLBACK (change_edit_check), pref);
 	pref->priv->confirmcheck_handler = g_signal_connect (pref->priv->confirmcheck, "toggled", G_CALLBACK (change_confirm_check), pref);
+
+	pref->priv->notify_has_decorations_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-decorations", G_CALLBACK (notify_has_decorations), pref);
+	pref->priv->notify_has_toolbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-toolbar", G_CALLBACK (notify_has_toolbar), pref);
+	pref->priv->notify_autohide_toolbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::autohide-toolbar", G_CALLBACK (notify_autohide_toolbar), pref);
+	pref->priv->notify_has_scrollbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-scrollbar", G_CALLBACK (notify_has_scrollbar), pref);
 
 	pref->priv->notify_font_handler = g_signal_connect_swapped (pref->priv->settings, "notify::fontname", G_CALLBACK (notify_fontname), pref);
 	pref->priv->notify_text_handler = g_signal_connect_swapped (pref->priv->settings, "notify::text-color", G_CALLBACK (notify_text_color), pref);
@@ -737,6 +811,36 @@ change_confirm_check (GtkToggleButton *button, XpadPreferences *pref)
 }
 
 static void
+change_has_decorations (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->settings, pref->priv->notify_has_decorations_handler);
+	g_object_set (pref->priv->settings, "has-decorations", gtk_toggle_button_get_active (button), NULL);
+	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_has_decorations_handler);
+}
+
+static void
+change_has_toolbar (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_object_set (pref->priv->settings, "has-toolbar", gtk_toggle_button_get_active (button), NULL);
+}
+
+static void
+change_autohide_toolbar (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->settings, pref->priv->notify_autohide_toolbar_handler);
+	g_object_set (pref->priv->settings, "autohide-toolbar", gtk_toggle_button_get_active (button), NULL);
+	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_autohide_toolbar_handler);
+}
+
+static void
+change_has_scrollbar (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->settings, pref->priv->notify_has_scrollbar_handler);
+	g_object_set (pref->priv->settings, "has-scrollbar", gtk_toggle_button_get_active (button), NULL);
+	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_has_scrollbar_handler);
+}
+
+static void
 notify_fontname (XpadPreferences *pref)
 {
 	const gchar *fontname;
@@ -917,4 +1021,45 @@ notify_confirm (XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), value);
 	g_signal_handler_unblock (pref->priv->confirmcheck, pref->priv->confirmcheck_handler);
+}
+
+static void
+notify_has_decorations (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "has-decorations", &value, NULL);
+	g_signal_handler_block (pref->priv->has_decorations, pref->priv->has_decorations_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_decorations), value);
+	g_signal_handler_unblock (pref->priv->has_decorations, pref->priv->has_decorations_handler);
+}
+
+static void
+notify_has_toolbar (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "has-toolbar", &value, NULL);
+	g_signal_handler_block (pref->priv->has_toolbar, pref->priv->has_toolbar_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_toolbar), value);
+	gtk_widget_set_sensitive (pref->priv->autohide_toolbar, value);
+	g_signal_handler_unblock (pref->priv->has_toolbar, pref->priv->has_toolbar_handler);
+}
+
+static void
+notify_autohide_toolbar (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "autohide-toolbar", &value, NULL);
+	g_signal_handler_block (pref->priv->autohide_toolbar, pref->priv->autohide_toolbar_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autohide_toolbar), value);
+	g_signal_handler_unblock (pref->priv->autohide_toolbar, pref->priv->autohide_toolbar_handler);
+}
+
+static void
+notify_has_scrollbar (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "has-scrollbar", &value, NULL);
+	g_signal_handler_block (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_scrollbar), value);
+	g_signal_handler_unblock (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
 }
