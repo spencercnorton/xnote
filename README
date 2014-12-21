@@ -7,8 +7,9 @@ Xpad is a virtual sticky pad system using GTK+ 3.
 --------------------------------------------------------------------------
 INSTALLATION NOTES
 --------------------------------------------------------------------------
-     To compile, just type "./configure", "make", and "make install".
-     Type "xpad" now to run.
+     To compile, run "./autogen.sh", which will give you all files to
+     compile and make the package. Then type "./configure" and "make".
+     Finally, run "make install" as root. Type "xpad" now to run.
 
      Read the INSTALL file for more information.
 
