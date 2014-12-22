@@ -22,14 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef X_DISPLAY_MISSING
 
 #include "../config.h"
+
 #include "xpad-session-manager.h"
+#include "xpad-session-manager.h"
+#include "xpad-app.h"
+
 #include <pwd.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <gdk/gdkx.h>
 #include <X11/SM/SMlib.h>
-#include "xpad-session-manager.h"
-#include "xpad-app.h"
 
 static SmcConn xpad_session_manager_conn = NULL;
 static int xpad_interact_style;

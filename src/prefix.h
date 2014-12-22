@@ -26,8 +26,8 @@
  * to br_*", try renaming prefix.c to prefix.cpp
  */
 
-#ifndef _PREFIX_H_
-#define _PREFIX_H_
+#ifndef __PREFIX_H__
+#define __PREFIX_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -126,4 +126,4 @@ char *br_extract_prefix(const char *path);
 }
 #endif /* __cplusplus */
 
-#endif /* _PREFIX_H_ */
+#endif /* __PREFIX_H__ */

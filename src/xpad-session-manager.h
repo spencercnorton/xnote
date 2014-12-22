@@ -24,10 +24,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <glib.h>
 
+G_BEGIN_DECLS
+
 gboolean xpad_session_manager_start_interact (gboolean error);
 void     xpad_session_manager_stop_interact (gboolean stop_shutdown);
 void     xpad_session_manager_init (void);
 void     xpad_session_manager_shutdown (void);
 void     xpad_session_manager_set_id (const gchar *id);
+
+G_END_DECLS
 
 #endif /* __XPAD_SESSION_MANAGER_H__ */
