@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad-tray.h"
 #include "fio.h"
+#include "help.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
@@ -161,6 +162,10 @@ xpad_tray_popup_menu_cb (GtkStatusIcon *icon, guint button, guint time, XpadSett
 
 	item = gtk_menu_item_new_with_mnemonic (_("_Preferences"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_preferences_open), settings);
+	gtk_container_add (GTK_CONTAINER (menu), item);
+
+	item = gtk_menu_item_new_with_mnemonic (_("_Help"));
+	g_signal_connect_swapped (item, "activate", G_CALLBACK (show_help), settings);
 	gtk_container_add (GTK_CONTAINER (menu), item);
 
 	item = gtk_menu_item_new_with_mnemonic (_("_Quit"));

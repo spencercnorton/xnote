@@ -1,5 +1,6 @@
 Version 4.5
 * New: Debug - ability to use built-in debugging functionality for bug solving and code improvements by Sagar Ghuge (#1389334)
+* New: Systray - ability to open the help from the tray icon menu (#1406378)
 * Fix: Menu - Use a more intuitive menu order and menu items by Merlijn Sebrechts (#1395889)
 * Fix: Technical - Use standard autotools commands for deploying the help file by Julien Lavergne (#1402235)
 * Fix: Technical - Changed the order of includes according to GTK best practices by Sagar Ghuge (#1366510)
