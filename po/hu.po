@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-12-30 05:58+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"X-Launchpad-Export-Date: 2015-02-28 05:32+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 "Language: hu\n"
 
 #: ../src/fio.c:129
@@ -169,9 +169,9 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Fox https://launchpad.net/~younfox\n"
 "  Gabor Kelemen https://launchpad.net/~kelemeng\n"
-"  Krasznecz Zoltán https://launchpad.net/~krasznecz-zoltan\n"
 "  Muszela Balázs https://launchpad.net/~bazsi86-deactivatedaccount\n"
-"  Németh Csaba https://launchpad.net/~1soproni"
+"  Németh Csaba https://launchpad.net/~1soproni\n"
+"  Zoltán Krasznecz https://launchpad.net/~krasznecz-zoltan"
 
 #: ../src/xpad-pad.c:1742
 msgid "_Pad"
