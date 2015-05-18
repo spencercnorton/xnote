@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-11-01 15:18-0500\n"
-"PO-Revision-Date: 2015-03-02 14:39+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
+"PO-Revision-Date: 2015-05-17 20:03+0000\n"
+"Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-03 05:26+0000\n"
-"X-Generator: Launchpad (build 17361)\n"
+"X-Launchpad-Export-Date: 2015-05-18 05:09+0000\n"
+"X-Generator: Launchpad (build 17493)\n"
 "Language: fr\n"
 
 #: ../src/fio.c:129
@@ -115,7 +115,7 @@ msgstr "Créer une nouvelle note au démarrage même s'il en existe déjà"
 
 #: ../src/xpad-app.c:822
 msgid "Hide all pads"
-msgstr "Cacher toutes les notes"
+msgstr "Masquer toutes les notes"
 
 #: ../src/xpad-app.c:823
 msgid "Show all pads"
@@ -123,7 +123,7 @@ msgstr "Afficher toutes les notes"
 
 #: ../src/xpad-app.c:824
 msgid "Toggle between show and hide all pads"
-msgstr "Basculer entre afficher ou cacher toutes les notes"
+msgstr "Basculer entre afficher ou masquer toutes les notes"
 
 #: ../src/xpad-app.c:825
 msgid "Create a new pad with the contents of a file"
@@ -175,7 +175,7 @@ msgstr ""
 "  François Blondel https://launchpad.net/~francoisblondel\n"
 "  Gabriel Filion https://launchpad.net/~gabriel-filion\n"
 "  Hornblende https://launchpad.net/~hornblende\n"
-"  Jean Marc https://launchpad.net/~m-balthazar\n"
+"  Jean-Marc https://launchpad.net/~m-balthazar\n"
 "  Michel Robitaille https://launchpad.net/~robitail\n"
 "  Nicolas Delvaux https://launchpad.net/~malizor\n"
 "  Ping Pong https://launchpad.net/~ping.pong\n"
@@ -203,7 +203,7 @@ msgstr "_Barre d'outils"
 
 #: ../src/xpad-pad.c:1789
 msgid "_Autohide Toolbar"
-msgstr "Cacher _automatiquement la barre d'outils"
+msgstr "Masquer _automatiquement la barre d'outils"
 
 #: ../src/xpad-pad.c:1791
 msgid "_Scrollbar"
@@ -312,7 +312,7 @@ msgstr "Ne rien faire"
 
 #: ../src/xpad-preferences.c:290
 msgid "Toggle Show All"
-msgstr "Afficher ou cacher toutes les notes"
+msgstr "Afficher ou masquer toutes les notes"
 
 #: ../src/xpad-preferences.c:291
 msgid "List of Pads"
@@ -400,11 +400,11 @@ msgstr "Ajouter « _Propritétés » à la barre d'outils"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Redo"
-msgstr "Répéter"
+msgstr "Rétablir"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Add _Redo to Toolbar"
-msgstr "Ajouter « _Répéter » à la barre d’outils"
+msgstr "Ajouter « _Rétablir » à la barre d’outils"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
