@@ -7,87 +7,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-11-01 15:18-0500\n"
+"POT-Creation-Date: 2015-05-18 10:15+0200\n"
 "PO-Revision-Date: 2013-10-10 07:04+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-28 05:32+0000\n"
-"X-Generator: Launchpad (build 17361)\n"
+"X-Launchpad-Export-Date: 2015-05-19 05:18+0000\n"
+"X-Generator: Launchpad (build 17508)\n"
 "Language: tr\n"
 
-#: ../src/fio.c:129
+#: ../src/fio.c:131
 #, c-format
 msgid "Could not write to file %s: %s"
 msgstr "%s dosyasına yazılamadı: %s"
 
-#: ../src/help.c:49
-msgid ""
-"Each xpad session consists of one or more open pads.  These pads are "
-"basically sticky notes on your desktop in which you can write memos."
+#: ../src/help.c:52
+msgid "Error showing the help"
 msgstr ""
-"Her Xpad bölümü bir ya da daha fazla açık bloknotu içerir. Bu bloknotlar "
-"temel olarak masaüstünüze duran bazı hatırlatmalar yazabileceğiniz, yapışkan "
-"notlardan oluşur."
 
 #: ../src/help.c:52
+#, c-format
 msgid ""
-"<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-"the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-msgstr ""
-"<b>Bir notun yerini değiştirmek için</b>, araç çubuğuna sol tıklayıp "
-"sürükleyin, sağ alttaki boyutlandırıcıya sağ tıklayıp sürükleyin ya da notun "
-"üzerinde herhangi bir yere sol tıklayıp sürüklerken CTRL tuşunu basılı tutun."
-
-#: ../src/help.c:55
-msgid ""
-"<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-"right dragging anywhere on the pad."
-msgstr ""
-"<b>Bir notu boyutlandırmak için</b>, sağ alttaki boyutlandırıcıya sol "
-"tıklayıp sürükleyin ya da notun üzerinde herhangi bir yere sağ tıklayıp "
-"sürüklerken CTRL tuşunu basılı tutun."
-
-#: ../src/help.c:57
-msgid ""
-"<b>To change color settings</b>, right click on a pad and choose Edit-"
-">Preferences."
-msgstr ""
-"<b> Renk ayarlarını değiştirmek için </b>, bloknotun üstüne sağ tıklayıp "
-"Düzenle->Tercihleri seçin."
-
-#: ../src/help.c:59
-msgid ""
-"Most actions are available throught the popup menu that appears when you "
-"right click on a pad.  Try it out and enjoy."
-msgstr "Birçok eylem"
-
-#: ../src/help.c:62
-msgid ""
-"Please send ideas or bug reports to\n"
-"https://bugs.launchpad.net/xpad/+filebug"
+"Could not find the help file %s\n"
+"%s"
 msgstr ""
 
-#: ../src/help.c:76
+#: ../src/help.c:69
+msgid "Close"
+msgstr ""
+
+#: ../src/help.c:74
 msgid "Help"
 msgstr "Yardım"
 
-#: ../src/xpad-app.c:133
+#: ../src/xpad-app.c:132
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad grafik programıdır. Lütfen masaüstünden çalıştırınız."
 
-#: ../src/xpad-app.c:138 ../xpad.desktop.in.h:1
+#: ../src/xpad-app.c:137 ../xpad.desktop.in.h:1
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:467
+#: ../src/xpad-app.c:219
+msgid "_Ok"
+msgstr ""
+
+#: ../src/xpad-app.c:466
 #, c-format
 msgid "Could not open directory %s."
 msgstr "%s dizini açılamadı"
 
-#: ../src/xpad-app.c:470
+#: ../src/xpad-app.c:469
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -95,72 +67,80 @@ msgstr ""
 "Bu dizinin tercihleri ve not bilgilerini depolaması gerekiyor. Xpad şimdi "
 "kapatılacak."
 
-#: ../src/xpad-app.c:814
+#: ../src/xpad-app.c:778
 msgid "Show version number and quit"
 msgstr "Sürümü göster ve çık"
 
-#: ../src/xpad-app.c:815
+#: ../src/xpad-app.c:779
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Daha önceden bir bloknot varsa yeni bir bloknot yaratma"
 
-#: ../src/xpad-app.c:821
+#: ../src/xpad-app.c:785
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Daha önceden bloknot olsa bile yeni bir bloknot yarat"
 
-#: ../src/xpad-app.c:822
+#: ../src/xpad-app.c:786 ../src/xpad-preferences.c:440
 msgid "Hide all pads"
 msgstr "Tüm bloknotları sakla"
 
-#: ../src/xpad-app.c:823
+#: ../src/xpad-app.c:787
 msgid "Show all pads"
 msgstr "Tüm bloknotları göster"
 
-#: ../src/xpad-app.c:824
+#: ../src/xpad-app.c:788
 msgid "Toggle between show and hide all pads"
 msgstr "Tüm notları gösterin/gizleyin"
 
-#: ../src/xpad-app.c:825
+#: ../src/xpad-app.c:789
 msgid "Create a new pad with the contents of a file"
 msgstr "Bir Dosya içeriğiyle yeni bir bloknot oluştur."
 
-#: ../src/xpad-app.c:825
+#: ../src/xpad-app.c:789
 msgid "FILE"
 msgstr "DOSYA"
 
-#: ../src/xpad-app.c:826
+#: ../src/xpad-app.c:790
 msgid "Close all pads"
 msgstr "Tüm bloknotları kapat"
 
-#: ../src/xpad-app.c:857
+#: ../src/xpad-app.c:821
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:171
+#: ../src/xpad-pad.c:173
 #, c-format
 msgid "Could not read file %s."
 msgstr "%s dosyası okunamadı."
 
-#: ../src/xpad-pad.c:771
+#: ../src/xpad-pad.c:846
 msgid "Delete this pad?"
 msgstr "bloknot silinsin mi?"
 
-#: ../src/xpad-pad.c:772
+#: ../src/xpad-pad.c:846
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Bu notun tüm metni kurtarılamayacak şekilde kaybolacak."
 
-#: ../src/xpad-pad.c:805
-#, c-format
-msgid "'%s' Properties"
-msgstr "'%s' Özellikler"
+#: ../src/xpad-pad.c:851 ../src/xpad-pad.c:1547
+msgid "_Delete"
+msgstr ""
 
-#: ../src/xpad-pad.c:1446
+#: ../src/xpad-pad.c:851
+msgid "_Cancel"
+msgstr ""
+
+#: ../src/xpad-pad.c:879
+#, c-format
+msgid "'%s' Layout"
+msgstr ""
+
+#: ../src/xpad-pad.c:1367
 msgid "Sticky notes"
 msgstr "Yapışkan notlar"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1450
+#: ../src/xpad-pad.c:1371
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -171,257 +151,396 @@ msgstr ""
 "  Oğuzhan Gökay ARI https://launchpad.net/~drakeos\n"
 "  nfortech https://launchpad.net/~fevzisumer"
 
-#: ../src/xpad-pad.c:1742
-msgid "_Pad"
+#: ../src/xpad-pad.c:1546 ../src/xpad-tray.c:136
+msgid "_New"
 msgstr ""
 
-#: ../src/xpad-pad.c:1751
-msgid "Show on _All Workspaces"
-msgstr "Tüm _All Workspaces de göster."
+#: ../src/xpad-pad.c:1548
+msgid "_Close"
+msgstr ""
 
-#: ../src/xpad-pad.c:1758
+#. Edit submenu
+#: ../src/xpad-pad.c:1551
 msgid "_Edit"
 msgstr "_Düzenle"
 
-#: ../src/xpad-pad.c:1781
-msgid "_View"
-msgstr "_Görüntüle"
+#: ../src/xpad-pad.c:1555
+msgid "_Undo"
+msgstr ""
 
-#: ../src/xpad-pad.c:1788
-msgid "_Toolbar"
-msgstr "_Araç Çubuğu"
+#: ../src/xpad-pad.c:1557
+msgid "_Redo"
+msgstr ""
 
-#: ../src/xpad-pad.c:1789
-msgid "_Autohide Toolbar"
-msgstr "Araç çubuğunu _Autohide"
+#: ../src/xpad-pad.c:1560 ../src/xpad-pad.c:1686
+msgid "_Paste"
+msgstr ""
 
-#: ../src/xpad-pad.c:1791
-msgid "_Scrollbar"
-msgstr "_Kaydırma Çubuğu"
+#: ../src/xpad-pad.c:1563
+msgid "_Layout"
+msgstr ""
 
-#: ../src/xpad-pad.c:1792
-msgid "_Window Decorations"
-msgstr "_Window Görselleri"
-
-#: ../src/xpad-pad.c:1795
+#. Notes submenu - The list of notes will get added in the prep function below
+#: ../src/xpad-pad.c:1569
 msgid "_Notes"
 msgstr "_Notlar"
 
-#: ../src/xpad-pad.c:1803 ../src/xpad-tray.c:173
+#: ../src/xpad-pad.c:1574 ../src/xpad-tray.c:143
 msgid "_Show All"
 msgstr "_Hepsini Göster"
 
-#: ../src/xpad-pad.c:1804 ../src/xpad-tray.c:180
+#: ../src/xpad-pad.c:1575 ../src/xpad-tray.c:149
 msgid "_Close All"
 msgstr "_Hepsini Kapat"
 
-#. The rest of the notes menu will get set up in the prep function below
-#: ../src/xpad-pad.c:1808
+#. Help submenu
+#: ../src/xpad-pad.c:1578 ../src/xpad-pad.c:1582 ../src/xpad-tray.c:167
 msgid "_Help"
 msgstr "_Yardım"
 
-#: ../src/xpad-pad.c:1815
-msgid "_Contents"
-msgstr "_İçerikler"
-
-#: ../src/xpad-pad.c:1816
+#: ../src/xpad-pad.c:1583
 msgid "_About"
 msgstr "_Hakkında"
 
-#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:128
+#: ../src/xpad-pad.c:1588 ../src/xpad-tray.c:163
+msgid "_Preferences"
+msgstr ""
+
+#: ../src/xpad-pad.c:1684
+msgid "Cu_t"
+msgstr ""
+
+#: ../src/xpad-pad.c:1685
+msgid "_Copy"
+msgstr ""
+
+#: ../src/xpad-pad.c:1689
+msgid "_Bold"
+msgstr ""
+
+#: ../src/xpad-pad.c:1690
+msgid "_Italic"
+msgstr ""
+
+#: ../src/xpad-pad.c:1691
+msgid "_Underline"
+msgstr ""
+
+#: ../src/xpad-pad.c:1692
+msgid "_Strikethrough"
+msgstr ""
+
+#: ../src/xpad-pad-properties.c:102
 msgid "Appearance"
 msgstr "Görünüm"
 
-#: ../src/xpad-pad-properties.c:161
+#: ../src/xpad-pad-properties.c:130
 msgid "Use font from xpad preferences"
 msgstr "Yazı tipini xpad tercihlerinden kullan"
 
-#: ../src/xpad-pad-properties.c:162 ../src/xpad-preferences.c:155
+#: ../src/xpad-pad-properties.c:131 ../src/xpad-preferences.c:296
 msgid "Use this font:"
 msgstr "Bu yazı tipini kullan:"
 
-#: ../src/xpad-pad-properties.c:163
+#: ../src/xpad-pad-properties.c:132
 msgid "Use colors from xpad preferences"
 msgstr "Xpad tercihlerinden renk kullan"
 
-#: ../src/xpad-pad-properties.c:164 ../src/xpad-preferences.c:157
+#: ../src/xpad-pad-properties.c:133 ../src/xpad-preferences.c:298
 msgid "Use these colors:"
 msgstr "Bu renkleri kullan:"
 
-#: ../src/xpad-pad-properties.c:174 ../src/xpad-preferences.c:167
-msgid "Background:"
-msgstr "Arkaplan"
-
-#: ../src/xpad-pad-properties.c:182 ../src/xpad-preferences.c:176
+#: ../src/xpad-pad-properties.c:143
 msgid "Foreground:"
 msgstr "Önplan:"
 
-#: ../src/xpad-pad-properties.c:200 ../src/xpad-preferences.c:199
+#: ../src/xpad-pad-properties.c:151 ../src/xpad-preferences.c:317
+msgid "Background:"
+msgstr "Arkaplan"
+
+#: ../src/xpad-pad-properties.c:169 ../src/xpad-preferences.c:382
 msgid "Set Foreground Color"
 msgstr "Önalan Rengini Ayarlar"
 
-#: ../src/xpad-pad-properties.c:201 ../src/xpad-preferences.c:200
+#: ../src/xpad-pad-properties.c:170 ../src/xpad-preferences.c:383
 msgid "Set Background Color"
 msgstr "Artalan Rengini Ayarla"
 
-#: ../src/xpad-pad-properties.c:202 ../src/xpad-preferences.c:201
+#: ../src/xpad-pad-properties.c:171 ../src/xpad-preferences.c:384
 msgid "Set Font"
 msgstr "Yazı Tipini Belirle"
 
-#: ../src/xpad-preferences.c:154
-msgid "Use font from theme"
-msgstr "Yazı tipini temadan kullan"
-
-#: ../src/xpad-preferences.c:156
-msgid "Use colors from theme"
-msgstr "Renkleri temadan kullan"
-
-#: ../src/xpad-preferences.c:187
-msgid "_Edit lock"
-msgstr "_Edit kilidi"
-
-#: ../src/xpad-preferences.c:188
-msgid "_Pads start on all workspaces"
-msgstr "_Pads tüm çalışma alanlarında başlasın"
-
-#: ../src/xpad-preferences.c:189
-msgid "_Confirm pad deletion"
-msgstr "Not silmek için _Confirm"
-
-#: ../src/xpad-preferences.c:194
-msgid "Xpad Preferences"
-msgstr "Xpad Tercihleri"
-
-#: ../src/xpad-preferences.c:262
-msgid "Options"
-msgstr "Seçenekler"
-
-#: ../src/xpad-preferences.c:289
-msgid "Do Nothing"
+#. View options
+#: ../src/xpad-preferences.c:228
+msgid "View"
 msgstr ""
 
-#: ../src/xpad-preferences.c:290
-msgid "Toggle Show All"
+#: ../src/xpad-preferences.c:247
+msgid "_Show toolbar"
 msgstr ""
 
-#: ../src/xpad-preferences.c:291
-msgid "List of Pads"
+#: ../src/xpad-preferences.c:251
+msgid "_Autohide toolbar"
 msgstr ""
 
-#: ../src/xpad-preferences.c:292
-msgid "New Pad"
+#: ../src/xpad-preferences.c:259
+msgid "_Show scrollbar"
+msgstr ""
+
+#: ../src/xpad-preferences.c:263
+msgid "_Show notes on all workspaces"
+msgstr ""
+
+#: ../src/xpad-preferences.c:267
+msgid "_Show window decorations"
+msgstr ""
+
+#. Layout options
+#: ../src/xpad-preferences.c:272
+msgid "Layout"
 msgstr ""
 
 #: ../src/xpad-preferences.c:295
-msgid "Tray click behaviour"
+msgid "Use font from theme"
+msgstr "Yazı tipini temadan kullan"
+
+#: ../src/xpad-preferences.c:297
+msgid "Use colors from theme"
+msgstr "Renkleri temadan kullan"
+
+#: ../src/xpad-preferences.c:308
+msgid "Text:"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:81
+#. Start options
+#: ../src/xpad-preferences.c:387
+msgid "Startup"
+msgstr ""
+
+#: ../src/xpad-preferences.c:406
+msgid "_Start Xpad automatically after login"
+msgstr ""
+
+#: ../src/xpad-preferences.c:410
+msgid "_Wait for systray (if possible)"
+msgstr ""
+
+#: ../src/xpad-preferences.c:422
+msgid "_Open a new empty pad"
+msgstr ""
+
+#: ../src/xpad-preferences.c:426
+msgid "Delay in seconds"
+msgstr ""
+
+#: ../src/xpad-preferences.c:437
+msgid "Display pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:439
+msgid "Open all pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:441
+msgid "Restore to previous state"
+msgstr ""
+
+#. Tray options
+#: ../src/xpad-preferences.c:449
+msgid "Tray"
+msgstr ""
+
+#: ../src/xpad-preferences.c:468
+msgid "_Enable tray icon"
+msgstr ""
+
+#: ../src/xpad-preferences.c:471
+msgid "Tray left mouse click behaviour"
+msgstr ""
+
+#: ../src/xpad-preferences.c:473
+msgid "Do Nothing"
+msgstr ""
+
+#: ../src/xpad-preferences.c:474
+msgid "Toggle Show All"
+msgstr ""
+
+#: ../src/xpad-preferences.c:475
+msgid "List of Pads"
+msgstr ""
+
+#: ../src/xpad-preferences.c:476
+msgid "New Pad"
+msgstr ""
+
+#. Other options
+#: ../src/xpad-preferences.c:484
+msgid "Other"
+msgstr ""
+
+#: ../src/xpad-preferences.c:503
+msgid "_Make pads read-only"
+msgstr ""
+
+#: ../src/xpad-preferences.c:504
+msgid "_Confirm pad deletion"
+msgstr "Not silmek için _Confirm"
+
+#: ../src/xpad-preferences.c:516
+msgid "Xpad Preferences"
+msgstr "Xpad Tercihleri"
+
+#: ../src/xpad-preferences.c:728
+#, c-format
+msgid ""
+"Could not load %s\n"
+"%s"
+msgstr ""
+
+#: ../src/xpad-preferences.c:729 ../src/xpad-preferences.c:741
+msgid "Error changing wait for systray setting"
+msgstr ""
+
+#: ../src/xpad-preferences.c:740
+#, c-format
+msgid ""
+"Could not save %s\n"
+"%s"
+msgstr ""
+
+#: ../src/xpad-settings.c:352
+msgid "Error enabling Xpad autostart"
+msgstr ""
+
+#: ../src/xpad-settings.c:352
+#, c-format
+msgid ""
+"Could not copy %s to %s\n"
+"%s"
+msgstr ""
+
+#: ../src/xpad-settings.c:366
+msgid "Error disabling Xpad autostart"
+msgstr ""
+
+#: ../src/xpad-settings.c:366
+#, c-format
+msgid ""
+"Could not delete %s\n"
+"%s"
+msgstr ""
+
+#: ../src/xpad-toolbar.c:79
 msgid "Clear Pad Contents"
 msgstr "Notun İçeriğini Temizle"
 
-#: ../src/xpad-toolbar.c:81
-msgid "Add C_lear to Toolbar"
-msgstr "Araç Çubuğuna T_emizle Ekle"
+#: ../src/xpad-toolbar.c:79
+msgid "Add C_lear button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:82
+#: ../src/xpad-toolbar.c:80
 msgid "Close and Save Pad"
 msgstr "Kapat ve Notu Kaydet"
 
-#: ../src/xpad-toolbar.c:82
-msgid "Add _Close to Toolbar"
-msgstr "Araç Çubuğuna _Kapat Ekle"
+#: ../src/xpad-toolbar.c:80
+msgid "Add _Close button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:83
+#: ../src/xpad-toolbar.c:81
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:83
-msgid "Add C_opy to Toolbar"
+#: ../src/xpad-toolbar.c:81
+msgid "Add C_opy button"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:84
+#: ../src/xpad-toolbar.c:82
 msgid "Cut to Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:84
-msgid "Add C_ut to Toolbar"
+#: ../src/xpad-toolbar.c:82
+msgid "Add C_ut button"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:85
+#: ../src/xpad-toolbar.c:83
 msgid "Delete Pad"
 msgstr "Notu Sil"
 
-#: ../src/xpad-toolbar.c:85
-msgid "Add _Delete to Toolbar"
-msgstr "Araç Çubuğuna _Sil Ekle"
+#: ../src/xpad-toolbar.c:83
+msgid "Add _Delete button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:86
+#: ../src/xpad-toolbar.c:84
 msgid "Open New Pad"
 msgstr "Yeni Not Aç"
 
-#: ../src/xpad-toolbar.c:86
-msgid "Add _New to Toolbar"
-msgstr "Araç Çubuğuna _Yeni Ekle"
+#: ../src/xpad-toolbar.c:84
+msgid "Add _New button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:87
+#: ../src/xpad-toolbar.c:85
 msgid "Paste from Clipboard"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:87
-msgid "Add Pa_ste to Toolbar"
+#: ../src/xpad-toolbar.c:85
+msgid "Add Pa_ste button"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:88
+#: ../src/xpad-toolbar.c:86
 msgid "Edit Preferences"
 msgstr "Tercihleri düzenle"
 
-#: ../src/xpad-toolbar.c:88
-msgid "Add Pr_eferences to Toolbar"
-msgstr "Araç Çubuğuna Te_rcihler Ekle"
+#: ../src/xpad-toolbar.c:86
+msgid "Add Pr_eferences button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:89
+#: ../src/xpad-toolbar.c:87
 msgid "Edit Pad Properties"
 msgstr "Bloknot özelliklerini düzenle"
 
-#: ../src/xpad-toolbar.c:89
-msgid "Add Proper_ties to Toolbar"
-msgstr "Araç Çubuğuna Özellik_ler Ekle"
+#: ../src/xpad-toolbar.c:87
+msgid "Add Proper_ties button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:90
+#: ../src/xpad-toolbar.c:88
 msgid "Redo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:90
-msgid "Add _Redo to Toolbar"
+#: ../src/xpad-toolbar.c:88
+msgid "Add _Redo button"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:91
+#: ../src/xpad-toolbar.c:89
 msgid "Close All Pads"
 msgstr "Tüm bloknotları kapat"
 
-#: ../src/xpad-toolbar.c:91
-msgid "Add Close _All to Toolbar"
-msgstr "Araç Çubuğuna _Hepsini Kapat Ekle"
+#: ../src/xpad-toolbar.c:89
+msgid "Add Close _All button"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:92
+#: ../src/xpad-toolbar.c:90
 msgid "Undo"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:92
-msgid "Add _Undo to Toolbar"
+#: ../src/xpad-toolbar.c:90
+msgid "Add _Undo button"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:93
-msgid "Add a Se_parator to Toolbar"
-msgstr "Araç Çubuğuna Ay_ıraç Ekle"
+#: ../src/xpad-toolbar.c:91
+msgid "Add Se_parator"
+msgstr ""
 
-#: ../src/xpad-toolbar.c:553
+#: ../src/xpad-toolbar.c:517
 msgid "Remove All _Buttons"
 msgstr ""
 
-#: ../src/xpad-toolbar.c:565
+#: ../src/xpad-toolbar.c:524
 msgid "Remo_ve Last Button"
+msgstr ""
+
+#: ../src/xpad-tray.c:171
+msgid "_Quit"
 msgstr ""
 
 #: ../xpad.desktop.in.h:2
@@ -432,8 +551,56 @@ msgstr ""
 msgid "Jot down notes for later"
 msgstr ""
 
+#~ msgid ""
+#~ "Most actions are available throught the popup menu that appears when you "
+#~ "right click on a pad.  Try it out and enjoy."
+#~ msgstr "Birçok eylem"
+
+#~ msgid ""
+#~ "<b>To change color settings</b>, right click on a pad and choose Edit-"
+#~ ">Preferences."
+#~ msgstr ""
+#~ "<b> Renk ayarlarını değiştirmek için </b>, bloknotun üstüne sağ tıklayıp "
+#~ "Düzenle->Tercihleri seçin."
+
+#~ msgid ""
+#~ "Each xpad session consists of one or more open pads.  These pads are "
+#~ "basically sticky notes on your desktop in which you can write memos."
+#~ msgstr ""
+#~ "Her Xpad bölümü bir ya da daha fazla açık bloknotu içerir. Bu bloknotlar "
+#~ "temel olarak masaüstünüze duran bazı hatırlatmalar yazabileceğiniz, yapışkan "
+#~ "notlardan oluşur."
+
+#, c-format
+#~ msgid "'%s' Properties"
+#~ msgstr "'%s' Özellikler"
+
+#~ msgid "_Contents"
+#~ msgstr "_İçerikler"
+
+#~ msgid "Add _Delete to Toolbar"
+#~ msgstr "Araç Çubuğuna _Sil Ekle"
+
+#~ msgid "Add _Close to Toolbar"
+#~ msgstr "Araç Çubuğuna _Kapat Ekle"
+
+#~ msgid "Options"
+#~ msgstr "Seçenekler"
+
+#~ msgid "Add C_lear to Toolbar"
+#~ msgstr "Araç Çubuğuna T_emizle Ekle"
+
+#~ msgid "Add _New to Toolbar"
+#~ msgstr "Araç Çubuğuna _Yeni Ekle"
+
 #~ msgid "_Remove From Toolbar"
 #~ msgstr "Araç Çubuğundan _Kaldır"
+
+#~ msgid "Add a Se_parator to Toolbar"
+#~ msgstr "Araç Çubuğuna Ay_ıraç Ekle"
+
+#~ msgid "Add Close _All to Toolbar"
+#~ msgstr "Araç Çubuğuna _Hepsini Kapat Ekle"
 
 #~ msgid ""
 #~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
@@ -441,5 +608,51 @@ msgstr ""
 #~ "Yorumlarınızı ve ya hata raporlarını lütfen xpad-devel@lists.sourceforge.net "
 #~ "gonderiniz"
 
+#~ msgid "_Toolbar"
+#~ msgstr "_Araç Çubuğu"
+
+#~ msgid "_Scrollbar"
+#~ msgstr "_Kaydırma Çubuğu"
+
+#~ msgid "Add Pr_eferences to Toolbar"
+#~ msgstr "Araç Çubuğuna Te_rcihler Ekle"
+
+#~ msgid "Add Proper_ties to Toolbar"
+#~ msgstr "Araç Çubuğuna Özellik_ler Ekle"
+
+#~ msgid "_View"
+#~ msgstr "_Görüntüle"
+
 #~ msgid "_Move"
 #~ msgstr "_Taşı"
+
+#~ msgid ""
+#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
+#~ "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
+#~ msgstr ""
+#~ "<b>Bir notun yerini değiştirmek için</b>, araç çubuğuna sol tıklayıp "
+#~ "sürükleyin, sağ alttaki boyutlandırıcıya sağ tıklayıp sürükleyin ya da notun "
+#~ "üzerinde herhangi bir yere sol tıklayıp sürüklerken CTRL tuşunu basılı tutun."
+
+#~ msgid ""
+#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
+#~ "right dragging anywhere on the pad."
+#~ msgstr ""
+#~ "<b>Bir notu boyutlandırmak için</b>, sağ alttaki boyutlandırıcıya sol "
+#~ "tıklayıp sürükleyin ya da notun üzerinde herhangi bir yere sağ tıklayıp "
+#~ "sürüklerken CTRL tuşunu basılı tutun."
+
+#~ msgid "_Window Decorations"
+#~ msgstr "_Window Görselleri"
+
+#~ msgid "_Autohide Toolbar"
+#~ msgstr "Araç çubuğunu _Autohide"
+
+#~ msgid "Show on _All Workspaces"
+#~ msgstr "Tüm _All Workspaces de göster."
+
+#~ msgid "_Pads start on all workspaces"
+#~ msgstr "_Pads tüm çalışma alanlarında başlasın"
+
+#~ msgid "_Edit lock"
+#~ msgstr "_Edit kilidi"
