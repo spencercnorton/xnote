@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-05-18 10:15+0200\n"
-"PO-Revision-Date: 2015-05-21 19:33+0000\n"
+"PO-Revision-Date: 2015-05-26 19:59+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-22 04:42+0000\n"
+"X-Launchpad-Export-Date: 2015-05-27 05:11+0000\n"
 "X-Generator: Launchpad (build 17514)\n"
 "Language: fr\n"
 
@@ -185,7 +185,7 @@ msgstr "C_oller"
 
 #: ../src/xpad-pad.c:1563
 msgid "_Layout"
-msgstr ""
+msgstr "Prése_ntation"
 
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1569
@@ -355,15 +355,15 @@ msgstr "Restaurer à l'état précédent"
 #. Tray options
 #: ../src/xpad-preferences.c:449
 msgid "Tray"
-msgstr ""
+msgstr "Notifications"
 
 #: ../src/xpad-preferences.c:468
 msgid "_Enable tray icon"
-msgstr ""
+msgstr "Activ_er l'icône de notification"
 
 #: ../src/xpad-preferences.c:471
 msgid "Tray left mouse click behaviour"
-msgstr ""
+msgstr "Comportement du clic gauche de la souris"
 
 #: ../src/xpad-preferences.c:473
 msgid "Do Nothing"
@@ -388,7 +388,7 @@ msgstr "Autres"
 
 #: ../src/xpad-preferences.c:503
 msgid "_Make pads read-only"
-msgstr ""
+msgstr "A_fficher les notes en lecture seule"
 
 #: ../src/xpad-preferences.c:504
 msgid "_Confirm pad deletion"
@@ -410,6 +410,7 @@ msgstr ""
 #: ../src/xpad-preferences.c:729 ../src/xpad-preferences.c:741
 msgid "Error changing wait for systray setting"
 msgstr ""
+"Erreur lors de la modification du paramètre de la zone de notification"
 
 #: ../src/xpad-preferences.c:740
 #, c-format
