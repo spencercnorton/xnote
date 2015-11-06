@@ -150,7 +150,7 @@ GtkWidget *
 xpad_pad_new_with_info (XpadPadGroup *group, XpadSettings *settings, const gchar *info_filename, gboolean *show)
 {
 	GtkWidget *pad = xpad_pad_new (group, settings);
-	
+
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
 	xpad_pad_load_info (XPAD_PAD (pad), show);
 	xpad_pad_load_content (XPAD_PAD (pad));
@@ -459,7 +459,7 @@ xpad_pad_finalize (GObject *object)
 
 	g_free (pad->priv->infoname);
 	g_free (pad->priv->contentname);
-	
+
 	G_OBJECT_CLASS (xpad_pad_parent_class)->finalize (object);
 }
 
@@ -666,7 +666,7 @@ xpad_pad_hide_toolbar (XpadPad *pad)
 		if (gtk_widget_get_window (pad_widget))
 			gdk_window_freeze_updates (gtk_widget_get_window (pad_widget));
 		gtk_widget_hide (pad->priv->toolbar);
-		
+
 		if (pad->priv->toolbar_expanded ||
 			 (pad->priv->toolbar_pad_resized && xpad_pad_text_and_toolbar_height (pad) >= pad->priv->height))
 		{
@@ -821,11 +821,11 @@ should_confirm_delete (XpadPad *pad)
 	g_object_get (pad->priv->settings, "confirm-destroy", &confirm, NULL);
 	if (!confirm)
 		return FALSE;
-	
+
 	buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &s, &e);
 	content = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buffer), &s, &e, FALSE);
-	
+
 	confirm = strcmp (g_strstrip (content), "") != 0;
 
 	g_free (content);
@@ -848,7 +848,7 @@ xpad_pad_delete (XpadPad *pad)
 		gint response;
 
 		dialog = xpad_app_alert_dialog (GTK_WINDOW (pad), "dialog-warning", _("Delete this pad?"), _("All text of this pad will be irrevocably lost."));
-		
+
 		if (!dialog)
 			return;
 
@@ -1622,7 +1622,7 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 	{
 		gint n = 1;
 		gchar *key;
-		
+
 		/* Remove old notes */
 		item = g_object_get_data (G_OBJECT (menu), "notes-sep");
 		while (item)
