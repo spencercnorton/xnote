@@ -482,6 +482,10 @@ xpad_pad_show (XpadPad *pad)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
+
+	/* Show the pad and set the cursor into the pad */
+        gtk_window_present (GTK_WINDOW (pad));
+        gtk_widget_grab_focus (GTK_WIDGET (pad->priv->textview));
 }
 
 static gboolean toolbar_timeout (XpadPad *pad)

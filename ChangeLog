@@ -1,6 +1,7 @@
 Version 4.6
 * Fix: CLI - the show, hide and toggle command-line options have been fixed (#1424081)
 * Fix: Internationalization - Added and updated the Xpad.pot file to restore the multi-lingual support (#1455888)
+* Fix: Pad focus - Improved the showing and focussing of pads when minimized, or newly created.
 
 Version 4.5
 * New: Debug - ability to use built-in debugging functionality for bug solving and code improvements by Sagar Ghuge (#1389334)
