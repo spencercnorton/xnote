@@ -5,7 +5,7 @@ Copyright (c) 2009 Paul Ivanov
 Copyright (c) 2011 Sergei Riaguzov
 Copyright (c) 2011 Dennis Hilmar
 Copyright (c) 2011 OBATA Akio
-Copyright (c) 2013-2014 Arthur Borsboom
+Copyright (c) 2013-2015 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -867,6 +867,13 @@ xpad_pad_delete (XpadPad *pad)
 		fio_remove_file (pad->priv->infoname);
 	if (pad->priv->contentname)
 		fio_remove_file (pad->priv->contentname);
+
+	/* Before deleting the current pad, find and set the focus to another pad (if any) */
+	GSList *nextPad = g_slist_nth (xpad_pad_group_get_pads(pad->priv->group), 0);
+	if (nextPad->data == pad)
+		nextPad = g_slist_next (nextPad);
+	if (nextPad)
+        	xpad_pad_show (nextPad->data);
 
 	/* Remove the pad from the group and destroy it. */
 	gtk_widget_destroy (GTK_WIDGET (pad));
