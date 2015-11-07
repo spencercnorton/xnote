@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
-struct XpadPreferencesPrivate 
+struct XpadPreferencesPrivate
 {
 	XpadSettings *settings;
 
@@ -95,13 +95,13 @@ struct XpadPreferencesPrivate
 	gulong notify_has_scrollbar_handler;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (XpadPreferences, xpad_preferences, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadPreferences, xpad_preferences, GTK_TYPE_WINDOW)
 
 static void xpad_preferences_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_preferences_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
-static void xpad_preferences_response (GtkDialog *dialog, gint response);
+static void xpad_preferences_response (GtkWindow *window, gint response);
 
 static void change_font_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_font_face (GtkFontButton *button, XpadPreferences *pref);
@@ -234,6 +234,7 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
 		"top-padding", 12,
+		"bottom-padding", 12,
 		"child", view_vbox,
 		NULL);
 	view_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
@@ -278,6 +279,7 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
 		"top-padding", 12,
+		"bottom-padding", 12,
 		"child", appearance_vbox,
 		NULL);
 	appearance_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
@@ -393,6 +395,7 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
 		"top-padding", 12,
+		"bottom-padding", 12,
 		"child", autostart_vbox,
 		NULL);
 	start_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
@@ -455,6 +458,7 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
 		"top-padding", 12,
+		"bottom-padding", 12,
 		"child", tray_vbox,
 		NULL);
 	tray_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
@@ -490,6 +494,7 @@ static void xpad_preferences_constructed (GObject *object)
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
 		"top-padding", 12,
+		"bottom-padding", 12,
 		"child", other_vbox,
 		NULL);
 	other_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
@@ -510,10 +515,16 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->confirmcheck), confirm_destroy);
 
 	/* Close button and window title */
-	gtk_dialog_add_button (GTK_DIALOG (pref), "gtk-close", GTK_RESPONSE_CLOSE);
-	gtk_dialog_set_default_response (GTK_DIALOG (pref), GTK_RESPONSE_CLOSE);
-	g_signal_connect (pref, "response", G_CALLBACK (xpad_preferences_response), NULL);
+	GtkWidget *button = gtk_button_new_from_icon_name ("gtk-close", GTK_ICON_SIZE_BUTTON);
+	gtk_button_set_label (GTK_BUTTON (button), _("Close"));
+	g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), GTK_WIDGET (pref));
 	gtk_window_set_title (GTK_WINDOW (pref), _("Xpad Preferences"));
+
+	/* Add preference tabs and the close button together */
+	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
+ 	gtk_container_add (GTK_CONTAINER (vbox), pref->priv->notebook);
+ 	gtk_container_add (GTK_CONTAINER (vbox), button);
+ 	gtk_container_add (GTK_CONTAINER (pref), GTK_WIDGET (vbox));
 
 	/* Activate all handlers */
 	pref->priv->has_decorations_handler = g_signal_connect (pref->priv->has_decorations, "toggled", G_CALLBACK (change_has_decorations), pref);
@@ -564,14 +575,10 @@ static void xpad_preferences_constructed (GObject *object)
 	/* Initiliaze the GUI logic */
 	g_object_notify (G_OBJECT (pref->priv->settings), "tray-enabled");
 
-	/* Make the preference dialog visible */
-	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (pref))), GTK_WIDGET (pref->priv->notebook), FALSE, FALSE, 0);
-	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (pref)));
+	/* Make the preference window visible */
+	gtk_window_set_position (GTK_WINDOW (pref), GTK_WIN_POS_CENTER);
+	gtk_widget_show_all (GTK_WIDGET (pref));
 	gtk_window_set_resizable (GTK_WINDOW (pref), FALSE);
-
-	/* Make the preference window not so squished */
-	gtk_widget_get_preferred_size (GTK_WIDGET (pref), &req, NULL);
-	g_object_set (G_OBJECT (pref), "default-width", (gint) (req.height * 0.8), NULL);
 }
 
 static GtkWidget * create_label (const gchar *label_text) {
@@ -627,13 +634,6 @@ xpad_preferences_finalize (GObject *object)
 		g_signal_handlers_disconnect_matched (pref->priv->settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pref);
 
 	G_OBJECT_CLASS (xpad_preferences_parent_class)->finalize (object);
-}
-
-static void
-xpad_preferences_response (GtkDialog *dialog, gint response)
-{
-	if (response == GTK_RESPONSE_CLOSE)
-		gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
@@ -740,7 +740,7 @@ change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 		errtext = g_strdup_printf (_("Could not save %s\n%s"), filename, error->message);
 		xpad_app_error (NULL, _("Error changing wait for systray setting"), errtext);
 		g_free (errtext);
-		
+
 		gtk_toggle_button_set_active (button, !wait_systray);
 		return;
 	}
