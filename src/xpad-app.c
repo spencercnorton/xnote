@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
 
-/* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines. 
+/* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines.
    These were provided by Alan Mizrahi <alan@cesma.usb.ve>.
 */
 #ifndef PF_LOCAL
@@ -85,8 +85,8 @@ static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboole
 
 static gboolean		config_dir_exists           (void);
 static gchar		*make_config_dir            (void);
-static void			register_stock_icons        (void);
-static gint			xpad_app_load_pads          (void);
+static void		register_stock_icons        (void);
+static gint		xpad_app_load_pads          (void);
 static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
@@ -484,7 +484,7 @@ xpad_app_load_pads (void)
 				gtk_widget_show (pad);
 		else if (show) /* pad thought it would show, we should save that it didn't */
 			xpad_pad_save_info (XPAD_PAD (pad));
-			
+
 			opened ++;
 		}
 	}
@@ -644,7 +644,7 @@ xpad_app_read_from_proc_file (void)
 		v[1] = "--new";
 
 		process_remote_args (&c, &v, TRUE, settings);
-		
+
 		g_free (v);
 	}
 
@@ -682,7 +682,7 @@ xpad_app_open_proc_file (void)
 
 	/* create the socket */
 	server_fd = socket (PF_LOCAL, SOCK_STREAM, 0);
-	bzero (&master, sizeof (master)); 
+	bzero (&master, sizeof (master));
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
 
@@ -748,7 +748,7 @@ xpad_app_pass_args (void)
 		do
 		{
 			bytesRead = read (client_fd, buf, 128);
-			
+
 			if (bytesRead < 0)
 			{
 			  goto done;
@@ -760,7 +760,7 @@ xpad_app_pass_args (void)
 		while (bytesRead > 0);
 	}
 	while (bytesRead > 0);
-	
+
 done:
 	close (client_fd);
 
@@ -803,7 +803,7 @@ process_local_args (gint *argc, gchar **argv[])
 	option_version = FALSE;
 	option_nonew = FALSE;
 
-	/* We make copies of argc and argv because we actually don't want the 
+	/* We make copies of argc and argv because we actually don't want the
 	   behavior of g_option_context_parse() that removes entries from the
 	   array. */
 	argc_copy = *argc;
@@ -857,7 +857,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	{
 		if (have_gtk && option_smid)
 			xpad_session_manager_set_id (option_smid);
-		
+
 		if (!option_new)
 			g_object_get (settings, "autostart-new-pad", &option_new, NULL);
 
