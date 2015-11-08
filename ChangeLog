@@ -1,6 +1,7 @@
 Version 4.6
 * Fix: CLI - the show, hide and toggle command-line options have been fixed (#1424081)
 * Fix: Internationalization - Added and updated the Xpad.pot file to restore the multi-lingual support (#1455888)
+* Fix: Help - Set the ability to select and copy the help text (#1415138)
 * Fix: Pad focus - Improved the showing and focussing of pads after minimization or creation of a new pad.
 * Fix: Pad focus - After deleting a pad, it is conveniant to have the focus on another pad. This fix added that behavior.
 * Fix: Technical - Code cleanup - removed spaces and indentions

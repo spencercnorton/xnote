@@ -85,6 +85,7 @@ void show_help ()
 		g_signal_connect_swapped (GTK_BUTTON (button), "clicked", G_CALLBACK (gtk_widget_destroy), help_window);
 
 		gtk_widget_show_all (GTK_WIDGET (help_window));
+		gtk_label_set_selectable (GTK_LABEL (helptext), TRUE);
 	}
 	else
 		gtk_window_present (help_window);
