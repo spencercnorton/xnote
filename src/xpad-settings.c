@@ -114,7 +114,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 
 	obj_prop[PROP_WIDTH] = g_param_spec_uint ("width", "Default width of pads", "Window width of pads on creation", 0, G_MAXUINT, 200, G_PARAM_READWRITE);
 	obj_prop[PROP_HEIGHT] = g_param_spec_uint ("height", "Default height of pads", "Window height of pads on creation", 0, G_MAXUINT, 200, G_PARAM_READWRITE);
-	obj_prop[PROP_HAS_DECORATIONS] = g_param_spec_boolean ("has-decorations", "Has decorations", "Whether pads have window decorations", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_HAS_DECORATIONS] = g_param_spec_boolean ("has-decorations", "Has decorations", "Whether pads have window decorations", FALSE, G_PARAM_READWRITE);
 	obj_prop[PROP_CONFIRM_DESTROY] = g_param_spec_boolean ("confirm-destroy", "Confirm destroy", "Ask for delete confirmation", TRUE, G_PARAM_READWRITE);
 	obj_prop[PROP_EDIT_LOCK] = g_param_spec_boolean ("edit-lock", "Edit lock", "Toggle read-only mode", FALSE, G_PARAM_READWRITE);
 	obj_prop[PROP_TRAY_ENABLED] = g_param_spec_boolean ("tray-enabled", "Enable tray icon", "Enable or disable the systray icon", TRUE, G_PARAM_READWRITE);
@@ -153,7 +153,7 @@ xpad_settings_init (XpadSettings *settings)
 	 */
 	settings->priv->width = 200;
 	settings->priv->height = 200;
-	settings->priv->has_decorations = TRUE;
+	settings->priv->has_decorations = FALSE;
 	settings->priv->confirm_destroy = TRUE;
 	settings->priv->edit_lock = FALSE;
 	settings->priv->tray_enabled = TRUE;
