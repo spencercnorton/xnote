@@ -1040,7 +1040,7 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 static gboolean
 xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 {
-	if (!gtk_widget_get_visible (GTK_WIDGET(pad)))
+	if (!gtk_widget_get_visible (GTK_WIDGET (pad)))
 		return FALSE;
 
 	int eWidth = event->width;
@@ -1048,29 +1048,30 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 
 	/* safe cast from gint to guint */
 	if (eWidth >= 0 && eHeight >=0 ) {
-		if (pad->priv->width != (guint) eWidth || pad->priv->height != (guint) eHeight)
+		if (pad->priv->width != (guint) eWidth || pad->priv->height != (guint) eHeight) {
 			pad->priv->toolbar_pad_resized = TRUE;
-
-		pad->priv->width = (guint) event->width;
-		pad->priv->height = (guint) event->height;
+			pad->priv->width = (guint) eWidth;
+			pad->priv->height = (guint) eHeight;
+			pad->priv->unsaved_info = TRUE;
+		}
 	}
 	else {
 		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_configure_event' the variable 'event->width' or 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 	}
 
-	pad->priv->x = event->x;
-	pad->priv->y = event->y;
-	pad->priv->location_valid = TRUE;
-
-	xpad_pad_save_info_delayed(pad);
+	if (pad->priv->x != event->x || pad->priv->y != event->y) {
+		pad->priv->x = event->x;
+		pad->priv->y = event->y;
+		pad->priv->location_valid = TRUE;
+		pad->priv->unsaved_info = TRUE;
+	}
 
 	/*
 	 * Sometimes when moving, if the toolbar tries to hide itself,
 	 * the window manager will not resize it correctly.  So, we make
 	 * sure not to end the timeout while moving.
 	 */
-	if (pad->priv->toolbar_timeout)
-	{
+	if (pad->priv->toolbar_timeout) {
 		g_source_remove (pad->priv->toolbar_timeout);
 		pad->priv->toolbar_timeout = g_timeout_add (1000, (GSourceFunc) toolbar_timeout, pad);
 	}
