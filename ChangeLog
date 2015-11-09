@@ -9,6 +9,7 @@ Version 4.6
 * Fix: Technical - Changed preference window type from GtkDialog to GtkWindow (#1395309)
 * Fix: Performance - Only save the location of the pad to disk when exiting Xpad. This prevents a lot of disk writes when moving pads. (#1459251)
 * Fix: Default settings - Window decorations are turned off by default (#1395889)
+* Fix: Default settings - Autostart Xpad by default for all users (#1395889)
 
 Version 4.5
 * New: Debug - ability to use built-in debugging functionality for bug solving and code improvements by Sagar Ghuge (#1389334)
