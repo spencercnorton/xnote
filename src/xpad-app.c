@@ -69,6 +69,7 @@ static gboolean option_show;
 static gboolean option_toggle;
 static gboolean option_version;
 static gboolean option_quit;
+static gboolean shutdown_in_progress;
 static gchar **option_files;
 static gchar *option_smid;
 static gchar *config_dir;
@@ -97,6 +98,7 @@ xpad_app_init (int argc, char **argv)
 {
 	gboolean first_time;
 	gboolean have_gtk;
+	gboolean shutdown_in_progress = FALSE;
 
 	xpad_debug_init();
 	xpad_debug_message (DEBUG_APP, "Startup");
@@ -245,6 +247,11 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
+	if (shutdown_in_progress)
+		return;
+
+	shutdown_in_progress = TRUE;
+
 	/* Free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (pad_group);
 
