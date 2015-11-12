@@ -120,6 +120,8 @@ static void xpad_pad_notify_has_scrollbar (XpadPad *pad);
 static void xpad_pad_notify_has_decorations (XpadPad *pad);
 static void xpad_pad_notify_has_toolbar (XpadPad *pad);
 static void xpad_pad_notify_autohide_toolbar (XpadPad *pad);
+static void xpad_pad_notify_hide_from_taskbar (XpadPad *pad);
+static void xpad_pad_notify_hide_from_task_switcher (XpadPad *pad);
 static void xpad_pad_hide_toolbar (XpadPad *pad);
 static void xpad_pad_show_toolbar (XpadPad *pad);
 static void xpad_pad_popup (XpadPad *pad, GdkEventButton *event);
@@ -301,7 +303,7 @@ static void xpad_pad_constructed (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 
-	gboolean decorations;
+	gboolean decorations, hide_from_taskbar, hide_from_task_switcher;
 	GtkBox *vbox;
 
 	g_object_get (pad->priv->settings,
@@ -338,11 +340,13 @@ static void xpad_pad_constructed (GObject *object)
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
 
 	g_object_get (pad->priv->settings, "has-decorations", &decorations, NULL);
+	g_object_get (pad->priv->settings, "hide-from-taskbar", &hide_from_taskbar, NULL);
+	g_object_get (pad->priv->settings, "hide-from-task-switcher", &hide_from_task_switcher, NULL);
 	gtk_window_set_decorated (pad_window, decorations);
 	gtk_window_set_default_size (pad_window, (gint) pad->priv->width, (gint) pad->priv->height);
 	gtk_window_set_gravity (pad_window, GDK_GRAVITY_STATIC); /* static gravity makes saving pad x,y work */
-	gtk_window_set_skip_pager_hint (pad_window, decorations);
-	gtk_window_set_skip_taskbar_hint (pad_window, !decorations);
+	gtk_window_set_skip_taskbar_hint (pad_window, hide_from_taskbar);
+	gtk_window_set_skip_pager_hint (pad_window, hide_from_task_switcher);
 	gtk_window_set_position (pad_window, GTK_WIN_POS_MOUSE);
 
 	g_object_set (G_OBJECT (pad), "child", vbox, NULL);
@@ -382,6 +386,8 @@ static void xpad_pad_constructed (GObject *object)
 	g_signal_connect (pad, "enter-notify-event", G_CALLBACK (xpad_pad_enter_notify_event), NULL);
 	g_signal_connect (pad, "leave-notify-event", G_CALLBACK (xpad_pad_leave_notify_event), NULL);
 
+	g_signal_connect_swapped (pad->priv->settings, "notify::hide-from-taskbar", G_CALLBACK (xpad_pad_notify_hide_from_taskbar), pad);
+	g_signal_connect_swapped (pad->priv->settings, "notify::hide-from-task-switcher", G_CALLBACK (xpad_pad_notify_hide_from_task_switcher), pad);
 	g_signal_connect_swapped (pad->priv->settings, "notify::has-decorations", G_CALLBACK (xpad_pad_notify_has_decorations), pad);
 	g_signal_connect_swapped (pad->priv->settings, "notify::has-toolbar", G_CALLBACK (xpad_pad_notify_has_toolbar), pad);
 	g_signal_connect_swapped (pad->priv->settings, "notify::autohide-toolbar", G_CALLBACK (xpad_pad_notify_autohide_toolbar), pad);
@@ -517,8 +523,6 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
 	 */
 	gtk_window_set_decorated (pad_window, decorations);
-	gtk_window_set_skip_taskbar_hint (pad_window, !decorations);
-	gtk_window_set_skip_pager_hint (pad_window, !decorations);
 
 	/*
 	 * reshow_with_initial_size() seems to set the window back to a never-shown state.
@@ -529,6 +533,22 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 	gtk_widget_hide (pad_widget);
 	gtk_widget_unrealize (pad_widget);
 	gtk_widget_show (pad_widget);
+}
+
+static void
+xpad_pad_notify_hide_from_taskbar (XpadPad *pad)
+{
+	gboolean hide;
+	g_object_get (pad->priv->settings, "hide-from-taskbar", &hide, NULL);
+	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (pad), hide);
+}
+
+static void
+xpad_pad_notify_hide_from_task_switcher (XpadPad *pad)
+{
+	gboolean hide;
+	g_object_get (pad->priv->settings, "hide-from-task-switcher", &hide, NULL);
+	gtk_window_set_skip_pager_hint (GTK_WINDOW (pad), hide);
 }
 
 static void

@@ -34,6 +34,8 @@ struct XpadSettingsPrivate
 {
 	guint width;
 	guint height;
+	gboolean hide_from_taskbar;
+	gboolean hide_from_task_switcher;
 	gboolean has_decorations;
 	gboolean confirm_destroy;
 	gboolean edit_lock;
@@ -81,10 +83,12 @@ enum
 	PROP_FONTNAME,
 	PROP_AUTOSTART_XPAD,
 	PROP_AUTOSTART_WAIT_SYSTRAY,
-	PROP_AUTOSTART_DELAY,  
+	PROP_AUTOSTART_DELAY,
 	PROP_AUTOSTART_NEW_PAD,
 	PROP_AUTOSTART_STICKY,
 	PROP_AUTOSTART_DISPLAY_PADS,
+	PROP_HIDE_FROM_TASKBAR,
+	PROP_HIDE_FROM_TASK_SWITCHER,
 	N_PROPERTIES
 };
 
@@ -131,6 +135,8 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	obj_prop[PROP_AUTOSTART_STICKY] = g_param_spec_boolean ("autostart-sticky", "Stick to desktop", "Whether pads are sticky on creation", FALSE, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOSTART_DELAY] = g_param_spec_uint ("autostart-delay", "Delay autostart of Xpad", "Number of seconds to wait before start of Xpad", 0, G_MAXUINT, 0, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOSTART_DISPLAY_PADS] = g_param_spec_uint ("autostart-display-pads", "Autostart display pads", "Show/hide/restore pads at start", 0, G_MAXUINT, 2, G_PARAM_READWRITE);
+	obj_prop[PROP_HIDE_FROM_TASKBAR] = g_param_spec_boolean ("hide-from-taskbar", "Hide from taskbar", "Hide the pads from the task bar", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_HIDE_FROM_TASK_SWITCHER] = g_param_spec_boolean ("hide-from-task-switcher", "Hide from task switcher", "Hide the pads from the task or workspace switcher", FALSE, G_PARAM_READWRITE);
 
 	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 
@@ -153,6 +159,8 @@ xpad_settings_init (XpadSettings *settings)
 	 */
 	settings->priv->width = 200;
 	settings->priv->height = 200;
+	settings->priv->hide_from_taskbar = TRUE;
+	settings->priv->hide_from_task_switcher = FALSE;
 	settings->priv->has_decorations = FALSE;
 	settings->priv->confirm_destroy = TRUE;
 	settings->priv->edit_lock = FALSE;
@@ -386,7 +394,15 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 	case PROP_AUTOSTART_DISPLAY_PADS:
 		settings->priv->autostart_display_pads = g_value_get_uint (value);
 		break;
-		
+
+	case PROP_HIDE_FROM_TASKBAR:
+		settings->priv->hide_from_taskbar = g_value_get_boolean (value);
+		break;
+
+	case PROP_HIDE_FROM_TASK_SWITCHER:
+		settings->priv->hide_from_task_switcher = g_value_get_boolean (value);
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		return;
@@ -487,6 +503,14 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		g_value_set_uint (value, settings->priv->autostart_display_pads);
 		break;
 
+	case PROP_HIDE_FROM_TASKBAR:
+		g_value_set_boolean (value, settings->priv->hide_from_taskbar);
+		break;
+
+	case PROP_HIDE_FROM_TASK_SWITCHER:
+		g_value_set_boolean (value, settings->priv->hide_from_task_switcher);
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		return;
@@ -531,6 +555,8 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_delay", &settings->priv->autostart_delay,
 		"b|autostart_new_pad", &settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", &settings->priv->autostart_display_pads,
+		"b|hide_from_taskbar", &settings->priv->hide_from_taskbar,
+		"b|hide_from_task_switcher", &settings->priv->hide_from_task_switcher,
 		NULL))
 		return;
 
@@ -578,9 +604,9 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 	{
 		gint i;
 		gchar **button_names;
-		
+
 		button_names = g_strsplit (buttons, ",", 0);
-		
+
 		while (settings->priv->toolbar_buttons)
 		{
 			g_free (settings->priv->toolbar_buttons->data);
@@ -610,7 +636,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 	while (tmp)
 	{
 		gchar *tmpstr = buttons;
-		
+
 		if (tmp->next)
 			buttons = g_strconcat (buttons, tmp->data, ", ", NULL);
 		else
@@ -642,6 +668,8 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_delay", settings->priv->autostart_delay,
 		"b|autostart_new_pad", settings->priv->autostart_new_pad,
 		"u|autostart_display_pads", settings->priv->autostart_display_pads,
+		"b|hide_from_taskbar", settings->priv->hide_from_taskbar,
+		"b|hide_from_task_switcher", settings->priv->hide_from_task_switcher,
 		NULL);
 
 	g_free (buttons);

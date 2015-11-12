@@ -52,6 +52,8 @@ struct XpadPreferencesPrivate
 	GtkWidget *editcheck;
 	GtkWidget *confirmcheck;
 	GtkWidget *has_decorations;
+	GtkWidget *hide_from_taskbar;
+	GtkWidget *hide_from_task_switcher;
 	GtkWidget *has_toolbar;
 	GtkWidget *autohide_toolbar;
 	GtkWidget *has_scrollbar;
@@ -72,6 +74,8 @@ struct XpadPreferencesPrivate
 	gulong editcheck_handler;
 	gulong confirmcheck_handler;
 	gulong has_decorations_handler;
+	gulong hide_from_taskbar_handler;
+	gulong hide_from_task_switcher_handler;
 	gulong has_toolbar_handler;
 	gulong autohide_toolbar_handler;
 	gulong has_scrollbar_handler;
@@ -90,6 +94,8 @@ struct XpadPreferencesPrivate
 	gulong notify_edit_handler;
 	gulong notify_confirm_handler;
 	gulong notify_has_decorations_handler;
+	gulong notify_hide_from_taskbar_handler;
+	gulong notify_hide_from_task_switcher_handler;
 	gulong notify_has_toolbar_handler;
 	gulong notify_autohide_toolbar_handler;
 	gulong notify_has_scrollbar_handler;
@@ -119,6 +125,8 @@ static void change_tray_click (GtkComboBox *box, XpadPreferences *pref);
 static void change_edit_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_confirm_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_has_decorations (GtkToggleButton *button, XpadPreferences *pref);
+static void change_hide_from_taskbar (GtkToggleButton *button, XpadPreferences *pref);
+static void change_hide_from_task_switcher (GtkToggleButton *button, XpadPreferences *pref);
 static void change_has_toolbar (GtkToggleButton *button, XpadPreferences *pref);
 static void change_autohide_toolbar (GtkToggleButton *button, XpadPreferences *pref);
 static void change_has_scrollbar (GtkToggleButton *button, XpadPreferences *pref);
@@ -136,10 +144,12 @@ static void notify_tray_enabled (XpadPreferences *pref);
 static void notify_tray_click (XpadPreferences *pref);
 static void notify_edit (XpadPreferences *pref);
 static void notify_confirm (XpadPreferences *pref);
-static void notify_has_decorations(XpadPreferences *pref);
-static void notify_has_toolbar(XpadPreferences *pref);
-static void notify_autohide_toolbar(XpadPreferences *pref);
-static void notify_has_scrollbar(XpadPreferences *pref);
+static void notify_has_decorations (XpadPreferences *pref);
+static void notify_hide_from_taskbar (XpadPreferences *pref);
+static void notify_hide_from_task_switcher (XpadPreferences *pref);
+static void notify_has_toolbar (XpadPreferences *pref);
+static void notify_autohide_toolbar (XpadPreferences *pref);
+static void notify_has_scrollbar (XpadPreferences *pref);
 
 static GtkWidget * create_label (const gchar *label_text);
 
@@ -200,7 +210,7 @@ static void xpad_preferences_constructed (GObject *object)
 	GtkRequisition req;
 	GdkRGBA theme_text_color = {0, 0, 0, 0}, theme_background_color = {0, 0, 0, 0};
 	guint tray_click_configuration, autostart_delay, autostart_display_pads;
-	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky, has_decorations, has_toolbar, autohide_toolbar, has_scrollbar;
+	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky, has_decorations, hide_from_taskbar, hide_from_task_switcher, has_toolbar, autohide_toolbar, has_scrollbar;
 
 	g_object_get (pref->priv->settings,
 			"fontname", &fontname,
@@ -216,6 +226,8 @@ static void xpad_preferences_constructed (GObject *object)
 			"autostart-delay", &autostart_delay,
 			"autostart-display-pads", &autostart_display_pads,
 			"has-decorations", &has_decorations,
+			"hide-from-taskbar", &hide_from_taskbar,
+			"hide-from-task-switcher", &hide_from_task_switcher,
 			"has-toolbar", &has_toolbar,
 			"autohide-toolbar", &autohide_toolbar,
 			"has-scrollbar", &has_scrollbar,
@@ -233,6 +245,7 @@ static void xpad_preferences_constructed (GObject *object)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
+		"right-padding", 12,
 		"top-padding", 12,
 		"bottom-padding", 12,
 		"child", view_vbox,
@@ -269,6 +282,14 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start (view_vbox, pref->priv->has_decorations, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_decorations), has_decorations);
 
+	pref->priv->hide_from_taskbar = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the taskbar and task switcher"));
+	gtk_box_pack_start (view_vbox, pref->priv->hide_from_taskbar, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_taskbar), hide_from_taskbar);
+
+	pref->priv->hide_from_task_switcher = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the workspace switcher"));
+	gtk_box_pack_start (view_vbox, pref->priv->hide_from_task_switcher, FALSE, FALSE, 0);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_task_switcher), hide_from_task_switcher);
+
 	/* Layout options */
 	label = create_label (_("Layout"));
 
@@ -278,6 +299,7 @@ static void xpad_preferences_constructed (GObject *object)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
+		"right-padding", 12,
 		"top-padding", 12,
 		"bottom-padding", 12,
 		"child", appearance_vbox,
@@ -394,6 +416,7 @@ static void xpad_preferences_constructed (GObject *object)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
+		"right-padding", 12,
 		"top-padding", 12,
 		"bottom-padding", 12,
 		"child", autostart_vbox,
@@ -457,6 +480,7 @@ static void xpad_preferences_constructed (GObject *object)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
+		"right-padding", 12,
 		"top-padding", 12,
 		"bottom-padding", 12,
 		"child", tray_vbox,
@@ -493,6 +517,7 @@ static void xpad_preferences_constructed (GObject *object)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	g_object_set (G_OBJECT (alignment),
 		"left-padding", 12,
+		"right-padding", 12,
 		"top-padding", 12,
 		"bottom-padding", 12,
 		"child", other_vbox,
@@ -528,6 +553,8 @@ static void xpad_preferences_constructed (GObject *object)
 
 	/* Activate all handlers */
 	pref->priv->has_decorations_handler = g_signal_connect (pref->priv->has_decorations, "toggled", G_CALLBACK (change_has_decorations), pref);
+	pref->priv->hide_from_taskbar_handler = g_signal_connect (pref->priv->hide_from_taskbar, "toggled", G_CALLBACK (change_hide_from_taskbar), pref);
+	pref->priv->hide_from_task_switcher_handler = g_signal_connect (pref->priv->hide_from_task_switcher, "toggled", G_CALLBACK (change_hide_from_task_switcher), pref);
 	pref->priv->has_toolbar_handler = g_signal_connect (pref->priv->has_toolbar, "toggled", G_CALLBACK (change_has_toolbar), pref);
 	pref->priv->autohide_toolbar_handler = g_signal_connect (pref->priv->autohide_toolbar, "toggled", G_CALLBACK (change_autohide_toolbar), pref);
 	pref->priv->has_scrollbar_handler = g_signal_connect (pref->priv->has_scrollbar, "toggled", G_CALLBACK (change_has_scrollbar), pref);
@@ -551,6 +578,8 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->confirmcheck_handler = g_signal_connect (pref->priv->confirmcheck, "toggled", G_CALLBACK (change_confirm_check), pref);
 
 	pref->priv->notify_has_decorations_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-decorations", G_CALLBACK (notify_has_decorations), pref);
+	pref->priv->notify_hide_from_taskbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::hide-from-taskbar", G_CALLBACK (notify_hide_from_taskbar), pref);
+	pref->priv->notify_hide_from_task_switcher_handler = g_signal_connect_swapped (pref->priv->settings, "notify::hide-from-task-switcher", G_CALLBACK (notify_hide_from_task_switcher), pref);
 	pref->priv->notify_has_toolbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-toolbar", G_CALLBACK (notify_has_toolbar), pref);
 	pref->priv->notify_autohide_toolbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::autohide-toolbar", G_CALLBACK (notify_autohide_toolbar), pref);
 	pref->priv->notify_has_scrollbar_handler = g_signal_connect_swapped (pref->priv->settings, "notify::has-scrollbar", G_CALLBACK (notify_has_scrollbar), pref);
@@ -821,6 +850,22 @@ change_has_decorations (GtkToggleButton *button, XpadPreferences *pref)
 }
 
 static void
+change_hide_from_taskbar (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->settings, pref->priv->notify_hide_from_taskbar_handler);
+	g_object_set (pref->priv->settings, "hide-from-taskbar", gtk_toggle_button_get_active (button), NULL);
+	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_hide_from_taskbar_handler);
+}
+
+static void
+change_hide_from_task_switcher (GtkToggleButton *button, XpadPreferences *pref)
+{
+	g_signal_handler_block (pref->priv->settings, pref->priv->notify_hide_from_task_switcher_handler);
+	g_object_set (pref->priv->settings, "hide-from-task-switcher", gtk_toggle_button_get_active (button), NULL);
+	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_hide_from_task_switcher_handler);
+}
+
+static void
 change_has_toolbar (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_object_set (pref->priv->settings, "has-toolbar", gtk_toggle_button_get_active (button), NULL);
@@ -995,7 +1040,7 @@ notify_tray_enabled (XpadPreferences *pref)
 	g_signal_handler_unblock (pref->priv->tray_enabled, pref->priv->tray_enabled_handler);
 }
 
-static void 
+static void
 notify_tray_click (XpadPreferences *pref)
 {
 	guint value;
@@ -1033,6 +1078,26 @@ notify_has_decorations (XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->has_decorations, pref->priv->has_decorations_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_decorations), value);
 	g_signal_handler_unblock (pref->priv->has_decorations, pref->priv->has_decorations_handler);
+}
+
+static void
+notify_hide_from_taskbar (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "hide-from-taskbar", &value, NULL);
+	g_signal_handler_block (pref->priv->hide_from_taskbar, pref->priv->hide_from_taskbar_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_taskbar), value);
+	g_signal_handler_unblock (pref->priv->hide_from_taskbar, pref->priv->hide_from_taskbar_handler);
+}
+
+static void
+notify_hide_from_task_switcher (XpadPreferences *pref)
+{
+	gboolean value;
+	g_object_get (pref->priv->settings, "hide-from-task-switcher", &value, NULL);
+	g_signal_handler_block (pref->priv->hide_from_task_switcher, pref->priv->hide_from_task_switcher_handler);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_task_switcher), value);
+	g_signal_handler_unblock (pref->priv->hide_from_task_switcher, pref->priv->hide_from_task_switcher_handler);
 }
 
 static void
