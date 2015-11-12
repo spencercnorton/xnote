@@ -98,7 +98,7 @@ xpad_app_init (int argc, char **argv)
 {
 	gboolean first_time;
 	gboolean have_gtk;
-	gboolean shutdown_in_progress = FALSE;
+	shutdown_in_progress = FALSE;
 
 	xpad_debug_init();
 	xpad_debug_message (DEBUG_APP, "Startup");
