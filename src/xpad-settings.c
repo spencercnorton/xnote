@@ -135,7 +135,8 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	obj_prop[PROP_AUTOSTART_STICKY] = g_param_spec_boolean ("autostart-sticky", "Stick to desktop", "Whether pads are sticky on creation", FALSE, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOSTART_DELAY] = g_param_spec_uint ("autostart-delay", "Delay autostart of Xpad", "Number of seconds to wait before start of Xpad", 0, G_MAXUINT, 0, G_PARAM_READWRITE);
 	obj_prop[PROP_AUTOSTART_DISPLAY_PADS] = g_param_spec_uint ("autostart-display-pads", "Autostart display pads", "Show/hide/restore pads at start", 0, G_MAXUINT, 2, G_PARAM_READWRITE);
-	obj_prop[PROP_HIDE_FROM_TASKBAR] = g_param_spec_boolean ("hide-from-taskbar", "Hide from taskbar", "Hide the pads from the task bar", TRUE, G_PARAM_READWRITE);
+	obj_prop[PROP_HIDE_FROM_TASKBAR] = g_param_spec_boolean ("hide-from-taskbar", "Hide from taskbar", "Hide the pads from the task bar", FALSE, 
+G_PARAM_READWRITE);
 	obj_prop[PROP_HIDE_FROM_TASK_SWITCHER] = g_param_spec_boolean ("hide-from-task-switcher", "Hide from task switcher", "Hide the pads from the task or workspace switcher", FALSE, G_PARAM_READWRITE);
 
 	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
@@ -159,9 +160,9 @@ xpad_settings_init (XpadSettings *settings)
 	 */
 	settings->priv->width = 200;
 	settings->priv->height = 200;
-	settings->priv->hide_from_taskbar = TRUE;
-	settings->priv->hide_from_task_switcher = FALSE;
 	settings->priv->has_decorations = FALSE;
+	settings->priv->hide_from_taskbar = FALSE;
+	settings->priv->hide_from_task_switcher = FALSE;
 	settings->priv->confirm_destroy = TRUE;
 	settings->priv->edit_lock = FALSE;
 	settings->priv->tray_enabled = TRUE;
