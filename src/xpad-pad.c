@@ -1687,7 +1687,7 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 		gchar *key;
 
 		key = g_strdup_printf ("notes-%i", n);
-		tmp_title = g_strdup (gtk_window_get_title (GTK_WINDOW (l->data)));
+		tmp_title = g_strndup (gtk_window_get_title (GTK_WINDOW (l->data)), 20);
 		str_replace_tokens (&tmp_title, '_', "__");
 		if (n < 10)
 			title = g_strdup_printf ("_%i. %s", n, tmp_title);
