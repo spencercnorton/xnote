@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 
 
-struct XpadPadPropertiesPrivate 
+struct XpadPadPropertiesPrivate
 {
 	GtkWidget *fontcheck;
 	GtkWidget *colorcheck;
@@ -122,7 +122,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 		"child", alignment,
 		"border-width", 6,
 		NULL));
-	
+
 	prop->priv->fontbutton = gtk_font_button_new ();
 	prop->priv->textbutton = gtk_color_button_new ();
 	prop->priv->backbutton = gtk_color_button_new ();
@@ -158,7 +158,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	alignment = gtk_alignment_new (1, 1, 1, 1);
 	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
 	gtk_container_add (GTK_CONTAINER (alignment), prop->priv->colorbox);
-	
+
 	gtk_dialog_add_button (GTK_DIALOG (prop), "gtk-close", GTK_RESPONSE_CLOSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (prop), GTK_RESPONSE_CLOSE);
 	g_signal_connect (prop, "response", G_CALLBACK (xpad_pad_properties_response), NULL);
