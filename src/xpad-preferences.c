@@ -107,7 +107,6 @@ static void xpad_preferences_set_property (GObject *object, guint prop_id, const
 static void xpad_preferences_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
-static void xpad_preferences_response (GtkWindow *window, gint response);
 
 static void change_font_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_font_face (GtkFontButton *button, XpadPreferences *pref);
