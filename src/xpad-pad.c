@@ -1208,7 +1208,7 @@ xpad_pad_save_content (XpadPad *pad)
 {
 	g_return_if_fail (pad);
 
-	gchar *content;
+	gchar *content = NULL;
 	XpadTextBuffer *buffer;
 
 	if (!pad->priv->unsaved_content)
