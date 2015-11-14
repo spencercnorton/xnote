@@ -57,8 +57,10 @@ void show_help ()
 		helptext = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (helptext), helptextbuf);
 		g_free (helptextbuf);
-		gtk_misc_set_padding (GTK_MISC (helptext), 12, 12);
-		gtk_misc_set_alignment (GTK_MISC (helptext), 0, 0);
+		gtk_widget_set_margin_top (helptext, 12);
+		gtk_widget_set_margin_bottom (helptext, 12);
+		gtk_widget_set_margin_start (helptext, 12);
+		gtk_widget_set_margin_end (helptext, 12);
 		gtk_label_set_line_wrap (GTK_LABEL (helptext), TRUE);
 
 		/* Create a box and stuff the text and buttons in */
