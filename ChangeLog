@@ -2,19 +2,21 @@ Version 4.6
 * New: Preferences - The ability to hide the pads from the taskbar (which was previously binded to window decorations) (#1029202)
 * New: Preferences - The ability to hide the pads from the workspace switcher (which was previously binded to window decorations) (#1340331)
 * Fix: CLI - the show, hide and toggle command-line options have been fixed (#1424081)
+* Fix: Menu - Limited the length of the note names in the menu items to 20 characters. This prevents very wide stretched menus.
 * Fix: Internationalization - Added and updated the Xpad.pot file to restore the multi-lingual support (#1455888)
 * Fix: Help - Set the ability to select and copy the help text (#1415138)
 * Fix: Pad focus - Improved the showing and focussing of pads after minimization or creation of a new pad.
 * Fix: Pad focus - After deleting a pad, it is conveniant to have the focus on another pad. This fix added that behavior.
+* Fix: Performance - Only save the location of the pad to disk when exiting Xpad. This prevents a lot of disk writes when moving pads. (#1459251)
+* Fix: Default settings - Window decorations are turned off by default (#1395889)
+* Fix: Default settings - Autostart Xpad by default for all users (#1395889)
 * Fix: Technical - Code cleanup - removed spaces and indentions
 * Fix: Technical - Prevent deprecated error messages when not using configure --enable-debug=yes
 * Fix: Technical - Changed preference window type from GtkDialog to GtkWindow (#1395309)
 * Fix: Technical - Prevent race condition when application shutdown is requested
 * Fix: Technical - Initialized uninitialized variable
 * Fix: Technical - Replaced or removed deprecated GTK functions, such as gtk_alignment_new
-* Fix: Performance - Only save the location of the pad to disk when exiting Xpad. This prevents a lot of disk writes when moving pads. (#1459251)
-* Fix: Default settings - Window decorations are turned off by default (#1395889)
-* Fix: Default settings - Autostart Xpad by default for all users (#1395889)
+* Fix: Technical - Removed debugging implementaton, since it was not used and uses unnecessary resources
 
 Version 4.5
 * New: Debug - ability to use built-in debugging functionality for bug solving and code improvements by Sagar Ghuge (#1389334)
