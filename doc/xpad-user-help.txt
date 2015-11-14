@@ -58,6 +58,13 @@ The top of the pad shows by default the window decorations, such as the title ba
 
 [Right-click text area] - [Pad] - [View] – [Window decorations]
 
+<u>Hide from taskbar or workspace switcher</u>
+
+If you have a lot of sticky notes, your taskbar might get filled with all these notes. In the preferences you can hide these notes from the taskbar, with a possible 
+side effect that the notes will not be visible anymore in the task switcher (alt-tab). Also you can hide all the notes in the workspace switcher with the same 
+possible side effect. Which ever option works best, depends on your preference and the desktop environment you use which is part of your Linux distribution (Mint, 
+Arch, Fedora, Ubuntu, Debian, etc). 
+
 <u>Show/hide pads</u>
 
 There are a couple of different ways to show and hide all pads in the same time.
