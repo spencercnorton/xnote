@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-05-19 05:17+0000\n"
-"X-Generator: Launchpad (build 17508)\n"
+"X-Launchpad-Export-Date: 2015-11-14 04:36+0000\n"
+"X-Generator: Launchpad (build 17845)\n"
 "Language: et\n"
 
 #: ../src/fio.c:131
@@ -151,8 +151,7 @@ msgstr ""
 "  Eraser https://launchpad.net/~rivozangov\n"
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  Märt Põder https://launchpad.net/~boamaod\n"
-"  Tiina https://launchpad.net/~tkarvane\n"
-"  olavi tohver https://launchpad.net/~olts16"
+"  Tiina https://launchpad.net/~tkarvane"
 
 #: ../src/xpad-pad.c:1546 ../src/xpad-tray.c:136
 msgid "_New"
