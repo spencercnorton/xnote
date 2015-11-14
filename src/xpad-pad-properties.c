@@ -181,8 +181,8 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	gtk_widget_set_margin_top (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
 	gtk_widget_set_margin_bottom (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
-	gtk_widget_set_margin_left (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
-	gtk_widget_set_margin_right (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
+	gtk_widget_set_margin_start (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
+	gtk_widget_set_margin_end (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
 
 	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (prop)));
 }
