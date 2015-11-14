@@ -282,11 +282,11 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_pack_start (view_vbox, pref->priv->has_decorations, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_decorations), has_decorations);
 
-	pref->priv->hide_from_taskbar = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the taskbar and task switcher"));
+	pref->priv->hide_from_taskbar = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the taskbar and possibly the task switcher"));
 	gtk_box_pack_start (view_vbox, pref->priv->hide_from_taskbar, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_taskbar), hide_from_taskbar);
 
-	pref->priv->hide_from_task_switcher = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the workspace switcher"));
+	pref->priv->hide_from_task_switcher = gtk_check_button_new_with_mnemonic (_("_Hide all notes from the workspace switcher and possibly the task switcher"));
 	gtk_box_pack_start (view_vbox, pref->priv->hide_from_task_switcher, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->hide_from_task_switcher), hide_from_task_switcher);
 
