@@ -200,7 +200,7 @@ static void xpad_preferences_constructed (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
-	GtkWidget *label, *alignment;
+	GtkWidget *label;
 	GtkBox *font_hbox, *vbox, *hbox, *view_vbox, *appearance_vbox, *start_vbox, *tray_vbox, *other_vbox;
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
@@ -252,7 +252,6 @@ static void xpad_preferences_constructed (GObject *object)
 
 	pref->priv->autohide_toolbar = gtk_check_button_new_with_mnemonic (_("_Autohide toolbar"));
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20));
-	gtk_box_pack_start (hbox, gtk_alignment_new (1, 1, 1, 1), FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->autohide_toolbar, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autohide_toolbar), autohide_toolbar);
 	gtk_widget_set_sensitive (pref->priv->autohide_toolbar, has_toolbar);
@@ -293,18 +292,19 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->textbutton = gtk_color_button_new ();
 	pref->priv->fontbutton = gtk_font_button_new ();
 	pref->priv->backbutton = gtk_color_button_new ();
+	pref->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 
 	pref->priv->antifontcheck = gtk_radio_button_new_with_mnemonic (NULL, _("Use font from theme"));
 	pref->priv->fontcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->antifontcheck), _("Use this font:"));
 	pref->priv->anticolorcheck = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from theme"));
 	pref->priv->colorcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->anticolorcheck), _("Use these colors:"));
+        gtk_widget_set_margin_left (GTK_WIDGET (pref->priv->colorbox), 25);
 
 	font_hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6));
 
 	gtk_box_pack_start (font_hbox, pref->priv->fontcheck, FALSE, TRUE, 0);
 	gtk_box_pack_start (font_hbox, pref->priv->fontbutton, FALSE, TRUE, 0);
 
-	pref->priv->colorbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
 	label = gtk_label_new_with_mnemonic (_("Text:"));
@@ -361,10 +361,6 @@ static void xpad_preferences_constructed (GObject *object)
 		gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &theme_background_color);
 	}
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), pref->priv->colorbox);
-
 	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 
 	gtk_box_pack_start (vbox, pref->priv->antifontcheck, FALSE, FALSE, 0);
@@ -375,7 +371,7 @@ static void xpad_preferences_constructed (GObject *object)
 
 	gtk_box_pack_start (vbox, pref->priv->anticolorcheck, FALSE, FALSE, 0);
 	gtk_box_pack_start (vbox, pref->priv->colorcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (vbox, alignment, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, pref->priv->colorbox, FALSE, FALSE, 0);
 	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 
 	gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (pref->priv->textbutton), FALSE);
@@ -403,7 +399,6 @@ static void xpad_preferences_constructed (GObject *object)
 
 	pref->priv->autostart_wait_systray = gtk_check_button_new_with_mnemonic (_("_Wait for systray (if possible)"));
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 20));
-	gtk_box_pack_start (hbox, gtk_alignment_new (1, 1, 1, 1), FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->autostart_wait_systray, FALSE, FALSE, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_wait_systray), autostart_wait_systray);
