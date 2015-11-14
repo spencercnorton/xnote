@@ -201,8 +201,8 @@ static void xpad_preferences_constructed (GObject *object)
 {
 	XpadPreferences *pref = XPAD_PREFERENCES (object);
 
-	GtkWidget *view_frame, *appearance_frame, *start_frame, *tray_frame, *other_frame, *label, *alignment;
-	GtkBox *font_hbox, *vbox, *hbox, *view_vbox, *appearance_vbox, *autostart_vbox, *tray_vbox, *other_vbox;
+	GtkWidget *label, *alignment;
+	GtkBox *font_hbox, *vbox, *hbox, *view_vbox, *appearance_vbox, *start_vbox, *tray_vbox, *other_vbox;
 	const GdkRGBA *text_color, *back_color;
 	const gchar *fontname;
 	GtkStyleContext *style;
@@ -241,22 +241,12 @@ static void xpad_preferences_constructed (GObject *object)
 
 	view_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
 	gtk_box_set_homogeneous (view_vbox, FALSE);
+        gtk_widget_set_margin_top (GTK_WIDGET (view_vbox), 12);
+        gtk_widget_set_margin_bottom (GTK_WIDGET (view_vbox), 12);
+        gtk_widget_set_margin_left (GTK_WIDGET (view_vbox), 12);
+        gtk_widget_set_margin_right (GTK_WIDGET (view_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"right-padding", 12,
-		"top-padding", 12,
-		"bottom-padding", 12,
-		"child", view_vbox,
-		NULL);
-	view_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", NULL,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		NULL));
-
-	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (view_frame), label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (view_vbox), label);
 
 	pref->priv->has_toolbar = gtk_check_button_new_with_mnemonic (_("_Show toolbar"));
 	gtk_box_pack_start (view_vbox, pref->priv->has_toolbar, FALSE, FALSE, 0);
@@ -295,22 +285,12 @@ static void xpad_preferences_constructed (GObject *object)
 
 	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 20));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
+        gtk_widget_set_margin_top (GTK_WIDGET (appearance_vbox), 12);
+        gtk_widget_set_margin_bottom (GTK_WIDGET (appearance_vbox), 12);
+        gtk_widget_set_margin_left (GTK_WIDGET (appearance_vbox), 12);
+        gtk_widget_set_margin_right (GTK_WIDGET (appearance_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"right-padding", 12,
-		"top-padding", 12,
-		"bottom-padding", 12,
-		"child", appearance_vbox,
-		NULL);
-	appearance_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", NULL,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		NULL));
-
-	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (appearance_frame), label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (appearance_vbox), label);
 
 	pref->priv->textbutton = gtk_color_button_new ();
 	pref->priv->fontbutton = gtk_font_button_new ();
@@ -410,27 +390,17 @@ static void xpad_preferences_constructed (GObject *object)
 	/* Start options */
 	label = create_label (_("Startup"));
 
-	autostart_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
-	gtk_box_set_homogeneous (autostart_vbox, FALSE);
+	start_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
+	gtk_box_set_homogeneous (start_vbox, FALSE);
+        gtk_widget_set_margin_top (GTK_WIDGET (start_vbox), 12);
+        gtk_widget_set_margin_bottom (GTK_WIDGET (start_vbox), 12);
+        gtk_widget_set_margin_left (GTK_WIDGET (start_vbox), 12);
+        gtk_widget_set_margin_right (GTK_WIDGET (start_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"right-padding", 12,
-		"top-padding", 12,
-		"bottom-padding", 12,
-		"child", autostart_vbox,
-		NULL);
-	start_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", NULL,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		NULL));
-
-	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (start_frame), label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (start_vbox), label);
 
 	pref->priv->autostart_xpad = gtk_check_button_new_with_mnemonic (_("_Start Xpad automatically after login"));
-	gtk_box_pack_start (autostart_vbox, pref->priv->autostart_xpad, FALSE, FALSE, 0);
+	gtk_box_pack_start (start_vbox, pref->priv->autostart_xpad, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_xpad), autostart_xpad);
 
 	pref->priv->autostart_wait_systray = gtk_check_button_new_with_mnemonic (_("_Wait for systray (if possible)"));
@@ -443,10 +413,10 @@ static void xpad_preferences_constructed (GObject *object)
 		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, TRUE);
 	else
 		gtk_widget_set_sensitive (pref->priv->autostart_wait_systray, FALSE);
-	gtk_box_pack_start (autostart_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+	gtk_box_pack_start (start_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
 	pref->priv->autostart_new_pad = gtk_check_button_new_with_mnemonic (_("_Open a new empty pad"));
-	gtk_box_pack_start (autostart_vbox, pref->priv->autostart_new_pad, FALSE, FALSE, 0);
+	gtk_box_pack_start (start_vbox, pref->priv->autostart_new_pad, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->autostart_new_pad), autostart_new_pad);
 
 	label = gtk_label_new (_("Delay in seconds"));
@@ -458,7 +428,7 @@ static void xpad_preferences_constructed (GObject *object)
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->autostart_delay, FALSE, TRUE, 0);
-	gtk_box_pack_start (autostart_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+	gtk_box_pack_start (start_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
 	label = gtk_label_new_with_mnemonic(_("Display pads"));
 	pref->priv->autostart_display_pads = gtk_combo_box_text_new();
@@ -469,29 +439,19 @@ static void xpad_preferences_constructed (GObject *object)
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->autostart_display_pads, FALSE, TRUE, 0);
-	gtk_box_pack_start (autostart_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
+	gtk_box_pack_start (start_vbox, GTK_WIDGET (hbox), FALSE, FALSE, 0);
 
 	/* Tray options */
 	label = create_label (_("Tray"));
 
 	tray_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 	gtk_box_set_homogeneous (tray_vbox, FALSE);
+        gtk_widget_set_margin_top (GTK_WIDGET (tray_vbox), 12);
+        gtk_widget_set_margin_bottom (GTK_WIDGET (tray_vbox), 12);
+        gtk_widget_set_margin_left (GTK_WIDGET (tray_vbox), 12);
+        gtk_widget_set_margin_right (GTK_WIDGET (tray_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"right-padding", 12,
-		"top-padding", 12,
-		"bottom-padding", 12,
-		"child", tray_vbox,
-		NULL);
-	tray_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", NULL,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		NULL));
-
-	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (tray_frame), label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (tray_vbox), label);
 
 	pref->priv->tray_enabled = gtk_check_button_new_with_mnemonic (_("_Enable tray icon"));
 	gtk_box_pack_start (tray_vbox, pref->priv->tray_enabled, FALSE, FALSE, 0);
@@ -513,22 +473,12 @@ static void xpad_preferences_constructed (GObject *object)
 
 	other_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 6));
 	gtk_box_set_homogeneous (other_vbox, FALSE);
+        gtk_widget_set_margin_top (GTK_WIDGET (other_vbox), 12);
+        gtk_widget_set_margin_bottom (GTK_WIDGET (other_vbox), 12);
+        gtk_widget_set_margin_left (GTK_WIDGET (other_vbox), 12);
+        gtk_widget_set_margin_right (GTK_WIDGET (other_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"right-padding", 12,
-		"top-padding", 12,
-		"bottom-padding", 12,
-		"child", other_vbox,
-		NULL);
-	other_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", NULL,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		NULL));
-
-	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (other_frame), label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (other_vbox), label);
 
 	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Make pads read-only"));
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
