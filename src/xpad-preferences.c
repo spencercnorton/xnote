@@ -241,8 +241,8 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_set_homogeneous (view_vbox, FALSE);
         gtk_widget_set_margin_top (GTK_WIDGET (view_vbox), 12);
         gtk_widget_set_margin_bottom (GTK_WIDGET (view_vbox), 12);
-        gtk_widget_set_margin_left (GTK_WIDGET (view_vbox), 12);
-        gtk_widget_set_margin_right (GTK_WIDGET (view_vbox), 12);
+        gtk_widget_set_margin_start (GTK_WIDGET (view_vbox), 12);
+        gtk_widget_set_margin_end (GTK_WIDGET (view_vbox), 12);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (view_vbox), label);
 
@@ -284,8 +284,8 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
         gtk_widget_set_margin_top (GTK_WIDGET (appearance_vbox), 12);
         gtk_widget_set_margin_bottom (GTK_WIDGET (appearance_vbox), 12);
-        gtk_widget_set_margin_left (GTK_WIDGET (appearance_vbox), 12);
-        gtk_widget_set_margin_right (GTK_WIDGET (appearance_vbox), 12);
+        gtk_widget_set_margin_start (GTK_WIDGET (appearance_vbox), 12);
+        gtk_widget_set_margin_end (GTK_WIDGET (appearance_vbox), 12);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (appearance_vbox), label);
 
@@ -298,7 +298,7 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->fontcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->antifontcheck), _("Use this font:"));
 	pref->priv->anticolorcheck = gtk_radio_button_new_with_mnemonic (NULL, _("Use colors from theme"));
 	pref->priv->colorcheck = gtk_radio_button_new_with_mnemonic_from_widget (GTK_RADIO_BUTTON (pref->priv->anticolorcheck), _("Use these colors:"));
-        gtk_widget_set_margin_left (GTK_WIDGET (pref->priv->colorbox), 25);
+        gtk_widget_set_margin_start (GTK_WIDGET (pref->priv->colorbox), 25);
 
 	font_hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6));
 
@@ -388,8 +388,8 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_set_homogeneous (start_vbox, FALSE);
         gtk_widget_set_margin_top (GTK_WIDGET (start_vbox), 12);
         gtk_widget_set_margin_bottom (GTK_WIDGET (start_vbox), 12);
-        gtk_widget_set_margin_left (GTK_WIDGET (start_vbox), 12);
-        gtk_widget_set_margin_right (GTK_WIDGET (start_vbox), 12);
+        gtk_widget_set_margin_start (GTK_WIDGET (start_vbox), 12);
+        gtk_widget_set_margin_end (GTK_WIDGET (start_vbox), 12);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (start_vbox), label);
 
@@ -441,8 +441,8 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_set_homogeneous (tray_vbox, FALSE);
         gtk_widget_set_margin_top (GTK_WIDGET (tray_vbox), 12);
         gtk_widget_set_margin_bottom (GTK_WIDGET (tray_vbox), 12);
-        gtk_widget_set_margin_left (GTK_WIDGET (tray_vbox), 12);
-        gtk_widget_set_margin_right (GTK_WIDGET (tray_vbox), 12);
+        gtk_widget_set_margin_start (GTK_WIDGET (tray_vbox), 12);
+        gtk_widget_set_margin_end (GTK_WIDGET (tray_vbox), 12);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (tray_vbox), label);
 
@@ -468,8 +468,8 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_box_set_homogeneous (other_vbox, FALSE);
         gtk_widget_set_margin_top (GTK_WIDGET (other_vbox), 12);
         gtk_widget_set_margin_bottom (GTK_WIDGET (other_vbox), 12);
-        gtk_widget_set_margin_left (GTK_WIDGET (other_vbox), 12);
-        gtk_widget_set_margin_right (GTK_WIDGET (other_vbox), 12);
+        gtk_widget_set_margin_start (GTK_WIDGET (other_vbox), 12);
+        gtk_widget_set_margin_end (GTK_WIDGET (other_vbox), 12);
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (other_vbox), label);
 
