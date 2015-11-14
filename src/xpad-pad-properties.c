@@ -94,34 +94,18 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 {
 	gchar *text;
 	GtkBox *hbox, *font_hbox, *vbox, *appearance_vbox;
-	GtkWidget *font_radio, *color_radio, *label, *appearance_frame, *alignment;
+	GtkWidget *font_radio, *color_radio, *label;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
 	prop->priv = xpad_pad_properties_get_instance_private (prop);
 
-	text = g_strconcat ("<b>", _("Appearance"), "</b>", NULL);
-	label = GTK_WIDGET (g_object_new (GTK_TYPE_LABEL,
-		"label", text,
-		"use-markup", TRUE,
-		"xalign", 0.0,
-		NULL));
-	g_free (text);
-
 	appearance_vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 18));
 	gtk_box_set_homogeneous (appearance_vbox, FALSE);
+	gtk_widget_set_margin_bottom (GTK_WIDGET (appearance_vbox), 12);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	g_object_set (G_OBJECT (alignment),
-		"left-padding", 12,
-		"top-padding", 12,
-		"child", appearance_vbox,
-		NULL);
-	appearance_frame = GTK_WIDGET (g_object_new (GTK_TYPE_FRAME,
-		"label-widget", label,
-		"shadow-type", GTK_SHADOW_NONE,
-		"child", alignment,
-		"border-width", 6,
-		NULL));
+	label = gtk_label_new (g_strconcat ("<b>", _("Appearance"), "</b>", NULL));
+	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+	gtk_box_pack_start (appearance_vbox, label, FALSE, FALSE, 0);
 
 	prop->priv->fontbutton = gtk_font_button_new ();
 	prop->priv->textbutton = gtk_color_button_new ();
@@ -155,10 +139,6 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_box_pack_start (hbox, prop->priv->backbutton, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (prop->priv->colorbox), "child", hbox, NULL);
 
-	alignment = gtk_alignment_new (1, 1, 1, 1);
-	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, 12, 0);
-	gtk_container_add (GTK_CONTAINER (alignment), prop->priv->colorbox);
-
 	gtk_dialog_add_button (GTK_DIALOG (prop), "gtk-close", GTK_RESPONSE_CLOSE);
 	gtk_dialog_set_default_response (GTK_DIALOG (prop), GTK_RESPONSE_CLOSE);
 	g_signal_connect (prop, "response", G_CALLBACK (xpad_pad_properties_response), NULL);
@@ -181,7 +161,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	gtk_box_pack_start (vbox, color_radio, FALSE, FALSE, 0);
 	gtk_box_pack_start (vbox, prop->priv->colorcheck, FALSE, FALSE, 0);
-	gtk_box_pack_start (vbox, alignment, FALSE, FALSE, 0);
+	gtk_box_pack_start (vbox, prop->priv->colorbox, FALSE, FALSE, 0);
 	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 
 	g_signal_connect (prop->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), prop);
@@ -198,7 +178,13 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	g_object_unref (size_group_labels);
 
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), appearance_frame);
+	/* gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), appearance_frame); */
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), GTK_WIDGET (appearance_vbox));
+
+	gtk_widget_set_margin_top (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
+	gtk_widget_set_margin_bottom (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
+	gtk_widget_set_margin_left (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
+	gtk_widget_set_margin_right (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
 
 	gtk_widget_show_all (gtk_dialog_get_content_area (GTK_DIALOG (prop)));
 }
