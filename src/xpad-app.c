@@ -379,8 +379,8 @@ xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *p
 	gtk_container_add (GTK_CONTAINER (hbox), image);
 	gtk_container_add (GTK_CONTAINER (hbox), label);
 
-	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0);
-	gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
+	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+	gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);

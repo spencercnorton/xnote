@@ -308,7 +308,6 @@ static void xpad_preferences_constructed (GObject *object)
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
 	label = gtk_label_new_with_mnemonic (_("Text:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->textbutton, FALSE, TRUE, 0);
@@ -317,7 +316,6 @@ static void xpad_preferences_constructed (GObject *object)
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 
 	label = gtk_label_new_with_mnemonic (_("Background:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, pref->priv->backbutton, FALSE, TRUE, 0);
