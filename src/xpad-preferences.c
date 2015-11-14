@@ -207,7 +207,6 @@ static void xpad_preferences_constructed (GObject *object)
 	const gchar *fontname;
 	GtkStyleContext *style;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
-	GtkRequisition req;
 	GdkRGBA theme_text_color = {0, 0, 0, 0}, theme_background_color = {0, 0, 0, 0};
 	guint tray_click_configuration, autostart_delay, autostart_display_pads;
 	gboolean confirm_destroy, edit_lock, autostart_xpad, autostart_wait_systray, autostart_new_pad, autostart_sticky, has_decorations, hide_from_taskbar, hide_from_task_switcher, has_toolbar, autohide_toolbar, has_scrollbar;
