@@ -177,7 +177,6 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	g_object_unref (size_group_labels);
 
-	/* gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), appearance_frame); */
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), GTK_WIDGET (appearance_vbox));
 
 	gtk_widget_set_margin_top (GTK_WIDGET (gtk_dialog_get_content_area (GTK_DIALOG (prop))), 12);
