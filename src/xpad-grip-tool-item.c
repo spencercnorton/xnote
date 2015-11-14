@@ -48,8 +48,12 @@ xpad_grip_tool_item_class_init (XpadGripToolItemClass *klass)
 static void
 xpad_grip_tool_item_init (XpadGripToolItem *grip)
 {
-	GtkWidget *alignment;
-	gboolean right;
+	/* Alignment of the grip tool has been removed, first since the function is deprecated and second,
+	   it does not seem to make any difference. If it does, the old code can be enabled. Remove these
+	   comments and the commented code in after March 2016 */
+
+	/* GtkWidget *alignment; */
+	/* gboolean right; */
 
 	grip->priv = xpad_grip_tool_item_get_instance_private(grip);
 
@@ -60,11 +64,12 @@ xpad_grip_tool_item_init (XpadGripToolItem *grip)
 	g_signal_connect (grip->priv->drawbox, "draw", G_CALLBACK (xpad_grip_tool_item_event_box_draw), NULL);
 	gtk_widget_set_size_request (grip->priv->drawbox, 18, 18);
 
-	right = gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR;
-	alignment = gtk_alignment_new (right ? 1 : 0, 1, 0, 0);
+	/* right = gtk_widget_get_direction (grip->priv->drawbox) == GTK_TEXT_DIR_LTR; */
+	/* alignment = gtk_alignment_new (right ? 1 : 0, 1, 0, 0); */
 
-	gtk_container_add (GTK_CONTAINER (alignment), grip->priv->drawbox);
-	gtk_container_add (GTK_CONTAINER (grip), alignment);
+	/* gtk_container_add (GTK_CONTAINER (alignment), grip->priv->drawbox); */
+	/* gtk_container_add (GTK_CONTAINER (grip), alignment); */
+	gtk_container_add (GTK_CONTAINER (grip), grip->priv->drawbox);
 }
 
 static gboolean
