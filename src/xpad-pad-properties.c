@@ -92,7 +92,6 @@ xpad_pad_properties_class_init (XpadPadPropertiesClass *klass)
 static void
 xpad_pad_properties_init (XpadPadProperties *prop)
 {
-	gchar *text;
 	GtkBox *hbox, *font_hbox, *vbox, *appearance_vbox;
 	GtkWidget *font_radio, *color_radio, *label;
 	GtkSizeGroup *size_group_labels = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
