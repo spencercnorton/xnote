@@ -9,13 +9,13 @@ msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2015-05-18 12:04+0000\n"
+"PO-Revision-Date: 2016-01-10 12:31+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-10 05:09+0000\n"
+"X-Launchpad-Export-Date: 2016-01-11 04:40+0000\n"
 "X-Generator: Launchpad (build 17881)\n"
 "Language: nl\n"
 
@@ -302,12 +302,13 @@ msgstr "_Toon vensters"
 
 #: ../src/xpad-preferences.c:272
 msgid "_Hide all notes from the taskbar and possibly the task switcher"
-msgstr ""
+msgstr "Verberg alle pads van de taakbalk en mogelijk van de taak switcher"
 
 #: ../src/xpad-preferences.c:276
 msgid ""
 "_Hide all notes from the workspace switcher and possibly the task switcher"
 msgstr ""
+"Verberg alle pads van de bureaublad switcher en mogelijk van de taak switcher"
 
 #. Layout options
 #: ../src/xpad-preferences.c:281
