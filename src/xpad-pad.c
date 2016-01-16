@@ -144,14 +144,18 @@ static gboolean xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *e
 GtkWidget *
 xpad_pad_new (XpadPadGroup *group, XpadSettings *settings)
 {
-	return GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, "settings", settings, NULL));
+	GtkWidget *pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, "settings", settings, NULL));
+
+	xpad_pad_save_info_delayed (XPAD_PAD (pad));
+
+	return pad;
 }
 
 /* Create a new pad based on the provided info-xxxxx file from the config directory and return this pad */
 GtkWidget *
 xpad_pad_new_with_info (XpadPadGroup *group, XpadSettings *settings, const gchar *info_filename, gboolean *show)
 {
-	GtkWidget *pad = xpad_pad_new (group, settings);
+	GtkWidget *pad = GTK_WIDGET (g_object_new (XPAD_TYPE_PAD, "group", group, "settings", settings, NULL));
 
 	XPAD_PAD (pad)->priv->infoname = g_strdup (info_filename);
 	xpad_pad_load_info (XPAD_PAD (pad), show);
