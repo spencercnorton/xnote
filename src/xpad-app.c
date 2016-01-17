@@ -184,8 +184,11 @@ xpad_app_init (int argc, char **argv)
 
 	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
 
-	if (first_time)
+	if (first_time) {
+		gboolean autostart_xpad = TRUE;
+		g_object_set (settings, "autostart-xpad", &autostart_xpad, NULL);
 		show_help ();
+	}
 
 	g_free (server_filename);
 	server_filename = NULL;

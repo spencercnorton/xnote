@@ -1,7 +1,8 @@
 Version 4.7
 * Fix: Translations - Updated the translation template, so translaters can translate the new or changed strings (#1531634)
+* Fix: Autostart - Partial undo of bug report #1395889, preventing autoset of system-wide autostart of Xpad (#1517262)
+* Fix: Autostart - If Xpad is run for the first time, autostart for the current user will be enabled. (#1517262)
 * Fix: Technical - The info file of a pad was only saved on proper exit of Xpad (#1534925)
-* Fix: Autostart - Partial undo of bug report #1395889, preventing autoset of system-wide autostart of Xpad
 
 Version 4.6
 * New: Preferences - The ability to hide the pads from the taskbar (which was previously binded to window decorations) (#1029202)
