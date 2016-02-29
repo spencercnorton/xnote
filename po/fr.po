@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2015-05-26 19:59+0000\n"
+"PO-Revision-Date: 2016-02-28 19:08+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-01-10 05:09+0000\n"
-"X-Generator: Launchpad (build 17881)\n"
+"X-Launchpad-Export-Date: 2016-02-29 05:27+0000\n"
+"X-Generator: Launchpad (build 17925)\n"
 "Language: fr\n"
 
 #: ../src/fio.c:131
@@ -305,11 +305,15 @@ msgstr "Affi_cher les décorations de fenêtre"
 #: ../src/xpad-preferences.c:272
 msgid "_Hide all notes from the taskbar and possibly the task switcher"
 msgstr ""
+"_Masquer toutes les notes depuis la barre des tâches et peut-être le "
+"sélecteur de tâches"
 
 #: ../src/xpad-preferences.c:276
 msgid ""
 "_Hide all notes from the workspace switcher and possibly the task switcher"
 msgstr ""
+"_Masquer toutes les notes depuis le sélecteur d'espaces de travail et peut-"
+"être le sélecteur de tâches"
 
 #. Layout options
 #: ../src/xpad-preferences.c:281
