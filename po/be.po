@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2016-03-02 11:42+0000\n"
+"PO-Revision-Date: 2016-03-03 16:07+0000\n"
 "Last-Translator: Mikalai Udodau <Unknown>\n"
 "Language-Team: Belarusian <be@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-03-03 05:16+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-04 05:19+0000\n"
+"X-Generator: Launchpad (build 17936)\n"
 
 #: ../src/fio.c:131
 #, c-format
@@ -66,6 +66,8 @@ msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr ""
+"Гэты каталог патрэбен, каб захоўваць настаўленні і звесткі з нататнікаў.  "
+"Xpad будзе закрыты."
 
 #: ../src/xpad-app.c:781
 msgid "Show version number and quit"
@@ -73,19 +75,19 @@ msgstr "Паказаць нумар версіі і выйсці"
 
 #: ../src/xpad-app.c:782
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr ""
+msgstr "Не ствараць новы нататнік па запуску, калі няма ранейшых нататнікаў"
 
 #: ../src/xpad-app.c:788
 msgid "Create a new pad on startup even if pads already exist"
-msgstr ""
+msgstr "Ствараць новы нататнік па запуску, нават калі нататнікі ўжо ёсць"
 
 #: ../src/xpad-app.c:789 ../src/xpad-preferences.c:427
 msgid "Hide all pads"
-msgstr ""
+msgstr "Схаваць усе нататнікі"
 
 #: ../src/xpad-app.c:790
 msgid "Show all pads"
-msgstr ""
+msgstr "Паказаць усе нататнікі"
 
 #: ../src/xpad-app.c:791
 msgid "Toggle between show and hide all pads"
@@ -93,7 +95,7 @@ msgstr ""
 
 #: ../src/xpad-app.c:792
 msgid "Create a new pad with the contents of a file"
-msgstr ""
+msgstr "Стварыць новы нататнік са зместам файла"
 
 #: ../src/xpad-app.c:792
 msgid "FILE"
@@ -101,7 +103,7 @@ msgstr "ФАЙЛ"
 
 #: ../src/xpad-app.c:793
 msgid "Close all pads"
-msgstr ""
+msgstr "Закрыць усе нататнікі"
 
 #: ../src/xpad-app.c:824
 #, c-format
@@ -115,11 +117,11 @@ msgstr "Немагчыма прачытаць файл %s."
 
 #: ../src/xpad-pad.c:870
 msgid "Delete this pad?"
-msgstr ""
+msgstr "Сцерці гэты нататнік?"
 
 #: ../src/xpad-pad.c:870
 msgid "All text of this pad will be irrevocably lost."
-msgstr ""
+msgstr "Увесь тэкст у гэтым нататніку будзе незваротна страчаны."
 
 #: ../src/xpad-pad.c:875 ../src/xpad-pad.c:1579
 msgid "_Delete"
@@ -335,7 +337,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:409
 msgid "_Open a new empty pad"
-msgstr ""
+msgstr "_Адкрыць новы пусты нататнік"
 
 #: ../src/xpad-preferences.c:413
 msgid "Delay in seconds"
@@ -347,7 +349,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:426
 msgid "Open all pads"
-msgstr ""
+msgstr "Адкрыць усе нататнікі"
 
 #: ../src/xpad-preferences.c:428
 msgid "Restore to previous state"
@@ -376,11 +378,11 @@ msgstr "Пераключыць 'паказваць усе'"
 
 #: ../src/xpad-preferences.c:454
 msgid "List of Pads"
-msgstr ""
+msgstr "Спіс нататнікаў"
 
 #: ../src/xpad-preferences.c:455
 msgid "New Pad"
-msgstr ""
+msgstr "Новы нататнік"
 
 #. Other options
 #: ../src/xpad-preferences.c:463
@@ -393,7 +395,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:475
 msgid "_Confirm pad deletion"
-msgstr ""
+msgstr "Пацвердзіце _сціранне нататніка"
 
 #: ../src/xpad-preferences.c:487
 msgid "Xpad Preferences"
@@ -449,7 +451,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:79
 msgid "Clear Pad Contents"
-msgstr ""
+msgstr "Ачысціць змест нататніка"
 
 #: ../src/xpad-toolbar.c:79
 msgid "Add C_lear button"
@@ -457,7 +459,7 @@ msgstr "_Дадаць кнопку 'Ачысціць'"
 
 #: ../src/xpad-toolbar.c:80
 msgid "Close and Save Pad"
-msgstr ""
+msgstr "Закрыць і запісаць нататнік"
 
 #: ../src/xpad-toolbar.c:80
 msgid "Add _Close button"
@@ -481,7 +483,7 @@ msgstr "Дадаць кнопку 'Вы_разаць'"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Delete Pad"
-msgstr ""
+msgstr "Сцерці нататнік"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Add _Delete button"
@@ -489,7 +491,7 @@ msgstr "Дадаць кнопку 'Сц_ерці'"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Open New Pad"
-msgstr ""
+msgstr "Адкрыць новы нататнік"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _New button"
@@ -513,7 +515,7 @@ msgstr "Дадаць кнопку 'Наста_ўленні'"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Edit Pad Properties"
-msgstr ""
+msgstr "Правіць уласцівасці нататніка"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Add Proper_ties button"
@@ -529,11 +531,11 @@ msgstr "Дадаць кнопку '_Паўтарыць'"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Close All Pads"
-msgstr ""
+msgstr "Закрыць усе нататнікі"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Close _All button"
-msgstr ""
+msgstr "Дадаць кнопку '_Закрыць усе'"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Undo"
@@ -541,19 +543,19 @@ msgstr "Адкаціць"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Add _Undo button"
-msgstr ""
+msgstr "Дадаць кнопку 'А_дкаціць'"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Se_parator"
-msgstr ""
+msgstr "Дадаць ра_здзяляльнік"
 
 #: ../src/xpad-toolbar.c:517
 msgid "Remove All _Buttons"
-msgstr ""
+msgstr "Выдаліць усе кнопкі"
 
 #: ../src/xpad-toolbar.c:524
 msgid "Remo_ve Last Button"
-msgstr ""
+msgstr "Выдаліць апошнюю кнопку"
 
 #: ../src/xpad-tray.c:171
 msgid "_Quit"
