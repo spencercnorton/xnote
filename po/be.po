@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2016-03-09 15:02+0000\n"
+"PO-Revision-Date: 2016-03-11 09:41+0000\n"
 "Last-Translator: Mikalai Udodau <Unknown>\n"
 "Language-Team: Belarusian <be@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-03-10 05:22+0000\n"
-"X-Generator: Launchpad (build 17936)\n"
+"X-Launchpad-Export-Date: 2016-03-12 05:20+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
 #: ../src/fio.c:131
 #, c-format
@@ -391,7 +391,7 @@ msgstr "Іншае"
 
 #: ../src/xpad-preferences.c:474
 msgid "_Make pads read-only"
-msgstr ""
+msgstr "Зрабі_ць нататнікі даступнымі толькі для чытання"
 
 #: ../src/xpad-preferences.c:475
 msgid "_Confirm pad deletion"
