@@ -481,16 +481,19 @@ xpad_app_load_pads (void)
 	while ((name = g_dir_read_name (dir)))
 	{
 		/* if it's an info file, but not a backup info file... */
-		if (!strncmp (name, "info-", 5) &&
-		    name[strlen (name) - 1] != '~')
+		if (!strncmp (name, "info-", 5) && name[strlen (name) - 1] != '~')
 		{
 			gboolean show = TRUE;
 			GtkWidget *pad = xpad_pad_new_with_info (pad_group, settings, name, &show);
+			/*
+			 * show = refers to the hidden variable in the info file; this can be different for each pad; show = !hidden.
+			 * option_show = command line parameter to show all the pads
+			 * option_hide = command line parameter to hide all the pads
+			*/
 			if ((show || option_show) && !option_hide)
 				gtk_widget_show (pad);
-		else if (show) /* pad thought it would show, we should save that it didn't */
-			xpad_pad_save_info (XPAD_PAD (pad));
-
+			else if (show) /* pad thought it would show, we should save that it didn't */
+				xpad_pad_save_info (XPAD_PAD (pad));
 			opened ++;
 		}
 	}
