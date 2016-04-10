@@ -524,7 +524,7 @@ xpad_pad_notify_has_decorations (XpadPad *pad)
 
 	/*
 	 *  There are two modes of operation:  a normal mode and a 'stealth' mode.
-	 *  If decorations are disabled, we also don't show up in the taskbar or pager. 
+	 *  If decorations are disabled, we also don't show up in the taskbar or pager.
 	 */
 	gtk_window_set_decorated (pad_window, decorations);
 
