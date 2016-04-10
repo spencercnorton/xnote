@@ -108,7 +108,7 @@ gboolean
 xpad_tray_is_open ()
 {
 	if (docklet)
-		return gtk_status_icon_is_embedded (docklet);
+		return TRUE;
 	else
 		return FALSE;
 }

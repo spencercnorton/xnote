@@ -1,3 +1,6 @@
+Version 4.8
+* Fix: Autostart - Pads did not hide on startup when set in the preferences due to the tray icon not being recognized properly (#1560019)
+
 Version 4.7
 * Fix: Translations - Updated the translation template, so translaters can translate the new or changed strings (#1531634)
 * Fix: Autostart - Partial undo of bug report #1395889, preventing autoset of system-wide autostart of Xpad (#1517262)
