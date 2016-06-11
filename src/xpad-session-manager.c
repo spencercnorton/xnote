@@ -222,7 +222,7 @@ xpad_session_manager_set_properties (void)
 	pw = getpwuid (getuid ());
 
 	/* While setting all the properties, safe casts are being used. */
-	const gchar *casting_warning = "Casting problem occured in the session manager. Xpad might not function as expected. Please send a bugreport.";
+	const gchar *casting_warning = "Casting problem occurred in the session manager. Xpad might not function as expected. Please send a bugreport.";
 	vals.user->value = pw ? pw->pw_name : "";
 	string_length = strlen (vals.user->value);
 	if (string_length <= INT_MAX)

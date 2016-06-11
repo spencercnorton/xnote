@@ -1,3 +1,7 @@
+Version 4.9
+* Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
+* Fix: Desktop file - added keywords for the desktop file (#1591368)
+
 Version 4.8
 * Fix: Autostart - Pads did not hide on startup when set in the preferences due to the tray icon not being recognized properly (#1560019)
 

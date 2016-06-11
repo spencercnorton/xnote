@@ -16,3 +16,4 @@ StartupWMClass=xpad
 Type=Application
 Categories=GTK;Utility;
 X-LXQt-Need-Tray=true
+Keywords=notes;postit

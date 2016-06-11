@@ -635,7 +635,7 @@ xpad_pad_text_and_toolbar_height (XpadPad *pad)
 		return (guint) y + pad->priv->toolbar_height + gtk_container_get_border_width (GTK_CONTAINER (pad_textview));
 	}
 	else {
-		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 		return 0;
 	}
 }
@@ -659,7 +659,7 @@ xpad_pad_show_toolbar (XpadPad *pad)
 				pad->priv->toolbar_height = (guint) req.height;
 			}
 			else {
-				g_warning ("There is a problem in the program Xpad. In function 'xpad_pad_show_toolbar' the variable 'req.height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+				g_warning ("There is a problem in the program Xpad. In function 'xpad_pad_show_toolbar' the variable 'req.height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 				pad->priv->toolbar_height = 0;
 			}
 		}
@@ -1055,7 +1055,7 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 		pad->priv->toolbar_height = (guint) event->height;
 	}
 	else {
-		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 		pad->priv->toolbar_height = 0;
 	}
 	return FALSE;
@@ -1080,7 +1080,7 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 		}
 	}
 	else {
-		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_configure_event' the variable 'event->width' or 'event->height' is not a postive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_configure_event' the variable 'event->width' or 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 	}
 
 	if (pad->priv->x != event->x || pad->priv->y != event->y) {
