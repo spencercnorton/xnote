@@ -15,4 +15,4 @@ EXTRA_DIST = $(desktop_in_files) intltool-extract.in intltool-merge.in intltool-
 DISTCLEANFILES = xpad.desktop intltool-extract intltool-merge intltool-update po/xpad.pot \
 Makefile.in aclocal.m4 autom4te.cache/* compile config.h.in configure depcomp install-sh \
 intltool-extract.in intltool-merge.in intltool-update.in missing autopackage/Makefile.in \
-doc/Makefile.in images/Makefile.in po/Makefile.in.in src/Makefile.in *.in~ *.~1~
+doc/Makefile.in images/Makefile.in po/Makefile.in src/Makefile.in *.in~ *.~1~
