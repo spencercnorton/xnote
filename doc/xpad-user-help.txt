@@ -54,7 +54,7 @@ The scrollbar can be enabled/disabled by the following way. When disabled, the s
 
 <u>Window decorations</u>
 
-The top of the pad shows by default the window decorations, such as the title bar, minimize, maximize and close buttons. This top bar can be hidden which makes the pad look more like an actual sticky note. See below how to move the pad without window decorations.
+By default the window decorations, such as the title bar, minimize, maximize and close buttons, are hidden. This top bar is hidden to make makes the pad look more like an actual sticky note. See below how to move the pad without window decorations.
 
 [Right-click text area] - [Pad] - [View] – [Window decorations]
 
