@@ -9,20 +9,20 @@ msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2016-04-26 06:50+0000\n"
+"PO-Revision-Date: 2017-01-05 16:43+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-09-27 05:50+0000\n"
-"X-Generator: Launchpad (build 18204)\n"
+"X-Launchpad-Export-Date: 2017-01-06 05:51+0000\n"
+"X-Generator: Launchpad (build 18302)\n"
 "Language: nl\n"
 
 #: ../src/fio.c:131
 #, c-format
 msgid "Could not write to file %s: %s"
-msgstr "Kan niet schrijven naar bestand %s: %s"
+msgstr "Kon niet schrijven naar bestand %s: %s"
 
 #: ../src/help.c:52
 msgid "Error showing the help"
@@ -107,7 +107,7 @@ msgstr "BESTAND"
 
 #: ../src/xpad-app.c:793
 msgid "Close all pads"
-msgstr "Alle memo's afsluiten"
+msgstr "Alle memo's sluiten"
 
 #: ../src/xpad-app.c:824
 #, c-format
@@ -129,11 +129,11 @@ msgstr "Alle tekst van dit memo zal onherstelbaar verloren gaan."
 
 #: ../src/xpad-pad.c:875 ../src/xpad-pad.c:1579
 msgid "_Delete"
-msgstr "_Verwijder"
+msgstr "_Verwijderen"
 
 #: ../src/xpad-pad.c:875
 msgid "_Cancel"
-msgstr "_Annuleer"
+msgstr "_Annuleren"
 
 #: ../src/xpad-pad.c:910
 #, c-format
@@ -246,15 +246,15 @@ msgstr "Lettertype uit Xpad-voorkeuren gebruiken"
 
 #: ../src/xpad-pad-properties.c:114 ../src/xpad-preferences.c:298
 msgid "Use this font:"
-msgstr "Dit lettertype gebruiken:"
+msgstr "Gebruik dit lettertype:"
 
 #: ../src/xpad-pad-properties.c:115
 msgid "Use colors from xpad preferences"
-msgstr "Kleuren uit Xpad-voorkeuren gebruiken"
+msgstr "Gebruik kleuren uit Xpad-voorkeuren"
 
 #: ../src/xpad-pad-properties.c:116 ../src/xpad-preferences.c:300
 msgid "Use these colors:"
-msgstr "Deze kleuren gebruiken:"
+msgstr "Gebruik deze kleuren:"
 
 #: ../src/xpad-pad-properties.c:126
 msgid "Foreground:"
@@ -287,7 +287,7 @@ msgstr "_Toon werkbalk"
 
 #: ../src/xpad-preferences.c:253
 msgid "_Autohide toolbar"
-msgstr "_Verberg werkbalk"
+msgstr "_Verberg werkbalk automatisch"
 
 #: ../src/xpad-preferences.c:260
 msgid "_Show scrollbar"
@@ -318,11 +318,11 @@ msgstr "Opmaak"
 
 #: ../src/xpad-preferences.c:297
 msgid "Use font from theme"
-msgstr "Lettertype uit thema gebruiken"
+msgstr "Gebruik lettertype uit thema"
 
 #: ../src/xpad-preferences.c:299
 msgid "Use colors from theme"
-msgstr "Kleuren uit thema gebruiken"
+msgstr "Gebruik kleuren uit thema"
 
 #: ../src/xpad-preferences.c:310
 msgid "Text:"
@@ -501,7 +501,7 @@ msgstr "Nieuw memoblaadje"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _New button"
-msgstr "Voeg nieuwknop toe"
+msgstr "Voeg 'Nieuw'-knop toe"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Paste from Clipboard"
@@ -509,7 +509,7 @@ msgstr "Klembordinhoud plakken"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add Pa_ste button"
-msgstr "Voeg plakknop toe"
+msgstr "Voeg 'Plakken'-knop toe"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Edit Preferences"
@@ -517,7 +517,7 @@ msgstr "Voorkeuren bewerken"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add Pr_eferences button"
-msgstr "Voeg voorkeurenknop toe"
+msgstr "Voeg 'Voorkeuren'-knop toe"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Edit Pad Properties"
@@ -525,7 +525,7 @@ msgstr "Memo-eigenschappen bewerken"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Add Proper_ties button"
-msgstr "Voeg eigenschappenknop toe"
+msgstr "Voeg 'Eigenschappen'-knop toe"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Redo"
@@ -533,7 +533,7 @@ msgstr "Opnieuw uitvoeren"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add _Redo button"
-msgstr "Voeg herhaalknop toe"
+msgstr "Voeg 'Herhalen'-knop toe"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Close All Pads"
@@ -541,7 +541,7 @@ msgstr "Sluit alle memo's"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Close _All button"
-msgstr "Voeg alles-sluiten-knop toe"
+msgstr "Voeg 'Alles sluiten'-knop toe"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Undo"
@@ -549,7 +549,7 @@ msgstr "Ongedaan maken"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Add _Undo button"
-msgstr "Voeg ongedaan-maken-knop toe"
+msgstr "Voeg 'Ongedaan maken'-knop toe"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Se_parator"
@@ -557,7 +557,7 @@ msgstr "Voeg scheidingsteken toe"
 
 #: ../src/xpad-toolbar.c:517
 msgid "Remove All _Buttons"
-msgstr "Alle knoppen verwijderen"
+msgstr "Verwijder alle knoppen"
 
 #: ../src/xpad-toolbar.c:524
 msgid "Remo_ve Last Button"
