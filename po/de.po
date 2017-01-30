@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-01-09 19:11+0100\n"
-"PO-Revision-Date: 2016-09-27 07:42+0000\n"
-"Last-Translator: Etamuk <trmfach@posteo.de>\n"
+"PO-Revision-Date: 2017-01-29 18:16+0000\n"
+"Last-Translator: Tobias Bannert <tobannert@gmail.com>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2016-09-28 05:55+0000\n"
-"X-Generator: Launchpad (build 18204)\n"
+"X-Launchpad-Export-Date: 2017-01-30 05:27+0000\n"
+"X-Generator: Launchpad (build 18315)\n"
 "Language: de\n"
 
 #: ../src/fio.c:131
@@ -38,7 +38,7 @@ msgstr ""
 
 #: ../src/help.c:71 ../src/xpad-preferences.c:485
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: ../src/help.c:76
 msgid "Help"
@@ -47,7 +47,7 @@ msgstr "Hilfe"
 #: ../src/xpad-app.c:130
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr ""
-"Xpad ist eine grafische Anwendung. Bitte nur vom Desktop aus starten."
+"Xpad ist eine grafische Anwendung. Bitte vom Schreibtisch aus starten."
 
 #: ../src/xpad-app.c:135 ../xpad.desktop.in.h:1
 msgid "Xpad"
@@ -55,7 +55,7 @@ msgstr "Xpad"
 
 #: ../src/xpad-app.c:217
 msgid "_Ok"
-msgstr ""
+msgstr "_OK"
 
 #: ../src/xpad-app.c:469
 #, c-format
@@ -77,27 +77,27 @@ msgstr "Versionsnummer anzeigen und beenden"
 #: ../src/xpad-app.c:782
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
-"Erstelle keinen neuen Zettel beim Start, auch wenn keine älteren existieren"
+"Keinen neuen Zettel beim Start erstellen, wenn keine älteren vorhanden sind"
 
 #: ../src/xpad-app.c:788
 msgid "Create a new pad on startup even if pads already exist"
-msgstr "Erstelle einen neuen Zettel beim Start, auch wenn ältere existieren"
+msgstr "Einen neuen Zettel beim Start erstellen, wenn ältere vorhanden sind"
 
 #: ../src/xpad-app.c:789 ../src/xpad-preferences.c:427
 msgid "Hide all pads"
-msgstr "Verstecke alle Zettel"
+msgstr "Alle Zettel verbergen"
 
 #: ../src/xpad-app.c:790
 msgid "Show all pads"
-msgstr "Zeige alle Zettel"
+msgstr "Alle Zettel anzeigen"
 
 #: ../src/xpad-app.c:791
 msgid "Toggle between show and hide all pads"
-msgstr "Zeige oder Verstecke alle Zettel (Umschalter)"
+msgstr "Umschalten, zwischen dem Anzeigen oder Verbergen aller Zettel"
 
 #: ../src/xpad-app.c:792
 msgid "Create a new pad with the contents of a file"
-msgstr "Erstelle einen neuen Zettel mit dem Inhalt einer Datei"
+msgstr "Einen neuen Zettel mit dem Inhalt einer Datei erstellen"
 
 #: ../src/xpad-app.c:792
 msgid "FILE"
@@ -105,7 +105,7 @@ msgstr "Datei"
 
 #: ../src/xpad-app.c:793
 msgid "Close all pads"
-msgstr "Schließe alle Zettel"
+msgstr "Alle Zettel schließen"
 
 #: ../src/xpad-app.c:824
 #, c-format
@@ -152,6 +152,7 @@ msgstr ""
 "  Denis Graipel https://launchpad.net/~denis98\n"
 "  Etamuk https://launchpad.net/~trmfach\n"
 "  Severin Heiniger https://launchpad.net/~severinh\n"
+"  Tobias Bannert https://launchpad.net/~toba\n"
 "  abondendAccount https://launchpad.net/~hennr"
 
 #: ../src/xpad-pad.c:1578 ../src/xpad-tray.c:136
