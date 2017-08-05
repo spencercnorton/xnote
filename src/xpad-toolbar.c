@@ -529,7 +529,7 @@ xpad_toolbar_popup_context_menu (GtkToolbar *toolbar, gint x, gint y, gint butto
 
 	g_signal_connect (menu, "deactivate", G_CALLBACK (menu_deactivated), toolbar);
 
-	gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (guint) ((button < 0) ? 0 : button), gtk_get_current_event_time ());
+	gtk_menu_popup_at_pointer (menu, NULL);
 
 	g_signal_emit (toolbar, signals[POPUP], 0, menu);
 
