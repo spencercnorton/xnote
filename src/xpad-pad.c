@@ -1310,7 +1310,6 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 		}
 
 		/* Set the text and background color for this pad, as stated in its properties file. */
-		gtk_widget_override_cursor (pad->priv->textview, &text_color, &text_color);
 		xpad_text_view_set_colors (pad->priv->textview, &text_color, &back_color);
 	}
 
