@@ -124,7 +124,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	label = gtk_label_new_with_mnemonic (_("Foreground:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, prop->priv->textbutton, TRUE, TRUE, 0);
@@ -132,7 +132,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 
 	hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12));
 	label = gtk_label_new_with_mnemonic (_("Background:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_label_set_xalign (GTK_LABEL (label), 0.0);
 	gtk_size_group_add_widget (size_group_labels, label);
 	gtk_box_pack_start (hbox, label, FALSE, FALSE, 0);
 	gtk_box_pack_start (hbox, prop->priv->backbutton, TRUE, TRUE, 0);

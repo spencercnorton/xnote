@@ -7,6 +7,7 @@ Version 4.9
 * Fix: Deprecated functions - Replaced gtk_widget_override_cursor function by CSS
 * Fix: Deprecated functions - Removed gtk_widget_override_background_color, since I did not notice a difference without in the Xpad toolbar
 * Fix: Deprecated functions - Replaced gtk_style_context_get_background_color with gtk_style_context_get
+* Fix: Deprecated functions - Replaced gtk_misc_set_alignment with gtk_label_set_xalign & gtk_label_set_yalign
 
 Version 4.8
 * Fix: Autostart - Pads did not hide on startup when set in the preferences due to the tray icon not being recognized properly (#1560019)
