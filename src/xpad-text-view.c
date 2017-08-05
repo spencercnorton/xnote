@@ -289,16 +289,18 @@ xpad_text_view_notify_editable (XpadTextView *view)
 {
 	GdkCursor *cursor;
 	gboolean editable;
+	GdkDisplay *display;
 	GdkWindow *view_window;
 	GtkSourceView *view_tv = GTK_SOURCE_VIEW (view);
 
 	editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view_tv));
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (view_tv), editable);
 
-	cursor = editable ? gdk_cursor_new (GDK_XTERM) : NULL;
+	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view_tv), GTK_TEXT_WINDOW_TEXT);
+	display = gdk_window_get_display(view_window);
+	cursor = editable ? gdk_cursor_new_for_display (display, GDK_XTERM) : NULL;
 
 	/* Only set for pads which are currently visible */ 
-	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view_tv), GTK_TEXT_WINDOW_TEXT);
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
 
