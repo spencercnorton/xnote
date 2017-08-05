@@ -2,7 +2,8 @@ Version 4.9
 * Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
 * Fix: Desktop file - added keywords for the desktop file (#1591368)
 * Fix: Makefile - distclean function did not do its job properly, leading to a configure issue, reported and fixed by jcfp (#1591497)
-* Fix: Pad selection - selected text in a pad was not visible anymore (regression due to GTK behavior change) (#1571625)
+* Fix: Text selection - selected text in a pad was not visible anymore (regression due to GTK behavior change) (#1571625)
+* Fix: Font selection - Replaced deprecated gtk_widget_override_font function by CSS
 
 Version 4.8
 * Fix: Autostart - Pads did not hide on startup when set in the preferences due to the tray icon not being recognized properly (#1560019)

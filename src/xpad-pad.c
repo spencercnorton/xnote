@@ -939,10 +939,10 @@ prop_notify_font (XpadPad *pad)
 	{
 		const gchar *font;
 		g_object_get (prop, "fontname", &font, NULL);
-		PangoFontDescription *fontdesc;
 
+		PangoFontDescription *fontdesc;
 		fontdesc = font ? pango_font_description_from_string (font) : NULL;
-		gtk_widget_override_font (pad->priv->textview, fontdesc);
+		xpad_text_view_set_font (pad->priv->textview, fontdesc);
 		if (fontdesc)
 			pango_font_description_free (fontdesc);
 	}
@@ -1286,7 +1286,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	if (!follow_font)
 	{
 		PangoFontDescription *font_desc = pango_font_description_from_string (fontname);
-		gtk_widget_override_font (pad->priv->textview, font_desc);
+		xpad_text_view_set_font(pad->priv->textview, font_desc);
 		pango_font_description_free (font_desc);
 	}
 
