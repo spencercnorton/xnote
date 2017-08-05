@@ -1789,34 +1789,6 @@ xpad_pad_popup (XpadPad *pad, GdkEventButton *event)
 	if (event) {
 		gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent*) event);
 	}
-
-/*
-	if (event)
-		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
-	else
-		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
-*/
-
-/*
-gtk_menu_popup (GtkMenu *menu,
-                GtkWidget *parent_menu_shell,
-                GtkWidget *parent_menu_item,
-                GtkMenuPositionFunc func,
-                gpointer data,
-                guint button,
-                guint32 activate_time);
-
-gtk_menu_popup_at_widget (GtkMenu *menu,
-                          GtkWidget *widget,
-                          GdkGravity widget_anchor,
-                          GdkGravity menu_anchor,
-                          const GdkEvent *trigger_event);
-
-gtk_menu_popup_at_pointer (GtkMenu *menu,
-                           const GdkEvent *trigger_event);
-
-*/
-
 }
 
 /* These functions below are used to reduce the amounts of writes, hence improve the performance. */
