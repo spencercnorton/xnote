@@ -52,6 +52,7 @@ struct XpadPreferencesClass
 GType xpad_preferences_get_type (void);
 
 void xpad_preferences_open (XpadSettings *settings);
+void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color);
 
 G_END_DECLS
 

@@ -323,7 +323,7 @@ static void xpad_preferences_constructed (GObject *object)
 
 	style = gtk_widget_get_style_context (GTK_WIDGET(pref));
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &theme_text_color);
-	gtk_style_context_get_background_color (style, GTK_STATE_FLAG_NORMAL, &theme_background_color);
+	get_background_color (style, GTK_STATE_FLAG_NORMAL, &theme_background_color);
 
 	if (fontname)
 	{
@@ -1070,4 +1070,21 @@ notify_has_scrollbar (XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_scrollbar), value);
 	g_signal_handler_unblock (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
+}
+
+/* Replacement of gtk_style_context_get_background_color with local static
+ * function get_background_color that does exactly same thing. */
+void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color) {
+	GdkRGBA *c;
+
+	g_return_if_fail (color != NULL);
+	g_return_if_fail (GTK_IS_STYLE_CONTEXT (context));
+
+	gtk_style_context_get (context,
+			state,
+			"background-color", &c,
+			NULL);
+
+	*color = *c;
+	gdk_rgba_free (c);
 }

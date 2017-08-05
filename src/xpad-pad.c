@@ -1000,7 +1000,7 @@ xpad_pad_open_properties (XpadPad *pad)
 	style = gtk_widget_get_style_context (pad->priv->textview);
 	gtk_style_context_get(style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &widget_text_color);
-	gtk_style_context_get_background_color (style, GTK_STATE_FLAG_NORMAL, &widget_background_color);
+	get_background_color (style, GTK_STATE_FLAG_NORMAL, &widget_background_color);
 
 	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
 	g_object_set (G_OBJECT (pad->priv->properties),
@@ -1361,7 +1361,7 @@ xpad_pad_save_info (XpadPad *pad)
 	style = gtk_widget_get_style_context (pad->priv->textview);
 	gtk_style_context_get (style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &text_color);
-	gtk_style_context_get_background_color (style, GTK_STATE_FLAG_NORMAL, &back_color);
+	get_background_color (style, GTK_STATE_FLAG_NORMAL, &back_color);
 
 	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
 
