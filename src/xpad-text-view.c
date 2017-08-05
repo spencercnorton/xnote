@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <gtk/gtk.h>
 
-struct XpadTextViewPrivate 
+struct XpadTextViewPrivate
 {
 	gboolean follow_font_style;
 	gboolean follow_color_style;
@@ -320,21 +320,38 @@ xpad_text_view_notify_fontname (XpadTextView *view)
 static void
 xpad_text_view_notify_colors (XpadTextView *view)
 {
-	GtkWidget *view_widget = GTK_WIDGET (view);
-	/* Set the colors of this individual pad to the global setting preference. */
-	const GdkRGBA *text_color, *back_color;
-
 	if (view->priv->follow_color_style) {
+		/* Set the colors of this individual pad to the global setting preference. */
+		const GdkRGBA *text_color, *back_color;
+
+		GtkWidget *view_widget = GTK_WIDGET (view);
+
 		/* Set the colors to the global preferences colors */
 		g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
 
 		gtk_widget_override_cursor (view_widget, text_color, text_color);
-		gtk_widget_override_color (view_widget, GTK_STATE_FLAG_NORMAL, text_color);
-		gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_NORMAL, back_color);
-
-		/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
-		gtk_widget_override_color (view_widget, GTK_STATE_FLAG_SELECTED, back_color);
-		gtk_widget_override_background_color (view_widget, GTK_STATE_FLAG_SELECTED, text_color);
-
+		xpad_text_view_set_colors(view_widget, text_color, back_color);
 	}
+}
+
+/* Set the foreground and background color of the visible part of the pad, which is the text view */
+void xpad_text_view_set_colors(GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
+	gchar *cssStyling = g_strconcat("textview, textview text {color: ",
+				gdk_rgba_to_string(text_color),
+				"; background-color: ",
+				gdk_rgba_to_string(back_color),
+				";}\n", NULL);
+
+	/*
+	 * TODO: If the background color is set to a color close to the text selection background color (blueish),
+	 * then inverse the text and background colors for selected text by adding this to the CSS.
+	 * */
+
+	GtkStyleContext *context = gtk_widget_get_style_context (view);
+	GtkCssProvider *provider = gtk_css_provider_new ();
+	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), cssStyling, -1, NULL);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+	g_free(cssStyling);
+	g_object_unref (provider);
 }

@@ -961,20 +961,15 @@ prop_notify_colors (XpadPad *pad)
 	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
 	g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-color-style", follow_color_style, NULL);
 
-	if (follow_color_style)
+	if (follow_color_style) {
 		/* Set the colors to the global preferences colors */
 		g_object_get (pad->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
-	else
+	} else {
 		/* Set the color to the individual pad properties colors */
 		g_object_get (prop, "text-color", &text_color, "back-color", &back_color, NULL);
+	}
 
-	gtk_widget_override_cursor (pad->priv->textview, text_color, text_color);
-	gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, text_color);
-	gtk_widget_override_background_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, back_color);
-
-	/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
-	gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_SELECTED, back_color);
-	gtk_widget_override_background_color (pad->priv->textview, GTK_STATE_FLAG_SELECTED, text_color);
+	xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
 
 	xpad_pad_save_info_delayed (pad);
 }
@@ -1316,12 +1311,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 
 		/* Set the text and background color for this pad, as stated in its properties file. */
 		gtk_widget_override_cursor (pad->priv->textview, &text_color, &text_color);
-		gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, &text_color);
-		gtk_widget_override_background_color (pad->priv->textview, GTK_STATE_FLAG_NORMAL, &back_color);
-
-		/* Inverse the text and background colors for selected text, so it is likely to be visible by any choice of the colors. */
-		gtk_widget_override_color (pad->priv->textview, GTK_STATE_FLAG_SELECTED, &back_color);
-		gtk_widget_override_background_color (pad->priv->textview, GTK_STATE_FLAG_SELECTED, &text_color);
+		xpad_text_view_set_colors (pad->priv->textview, &text_color, &back_color);
 	}
 
 	if (pad->priv->sticky)
