@@ -1533,8 +1533,6 @@ menu_title_compare (GtkWindow *a, GtkWindow *b)
 	if (image) {\
 		item = gtk_menu_item_new ();\
 		GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 3);\
-		GdkRGBA bg = {0, 0, 0, 0};\
-		gtk_widget_override_background_color (hbox, GTK_STATE_FLAG_NORMAL, &bg);\
 		gtk_container_add (GTK_CONTAINER (hbox), gtk_image_new_from_icon_name (image, GTK_ICON_SIZE_MENU));\
 		gtk_container_add (GTK_CONTAINER (hbox), gtk_label_new_with_mnemonic (mnemonic));\
 		gtk_container_add (GTK_CONTAINER (item), hbox);\
