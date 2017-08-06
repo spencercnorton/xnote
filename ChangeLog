@@ -1,5 +1,5 @@
 Version 5.0
-* Fix
+* Fix: Technical - Preferences -> Layout -> Change font gives error (#1708877)
 
 Version 4.9
 * Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
