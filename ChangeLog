@@ -1,3 +1,6 @@
+Version 5.0
+* Fix
+
 Version 4.9
 * Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
 * Fix: Desktop file - added keywords for the desktop file (#1591368)
