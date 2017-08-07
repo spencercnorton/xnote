@@ -119,7 +119,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	{
 		g_output_stream_write_all (G_OUTPUT_STREAM (stream), value, strlen (value),
 		                           NULL, NULL, &error);
-		g_object_unref (stream);
+		g_clear_object (&stream);
 	}
 
 	if (error)
@@ -137,7 +137,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 		g_free (parse_name);
 	}
 
-	g_object_unref (file);
+	g_clear_object (&file);
 	return !error;
 }
 
@@ -152,7 +152,7 @@ gchar *fio_get_file (const gchar *name)
 
 	file = fio_fill_filename (name);
 	g_file_load_contents (file, NULL, &contents, NULL, NULL, NULL);
-	g_object_unref (file);
+	g_clear_object (&file);
 
 	return contents;
 }
@@ -318,5 +318,5 @@ void fio_remove_file (const gchar *filename)
 	GFile *file;
 	file = fio_fill_filename (filename);
 	g_file_delete (file, NULL, NULL);
-	g_object_unref (file);
+	g_clear_object (&file);
 }

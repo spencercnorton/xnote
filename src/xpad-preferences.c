@@ -540,9 +540,9 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->notify_tray_enabled_handler = g_signal_connect_swapped (pref->priv->settings, "notify::tray-enabled", G_CALLBACK (notify_tray_enabled), pref);
 	pref->priv->notify_tray_click_handler = g_signal_connect_swapped (pref->priv->settings, "notify::tray-click-configuration", G_CALLBACK(notify_tray_click), pref);
 
-	g_object_unref (size_group_labels);
+	g_clear_object (&size_group_labels);
 
-	/* Initiliaze the GUI logic */
+	/* Initialize the GUI logic */
 	g_object_notify (G_OBJECT (pref->priv->settings), "tray-enabled");
 
 	/* Make the preference window visible */

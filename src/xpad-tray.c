@@ -89,10 +89,7 @@ static void xpad_tray_open (XpadSettings *settings)
 
 static void xpad_tray_close ()
 {
-	if (docklet) {
-		g_object_unref (docklet);
-		docklet = NULL;
-	}
+	g_clear_object (&docklet);
 
 	if (menu)
 		gtk_widget_destroy(menu);

@@ -175,7 +175,7 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_widget_set_sensitive (prop->priv->colorbox, FALSE);
 	gtk_widget_set_sensitive (prop->priv->fontbutton, FALSE);
 
-	g_object_unref (size_group_labels);
+	g_clear_object (&size_group_labels);
 
 	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prop))), GTK_WIDGET (appearance_vbox));
 

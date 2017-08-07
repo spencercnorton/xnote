@@ -281,10 +281,7 @@ xpad_toolbar_dispose (GObject *object)
 {
 	XpadToolbar *toolbar = XPAD_TOOLBAR (object);
 
-	if (toolbar->priv->pad) {
-		g_object_unref (toolbar->priv->pad);
-		toolbar->priv->pad = NULL;
-	}
+	g_clear_object (&toolbar->priv->pad);
 
 	G_OBJECT_CLASS (xpad_toolbar_parent_class)->dispose (object);
 }
@@ -297,13 +294,13 @@ xpad_toolbar_set_property (GObject *object, guint prop_id, const GValue *value, 
 	switch (prop_id)
 	{
 	case PROP_PAD:
-		if (toolbar->priv->pad && G_IS_OBJECT (toolbar->priv->pad))
-			g_object_unref (toolbar->priv->pad);
-		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value)))
-		{
+		g_clear_object (&toolbar->priv->pad);
+
+		if (G_VALUE_HOLDS_POINTER (value) && G_IS_OBJECT (g_value_get_pointer (value))) {
 			toolbar->priv->pad = g_value_get_pointer (value);
 			g_object_ref (toolbar->priv->pad);
 		}
+
 		break;
 
 	default:

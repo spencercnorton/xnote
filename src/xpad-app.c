@@ -255,17 +255,13 @@ xpad_app_quit (void)
 	xpad_pad_group_destroy_pads (pad_group);
 
 	/* Free the memory used by group. */
-	if (G_IS_OBJECT (pad_group))
-		g_object_unref (pad_group);
-	pad_group = NULL;
+	g_clear_object (&pad_group);
 
 	/* Free the memory used by the tray icon and its menu. */
 	xpad_tray_dispose (settings);
 
 	/* Free the memory used by the settings menu. */
-	if (G_IS_OBJECT (settings))
-		g_object_unref (settings);
-	settings = NULL; /* This is needed due to the asynchronous finalizing process. */
+	g_clear_object (&settings);
 
 	/* Give GTK the signal to clean the rest and quit the application. */
 	gtk_main_quit ();

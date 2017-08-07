@@ -95,6 +95,11 @@ enum
 static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 static guint signals[LAST_SIGNAL] = { 0 };
 
+/* A pleasant light yellow background color, similar to commercial sticky notes, with black text. */
+static const GdkRGBA text_color_default = {0, 0, 0, 1};
+static const GdkRGBA back_color_default = {1, 0.933334350586, 0.6, 1};
+static const gchar *font_default = "Sans 9";
+
 static void load_from_file (XpadSettings *settings, const gchar *filename);
 static void save_to_file (XpadSettings *settings, const gchar *filename);
 static void xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
@@ -170,10 +175,9 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->has_toolbar = TRUE;
 	settings->priv->autohide_toolbar = TRUE;
 	settings->priv->has_scrollbar = TRUE;
-	settings->priv->fontname = NULL;
-	/* A pleasant light yellow background color, similar to commercial sticky notes, with black text. */
-	settings->priv->text = gdk_rgba_copy(&(GdkRGBA) {0, 0, 0, 1});
-	settings->priv->back = gdk_rgba_copy(&(GdkRGBA) {1, 0.933334350586, 0.6, 1});
+	settings->priv->fontname = g_strdup (font_default);
+	settings->priv->text = gdk_rgba_copy (&text_color_default);
+	settings->priv->back = gdk_rgba_copy (&back_color_default);
 	settings->priv->autostart_wait_systray = TRUE;
 	settings->priv->autostart_new_pad = FALSE;
 	settings->priv->autostart_sticky = FALSE;
@@ -323,7 +327,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		if (g_value_get_boxed (value))
 			settings->priv->text = gdk_rgba_copy (g_value_get_boxed (value));
 		else
-			settings->priv->text = NULL;
+			settings->priv->text = gdk_rgba_copy (&text_color_default);
 		break;
 
 	case PROP_BACK_COLOR:
@@ -332,14 +336,14 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		if (g_value_get_boxed (value))
 			settings->priv->back = gdk_rgba_copy (g_value_get_boxed (value));
 		else
-			settings->priv->back = NULL;
+			settings->priv->back = gdk_rgba_copy (&back_color_default);
 		break;
 
 	case PROP_FONTNAME:
 		if (value)
 			settings->priv->fontname = g_value_dup_string (value);
 		else
-			settings->priv->fontname = NULL;
+			settings->priv->fontname = g_strdup (font_default);
 		break;
 
 	case PROP_AUTOSTART_XPAD:
@@ -522,7 +526,7 @@ static void
 load_from_file (XpadSettings *settings, const gchar *filename)
 {
 	gchar *buttons = NULL, *text_color_string = NULL, *background_color_string = NULL;
-	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};
+	GdkRGBA text_color = text_color_default, back_color = back_color_default;
 	gboolean use_text, use_back;
 
 	use_text = settings->priv->text ? TRUE : FALSE;
@@ -534,7 +538,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		back_color = *settings->priv->back;
 
 	/* get all the values from the default-style text file in the forms of booleans, ints or strings. */
-	if (fio_get_values_from_file (filename, 
+	if (fio_get_values_from_file (filename,
 		"b|decorations", &settings->priv->has_decorations,
 		"u|height", &settings->priv->height,
 		"u|width", &settings->priv->width,
@@ -562,44 +566,38 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		return;
 
 	if (use_text) {
-		gdk_rgba_free (settings->priv->text);
-
 		/*
 		 * If, for some reason, one of the colors could not be retrieved
 		 * (for example due to the migration to the new GdkRGBA colors),
 		 * set the color to the default.
 		 */
-		if (text_color_string == NULL)
-			text_color = (GdkRGBA) {0, 0, 0, 1};
-		else
+		if (text_color_string != NULL)
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
 			if (!gdk_rgba_parse (&text_color, text_color_string))
-				text_color = (GdkRGBA) {0, 0, 0, 1};
+				text_color = text_color_default;
 
+		gdk_rgba_free (settings->priv->text);
 		settings->priv->text = gdk_rgba_copy (&text_color);
 	}
 
-	gdk_rgba_free (settings->priv->back);
 	if (use_back) {
 		/*
 		 * If, for some reason, one of the colors could not be retrieved
 		 * (for example due to the migration to the new GdkRGBA colors),
 		 * set the color to the default.
 		 */
-		if (background_color_string == NULL)
-			back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
-		else
+		if (background_color_string != NULL)
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
 			if (!gdk_rgba_parse (&back_color, background_color_string))
-				back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+				back_color = back_color_default;
 
+		gdk_rgba_free (settings->priv->back);
 		settings->priv->back = gdk_rgba_copy (&back_color);
 	}
-	else
-		settings->priv->back = NULL;
 
-	if (settings->priv->fontname && strcmp (settings->priv->fontname, "NULL") == 0)
-		settings->priv->fontname = NULL;
+	if (settings->priv->fontname == NULL || pango_font_description_from_string (settings->priv->fontname) == NULL) {
+		settings->priv->fontname = g_strdup (font_default);
+	}
 
 	if (buttons)
 	{
@@ -647,6 +645,14 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		tmp = tmp->next;
 	}
 
+	/*
+	if (settings->priv->fontname)
+		g_warning ("save to file: %s", settings->priv->fontname);
+	else {
+		g_warning ("save to file is null");
+	}
+	*/
+
 	fio_set_values_to_file (filename, 
 		"b|decorations", settings->priv->has_decorations,
 		"u|height", settings->priv->height,
@@ -656,11 +662,11 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"b|sticky_on_start", settings->priv->autostart_sticky,
 		"b|tray_enabled", settings->priv->tray_enabled,
 		"u|tray_click_configuration", settings->priv->tray_click_configuration,
-		"s|back", settings->priv->back ? gdk_rgba_to_string (settings->priv->back) : "NULL",
+		"s|back", settings->priv->back ? gdk_rgba_to_string (settings->priv->back) : gdk_rgba_to_string (&back_color_default),
 		"b|use_back", settings->priv->back ? TRUE : FALSE,
-		"s|text", settings->priv->text ? gdk_rgba_to_string (settings->priv->text) : "NULL",
+		"s|text", settings->priv->text ? gdk_rgba_to_string (settings->priv->text) : gdk_rgba_to_string (&text_color_default),
 		"b|use_text", settings->priv->text ? TRUE : FALSE,
-		"s|fontname", settings->priv->fontname ? settings->priv->fontname : "NULL",
+		"s|fontname", settings->priv->fontname ? settings->priv->fontname : g_strdup (font_default),
 		"b|toolbar", settings->priv->has_toolbar,
 		"b|auto_hide_toolbar", settings->priv->autohide_toolbar,
 		"b|scrollbar", settings->priv->has_scrollbar,

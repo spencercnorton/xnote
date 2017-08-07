@@ -128,18 +128,9 @@ xpad_text_view_dispose (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
-	if (view->priv->buffer)
-		g_object_unref (view->priv->buffer);
-
-	if (view->priv->pad) {
-		g_object_unref(view->priv->pad);
-		view->priv->pad = NULL;
-	}
-
-	if (view->priv->settings) {
-		g_object_unref(view->priv->settings);
-		view->priv->settings = NULL;
-	}
+	g_clear_object (&view->priv->buffer);
+	g_clear_object (&view->priv->pad);
+	g_clear_object (&view->priv->settings);
 
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->dispose (object);
 }
@@ -304,8 +295,7 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
 
-	if (cursor)
-		g_object_unref (cursor);
+	g_clear_object (&cursor);
 }
 
 static void
@@ -337,13 +327,13 @@ xpad_text_view_notify_colors (XpadTextView *view)
 }
 
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
-void xpad_text_view_set_colors(GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
+void xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
 	gchar *cssStyling = g_strconcat("textview, textview text {caret-color: ",
-			gdk_rgba_to_string(text_color),
+			gdk_rgba_to_string (text_color),
 			"; color: ",
-			gdk_rgba_to_string(text_color),
+			gdk_rgba_to_string (text_color),
 			"; background-color: ",
-			gdk_rgba_to_string(back_color),
+			gdk_rgba_to_string (back_color),
 			";}\n", NULL);
 
 	/*
@@ -357,7 +347,7 @@ void xpad_text_view_set_colors(GtkWidget *view, const GdkRGBA *text_color, const
 	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	g_free(cssStyling);
-	g_object_unref (provider);
+	g_clear_object (&provider);
 }
 
 /* Set the font of the pad, which is in the text view */
@@ -375,7 +365,7 @@ void xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
 	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	g_free(cssStyling);
-	g_object_unref (provider);
+	g_clear_object (&provider);
 }
 
 /**

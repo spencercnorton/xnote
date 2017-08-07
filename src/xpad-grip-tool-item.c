@@ -107,7 +107,7 @@ xpad_grip_tool_item_event_box_realize (GtkWidget *widget)
 
 	cursor = gdk_cursor_new_for_display (display, cursor_type);
 	gdk_window_set_cursor (gtk_widget_get_window(widget), cursor);
-	g_object_unref (cursor);
+	g_clear_object (&cursor);
 }
 
 static gboolean

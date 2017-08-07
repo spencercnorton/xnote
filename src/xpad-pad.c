@@ -424,10 +424,9 @@ xpad_pad_dispose (GObject *object)
 {
 	XpadPad *pad = XPAD_PAD (object);
 
-	if (pad->priv->group) {
-		g_object_unref(pad->priv->group);
-		pad->priv->group = NULL;
-	}
+	xpad_pad_remove_accelerator_group (pad);
+
+	g_clear_object(&pad->priv->group);
 
 	if (GTK_IS_WIDGET(pad->priv->menu)) {
 		gtk_widget_destroy (pad->priv->menu);
@@ -463,8 +462,7 @@ xpad_pad_finalize (GObject *object)
 
 	if (pad->priv->settings) {
 		g_signal_handlers_disconnect_matched (pad->priv->settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, pad);
-		g_object_unref(pad->priv->settings);
-		pad->priv->settings = NULL;
+		g_clear_object(&pad->priv->settings);
 	}
 
 	g_free (pad->priv->infoname);
@@ -1246,7 +1244,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	if (!pad->priv->infoname)
 		return;
 
-	if (fio_get_values_from_file (pad->priv->infoname, 
+	if (fio_get_values_from_file (pad->priv->infoname,
 		"i|width", &pad->priv->width,
 		"i|height", &pad->priv->height,
 		"i|x", &pad->priv->x,
@@ -1794,15 +1792,32 @@ void xpad_pad_save_content_delayed (XpadPad *pad)
 	pad->priv->unsaved_content = TRUE;
 	xpad_periodic_save_content_delayed (pad);
 }
+
 void xpad_pad_save_info_delayed (XpadPad *pad)
 {
 	pad->priv->unsaved_info = TRUE;
 	xpad_periodic_save_info_delayed (pad);
 }
+
 void xpad_pad_save_unsaved (XpadPad *pad)
 {
 	if (pad->priv->unsaved_content)
 		xpad_pad_save_content (pad);
 	if (pad->priv->unsaved_info)
 		xpad_pad_save_info (pad);
+}
+
+void xpad_pad_remove_accelerator_group (XpadPad *pad) {
+	if (pad == NULL || pad->priv->accel_group == NULL) {
+		return;
+	}
+
+	gtk_widget_add_events (GTK_WIDGET (pad), 0);
+
+	if (pad->priv->toolbar != NULL) {
+		gtk_widget_add_events (pad->priv->toolbar, 0);
+	}
+
+	gtk_window_remove_accel_group (GTK_WINDOW(pad), pad->priv->accel_group);
+	g_clear_object (&pad->priv->accel_group);
 }

@@ -73,6 +73,7 @@ void xpad_pad_notify_clipboard_owner_changed (XpadPad *pad);
 void xpad_pad_notify_undo_redo_changed (XpadPad *pad);
 
 void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu);
+void xpad_pad_remove_accelerator_group (XpadPad *pad);
 
 G_END_DECLS
 

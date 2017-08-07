@@ -112,8 +112,7 @@ void
 xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 {
 	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
-	g_object_unref(pad);
-	pad = NULL;
+	g_clear_object(&pad);
 
 	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
 }
@@ -124,6 +123,8 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 {
 	xpad_pad_group_save_unsaved_all(group);
 
+	/* Remove (and thus disable) all the key accelerators before the pads get destroyed, preventing a call to a non-existing accelerator */
+	g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_remove_accelerator_group, NULL);
 	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
 }
 

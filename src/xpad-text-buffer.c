@@ -49,6 +49,7 @@ enum
 static void xpad_text_buffer_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 static void xpad_text_buffer_dispose (GObject *object);
+static void xpad_text_buffer_finalize (GObject *object);
 
 XpadTextBuffer *
 xpad_text_buffer_new (XpadPad *pad)
@@ -62,6 +63,7 @@ xpad_text_buffer_class_init (XpadTextBufferClass *klass)
 	GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
 	gobject_class->dispose = xpad_text_buffer_dispose;
+	gobject_class->finalize = xpad_text_buffer_finalize;
 	gobject_class->set_property = xpad_text_buffer_set_property;
 	gobject_class->get_property = xpad_text_buffer_get_property;
 
@@ -86,19 +88,16 @@ xpad_text_buffer_dispose (GObject *object)
 {
 	XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (object);
 
-	if (buffer->priv->pad) {
-		g_object_unref (buffer->priv->pad);
-		buffer->priv->pad = NULL;
-	}
-
-	if (buffer->priv->undo) {
-		g_object_unref (buffer->priv->undo);
-		buffer->priv->undo = NULL;
-	}
-
-	g_object_unref (gtk_text_buffer_get_tag_table (GTK_TEXT_BUFFER (buffer)));
+	g_clear_object (&buffer->priv->pad);
+	g_clear_object (&buffer->priv->undo);
 
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
+}
+
+static void
+xpad_text_buffer_finalize (GObject *object)
+{
+	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->finalize (object);
 }
 
 static void
@@ -185,7 +184,7 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 			else
 			{
 				GList *element = g_list_find_custom (tags, &(tokens[count][1]), (GCompareFunc) g_ascii_strcasecmp);
-				
+
 				if (element)
 				{
 					tags = g_list_delete_link (tags, element);
@@ -336,47 +335,47 @@ create_tag_table (void)
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "bold", "weight", PANGO_WEIGHT_BOLD, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "italic", "style", PANGO_STYLE_ITALIC, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "strikethrough", "strikethrough", TRUE, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "underline", "underline", PANGO_UNDERLINE_SINGLE, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small-xx", "scale", PANGO_SCALE_XX_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small-x", "scale", PANGO_SCALE_X_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "small", "scale", PANGO_SCALE_SMALL, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "medium", "scale", PANGO_SCALE_MEDIUM, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large", "scale", PANGO_SCALE_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large-x", "scale", PANGO_SCALE_X_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	tag = GTK_TEXT_TAG (g_object_new (GTK_TYPE_TEXT_TAG, "name", "large-xx", "scale", PANGO_SCALE_XX_LARGE, NULL));
 	gtk_text_tag_table_add (table, tag);
-	g_object_unref (tag);
+	g_clear_object (&tag);
 
 	return table;
 }
