@@ -1,5 +1,6 @@
 Version 5.0
 * Fix: Technical - Preferences -> Layout -> Change font gives error (#1708877)
+* Fix: Technical - Xpad quit by CTRL-Q give repetitive assertion error (#1708879)
 
 Version 4.9
 * Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
