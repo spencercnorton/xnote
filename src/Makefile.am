@@ -13,6 +13,7 @@ xpad_SOURCES = \
 	xpad-preferences.c xpad-preferences.h \
 	xpad-session-manager.c xpad-session-manager.h \
 	xpad-settings.c xpad-settings.h \
+	xpad-styling-helpers.c xpad-styling-helpers.h \
 	xpad-text-buffer.c xpad-text-buffer.h \
 	xpad-text-view.c xpad-text-view.h \
 	xpad-toolbar.c xpad-toolbar.h \

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <gtk/gtk.h>
 #include "xpad-settings.h"
+#include "xpad-styling-helpers.h"
 
 G_BEGIN_DECLS
 
@@ -52,7 +53,6 @@ struct XpadPreferencesClass
 GType xpad_preferences_get_type (void);
 
 void xpad_preferences_open (XpadSettings *settings);
-void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color);
 
 G_END_DECLS
 

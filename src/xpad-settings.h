@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_SETTINGS_H__
 
 #include <gtk/gtk.h>
+#include "xpad-styling-helpers.h"
 
 G_BEGIN_DECLS
 

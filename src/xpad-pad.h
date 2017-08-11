@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad-pad-group.h"
 #include "xpad-settings.h"
+#include "xpad-styling-helpers.h"
 
 G_BEGIN_DECLS
 

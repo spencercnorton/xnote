@@ -610,10 +610,13 @@ static void
 change_font_check (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_font_handler);
-	if (!gtk_toggle_button_get_active (button))
-		g_object_set (pref->priv->settings, "fontname", NULL, NULL);
-	else
+
+	if (gtk_toggle_button_get_active (button)) {
 		g_object_set (pref->priv->settings, "fontname", gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)), NULL);
+	} else {
+		g_object_set (pref->priv->settings, "fontname", NULL, NULL);
+	}
+
 	gtk_widget_set_sensitive (pref->priv->fontbutton, gtk_toggle_button_get_active (button));
 	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_font_handler);
 }
@@ -632,14 +635,13 @@ change_color_check (GtkToggleButton *button, XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_text_handler);
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_back_handler);
 
-	if (!gtk_toggle_button_get_active (button))
-		g_object_set (pref->priv->settings, "text-color", NULL, "back-color", NULL, NULL);
-	else
-	{
+	if (gtk_toggle_button_get_active (button)) {
 		GdkRGBA text_color, back_color;
 		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->textbutton), &text_color);
 		gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (pref->priv->backbutton), &back_color);
 		g_object_set (pref->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
+	} else {
+		g_object_set (pref->priv->settings, "text-color", NULL, "back-color", NULL, NULL);
 	}
 
 	gtk_widget_set_sensitive (pref->priv->colorbox, gtk_toggle_button_get_active (button));
@@ -1070,21 +1072,4 @@ notify_has_scrollbar (XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->has_scrollbar), value);
 	g_signal_handler_unblock (pref->priv->has_scrollbar, pref->priv->has_scrollbar_handler);
-}
-
-/* Replacement of gtk_style_context_get_background_color with local static
- * function get_background_color that does exactly same thing. */
-void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color) {
-	GdkRGBA *c;
-
-	g_return_if_fail (color != NULL);
-	g_return_if_fail (GTK_IS_STYLE_CONTEXT (context));
-
-	gtk_style_context_get (context,
-			state,
-			"background-color", &c,
-			NULL);
-
-	*color = *c;
-	gdk_rgba_free (c);
 }
