@@ -1278,8 +1278,9 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 
 	g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", follow_font, "follow-color-style", follow_color, NULL);
 
-	if (locked)
+	if (locked) {
 		g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", FALSE, "follow-color-style", FALSE, NULL);
+	}
 
 	if (!follow_font)
 	{

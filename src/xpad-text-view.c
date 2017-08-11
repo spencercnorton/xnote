@@ -35,6 +35,7 @@ struct XpadTextViewPrivate
 	gulong notify_text_handler;
 	gulong notify_back_handler;
 	gulong notify_font_handler;
+	GtkCssProvider *font_provider;
 	XpadTextBuffer *buffer;
 	XpadSettings *settings;
 	XpadPad *pad;
@@ -131,6 +132,7 @@ xpad_text_view_dispose (GObject *object)
 	g_clear_object (&view->priv->buffer);
 	g_clear_object (&view->priv->pad);
 	g_clear_object (&view->priv->settings);
+	g_clear_object (&view->priv->font_provider);
 
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->dispose (object);
 }
@@ -352,18 +354,30 @@ void xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, cons
 
 /* Set the font of the pad, which is in the text view */
 void xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
-	const gchar *font_description;
-	gchar *cssStyling;
-	GtkCssProvider *provider;
-
-	provider = gtk_css_provider_new ();
-	font_description = pango_font_description_to_css(desc);
-	cssStyling = g_strconcat("textview, textview text ", font_description, "\n", NULL);
-
-	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), cssStyling, -1, NULL);
 	GtkStyleContext *context = gtk_widget_get_style_context (view);
-	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-	g_free(cssStyling);
-	g_clear_object (&provider);
+	if (desc == NULL && XPAD_TEXT_VIEW (view)->priv->font_provider) {
+		/* Remove font provider */
+		gtk_style_context_remove_provider (context, GTK_STYLE_PROVIDER (XPAD_TEXT_VIEW (view)->priv->font_provider));
+		g_clear_object (&XPAD_TEXT_VIEW (view)->priv->font_provider);
+	} else {
+		/* Add/replace font provider */
+		const gchar *font_description;
+		gchar *cssStyling;
+
+		font_description = pango_font_description_to_css(desc);
+		cssStyling = g_strconcat("textview, textview text ", font_description, "\n", NULL);
+
+		if (XPAD_TEXT_VIEW (view)->priv->font_provider) {
+			gtk_style_context_remove_provider (context, GTK_STYLE_PROVIDER (XPAD_TEXT_VIEW (view)->priv->font_provider));
+			g_clear_object (&XPAD_TEXT_VIEW (view)->priv->font_provider);
+		}
+
+		GtkCssProvider *provider = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (provider, cssStyling, -1, NULL);
+		gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
+		XPAD_TEXT_VIEW (view)->priv->font_provider = provider;
+
+		g_free (cssStyling);
+	}
 }
