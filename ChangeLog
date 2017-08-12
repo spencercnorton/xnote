@@ -1,6 +1,7 @@
 Version 5.0
 * Fix: Preferences -> Layout -> Change font gives error (#1708877)
 * Fix: Preferences -> Color and font changes between custom and theme did not always work
+* Fix: Preferences -> Xpad autostart_new_pad is broken (same fix as #1652845) (#1689754)
 * Fix: Parameters - -f closes app, when trying to add note from file while xpad in running (#1652845)
 * Fix: Technical - Xpad quit by CTRL-Q give repetitive assertion error (#1708879)
 
