@@ -172,31 +172,27 @@ xpad_pad_new_from_file (XpadPadGroup *group, XpadSettings *settings, const gchar
 	GtkWidget *pad = NULL;
 	gchar *content;
 
-	content = fio_get_file (filename);
+	content = fio_get_file (filename, CURRENT_WORK_DIR);
 
-	if (!content)
-	{
+	if (!content) {
 		gchar *usertext = g_strdup_printf (_("Could not read file %s."), filename);
 		xpad_app_error (NULL, usertext, NULL);
 		g_free (usertext);
-	}
-	else
-	{
+	} else {
 		GtkSourceBuffer *buffer;
 
-		xpad_periodic_init ();
-		xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
-
 		pad = xpad_pad_new (group, settings);
+
 		buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (XPAD_PAD (pad)->priv->textview)));
 
 		xpad_text_buffer_freeze_undo (XPAD_TEXT_BUFFER (buffer));
-		g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
 
+		g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
 		xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
+		g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+
 		g_free (content);
 
-		g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
 		xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
 
 		xpad_pad_text_changed(XPAD_PAD(pad), buffer);
@@ -1183,7 +1179,7 @@ xpad_pad_load_content (XpadPad *pad)
 	if (!pad->priv->contentname)
 		return;
 
-	content = fio_get_file (pad->priv->contentname);
+	content = fio_get_file (pad->priv->contentname, CONFIG_DIR);
 
 	buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 

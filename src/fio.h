@@ -24,9 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <glib.h>
 
+typedef enum {CONFIG_DIR, CURRENT_WORK_DIR} DirectoryType;
+
 G_BEGIN_DECLS
 
-gchar *fio_get_file (const gchar *name);
+gchar *fio_get_file (const gchar *name, DirectoryType dirType);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 void fio_remove_file (const gchar *filename);
 

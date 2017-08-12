@@ -162,16 +162,16 @@ xpad_app_init (int argc, char **argv)
 	if (autostart_delay)
 		sleep(autostart_delay);
 
+	/* Initialize Xpad-periodic module */
+	xpad_periodic_init ();
+	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
+
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
 
 	xpad_tray_init (settings);
 	xpad_session_manager_init ();
-
-	/* Initialize Xpad-periodic module */
-	xpad_periodic_init ();
-	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
-	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
@@ -708,7 +708,6 @@ xpad_app_open_proc_file (void)
 	return TRUE;
 }
 
-
 static gboolean
 xpad_app_pass_args (void)
 {
@@ -860,57 +859,64 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	g_option_context_set_ignore_unknown_options (context, TRUE);
 	g_option_context_set_help_enabled (context, FALSE);
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
-	if (g_option_context_parse (context, argc, argv, &error))
-	{
-		if (have_gtk && option_smid)
+
+	if (g_option_context_parse (context, argc, argv, &error)) {
+		if (have_gtk && option_smid) {
 			xpad_session_manager_set_id (option_smid);
+		}
 
-		if (!option_new)
+		if (!option_new) {
 			g_object_get (settings, "autostart-new-pad", &option_new, NULL);
+		}
 
-		if (have_gtk && option_new)
-		{
+		if (have_gtk && option_new) {
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 			gtk_widget_show (pad);
 		}
 
-		if (have_gtk && (option_show))
+		if (have_gtk && (option_show)) {
 			xpad_pad_group_show_all (pad_group);
-		if (have_gtk && (option_hide))
+		}
+
+		if (have_gtk && (option_hide)) {
 			xpad_pad_group_close_all (pad_group);
-		if (have_gtk && option_toggle)
+		}
+
+		if (have_gtk && option_toggle) {
 			xpad_pad_group_toggle_hide (pad_group);
+		}
 
 		if (!option_hide && !option_show) {
 			guint display_pads;
 			g_object_get (xpad_settings, "autostart-display-pads", &display_pads, NULL);
-			if (display_pads == 0)
-				option_show = TRUE;
-			else if (display_pads == 1)
-				option_hide = TRUE;
-		}
 
-		if (have_gtk && option_files)
-		{
-			int i;
-			for (i = 0; option_files[i]; i++)
-			{
-				GtkWidget *pad = xpad_pad_new_from_file (pad_group, settings, option_files[i]);
-				if (pad)
-					gtk_widget_show (pad);
+			if (display_pads == 0) {
+				option_show = TRUE;
+			} else if (display_pads == 1) {
+				option_hide = TRUE;
 			}
 		}
 
-		if (option_quit)
-		{
-			if (have_gtk && gtk_main_level () > 0)
-				xpad_app_quit ();
-			else
-				exit (0);
+		if (have_gtk && option_files) {
+			int i;
+
+			for (i = 0; option_files[i]; i++) {
+				GtkWidget *pad = xpad_pad_new_from_file (pad_group, settings, option_files[i]);
+
+				if (pad) {
+					gtk_widget_show (pad);
+				}
+			}
 		}
-	}
-	else
-	{
+
+		if (option_quit) {
+			if (have_gtk && gtk_main_level () > 0) {
+				xpad_app_quit ();
+			} else {
+				exit (0);
+			}
+		}
+	} else {
 		fprintf (output, "%s\n", error->message);
 		/* Don't quit.  Bad options passed to the main xpad program by other
 		   iterations shouldn't close the main one. */

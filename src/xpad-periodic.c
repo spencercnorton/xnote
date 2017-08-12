@@ -210,7 +210,7 @@ static void xpad_periodic_signal (const char * cbname, void * xpad_pad)
 
 	/* If there is no callback address, we can't continue. */
 	if (! func_ptr) {
-		xpad_periodic_error_exit("Can't find signal function address: %s\n", cbname);
+		xpad_periodic_error_exit ("Can't find signal function address: %s\n", cbname);
 	}
 
 	/* Check that this event is not already present. 

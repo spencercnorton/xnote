@@ -32,19 +32,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 
-
-/* Sets filename to full path of filename (prepends xpad_app_get_config_dir ()
-   to it).  Returns a GFile representing the file. */
+/*
+ * Sets filename to full path of filename.
+ * If the path is relative, prepends a path depending on the parameter: config dir or current work dir.
+ * Returns a GFile representing the file.
+ */
 static GFile *
-fio_fill_filename (const gchar *filename)
+fio_fill_filename (const gchar *filename, DirectoryType dirType)
 {
-	if (g_path_is_absolute (filename))
+	if (g_path_is_absolute (filename)) {
 		return g_file_new_for_path (filename);
-	else {
+	} else {
 		gchar *full_path;
+		const gchar *path;
 		GFile *file;
 
-		full_path = g_build_filename (xpad_app_get_config_dir (), filename, NULL);
+		switch (dirType) {
+			case CONFIG_DIR:
+				path = xpad_app_get_config_dir ();
+				break;
+			case CURRENT_WORK_DIR:
+				path = g_get_current_dir();
+				break;
+			default:
+				g_critical ("Unexpected directory type encountered. This is programming error.");
+				break;
+		}
+
+		full_path = g_build_filename (path, filename, NULL);
 		file = g_file_new_for_path (full_path);
 
 		g_free (full_path);
@@ -111,7 +126,7 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	GFileOutputStream *stream;
 	GError *error = NULL;
 
-	file = fio_fill_filename (name);
+	file = fio_fill_filename (name, CONFIG_DIR);
 
 	stream = g_file_replace (file, NULL, FALSE, G_FILE_CREATE_PRIVATE, NULL, &error);
 
@@ -141,22 +156,20 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	return !error;
 }
 
-
 /*
  * Returned gchar * must be g_free'd.
  */
-gchar *fio_get_file (const gchar *name)
+gchar *fio_get_file (const gchar *filename, DirectoryType dirType)
 {
 	GFile *file;
 	gchar *contents = NULL;
 
-	file = fio_fill_filename (name);
+	file = fio_fill_filename (filename, dirType);
 	g_file_load_contents (file, NULL, &contents, NULL, NULL, NULL);
 	g_clear_object (&file);
 
 	return contents;
 }
-
 
 /*
  * list is a variable number of (gchar *) / (gchar ** or gint *) groups,
@@ -170,7 +183,7 @@ gint fio_get_values_from_file (const gchar *filename, ...)
 	va_list ap;
 	size_t len;
 
-	buf = fio_get_file (filename);
+	buf = fio_get_file (filename, CONFIG_DIR);
 
 	if (!buf)
 		return 1;
@@ -313,10 +326,11 @@ gint fio_set_values_to_file (const gchar *filename, ...)
 	return 0;
 }
 
+/* Remove a file from the configuration directory */
 void fio_remove_file (const gchar *filename)
 {
 	GFile *file;
-	file = fio_fill_filename (filename);
+	file = fio_fill_filename (filename, CONFIG_DIR);
 	g_file_delete (file, NULL, NULL);
 	g_clear_object (&file);
 }
