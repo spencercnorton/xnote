@@ -1809,16 +1809,16 @@ void xpad_pad_save_unsaved (XpadPad *pad)
 }
 
 void xpad_pad_remove_accelerator_group (XpadPad *pad) {
-	if (pad == NULL || pad->priv->accel_group == NULL) {
-		return;
-	}
+	g_return_if_fail (pad);
 
 	gtk_widget_add_events (GTK_WIDGET (pad), 0);
 
-	if (pad->priv->toolbar != NULL) {
+	if (pad->priv->toolbar) {
 		gtk_widget_add_events (pad->priv->toolbar, 0);
 	}
 
-	gtk_window_remove_accel_group (GTK_WINDOW(pad), pad->priv->accel_group);
-	g_clear_object (&pad->priv->accel_group);
+	if (pad->priv->accel_group) {
+		gtk_window_remove_accel_group (GTK_WINDOW(pad), pad->priv->accel_group);
+		g_clear_object (&pad->priv->accel_group);
+	}
 }

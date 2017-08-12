@@ -246,25 +246,27 @@ xpad_app_get_pad_group (void)
 void
 xpad_app_quit (void)
 {
-	if (shutdown_in_progress)
+	if (shutdown_in_progress) {
 		return;
+	}
 
+	/* TODO: Should this variable be locked before writing (thread safety)? */
 	shutdown_in_progress = TRUE;
 
-	/* Free the memory used by the pads belonging to this group */
+	/* Stop the GTK main loop. gtk_main_quit() does no destruction of windows. It is just saying "exit the main loop and return to the caller". */
+	gtk_main_quit ();
+
+	/* First disable the signals, then free the memory used by the tray icon and its menu. */
+	xpad_tray_dispose (settings);
+
+	/* First disable the accelerators, then free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (pad_group);
 
 	/* Free the memory used by group. */
 	g_clear_object (&pad_group);
 
-	/* Free the memory used by the tray icon and its menu. */
-	xpad_tray_dispose (settings);
-
 	/* Free the memory used by the settings menu. */
 	g_clear_object (&settings);
-
-	/* Give GTK the signal to clean the rest and quit the application. */
-	gtk_main_quit ();
 }
 
 static gboolean
