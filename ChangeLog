@@ -4,6 +4,7 @@ Version 5.0
 * Fix: Preferences -> Xpad autostart_new_pad is broken (same fix as #1652845) (#1689754)
 * Fix: Parameters - -f closes app, when trying to add note from file while xpad in running (#1652845)
 * Fix: Technical - Xpad quit by CTRL-Q give repetitive assertion error (#1708879)
+* Fix: Technical - Fixed error on first time run: value TRUE of type gboolean is invalid or out of range for property autostart-xpad of type gboolean
 
 Version 4.9
 * Fix: Typos - Found by Lintian and reported by jcfp (#1591368)
