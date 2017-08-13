@@ -1204,8 +1204,9 @@ xpad_pad_save_content (XpadPad *pad)
 	gchar *content = NULL;
 	XpadTextBuffer *buffer;
 
-	if (!pad->priv->unsaved_content)
+	if (!pad->priv->unsaved_content) {
 		return;
+	}
 
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
@@ -1218,9 +1219,9 @@ xpad_pad_save_content (XpadPad *pad)
 	if (GTK_IS_TEXT_VIEW(GTK_TEXT_VIEW (pad->priv->textview))) {
 		buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 		content = xpad_text_buffer_get_text_with_tags (buffer);
-	}
-	else
+	} else {
 		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_save_content' the variable 'pad->priv->textview' is not of type textview. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+	}
 
 	fio_set_file (pad->priv->contentname, content);
 
