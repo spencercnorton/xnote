@@ -202,8 +202,6 @@ xpad_text_buffer_set_text_with_tags (XpadTextBuffer *buffer, const gchar *text)
 gchar *
 xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 {
-	g_warning("xpad_text_buffer_get_text_with_tags: start");
-
 	GtkTextIter start, prev;
 	GSList *tags = NULL, *i;
 	gchar tag_char_utf8[7] = {0};
@@ -220,7 +218,6 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 	while (!done)
 	{
 		tmp = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buffer_tb), &prev, &start, TRUE);
-		g_warning("tmp: %s", tmp);
 		oldtext = text;
 		text = g_strconcat (text, tmp, NULL);
 		g_free (oldtext);
@@ -231,9 +228,13 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 		{
 			gchar *name;
 			g_object_get (G_OBJECT (i->data), "name", &name, NULL);
-			oldtext = text;
-			text = g_strconcat (text, tag_char_utf8, name, tag_char_utf8, NULL);
-			g_free (oldtext);
+
+			if (name) {
+				oldtext = text;
+				text = g_strconcat (text, tag_char_utf8, name, tag_char_utf8, NULL);
+				g_free (oldtext);
+			}
+
 			g_free (name);
 		}
 		g_slist_free (tags);
@@ -243,9 +244,13 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 		{
 			gchar *name;
 			g_object_get (G_OBJECT (i->data), "name", &name, NULL);
-			oldtext = text;
-			text = g_strconcat (text, tag_char_utf8, "/", name, tag_char_utf8, NULL);
-			g_free (oldtext);
+
+			if (name) {
+				oldtext = text;
+				text = g_strconcat (text, tag_char_utf8, "/", name, tag_char_utf8, NULL);
+				g_free (oldtext);
+			}
+
 			g_free (name);
 		}
 		g_slist_free (tags);
@@ -255,8 +260,6 @@ xpad_text_buffer_get_text_with_tags (XpadTextBuffer *buffer)
 		prev = start;
 		gtk_text_iter_forward_to_tag_toggle (&start, NULL);
 	}
-
-	g_warning("xpad_text_buffer_get_text_with_tags: finish");
 
 	return text;
 }
