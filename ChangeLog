@@ -1,4 +1,5 @@
 Version 5.0
+* New: Reload from Disk - No way to refresh sticky that was edited externally (#1689429)
 * Fix: Preferences -> Layout -> Change font gives error (#1708877)
 * Fix: Preferences -> Color and font changes between custom and theme did not always work
 * Fix: Preferences -> Xpad autostart_new_pad is broken (same fix as #1652845) (#1689754)

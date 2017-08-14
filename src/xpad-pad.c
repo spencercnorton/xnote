@@ -1172,24 +1172,22 @@ void
 xpad_pad_load_content (XpadPad *pad)
 {
 	g_return_if_fail (pad);
+	g_return_if_fail (pad->priv->contentname);
 
 	gchar *content;
 	GtkSourceBuffer *buffer;
-
-	if (!pad->priv->contentname)
-		return;
 
 	content = fio_get_file (pad->priv->contentname, CONFIG_DIR);
 
 	buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 
 	xpad_text_buffer_freeze_undo (XPAD_TEXT_BUFFER (buffer));
+
 	g_signal_handlers_block_by_func (buffer, xpad_pad_text_changed, pad);
-
 	xpad_text_buffer_set_text_with_tags (XPAD_TEXT_BUFFER (buffer), content ? content : "");
-	g_free (content);
-
 	g_signal_handlers_unblock_by_func (buffer, xpad_pad_text_changed, pad);
+
+	g_free (content);
 	xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
 
 	xpad_pad_text_changed(pad, buffer);
@@ -1564,6 +1562,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	menu = uppermenu;
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
 	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
+	MENU_ADD (_("_Reload"), "reload-pad-content", GDK_KEY_F5, 0, xpad_pad_load_content);
 	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
 
 	/* Edit submenu */
