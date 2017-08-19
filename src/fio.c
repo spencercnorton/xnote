@@ -55,7 +55,8 @@ fio_fill_filename (const gchar *filename, DirectoryType dirType)
 				path = g_get_current_dir();
 				break;
 			default:
-				g_critical ("Unexpected directory type encountered. This is programming error.");
+				g_critical ("Unexpected directory type encountered. Falling back to Xpad config folder.");
+				path = xpad_app_get_config_dir ();
 				break;
 		}
 
