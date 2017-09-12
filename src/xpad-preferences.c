@@ -492,7 +492,11 @@ static void xpad_preferences_constructed (GObject *object)
  	gtk_container_add (GTK_CONTAINER (vbox), button);
  	gtk_container_add (GTK_CONTAINER (pref), GTK_WIDGET (vbox));
 
-	/* Activate all handlers */
+	/* Add CSS style class, so the styling can be overridden by a GTK theme */
+	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (pref));
+	gtk_style_context_add_class(context, "XpadPreferences");
+
+ 	/* Activate all handlers */
 	pref->priv->has_decorations_handler = g_signal_connect (pref->priv->has_decorations, "toggled", G_CALLBACK (change_has_decorations), pref);
 	pref->priv->hide_from_taskbar_handler = g_signal_connect (pref->priv->hide_from_taskbar, "toggled", G_CALLBACK (change_hide_from_taskbar), pref);
 	pref->priv->hide_from_task_switcher_handler = g_signal_connect (pref->priv->hide_from_task_switcher, "toggled", G_CALLBACK (change_hide_from_task_switcher), pref);

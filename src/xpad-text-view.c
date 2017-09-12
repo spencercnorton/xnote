@@ -111,6 +111,11 @@ static void xpad_text_view_constructed (GObject *object)
 	gtk_container_set_border_width (GTK_CONTAINER (view), 5);
 	gtk_widget_set_name (GTK_WIDGET (view), g_strdup_printf ("%p", (void *) view));
 
+	/* Add CSS style class, so the styling can be overridden by a GTK theme */
+	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (view));
+	gtk_style_context_add_class(context, "XpadTextView");
+
+	/* Signals */
 	g_signal_connect (view, "button-press-event", G_CALLBACK (xpad_text_view_button_press_event), view->priv->settings);
 	g_signal_connect_after (view, "focus-out-event", G_CALLBACK (xpad_text_view_focus_out_event), view->priv->settings);
 	g_signal_connect (view, "realize", G_CALLBACK (xpad_text_view_realize), NULL);

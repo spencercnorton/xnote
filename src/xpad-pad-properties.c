@@ -163,6 +163,10 @@ xpad_pad_properties_init (XpadPadProperties *prop)
 	gtk_box_pack_start (vbox, prop->priv->colorbox, FALSE, FALSE, 0);
 	gtk_box_pack_start (appearance_vbox, GTK_WIDGET (vbox), FALSE, FALSE, 0);
 
+	/* Add CSS style class, so the styling can be overridden by a GTK theme */
+	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (prop));
+	gtk_style_context_add_class(context, "XpadPadProperties");
+
 	g_signal_connect (prop->priv->fontcheck, "toggled", G_CALLBACK (change_font_check), prop);
 	g_signal_connect (prop->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), prop);
 	g_signal_connect_swapped (prop->priv->fontbutton, "font-set", G_CALLBACK (change_font_face), prop);

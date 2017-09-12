@@ -272,6 +272,10 @@ static void xpad_toolbar_constructed (GObject *object)
 
 	xpad_toolbar_change_buttons (toolbar);
 
+	/* Add CSS style class, so the styling can be overridden by a GTK theme */
+	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (toolbar));
+	gtk_style_context_add_class(context, "XpadToolbar");
+
 	g_object_get (toolbar->priv->pad, "settings", &settings, NULL);
 	g_signal_connect_swapped (settings, "change-buttons", G_CALLBACK (xpad_toolbar_change_buttons), toolbar);
 }

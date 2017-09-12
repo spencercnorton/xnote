@@ -365,6 +365,10 @@ static void xpad_pad_constructed (GObject *object)
 
 	xpad_pad_sync_title (pad);
 
+	/* Add CSS style class, so the styling can be overridden by a GTK theme */
+	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (pad));
+	gtk_style_context_add_class(context, "XpadPad");
+
 	gtk_widget_show_all (GTK_WIDGET (vbox));
 
 	gtk_widget_hide (pad->priv->toolbar);
