@@ -105,6 +105,7 @@ Each pad can be resized to the prefered size.
 
 <tt>F1: Help 
 CTRL-Q: Quit 
+CTRL-W: Close current pad
 CTRL-A: Select All 
 CTRL-Z: Undo 
 CTRL-Y: Redo 

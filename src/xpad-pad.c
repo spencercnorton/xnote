@@ -1567,7 +1567,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD (_("_New"), "document-new", GDK_KEY_N, GDK_CONTROL_MASK, xpad_pad_spawn);
 	MENU_ADD (_("_Delete"), "edit-delete", GDK_KEY_Delete, GDK_SHIFT_MASK, xpad_pad_delete);
 	MENU_ADD (_("_Reload"), "reload-pad-content", GDK_KEY_F5, 0, xpad_pad_load_content);
-	MENU_ADD (_("_Close"), "window-close", 0, 0, xpad_pad_close);
+	MENU_ADD (_("_Close"), "window-close", GDK_KEY_W, GDK_CONTROL_MASK, xpad_pad_close);
 
 	/* Edit submenu */
 	item = gtk_menu_item_new_with_mnemonic (_("_Edit"));

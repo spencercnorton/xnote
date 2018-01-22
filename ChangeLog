@@ -1,5 +1,5 @@
 Version 5.1
-* 
+* New: CTRL-W short-cut / key-combination to close an open pad (#1744749)
 
 Version 5.0
 * New: Reload from Disk - No way to refresh sticky that was edited externally (#1689429)
