@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2016-01-09 19:11+0100\n"
+"POT-Creation-Date: 2018-01-22 17:27+0000\n"
 "PO-Revision-Date: 2017-05-01 19:30+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2017-09-20 05:14+0000\n"
-"X-Generator: Launchpad (build 18449)\n"
+"X-Launchpad-Export-Date: 2018-01-23 05:19+0000\n"
+"X-Generator: Launchpad (build 18532)\n"
 "X-Language: pl_PL\n"
 "X-Source-Language: C\n"
 
-#: ../src/fio.c:131
+#: ../src/fio.c:147
 #, c-format
 msgid "Could not write to file %s: %s"
 msgstr "Nie można zapisać do pliku %s: %s"
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:217
+#: ../src/xpad-app.c:219
 msgid "_Ok"
 msgstr "_Ok"
 
@@ -72,84 +72,84 @@ msgstr ""
 "Ten katalog jest potrzebny do przechowywania informacji o karteczkach i ich "
 "właściwościach. Xpad będzie teraz zamknięty."
 
-#: ../src/xpad-app.c:781
+#: ../src/xpad-app.c:783
 msgid "Show version number and quit"
 msgstr "Pokaż wersję programu i wyjdź"
 
-#: ../src/xpad-app.c:782
+#: ../src/xpad-app.c:784
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Nie twórz nowej karteczki przy starcie, jeżeli poprzednia karteczka nie "
 "istnieje"
 
-#: ../src/xpad-app.c:788
+#: ../src/xpad-app.c:790
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Stwórz nową karteczkę przy starcie, nawet jeżeli poprzednia karteczka nadal "
 "istnieje"
 
-#: ../src/xpad-app.c:789 ../src/xpad-preferences.c:427
+#: ../src/xpad-app.c:791 ../src/xpad-preferences.c:427
 msgid "Hide all pads"
 msgstr "Schowaj wszystkie karteczki"
 
-#: ../src/xpad-app.c:790
+#: ../src/xpad-app.c:792
 msgid "Show all pads"
 msgstr "Pokaż wszystkie karteczki"
 
-#: ../src/xpad-app.c:791
+#: ../src/xpad-app.c:793
 msgid "Toggle between show and hide all pads"
 msgstr "Przełącz pomiędzy pokazywaniem a ukrywaniem wszystkich karteczek"
 
-#: ../src/xpad-app.c:792
+#: ../src/xpad-app.c:794
 msgid "Create a new pad with the contents of a file"
 msgstr "Stwórz nową karteczkę z zawartością pliku"
 
-#: ../src/xpad-app.c:792
+#: ../src/xpad-app.c:794
 msgid "FILE"
 msgstr "PLIK"
 
-#: ../src/xpad-app.c:793
+#: ../src/xpad-app.c:795
 msgid "Close all pads"
 msgstr "Zamknij wszystkie karteczki"
 
-#: ../src/xpad-app.c:824
+#: ../src/xpad-app.c:826
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
 
-#: ../src/xpad-pad.c:175
+#: ../src/xpad-pad.c:178
 #, c-format
 msgid "Could not read file %s."
 msgstr "Nie można odczytać pliku %s."
 
-#: ../src/xpad-pad.c:870
+#: ../src/xpad-pad.c:872
 msgid "Delete this pad?"
 msgstr "Skasować tę karteczkę?"
 
-#: ../src/xpad-pad.c:870
+#: ../src/xpad-pad.c:872
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Zawartość karteczki będzie nieodwracalnie utracona."
 
-#: ../src/xpad-pad.c:875 ../src/xpad-pad.c:1579
+#: ../src/xpad-pad.c:877 ../src/xpad-pad.c:1568
 msgid "_Delete"
 msgstr "_Usuń"
 
-#: ../src/xpad-pad.c:875
+#: ../src/xpad-pad.c:877
 msgid "_Cancel"
 msgstr "_Anuluj"
 
-#: ../src/xpad-pad.c:910
+#: ../src/xpad-pad.c:912
 #, c-format
 msgid "'%s' Layout"
 msgstr "Wygląd karteczki „%s”"
 
-#: ../src/xpad-pad.c:1399
+#: ../src/xpad-pad.c:1390
 msgid "Sticky notes"
 msgstr "Przylepna karteczka"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1403
+#: ../src/xpad-pad.c:1394
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -157,82 +157,86 @@ msgstr ""
 "  GTriderXC https://launchpad.net/~gtriderxc\n"
 "  Przemysław Liszka https://launchpad.net/~mistix"
 
-#: ../src/xpad-pad.c:1578 ../src/xpad-tray.c:136
+#: ../src/xpad-pad.c:1567 ../src/xpad-tray.c:133
 msgid "_New"
 msgstr "_Nowa"
 
-#: ../src/xpad-pad.c:1580
+#: ../src/xpad-pad.c:1569
+msgid "_Reload"
+msgstr ""
+
+#: ../src/xpad-pad.c:1570
 msgid "_Close"
 msgstr "_Zamknij"
 
 #. Edit submenu
-#: ../src/xpad-pad.c:1583
+#: ../src/xpad-pad.c:1573
 msgid "_Edit"
 msgstr "_Edycja"
 
-#: ../src/xpad-pad.c:1587
+#: ../src/xpad-pad.c:1577
 msgid "_Undo"
 msgstr "_Cofnij"
 
-#: ../src/xpad-pad.c:1589
+#: ../src/xpad-pad.c:1579
 msgid "_Redo"
 msgstr "_Powtórz"
 
-#: ../src/xpad-pad.c:1592 ../src/xpad-pad.c:1718
+#: ../src/xpad-pad.c:1582 ../src/xpad-pad.c:1708
 msgid "_Paste"
 msgstr "_Wklej"
 
-#: ../src/xpad-pad.c:1595
+#: ../src/xpad-pad.c:1585
 msgid "_Layout"
 msgstr "_Wygląd"
 
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1601
+#: ../src/xpad-pad.c:1591
 msgid "_Notes"
 msgstr "_Karteczki"
 
-#: ../src/xpad-pad.c:1606 ../src/xpad-tray.c:143
+#: ../src/xpad-pad.c:1596 ../src/xpad-tray.c:140
 msgid "_Show All"
 msgstr "_Wyświetl wszystkie"
 
-#: ../src/xpad-pad.c:1607 ../src/xpad-tray.c:149
+#: ../src/xpad-pad.c:1597 ../src/xpad-tray.c:146
 msgid "_Close All"
 msgstr "_Zamknij wszystkie"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1610 ../src/xpad-pad.c:1614 ../src/xpad-tray.c:167
+#: ../src/xpad-pad.c:1600 ../src/xpad-pad.c:1604 ../src/xpad-tray.c:164
 msgid "_Help"
 msgstr "_Pomoc"
 
-#: ../src/xpad-pad.c:1615
+#: ../src/xpad-pad.c:1605
 msgid "_About"
 msgstr "_O programie"
 
-#: ../src/xpad-pad.c:1620 ../src/xpad-tray.c:163
+#: ../src/xpad-pad.c:1610 ../src/xpad-tray.c:160
 msgid "_Preferences"
 msgstr "_Ustawienia"
 
-#: ../src/xpad-pad.c:1716
+#: ../src/xpad-pad.c:1706
 msgid "Cu_t"
 msgstr "W_ytnij"
 
-#: ../src/xpad-pad.c:1717
+#: ../src/xpad-pad.c:1707
 msgid "_Copy"
 msgstr "_Kopiuj"
 
-#: ../src/xpad-pad.c:1721
+#: ../src/xpad-pad.c:1711
 msgid "_Bold"
 msgstr "Po_grubienie"
 
-#: ../src/xpad-pad.c:1722
+#: ../src/xpad-pad.c:1712
 msgid "_Italic"
 msgstr "_Kursywa"
 
-#: ../src/xpad-pad.c:1723
+#: ../src/xpad-pad.c:1713
 msgid "_Underline"
 msgstr "_Podkreślenie"
 
-#: ../src/xpad-pad.c:1724
+#: ../src/xpad-pad.c:1714
 msgid "_Strikethrough"
 msgstr "Prze_kreślenie"
 
@@ -410,7 +414,7 @@ msgstr "_Potwierdź usunięcie karteczki"
 msgid "Xpad Preferences"
 msgstr "Właściwości Xpad"
 
-#: ../src/xpad-preferences.c:698
+#: ../src/xpad-preferences.c:704
 #, c-format
 msgid ""
 "Could not load %s\n"
@@ -419,12 +423,12 @@ msgstr ""
 "Nie można wczytać %s\n"
 "%s"
 
-#: ../src/xpad-preferences.c:699 ../src/xpad-preferences.c:711
+#: ../src/xpad-preferences.c:705 ../src/xpad-preferences.c:717
 msgid "Error changing wait for systray setting"
 msgstr ""
 "Błąd podczas nanoszenia zmiany preferencji „Jeśli się da, czekaj na tackę”"
 
-#: ../src/xpad-preferences.c:710
+#: ../src/xpad-preferences.c:716
 #, c-format
 msgid ""
 "Could not save %s\n"
@@ -433,12 +437,12 @@ msgstr ""
 "Nie można zapisać %s\n"
 "%s"
 
-#: ../src/xpad-settings.c:361
+#: ../src/xpad-settings.c:372
 msgid "Error enabling Xpad autostart"
 msgstr ""
 "Błąd podczas nanoszenia zmiany preferencji „Uruchamiaj Xpad po zalogowaniu”"
 
-#: ../src/xpad-settings.c:361
+#: ../src/xpad-settings.c:372
 #, c-format
 msgid ""
 "Could not copy %s to %s\n"
@@ -447,11 +451,11 @@ msgstr ""
 "Nie można skopiować %s do %s\n"
 "%s"
 
-#: ../src/xpad-settings.c:375
+#: ../src/xpad-settings.c:386
 msgid "Error disabling Xpad autostart"
 msgstr "Bład podczas rezygnacji z uruchamiania Xpad po zalogowaniu"
 
-#: ../src/xpad-settings.c:375
+#: ../src/xpad-settings.c:386
 #, c-format
 msgid ""
 "Could not delete %s\n"
@@ -560,15 +564,15 @@ msgstr "Dodaj przycisk _cofania"
 msgid "Add Se_parator"
 msgstr "Dodaj prze_grodę"
 
-#: ../src/xpad-toolbar.c:517
+#: ../src/xpad-toolbar.c:518
 msgid "Remove All _Buttons"
 msgstr "U_suń wszystkie przyciski"
 
-#: ../src/xpad-toolbar.c:524
+#: ../src/xpad-toolbar.c:525
 msgid "Remo_ve Last Button"
 msgstr "_Usuń ostatni przycisk"
 
-#: ../src/xpad-tray.c:171
+#: ../src/xpad-tray.c:168
 msgid "_Quit"
 msgstr "_Wyjdź"
 
