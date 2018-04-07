@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2018-04-05 04:43+0000\n"
-"PO-Revision-Date: 2014-05-09 02:18+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
+"POT-Creation-Date: 2018-04-06 04:38+0000\n"
+"PO-Revision-Date: 2018-04-06 15:00+0000\n"
+"Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: galego\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-04-06 04:37+0000\n"
+"X-Launchpad-Export-Date: 2018-04-07 05:23+0000\n"
 "X-Generator: Launchpad (build 18599)\n"
 "Language: gl\n"
 
@@ -36,7 +36,7 @@ msgstr ""
 
 #: ../src/help.c:71 ../src/xpad-preferences.c:485
 msgid "Close"
-msgstr ""
+msgstr "Pechar"
 
 #: ../src/help.c:76
 msgid "Help"
@@ -52,7 +52,7 @@ msgstr "Xpad"
 
 #: ../src/xpad-app.c:219
 msgid "_Ok"
-msgstr ""
+msgstr "_Aceptar"
 
 #: ../src/xpad-app.c:469
 #, c-format
@@ -123,11 +123,11 @@ msgstr "Perderase o texto da nota de forma irreversíbel."
 
 #: ../src/xpad-pad.c:877 ../src/xpad-pad.c:1568
 msgid "_Delete"
-msgstr ""
+msgstr "_Eliminar"
 
 #: ../src/xpad-pad.c:877
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #: ../src/xpad-pad.c:912
 #, c-format
@@ -146,19 +146,20 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
 "  Marcos Lans https://launchpad.net/~marcoslansgarza\n"
+"  Marcos Lans https://launchpad.net/~markooss\n"
 "  ghas https://launchpad.net/~agghas"
 
 #: ../src/xpad-pad.c:1567 ../src/xpad-tray.c:133
 msgid "_New"
-msgstr ""
+msgstr "_Nova"
 
 #: ../src/xpad-pad.c:1569
 msgid "_Reload"
-msgstr ""
+msgstr "_Recargar"
 
 #: ../src/xpad-pad.c:1570
 msgid "_Close"
-msgstr ""
+msgstr "_Pechar"
 
 #. Edit submenu
 #: ../src/xpad-pad.c:1573
@@ -167,19 +168,19 @@ msgstr "_Editar"
 
 #: ../src/xpad-pad.c:1577
 msgid "_Undo"
-msgstr ""
+msgstr "_Desfacer"
 
 #: ../src/xpad-pad.c:1579
 msgid "_Redo"
-msgstr ""
+msgstr "_Refacer"
 
 #: ../src/xpad-pad.c:1582 ../src/xpad-pad.c:1708
 msgid "_Paste"
-msgstr ""
+msgstr "_Pegar"
 
 #: ../src/xpad-pad.c:1585
 msgid "_Layout"
-msgstr ""
+msgstr "_Disposición"
 
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1591
@@ -205,31 +206,31 @@ msgstr "_Sobre"
 
 #: ../src/xpad-pad.c:1610 ../src/xpad-tray.c:160
 msgid "_Preferences"
-msgstr ""
+msgstr "_Preferencias"
 
 #: ../src/xpad-pad.c:1706
 msgid "Cu_t"
-msgstr ""
+msgstr "Cor_tar"
 
 #: ../src/xpad-pad.c:1707
 msgid "_Copy"
-msgstr ""
+msgstr "_Copiar"
 
 #: ../src/xpad-pad.c:1711
 msgid "_Bold"
-msgstr ""
+msgstr "_Grosa"
 
 #: ../src/xpad-pad.c:1712
 msgid "_Italic"
-msgstr ""
+msgstr "Curs_iva"
 
 #: ../src/xpad-pad.c:1713
 msgid "_Underline"
-msgstr ""
+msgstr "_Subliñado"
 
 #: ../src/xpad-pad.c:1714
 msgid "_Strikethrough"
-msgstr ""
+msgstr "_Riscado"
 
 #: ../src/xpad-pad-properties.c:105
 msgid "Appearance"
@@ -274,7 +275,7 @@ msgstr "Escoller un tipo de letra"
 #. View options
 #: ../src/xpad-preferences.c:238
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #: ../src/xpad-preferences.c:249
 msgid "_Show toolbar"
@@ -308,7 +309,7 @@ msgstr ""
 #. Layout options
 #: ../src/xpad-preferences.c:281
 msgid "Layout"
-msgstr ""
+msgstr "Disposición"
 
 #: ../src/xpad-preferences.c:297
 msgid "Use font from theme"
@@ -320,12 +321,12 @@ msgstr "Usar as cores do tema"
 
 #: ../src/xpad-preferences.c:310
 msgid "Text:"
-msgstr ""
+msgstr "Texto:"
 
 #. Start options
 #: ../src/xpad-preferences.c:383
 msgid "Startup"
-msgstr ""
+msgstr "Inicio"
 
 #: ../src/xpad-preferences.c:394
 msgid "_Start Xpad automatically after login"
@@ -358,7 +359,7 @@ msgstr ""
 #. Tray options
 #: ../src/xpad-preferences.c:436
 msgid "Tray"
-msgstr ""
+msgstr "Bandexa"
 
 #: ../src/xpad-preferences.c:447
 msgid "_Enable tray icon"
