@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2018-04-07 05:24+0000\n"
-"PO-Revision-Date: 2018-04-07 06:37+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
+"POT-Creation-Date: 2018-04-08 05:21+0000\n"
+"PO-Revision-Date: 2018-04-08 20:26+0000\n"
+"Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: galego\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-04-08 05:20+0000\n"
+"X-Launchpad-Export-Date: 2018-04-09 05:24+0000\n"
 "X-Generator: Launchpad (build 18599)\n"
 "Language: gl\n"
 
@@ -25,7 +25,7 @@ msgstr "Non foi posíbel escribir no ficheiro %s: %s"
 
 #: ../src/help.c:52
 msgid "Error showing the help"
-msgstr ""
+msgstr "Produciuse un erro mostrando a axuda"
 
 #: ../src/help.c:52
 #, c-format
@@ -363,11 +363,11 @@ msgstr "Bandexa"
 
 #: ../src/xpad-preferences.c:447
 msgid "_Enable tray icon"
-msgstr ""
+msgstr "Activar a icona da band_exa"
 
 #: ../src/xpad-preferences.c:450
 msgid "Tray left mouse click behaviour"
-msgstr ""
+msgstr "Comportamento do clic esquerdo do rato sobre a bandexa"
 
 #: ../src/xpad-preferences.c:452
 msgid "Do Nothing"
@@ -388,7 +388,7 @@ msgstr "Nota nova"
 #. Other options
 #: ../src/xpad-preferences.c:463
 msgid "Other"
-msgstr ""
+msgstr "Outros"
 
 #: ../src/xpad-preferences.c:474
 msgid "_Make pads read-only"
@@ -408,6 +408,8 @@ msgid ""
 "Could not load %s\n"
 "%s"
 msgstr ""
+"Non foi posíbel cargar %s\n"
+"%s"
 
 #: ../src/xpad-preferences.c:705 ../src/xpad-preferences.c:717
 msgid "Error changing wait for systray setting"
@@ -419,10 +421,12 @@ msgid ""
 "Could not save %s\n"
 "%s"
 msgstr ""
+"Non foi posíbel gardar %s\n"
+"%s"
 
 #: ../src/xpad-settings.c:372
 msgid "Error enabling Xpad autostart"
-msgstr ""
+msgstr "Produciuse un erro activando o inicio automático do Xpad"
 
 #: ../src/xpad-settings.c:372
 #, c-format
@@ -430,10 +434,12 @@ msgid ""
 "Could not copy %s to %s\n"
 "%s"
 msgstr ""
+"Non foi posíbel copiar %s a %s\n"
+"%s"
 
 #: ../src/xpad-settings.c:386
 msgid "Error disabling Xpad autostart"
-msgstr ""
+msgstr "Produciuse un erro desactivando o inicio automático do Xpad"
 
 #: ../src/xpad-settings.c:386
 #, c-format
@@ -441,6 +447,8 @@ msgid ""
 "Could not delete %s\n"
 "%s"
 msgstr ""
+"Non foi posíbel eliminar %s\n"
+"%s"
 
 #: ../src/xpad-toolbar.c:79
 msgid "Clear Pad Contents"
@@ -448,7 +456,7 @@ msgstr "Borrar o contido da nota"
 
 #: ../src/xpad-toolbar.c:79
 msgid "Add C_lear button"
-msgstr ""
+msgstr "Engadir o botón _Limpar"
 
 #: ../src/xpad-toolbar.c:80
 msgid "Close and Save Pad"
@@ -456,7 +464,7 @@ msgstr "Pechar e gardar a nota"
 
 #: ../src/xpad-toolbar.c:80
 msgid "Add _Close button"
-msgstr ""
+msgstr "Engadir o botón Pe_char"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Copy to Clipboard"
@@ -464,7 +472,7 @@ msgstr "Copiar ao portarretallos"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add C_opy button"
-msgstr ""
+msgstr "Engadir o b_otón Copiar"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Cut to Clipboard"
@@ -472,7 +480,7 @@ msgstr "Cortar ao portarretallos"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Add C_ut button"
-msgstr ""
+msgstr "Engadir o botón Co_rtar"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Delete Pad"
@@ -480,7 +488,7 @@ msgstr "Eliminar a nota"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Add _Delete button"
-msgstr ""
+msgstr "Enga_dir o botón Eliminar"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Open New Pad"
@@ -488,7 +496,7 @@ msgstr "Abrir unha nova nota"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _New button"
-msgstr ""
+msgstr "Engadir o botó_n Novo"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Paste from Clipboard"
@@ -496,7 +504,7 @@ msgstr "Pegar do portarretallos"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add Pa_ste button"
-msgstr ""
+msgstr "En_gadir o botón Pegar"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Edit Preferences"
@@ -504,7 +512,7 @@ msgstr "Editar preferencias"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add Pr_eferences button"
-msgstr ""
+msgstr "Engadir o botón Pr_eferencias"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Edit Pad Properties"
@@ -512,7 +520,7 @@ msgstr "Editar propiedades das notas"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Add Proper_ties button"
-msgstr ""
+msgstr "Engadir o bo_tón Propiedades"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Redo"
