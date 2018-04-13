@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2018-04-11 05:24+0000\n"
-"PO-Revision-Date: 2018-04-11 18:13+0000\n"
+"POT-Creation-Date: 2018-04-12 05:24+0000\n"
+"PO-Revision-Date: 2018-04-12 09:42+0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: galego\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-04-12 05:22+0000\n"
+"X-Launchpad-Export-Date: 2018-04-13 05:25+0000\n"
 "X-Generator: Launchpad (build 18609)\n"
 "Language: gl\n"
 
@@ -374,7 +374,7 @@ msgstr "Ac_tivar a icona da área de notificación"
 
 #: ../src/xpad-preferences.c:450
 msgid "Tray left mouse click behaviour"
-msgstr "Comportamento do clic esquerdo do rato sobre a bandexa"
+msgstr "Comportamento do clic esquerdo do rato sobre a área de notificación"
 
 #: ../src/xpad-preferences.c:452
 msgid "Do Nothing"
@@ -382,7 +382,7 @@ msgstr "Non facer nada"
 
 #: ../src/xpad-preferences.c:453
 msgid "Toggle Show All"
-msgstr "Cambiar «Mostrar todo»"
+msgstr "Cambiar «Amosar todo»"
 
 #: ../src/xpad-preferences.c:454
 msgid "List of Pads"
@@ -395,11 +395,11 @@ msgstr "Nota nova"
 #. Other options
 #: ../src/xpad-preferences.c:463
 msgid "Other"
-msgstr "Outros"
+msgstr "Outras"
 
 #: ../src/xpad-preferences.c:474
 msgid "_Make pads read-only"
-msgstr ""
+msgstr "_Marcar notas como só de lectura"
 
 #: ../src/xpad-preferences.c:475
 msgid "_Confirm pad deletion"
@@ -407,7 +407,7 @@ msgstr "_Confirmar a eliminación da nota"
 
 #: ../src/xpad-preferences.c:487
 msgid "Xpad Preferences"
-msgstr "Preferencias de Xpad"
+msgstr "Preferencias do Xpad"
 
 #: ../src/xpad-preferences.c:704
 #, c-format
@@ -421,6 +421,7 @@ msgstr ""
 #: ../src/xpad-preferences.c:705 ../src/xpad-preferences.c:717
 msgid "Error changing wait for systray setting"
 msgstr ""
+"Produciuse un erro ao cambiar o axuste de agardar pola área de notificación"
 
 #: ../src/xpad-preferences.c:716
 #, c-format
@@ -433,7 +434,7 @@ msgstr ""
 
 #: ../src/xpad-settings.c:372
 msgid "Error enabling Xpad autostart"
-msgstr "Produciuse un erro activando o inicio automático do Xpad"
+msgstr "Produciuse un erro ao activar o inicio automático do Xpad"
 
 #: ../src/xpad-settings.c:372
 #, c-format
@@ -446,7 +447,7 @@ msgstr ""
 
 #: ../src/xpad-settings.c:386
 msgid "Error disabling Xpad autostart"
-msgstr "Produciuse un erro desactivando o inicio automático do Xpad"
+msgstr "Produciuse un erro ao desactivar o inicio automático do Xpad"
 
 #: ../src/xpad-settings.c:386
 #, c-format
@@ -475,15 +476,15 @@ msgstr "Engadir o botón Pe_char"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Copy to Clipboard"
-msgstr "Copiar ao portarretallos"
+msgstr "Copiar no portapapeis"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add C_opy button"
-msgstr "Engadir o b_otón Copiar"
+msgstr "Engadir o botón C_opiar"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Cut to Clipboard"
-msgstr "Cortar ao portarretallos"
+msgstr "Cortar ao portapapeis"
 
 #: ../src/xpad-toolbar.c:82
 msgid "Add C_ut button"
@@ -495,7 +496,7 @@ msgstr "Eliminar a nota"
 
 #: ../src/xpad-toolbar.c:83
 msgid "Add _Delete button"
-msgstr "Enga_dir o botón Eliminar"
+msgstr "Engadir o botón _Eliminar"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Open New Pad"
@@ -503,19 +504,19 @@ msgstr "Abrir unha nova nota"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _New button"
-msgstr "Engadir o botó_n Novo"
+msgstr "Engadir o botón _Novo"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Paste from Clipboard"
-msgstr "Pegar do portarretallos"
+msgstr "Pegar do portapapeis"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add Pa_ste button"
-msgstr "En_gadir o botón Pegar"
+msgstr "Engadir o botón Pe_gar"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Edit Preferences"
-msgstr "Editar preferencias"
+msgstr "Editar as preferencias"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add Pr_eferences button"
@@ -523,19 +524,19 @@ msgstr "Engadir o botón Pr_eferencias"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Edit Pad Properties"
-msgstr "Editar propiedades das notas"
+msgstr "Editar as propiedades das notas"
 
 #: ../src/xpad-toolbar.c:87
 msgid "Add Proper_ties button"
-msgstr "Engadir o bo_tón Propiedades"
+msgstr "Engadir o botón P_ropiedades"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Redo"
-msgstr "Facer de novo"
+msgstr "Refacer"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add _Redo button"
-msgstr ""
+msgstr "Engadir o botón _Refacer"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Close All Pads"
@@ -543,7 +544,7 @@ msgstr "Pechar todas as notas"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Close _All button"
-msgstr ""
+msgstr "Engadir o botón Pechar tod_as"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Undo"
@@ -551,11 +552,11 @@ msgstr "Desfacer"
 
 #: ../src/xpad-toolbar.c:90
 msgid "Add _Undo button"
-msgstr ""
+msgstr "Engadir o botón Des_facer"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Se_parator"
-msgstr ""
+msgstr "Engadir se_parador"
 
 #: ../src/xpad-toolbar.c:518
 msgid "Remove All _Buttons"
@@ -563,15 +564,15 @@ msgstr "Eliminar todos os _botóns"
 
 #: ../src/xpad-toolbar.c:525
 msgid "Remo_ve Last Button"
-msgstr "Eliminar o úl_timo botón"
+msgstr "Re_tirar o último botón"
 
 #: ../src/xpad-tray.c:168
 msgid "_Quit"
-msgstr ""
+msgstr "_Saír"
 
 #: ../xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr "Notas adhesivas"
+msgstr "Notas pegañentas"
 
 #: ../xpad.desktop.in.h:3
 msgid "Jot down notes for later"
