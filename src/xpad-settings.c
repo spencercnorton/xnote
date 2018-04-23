@@ -356,20 +356,31 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 	case PROP_AUTOSTART_XPAD:
 		if (g_value_get_boolean (value)) {
 			/* Copy the xpad.desktop file to the autostart folder and enable/disable the wait for systray preference */
+			const gchar *xpad_desktop_filename = "xpad.desktop";
+
 			gboolean success;
-			char *source_filename, *destination_directory;
+			gchar *source_dir, *destination_dir;
 			GFile *source, *destination;
 			GError *error = NULL;
 
-			source_filename = g_strdup_printf ("%s/share/applications/xpad.desktop", BASE_DIR);
-			destination_directory = g_strdup_printf ("%s/.config/autostart/xpad.desktop", g_get_home_dir());
+			source_dir = g_strdup_printf ("%s/share/applications", BASE_DIR);
+			destination_dir = g_strdup_printf ("%s/.config/autostart", g_get_home_dir());
 
-			source = g_file_new_for_path (source_filename);
-			destination = g_file_new_for_path (destination_directory);
+			if (g_mkdir_with_parents (destination_dir, 0700) != 0) {
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not create directoryy %s\n%s."), destination_dir, error->message));
+				break;
+			}
+
+			source = g_file_new_build_filename (source_dir, xpad_desktop_filename, NULL);
+			destination = g_file_new_build_filename (destination_dir, xpad_desktop_filename, NULL);
+
 			success = g_file_copy (source, destination, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
 
 			if (!success)
-				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not copy %s to %s\n%s"), source_filename, destination_directory, error->message));
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not copy %s to %s\n%s"), xpad_desktop_filename, destination_dir, error->message));
+
+			g_free (source_dir);
+			g_free (destination_dir);
 		}
 		else {
 			/* Remove the xpad.desktop file from the autostart folder and enable/disable the wait for systray preference */
