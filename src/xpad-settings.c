@@ -367,7 +367,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			destination_dir = g_strdup_printf ("%s/.config/autostart", g_get_home_dir());
 
 			if (g_mkdir_with_parents (destination_dir, 0700) != 0) {
-				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not create directoryy %s\n%s."), destination_dir, error->message));
+				xpad_app_error (NULL, _("Error enabling Xpad autostart"), g_strdup_printf (_("Could not create directory %s\n%s."), destination_dir, error->message));
 				break;
 			}
 
