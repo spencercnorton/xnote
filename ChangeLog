@@ -3,6 +3,7 @@ Version 5.1
 * Fix: Autostart - Prevent an error message if the 'home_dir/.config/autostart' folder is missing. (#1756630)
 * Fix: Pad deletion - Changed the default of the delete pad confirmation window to [Cancel]. (#1783052)
 * Fix: Pad deletion - Do not present another pad after pad deletion. (#1783053)
+* Fix: Tray - [Toggle Show All] action actually shows hidden and hides shown. Fixed by 'If one of the pads is not visible show them all, else hide them all.' (#1773866)
 
 Version 5.0
 * New: Reload from Disk - No way to refresh sticky that was edited externally (#1689429)

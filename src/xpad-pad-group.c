@@ -170,9 +170,24 @@ xpad_pad_group_show_all (XpadPadGroup *group)
 		g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_show, NULL);
 }
 
+/* If one of the pads is not visible show them all, else hide them all. */
 void
 xpad_pad_group_toggle_hide (XpadPadGroup *group)
 {
-	if (group)
-		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_toggle, NULL);
+	if (!group) {
+		return;
+	}
+
+        GSList *nextPad = g_slist_nth (group->priv->pads, 0);
+
+	while (nextPad != NULL) {
+		if (!gtk_widget_get_visible (GTK_WIDGET(nextPad->data))) {
+			xpad_pad_group_show_all (group);
+			return;
+		}
+
+                nextPad = g_slist_next (nextPad);		
+	}
+
+	xpad_pad_group_close_all (group);
 }
