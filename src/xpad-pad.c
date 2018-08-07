@@ -891,12 +891,20 @@ xpad_pad_delete (XpadPad *pad)
 	if (pad->priv->contentname)
 		fio_remove_file (pad->priv->contentname);
 
+	/* 
+	   This behavior used to be handy for debugging purposes, to create (CTRL+N) and delete (CTRL+DELETE)
+	   pads in a rapid way. However the behavior is unexpected to the user, so it has been disabled by
+	   commenting out the code.
+	*/
+
 	/* Before deleting the current pad, find and set the focus to another pad (if any) */
+	/*
 	GSList *nextPad = g_slist_nth (xpad_pad_group_get_pads(pad->priv->group), 0);
 	if (nextPad->data == pad)
 		nextPad = g_slist_next (nextPad);
 	if (nextPad)
         	xpad_pad_show (nextPad->data);
+	*/
 
 	/* Remove the pad from the group and destroy it. */
 	gtk_widget_destroy (GTK_WIDGET (pad));
