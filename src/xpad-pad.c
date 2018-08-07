@@ -875,6 +875,7 @@ xpad_pad_delete (XpadPad *pad)
 			return;
 
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("_Delete"), GTK_RESPONSE_ACCEPT, _("_Cancel"), GTK_RESPONSE_REJECT, NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT);
 
 		response = gtk_dialog_run (GTK_DIALOG (dialog));
 
