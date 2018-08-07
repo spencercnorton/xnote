@@ -178,7 +178,14 @@ xpad_app_init (int argc, char **argv)
 	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);
-			gtk_widget_show (pad);
+
+			/* Only show a new pad on startup, if the generic setting says to show all pads on startup. */
+                        guint display_pads;
+                        g_object_get (settings, "autostart-display-pads", &display_pads, NULL);
+
+                        if (display_pads == 0) {
+				gtk_widget_show (pad);
+			}
 		}
 	}
 
