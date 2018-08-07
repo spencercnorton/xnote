@@ -1,6 +1,8 @@
 Version 5.1
 * New: CTRL-W short-cut / key-combination to close an open pad (#1744749)
 * Fix: Autostart - Prevent an error message if the 'home_dir/.config/autostart' folder is missing. (#1756630)
+* Fix: Pad deletion - Changed the default of the delete pad confirmation window to [Cancel]. (#1783052)
+* Fix: Pad deletion - Do not present another pad after pad deletion. (#1783053)
 
 Version 5.0
 * New: Reload from Disk - No way to refresh sticky that was edited externally (#1689429)
