@@ -739,7 +739,7 @@ xpad_pad_notify_undo_redo_changed (XpadPad *pad)
 	g_return_if_fail (pad);
 
 	XpadTextBuffer *buffer = NULL;
-	buffer = XPAD_TEXT_BUFFER ((gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview))));
+	buffer = XPAD_TEXT_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	g_return_if_fail (buffer);
 
 	XpadToolbar *toolbar = NULL;
