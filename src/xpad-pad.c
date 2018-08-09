@@ -794,7 +794,7 @@ xpad_pad_spawn (XpadPad *pad)
 static void
 xpad_pad_clear (XpadPad *pad)
 {
-	GtkSourceBuffer *buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
 	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "", -1);
 }
 
