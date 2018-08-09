@@ -795,7 +795,13 @@ static void
 xpad_pad_clear (XpadPad *pad)
 {
 	GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview));
-	gtk_text_buffer_set_text (GTK_TEXT_BUFFER (buffer), "", -1);
+
+	GtkTextIter start, end;
+	gtk_text_buffer_get_bounds (GTK_TEXT_BUFFER (buffer), &start, &end);
+
+	gtk_text_buffer_begin_user_action (buffer);
+	gtk_text_buffer_delete (buffer, &start, &end);
+	gtk_text_buffer_end_user_action (buffer);
 }
 
 void
