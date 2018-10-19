@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-04-26 05:20+0000\n"
-"PO-Revision-Date: 2018-10-17 15:15+0000\n"
+"PO-Revision-Date: 2018-10-18 06:39+0000\n"
 "Last-Translator: Shinichirou Yamada "
 "<yamada_strong_yamada_nice_64bit@yahoo.co.jp>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2018-10-18 05:32+0000\n"
+"X-Launchpad-Export-Date: 2018-10-19 05:30+0000\n"
 "X-Generator: Launchpad (build 18790)\n"
 "Language: ja\n"
 
@@ -582,13 +582,7 @@ msgstr "付箋"
 
 #: ../xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr "手早くメモを行います"
-
-#~ msgid "_Toolbar"
-#~ msgstr "ツール・バー"
-
-#~ msgid "_View"
-#~ msgstr "ビュー"
+msgstr "手早くメモを取る"
 
 #~ msgid "Options"
 #~ msgstr "オプション"
@@ -600,14 +594,17 @@ msgstr "手早くメモを行います"
 #~ msgid "_Autohide Toolbar"
 #~ msgstr "ツールバーを自動で隠す(_A)"
 
-#~ msgid "Show on _All Workspaces"
-#~ msgstr "全てのワークスペースに表示(_A)"
+#~ msgid "_View"
+#~ msgstr "表示(_V)"
 
 #~ msgid "_Window Decorations"
 #~ msgstr "ウィンドウ装飾(_W)"
 
 #~ msgid "_Scrollbar"
 #~ msgstr "スクロールバー(_S)"
+
+#~ msgid "_Contents"
+#~ msgstr "目次(_C)"
 
 #~ msgid "_Move"
 #~ msgstr "移動(_M)"
@@ -641,43 +638,46 @@ msgstr "手早くメモを行います"
 #~ msgid "_Pad"
 #~ msgstr "パッド(_P)"
 
-#~ msgid "_Contents"
-#~ msgstr "目次 (_C)"
-
-#~ msgid "_Pads start on all workspaces"
-#~ msgstr "すべてのワークスペースでポッドを表示(_P)"
-
-#~ msgid "_Edit lock"
-#~ msgstr "ローカを編集(_E)"
-
-#~ msgid "Add _Delete to Toolbar"
-#~ msgstr "ツールバーに削除を追加(_D)"
-
-#~ msgid "Add _Close to Toolbar"
-#~ msgstr "ツールバーに閉じるを追加(_C)"
-
-#~ msgid "Add C_lear to Toolbar"
-#~ msgstr "ツールバーにクリアを追加(_l)"
-
-#~ msgid "Add Pr_eferences to Toolbar"
-#~ msgstr "ツールバーに「設定」を追加(_e)"
-
-#~ msgid "Add _New to Toolbar"
-#~ msgstr "ツールバーに「開く」を追加(_N)"
-
-#~ msgid "Add Proper_ties to Toolbar"
-#~ msgstr "ツールバーに「属性」を追加(_t)"
-
-#~ msgid "_Remove From Toolbar"
-#~ msgstr "ツールバーから外す(_R)"
-
-#~ msgid "Add a Se_parator to Toolbar"
-#~ msgstr "ツールバーに「セパレーター」を追加(_p)"
-
-#~ msgid "Add Close _All to Toolbar"
-#~ msgstr "ツールバーに「全部閉じる」を追加(_A)"
-
 #~ msgid ""
 #~ "Each xpad session consists of one or more open pads.  These pads are "
 #~ "basically sticky notes on your desktop in which you can write memos."
 #~ msgstr "各Xpadセッションは1つまたは複数開いたパッドで構成されます。これらのパッドは基本的にメモとして書き込めるデスクトップ上の付箋です。"
+
+#~ msgid "_Toolbar"
+#~ msgstr "ツールバー(_T)"
+
+#~ msgid "_Edit lock"
+#~ msgstr "ロックを編集(_E)"
+
+#~ msgid "_Pads start on all workspaces"
+#~ msgstr "すべてのワークスペースにパッドを表示する(_P)"
+
+#~ msgid "Show on _All Workspaces"
+#~ msgstr "すべてのワークスペースに表示(_A)"
+
+#~ msgid "Add C_lear to Toolbar"
+#~ msgstr "ツールバーに「消去」を追加(_L)"
+
+#~ msgid "Add _Close to Toolbar"
+#~ msgstr "ツールバーに「閉じる」を追加(_C)"
+
+#~ msgid "Add _Delete to Toolbar"
+#~ msgstr "ツールバーに「削除」を追加(_D)"
+
+#~ msgid "Add _New to Toolbar"
+#~ msgstr "ツールバーに「新規」を追加(_N)"
+
+#~ msgid "Add Pr_eferences to Toolbar"
+#~ msgstr "ツールバーに「設定」を追加(_E)"
+
+#~ msgid "Add Proper_ties to Toolbar"
+#~ msgstr "ツールバーに「プロパティ」を追加(_T)"
+
+#~ msgid "Add Close _All to Toolbar"
+#~ msgstr "ツールバーに「すべて閉じる」を追加(_A)"
+
+#~ msgid "Add a Se_parator to Toolbar"
+#~ msgstr "ツールバーに「区切り」を追加(_P)"
+
+#~ msgid "_Remove From Toolbar"
+#~ msgstr "ツールバーから削除(_R)"
