@@ -720,6 +720,7 @@ xpad_app_pass_args (void)
 	int client_fd;
 	struct sockaddr_un master;
 	fd_set fdset;
+	fd_set exception;
 	gchar buf [129];
 	gchar *args = NULL;
 	guint size;
@@ -753,9 +754,11 @@ xpad_app_pass_args (void)
 	{
 		/* wait for response */
 		FD_ZERO (&fdset);
+		FD_ZERO (&exception);
 		FD_SET (client_fd, &fdset);
+		FD_SET (client_fd, &exception);
 		/* block until we are answered, or an error occurs */
-		select (client_fd + 1, &fdset, NULL, &fdset, NULL);
+		select (client_fd + 1, &fdset, NULL, &exception, NULL);
 
 		do
 		{
