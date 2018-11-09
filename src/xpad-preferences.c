@@ -109,7 +109,7 @@ static void xpad_preferences_constructed (GObject *object);
 static void xpad_preferences_finalize (GObject *object);
 
 static void change_font_check (GtkToggleButton *button, XpadPreferences *pref);
-static void change_font_face (GtkFontButton *button, XpadPreferences *pref);
+static void change_font_face (GtkFontChooser *button, XpadPreferences *pref);
 static void change_color_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_text_color (GtkColorChooser *chooser, XpadPreferences *pref);
 static void change_back_color (GtkColorChooser *chooser, XpadPreferences *pref);
@@ -328,7 +328,7 @@ static void xpad_preferences_constructed (GObject *object)
 	if (fontname)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->fontcheck), TRUE);
-		gtk_font_button_set_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton), fontname);
+		gtk_font_chooser_set_font (GTK_FONT_CHOOSER (pref->priv->fontbutton), fontname);
 	}
 	else
 	{
@@ -338,7 +338,7 @@ static void xpad_preferences_constructed (GObject *object)
 		gtk_widget_set_sensitive (pref->priv->fontbutton, FALSE);
 
 		gtk_style_context_get (style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
-		gtk_font_button_set_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton), pango_font_description_to_string(font));
+		gtk_font_chooser_set_font (GTK_FONT_CHOOSER (pref->priv->fontbutton), pango_font_description_to_string(font));
 		pango_font_description_free (font);
 	}
 
@@ -616,7 +616,7 @@ change_font_check (GtkToggleButton *button, XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_font_handler);
 
 	if (gtk_toggle_button_get_active (button)) {
-		g_object_set (pref->priv->settings, "fontname", gtk_font_button_get_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton)), NULL);
+		g_object_set (pref->priv->settings, "fontname", gtk_font_chooser_get_font (GTK_FONT_CHOOSER (pref->priv->fontbutton)), NULL);
 	} else {
 		g_object_set (pref->priv->settings, "fontname", NULL, NULL);
 	}
@@ -626,10 +626,10 @@ change_font_check (GtkToggleButton *button, XpadPreferences *pref)
 }
 
 static void
-change_font_face (GtkFontButton *button, XpadPreferences *pref)
+change_font_face (GtkFontChooser *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_font_handler);
-	g_object_set (pref->priv->settings, "fontname", gtk_font_button_get_font_name (button), NULL);
+	g_object_set (pref->priv->settings, "fontname", gtk_font_chooser_get_font (button), NULL);
 	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_font_handler);
 }
 
@@ -847,7 +847,7 @@ notify_fontname (XpadPreferences *pref)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (pref->priv->fontcheck), TRUE);
 		gtk_widget_set_sensitive (pref->priv->fontbutton, TRUE);
-		gtk_font_button_set_font_name (GTK_FONT_BUTTON (pref->priv->fontbutton), fontname);
+		gtk_font_chooser_set_font (GTK_FONT_CHOOSER (pref->priv->fontbutton), fontname);
 	}
 	else
 	{

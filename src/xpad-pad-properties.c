@@ -256,7 +256,7 @@ xpad_pad_properties_set_property (GObject *object, guint prop_id, const GValue *
 		break;
 
 	case PROP_FONTNAME:
-		gtk_font_button_set_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton), g_value_get_string (value));
+		gtk_font_chooser_set_font (GTK_FONT_CHOOSER (prop->priv->fontbutton), g_value_get_string (value));
 		break;
 
 	default:
@@ -291,7 +291,7 @@ xpad_pad_properties_get_property (GObject *object, guint prop_id, GValue *value,
 		break;
 
 	case PROP_FONTNAME:
-		g_value_set_string (value, gtk_font_button_get_font_name (GTK_FONT_BUTTON (prop->priv->fontbutton)));
+		g_value_set_string (value, gtk_font_chooser_get_font (GTK_FONT_CHOOSER (prop->priv->fontbutton)));
 		break;
 
 	default:
