@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 
+#include <gtk/gtk.h>
+#include <gtk/deprecated/gtkstatusicon.h>
+#include <glib/gi18n.h>
+
 #include "xpad-tray.h"
 #include "fio.h"
 #include "help.h"
@@ -30,9 +34,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-pad-group.h"
 #include "xpad-preferences.h"
 #include "xpad-settings.h"
-
-#include <gtk/gtk.h>
-#include <glib/gi18n.h>
 
 enum
 {
