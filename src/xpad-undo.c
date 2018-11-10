@@ -22,12 +22,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 
+#include <stdlib.h>
+#include <glib.h>
+#include <gtk/gtk.h>
+
 #include "xpad-undo.h"
 #include "xpad-text-buffer.h"
-
-#include <stdlib.h>
-
-#include <glib.h>
 
 struct XpadUndoPrivate
 {

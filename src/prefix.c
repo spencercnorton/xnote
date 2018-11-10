@@ -45,12 +45,12 @@
 
 #include "../config.h"
 
-#include "prefix.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
+
+#include "prefix.h"
 
 #ifdef __cplusplus
 extern "C" {

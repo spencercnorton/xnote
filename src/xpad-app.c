@@ -26,6 +26,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <glib/gstdio.h>
+
 #include "xpad-app.h"
 #include "help.h"
 #include "xpad-pad.h"
@@ -33,16 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-periodic.h"
 #include "xpad-session-manager.h"
 #include "xpad-tray.h"
-
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <glib.h>
-#include <glib/gi18n.h>
-#include <glib/gstdio.h>
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines.
    These were provided by Alan Mizrahi <alan@cesma.usb.ve>.

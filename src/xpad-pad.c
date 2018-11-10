@@ -25,9 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../config.h"
 
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <gtksourceview/gtksource.h>
+
 #include "xpad-pad.h"
-#include "fio.h"
-#include "help.h"
 #include "xpad-app.h"
 #include "xpad-pad-properties.h"
 #include "xpad-periodic.h"
@@ -36,9 +38,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-text-view.h"
 #include "xpad-toolbar.h"
 #include "xpad-tray.h"
-
-#include <gtk/gtk.h>
-#include <glib/gi18n.h>
+#include "fio.h"
+#include "help.h"
 
 struct XpadPadPrivate
 {
