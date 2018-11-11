@@ -311,7 +311,7 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 
 	if (!tag)
 	{
-		g_print ("Tag not found in table %p\n", (void *) table);
+		g_printerr ("Tag not found in table %p\n", (void *) table);
 		return;
 	}
 

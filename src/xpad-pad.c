@@ -138,6 +138,7 @@ static void xpad_pad_open_properties (XpadPad *pad);
 static void xpad_pad_open_preferences (XpadPad *pad);
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
+static void xpad_pad_stick_unstick (XpadPad *pad);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
 static gboolean xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *event);
 
@@ -359,11 +360,6 @@ static void xpad_pad_constructed (GObject *object)
 
 	pad->priv->clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
-	if (pad->priv->sticky)
-		gtk_window_stick (pad_window);
-	else
-		gtk_window_unstick (pad_window);
-
 	xpad_pad_sync_title (pad);
 
 	/* Add CSS style class, so the styling can be overridden by a GTK theme */
@@ -487,15 +483,30 @@ xpad_pad_show (XpadPad *pad)
 	if (pad->priv->location_valid)
 		gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 
+	xpad_pad_stick_unstick (pad);
+
+	/* Show the pad and set the cursor into the pad */
+	gtk_window_present (GTK_WINDOW (pad));
+	gtk_widget_grab_focus (GTK_WIDGET (pad->priv->textview));
+}
+
+void
+xpad_pad_set_sticky (XpadPad *pad, gboolean is_sticky)
+{
+	pad->priv->sticky = is_sticky;
+	xpad_pad_stick_unstick (pad);
+	xpad_pad_save_info_delayed (pad);
+}
+
+static void
+xpad_pad_stick_unstick (XpadPad *pad)
+{
 	if (pad->priv->sticky)
 		gtk_window_stick (GTK_WINDOW (pad));
 	else
 		gtk_window_unstick (GTK_WINDOW (pad));
-
-	/* Show the pad and set the cursor into the pad */
-        gtk_window_present (GTK_WINDOW (pad));
-        gtk_widget_grab_focus (GTK_WIDGET (pad->priv->textview));
 }
+
 
 static gboolean toolbar_timeout (XpadPad *pad)
 {
@@ -825,7 +836,7 @@ xpad_pad_close (XpadPad *pad)
 	if (pad->priv->properties)
 		gtk_widget_destroy (pad->priv->properties);
 
-	xpad_pad_save_info (pad);
+	xpad_pad_save_info_delayed (pad);
 
 	g_signal_emit (pad, signals[CLOSED], 0);
 }
@@ -1327,10 +1338,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 		xpad_text_view_set_colors (pad->priv->textview, &text_color, &back_color);
 	}
 
-	if (pad->priv->sticky)
-		gtk_window_stick (GTK_WINDOW (pad));
-	else
-		gtk_window_unstick (GTK_WINDOW (pad));
+	xpad_pad_stick_unstick (pad);
 
 	if (show)
 		*show = !hidden;
@@ -1360,6 +1368,7 @@ xpad_pad_save_info (XpadPad *pad)
 			return;
 		gtk_window_set_role (GTK_WINDOW (pad), pad->priv->infoname);
 	}
+
 	/* create content file if it doesn't exist yet */
 	if (!pad->priv->contentname)
 	{
@@ -1816,6 +1825,7 @@ void xpad_pad_save_info_delayed (XpadPad *pad)
 	xpad_periodic_save_info_delayed (pad);
 }
 
+/* Save pad without delay, for example on application shutdown. */
 void xpad_pad_save_unsaved (XpadPad *pad)
 {
 	if (pad->priv->unsaved_content)

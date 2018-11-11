@@ -180,7 +180,7 @@ xpad_pad_group_toggle_hide (XpadPadGroup *group)
 		return;
 	}
 
-        GSList *nextPad = g_slist_nth (group->priv->pads, 0);
+	GSList *nextPad = g_slist_nth (group->priv->pads, 0);
 
 	while (nextPad != NULL) {
 		if (!gtk_widget_get_visible (GTK_WIDGET(nextPad->data))) {
@@ -188,8 +188,17 @@ xpad_pad_group_toggle_hide (XpadPadGroup *group)
 			return;
 		}
 
-                nextPad = g_slist_next (nextPad);		
+		nextPad = g_slist_next (nextPad);
 	}
 
 	xpad_pad_group_close_all (group);
+}
+
+
+void
+xpad_pad_group_update_sticky (XpadPadGroup *group, gboolean is_sticky)
+{
+	if (group) {
+		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_set_sticky, GINT_TO_POINTER(is_sticky));
+	}
 }

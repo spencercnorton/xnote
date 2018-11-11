@@ -172,7 +172,7 @@ gboolean xpad_periodic_set_callback (const char * cbname, XpadPeriodicFunc func)
 	}
 
 	if (! isdone) {
-		g_print("Failed to install signal callback: %s\n", cbname);
+		g_printerr("Failed to install signal callback: %s\n", cbname);
 		exit(1);
 	}
 
@@ -192,12 +192,18 @@ void xpad_periodic_save_content_delayed (void * xpad_pad)
 static void xpad_periodic_signal (const char * cbname, void * xpad_pad)
 {
 	int isdone = 0;
-	int tnx=0, snx=0;
+	int tnx = 0;
+	int snx = 0;
 	XpadPeriodicFunc func_ptr = 0;
 	Xpadsigref * sig_item = 0;
 
-	if (0 == cbname || 0==*cbname) { return; }
-	if (0 == xpad_pad) { return; }
+	if (0 == cbname || 0 == *cbname) {
+		return;
+	}
+
+	if (0 == xpad_pad) {
+		return;
+	}
 
 	/* Get the callback function address */
 	for (tnx = 0; tnx < xpptr->template_len; ++tnx) {
@@ -216,9 +222,9 @@ static void xpad_periodic_signal (const char * cbname, void * xpad_pad)
 	If it is present, don't do anything more. */
 	for (snx = 0; snx < xpptr->sigs_len; ++snx) {
 		sig_item = xpptr->sigs + snx;
-		if (str_equal(sig_item->signame,cbname) &&
-			(xpad_pad == sig_item->data)) {
-			G_PRINT_DBG("Already got signal: %s\n", cbname);
+
+		if (str_equal(sig_item->signame, cbname) && xpad_pad == sig_item->data) {
+			G_PRINT_DBG("Already got signal for this pad: %s\n", cbname);
 			return;
 		}
 	}
@@ -228,7 +234,7 @@ static void xpad_periodic_signal (const char * cbname, void * xpad_pad)
 		gint doadd = 0;
 		sig_item = xpptr->sigs + snx;
 
-		doadd += (str_equal(sig_item->signame, cbname));
+		doadd += (str_equal(sig_item->signame, cbname) && xpad_pad == sig_item->data);
 		doadd += (0 == sig_item->signame);
 
 		if (doadd) {
@@ -264,7 +270,7 @@ static void xpad_periodic_error_exit (const char * fmt, ...)
 {
 	va_list app;
 	va_start(app, fmt);
-	g_print(fmt, app);
+	g_printerr(fmt, app);
 	va_end(app);
 	exit(1);
 }

@@ -64,6 +64,7 @@ GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, XpadSettings *settings, 
 void xpad_pad_close (XpadPad *pad);
 void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);
+void xpad_pad_set_sticky (XpadPad *pad, gboolean is_sticky);
 
 void xpad_pad_load_content (XpadPad *pad);
 void xpad_pad_save_content (XpadPad *pad);

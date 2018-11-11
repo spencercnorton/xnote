@@ -496,7 +496,7 @@ xpad_app_load_pads (void)
 			if ((show || option_show) && !option_hide)
 				gtk_widget_show (pad);
 			else if (show) /* pad thought it would show, we should save that it didn't */
-				xpad_pad_save_info (XPAD_PAD (pad));
+				xpad_pad_save_info_delayed (XPAD_PAD (pad));
 			opened ++;
 		}
 	}

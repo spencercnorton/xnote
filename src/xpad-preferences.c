@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad-preferences.h"
 #include "xpad-app.h"
+#include "xpad-pad-group.h"
 
 struct XpadPreferencesPrivate
 {
@@ -738,7 +739,9 @@ static void
 change_autostart_sticky (GtkToggleButton *button, XpadPreferences *pref)
 {
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_autostart_sticky_handler);
-	g_object_set (pref->priv->settings, "autostart-sticky", gtk_toggle_button_get_active (button), NULL);
+	gboolean is_sticky = gtk_toggle_button_get_active (button);
+	g_object_set (pref->priv->settings, "autostart-sticky", is_sticky, NULL);
+	xpad_pad_group_update_sticky (xpad_app_get_pad_group(), is_sticky);
 	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_autostart_sticky_handler);
 }
 

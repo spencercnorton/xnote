@@ -1,4 +1,7 @@
 Version 5.1
+* Fix: Show notes on all workspaces (#1796459, #1425549)
+
+Version 5.1
 * New: CTRL-W short-cut / key-combination to close an open pad (#1744749, #1744748)
 * Fix: Autostart - Prevent an error message if the 'home_dir/.config/autostart' folder is missing. (#1756630)
 * Fix: Pad deletion - Changed the default of the delete pad confirmation window to [Cancel]. (#1783052)
