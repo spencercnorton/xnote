@@ -1,5 +1,7 @@
-Version 5.1
+Version 5.2
 * Fix: Show notes on all workspaces (#1796459, #1425549)
+* Fix: Save pad location and size (in fact all pad metadata) on user interrupt (CTRL-C) and on Linux request (reboot/shutdown/kill) (#1798374)
+* Fix: Save pad location and size automatically when changed. (#1798374).
 
 Version 5.1
 * New: CTRL-W short-cut / key-combination to close an open pad (#1744749, #1744748)

@@ -488,6 +488,9 @@ xpad_pad_show (XpadPad *pad)
 	/* Show the pad and set the cursor into the pad */
 	gtk_window_present (GTK_WINDOW (pad));
 	gtk_widget_grab_focus (GTK_WIDGET (pad->priv->textview));
+
+	/* Save the new visibility status to the disk */
+	xpad_pad_save_info_delayed (pad);
 }
 
 void
@@ -1073,11 +1076,11 @@ xpad_pad_toolbar_size_allocate (XpadPad *pad, GtkAllocation *event)
 	/* safe cast from gint to guint */
 	if (event->height >= 0) {
 		pad->priv->toolbar_height = (guint) event->height;
-	}
-	else {
+	} else {
 		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 		pad->priv->toolbar_height = 0;
 	}
+
 	return FALSE;
 }
 
@@ -1092,22 +1095,24 @@ xpad_pad_configure_event (XpadPad *pad, GdkEventConfigure *event)
 
 	/* safe cast from gint to guint */
 	if (eWidth >= 0 && eHeight >=0 ) {
+		/* If the width or height has changed, save it. */
 		if (pad->priv->width != (guint) eWidth || pad->priv->height != (guint) eHeight) {
 			pad->priv->toolbar_pad_resized = TRUE;
 			pad->priv->width = (guint) eWidth;
 			pad->priv->height = (guint) eHeight;
-			pad->priv->unsaved_info = TRUE;
+			xpad_pad_save_info_delayed(pad);
 		}
 	}
 	else {
 		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_configure_event' the variable 'event->width' or 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
 	}
 
+	/* If the location of the pad has changed, save it. */
 	if (pad->priv->x != event->x || pad->priv->y != event->y) {
 		pad->priv->x = event->x;
 		pad->priv->y = event->y;
 		pad->priv->location_valid = TRUE;
-		pad->priv->unsaved_info = TRUE;
+		xpad_pad_save_info_delayed(pad);
 	}
 
 	/*

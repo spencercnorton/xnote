@@ -90,6 +90,8 @@ static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
 static gboolean		xpad_app_open_proc_file     (void);
+static void enable_unix_signal_handlers();
+static void unix_signal_handler(int sig) __attribute__(( __noreturn__ ));
 
 static void
 xpad_app_init (int argc, char **argv)
@@ -202,10 +204,29 @@ xpad_app_init (int argc, char **argv)
 gint main (gint argc, gchar **argv)
 {
 	xpad_app_init (argc, argv);
-
+	enable_unix_signal_handlers();
 	gtk_main ();
 
 	return 0;
+}
+
+static void enable_unix_signal_handlers() {
+	signal(SIGINT, unix_signal_handler);
+	signal(SIGQUIT, unix_signal_handler);
+	signal(SIGTERM, unix_signal_handler);
+}
+
+static void unix_signal_handler(int sig)
+{
+	switch (sig) {
+		case SIGINT:
+		case SIGTERM:
+		case SIGQUIT:
+			xpad_app_quit();
+			break;
+	}
+
+	exit(EXIT_FAILURE);
 }
 
 /* parent and secondary may be NULL.
@@ -272,6 +293,8 @@ xpad_app_quit (void)
 
 	/* Free the memory used by the settings menu. */
 	g_clear_object (&settings);
+
+	exit(EXIT_SUCCESS);
 }
 
 static gboolean
