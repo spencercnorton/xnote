@@ -83,8 +83,8 @@ gboolean xpad_periodic_init (void)
 	xpptr->after_id = (gint) g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
 
 	/* Allocate space for the signal references. */
-	int tlen = xpptr->template_len = 5;
-	int slen = xpptr->sigs_len = 20;
+	int tlen = xpptr->template_len = 50;
+	int slen = xpptr->sigs_len = 200;
 	xpptr->template = g_malloc0((gsize) tlen * sizeof(Xpadsigref));
 	xpptr->sigs = g_malloc0((gsize) slen * sizeof(Xpadsigref));
 
@@ -191,7 +191,7 @@ void xpad_periodic_save_content_delayed (void * xpad_pad)
 
 static void xpad_periodic_signal (const char * cbname, void * xpad_pad)
 {
-	int isdone = 0;
+	gboolean isdone = FALSE;
 	int tnx = 0;
 	int snx = 0;
 	XpadPeriodicFunc func_ptr = 0;
