@@ -1,3 +1,6 @@
+Version 5.3
+* Fix: Prevent crash when starting Xpad with more than 10 pads (email bug report by Kevin Fenzi)
+
 Version 5.2
 * Fix: Show notes on all workspaces (#1796459, #1425549)
 * Fix: Save pad location and size (in fact all pad metadata) on user interrupt (CTRL-C) and on Linux request (reboot/shutdown/kill) (#1798374)
