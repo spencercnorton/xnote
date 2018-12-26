@@ -74,6 +74,7 @@ static gboolean str_equal (const char *, const char *);
 
 /* global variables */
 static XpadPeriodic xpptr [1];
+static gboolean is_activated;
 
 /* Functions start here */
 
@@ -83,16 +84,18 @@ gboolean xpad_periodic_init (void)
 	xpptr->after_id = (gint) g_timeout_add_seconds(TIMEOUT_SECONDS, xppd_intercept, xpptr);
 
 	/* Allocate space for the signal references. */
-	int tlen = xpptr->template_len = 50;
-	int slen = xpptr->sigs_len = 200;
+	int tlen = xpptr->template_len = 5;
+	int slen = xpptr->sigs_len = 20;
 	xpptr->template = g_malloc0((gsize) tlen * sizeof(Xpadsigref));
 	xpptr->sigs = g_malloc0((gsize) slen * sizeof(Xpadsigref));
+	is_activated = TRUE;
 
-	return TRUE;
+	return is_activated;
 }
 
 void xpad_periodic_close (void)
 {
+	is_activated = FALSE;
 	if (xpptr->after_id) { g_source_remove((guint) xpptr->after_id); }
 	/* Free the signal references memory. */
 	g_free(xpptr->template);
@@ -181,12 +184,16 @@ gboolean xpad_periodic_set_callback (const char * cbname, XpadPeriodicFunc func)
 
 void xpad_periodic_save_info_delayed (void * xpad_pad)
 {
-	xpad_periodic_signal("save-info", xpad_pad);
+	if (is_activated) {
+		xpad_periodic_signal("save-info", xpad_pad);
+	}
 }
 
 void xpad_periodic_save_content_delayed (void * xpad_pad)
 {
-	xpad_periodic_signal("save-content", xpad_pad);
+	if (is_activated) {
+		xpad_periodic_signal("save-content", xpad_pad);
+	}
 }
 
 static void xpad_periodic_signal (const char * cbname, void * xpad_pad)

@@ -1,5 +1,5 @@
 Version 5.3
-* Fix: Prevent crash when starting Xpad with more than 10 pads (email bug report by Kevin Fenzi)
+* Fix: Prevent crash when starting Xpad with more than 10 pads (#1809814)
 
 Version 5.2
 * Fix: Show notes on all workspaces (#1796459, #1425549)

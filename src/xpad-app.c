@@ -163,11 +163,6 @@ xpad_app_init (int argc, char **argv)
 	if (autostart_delay)
 		sleep(autostart_delay);
 
-	/* Initialize Xpad-periodic module */
-	xpad_periodic_init ();
-	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
-	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
-
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
 
@@ -176,19 +171,25 @@ xpad_app_init (int argc, char **argv)
 
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
+
 	if (pads_loaded_on_start == 0 && !option_new) {
 		if (!option_nonew) {
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 
 			/* Only show a new pad on startup, if the generic setting says to show all pads on startup. */
-                        guint display_pads;
-                        g_object_get (settings, "autostart-display-pads", &display_pads, NULL);
+			guint display_pads;
+			g_object_get (settings, "autostart-display-pads", &display_pads, NULL);
 
-                        if (display_pads == 0) {
+			if (display_pads == 0) {
 				gtk_widget_show (pad);
 			}
 		}
 	}
+
+	/* Initialize Xpad-periodic module */
+	xpad_periodic_init ();
+	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
+	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 
 	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
 
@@ -516,10 +517,14 @@ xpad_app_load_pads (void)
 			 * option_show = command line parameter to show all the pads
 			 * option_hide = command line parameter to hide all the pads
 			*/
-			if ((show || option_show) && !option_hide)
+
+			if ((show || option_show) && !option_hide) {
 				gtk_widget_show (pad);
-			else if (show) /* pad thought it would show, we should save that it didn't */
+			} else if (show) {
+				/* pad thought it would show, we should save that it didn't */
 				xpad_pad_save_info_delayed (XPAD_PAD (pad));
+			}
+
 			opened ++;
 		}
 	}
