@@ -277,7 +277,6 @@ xpad_app_quit (void)
 		return;
 	}
 
-	/* TODO: Should this variable be locked before writing (thread safety)? */
 	shutdown_in_progress = TRUE;
 
 	/* Stop the GTK main loop. gtk_main_quit() does no destruction of windows. It is just saying "exit the main loop and return to the caller". */
