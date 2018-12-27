@@ -1,4 +1,5 @@
 Version 5.3
+* New: ability to change the size of a new pad by the preferences (#1809825)
 * Fix: Prevent crash when starting Xpad with more than 10 pads (#1809814)
 
 Version 5.2
