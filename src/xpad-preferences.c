@@ -66,6 +66,8 @@ struct XpadPreferencesPrivate
 	gulong colorcheck_handler;
 	gulong text_handler;
 	gulong back_handler;
+	gulong new_pad_height_handler;
+	gulong new_pad_width_handler;
 	gulong autostart_xpad_handler;
 	gulong autostart_wait_systray_handler;
 	gulong autostart_delay_handler;
@@ -116,6 +118,8 @@ static void change_font_face (GtkFontChooser *button, XpadPreferences *pref);
 static void change_color_check (GtkToggleButton *button, XpadPreferences *pref);
 static void change_text_color (GtkColorChooser *chooser, XpadPreferences *pref);
 static void change_back_color (GtkColorChooser *chooser, XpadPreferences *pref);
+static void change_new_pad_height (GtkSpinButton *button, XpadPreferences *pref);
+static void change_new_pad_width (GtkSpinButton *button, XpadPreferences *pref);
 static void change_autostart_xpad (GtkToggleButton *button, XpadPreferences *pref);
 static void change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref);
 static void change_autostart_delay (GtkComboBox *box, XpadPreferences *pref);
@@ -306,12 +310,6 @@ static void xpad_preferences_constructed (GObject *object)
 	gtk_widget_set_margin_start (GTK_WIDGET (pref->priv->colorbox), 25);
 
 	/* Size of new pads: input fields */
-	gulong max_length_resolution = 5;
-	gchar *sheight = (gchar *) g_malloc (max_length_resolution);
-	gchar *swidth = (gchar *) g_malloc (max_length_resolution);
-	g_snprintf (sheight, max_length_resolution, "%i", height);
-	g_snprintf (swidth, max_length_resolution, "%i", width);
-
 	label_height = gtk_label_new_with_mnemonic (_("Height new pad"));
 	gtk_size_group_add_widget (size_group_labels, label_height);
 	pref->priv->height = gtk_spin_button_new_with_range (10, 99999, 10);
@@ -321,7 +319,7 @@ static void xpad_preferences_constructed (GObject *object)
 	label_width = gtk_label_new_with_mnemonic (_("Width new pad"));
 	gtk_size_group_add_widget (size_group_labels, label_width);
 	pref->priv->width = gtk_spin_button_new_with_range (10, 99999, 10);
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON(pref->priv->width), height);
+	gtk_spin_button_set_value (GTK_SPIN_BUTTON(pref->priv->width), width);
     gtk_widget_set_margin_start (pref->priv->width, 12);
 
 	/* Start adding the input pieces together in boxes */
@@ -545,6 +543,9 @@ static void xpad_preferences_constructed (GObject *object)
 	pref->priv->colorcheck_handler = g_signal_connect (pref->priv->colorcheck, "toggled", G_CALLBACK (change_color_check), pref);
 	pref->priv->text_handler = g_signal_connect (pref->priv->textbutton, "color-set", G_CALLBACK (change_text_color), pref);
 	pref->priv->back_handler = g_signal_connect (pref->priv->backbutton, "color-set", G_CALLBACK (change_back_color), pref);
+
+	pref->priv->new_pad_height_handler = g_signal_connect (pref->priv->height, "value-changed", G_CALLBACK (change_new_pad_height), pref);
+	pref->priv->new_pad_width_handler = g_signal_connect (pref->priv->width, "value-changed", G_CALLBACK (change_new_pad_width), pref);
 
 	pref->priv->autostart_xpad_handler = g_signal_connect (pref->priv->autostart_xpad, "toggled", G_CALLBACK (change_autostart_xpad), pref);
 	pref->priv->autostart_wait_systray_handler = g_signal_connect (pref->priv->autostart_wait_systray, "toggled", G_CALLBACK (change_autostart_wait_systray), pref);
@@ -870,6 +871,18 @@ change_has_scrollbar (GtkToggleButton *button, XpadPreferences *pref)
 	g_signal_handler_block (pref->priv->settings, pref->priv->notify_has_scrollbar_handler);
 	g_object_set (pref->priv->settings, "has-scrollbar", gtk_toggle_button_get_active (button), NULL);
 	g_signal_handler_unblock (pref->priv->settings, pref->priv->notify_has_scrollbar_handler);
+}
+
+static void
+change_new_pad_height (GtkSpinButton *button, XpadPreferences *pref)
+{
+	g_object_set (pref->priv->settings, "height", gtk_spin_button_get_value_as_int(button), NULL);
+}
+
+static void
+change_new_pad_width (GtkSpinButton *button, XpadPreferences *pref)
+{
+	g_object_set (pref->priv->settings, "width", gtk_spin_button_get_value_as_int(button), NULL);
 }
 
 static void
