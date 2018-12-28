@@ -1,6 +1,7 @@
 Version 5.3
 * New: ability to change the size of a new pad by the preferences (#1809825)
 * Fix: Prevent crash when starting Xpad with more than 10 pads (#1809814)
+* Fix: Changed the default size of new pads for new installations from 200x200 to 300x300 pixels. (#1809825)
 
 Version 5.2
 * Fix: Show notes on all workspaces (#1796459, #1425549)
