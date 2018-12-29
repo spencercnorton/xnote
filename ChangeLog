@@ -1,3 +1,6 @@
+Version 5.4
+* New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
+
 Version 5.3
 * New: ability to change the size of a new pad by the preferences (#1809825)
 * Fix: Prevent crash when starting Xpad with more than 10 pads (#1809814)
