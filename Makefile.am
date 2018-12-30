@@ -10,9 +10,40 @@ dist-hook:
 	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
 	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
 
-EXTRA_DIST = $(desktop_in_files) intltool-extract.in intltool-merge.in intltool-update.in
+EXTRA_DIST = \
+	$(desktop_in_files) \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in
 
-DISTCLEANFILES = xpad.desktop intltool-extract intltool-merge intltool-update po/xpad.pot \
-Makefile.in aclocal.m4 autom4te.cache/* compile config.h.in configure depcomp install-sh \
-intltool-extract.in intltool-merge.in intltool-update.in missing autopackage/Makefile.in \
-doc/Makefile.in images/Makefile.in po/Makefile.in src/Makefile.in *.in~ *.~1~
+DISTCLEANFILES = \
+	xpad.desktop \
+	intltool-extract \
+	intltool-merge \
+	intltool-update \
+	po/xpad.pot \
+	Makefile.in \
+	aclocal.m4 \
+	autom4te.cache/* \
+	compile \
+	config.h.in \
+	configure \
+	depcomp \
+	install-sh \
+	intltool-extract.in \
+	intltool-merge.in \
+	intltool-update.in \
+	missing \
+	autopackage/Makefile.in \
+	doc/Makefile.in \
+	images/Makefile.in \
+	po/Makefile.in \
+	src/Makefile.in \
+	*.in~ \
+	*.~1~
+
+install:
+#	$(INSTALL) -d $(DESTDIR)/usr/share/metainfo
+#	$(INSTALL_DATA) xpad.appdata.xml $(DESTDIR)/usr/share/metainfo/xpad.appdata.xml
+	$(INSTALL) -d $(datadir)/metainfo
+	$(INSTALL_DATA) xpad.appdata.xml $(datadir)/metainfo/xpad.appdata.xml
