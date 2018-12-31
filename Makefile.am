@@ -1,17 +1,15 @@
-SUBDIRS = autopackage doc src images po
+SUBDIRS = \
+	autopackage \
+	data \
+	doc \
+	images \
+	po \
+	src
 
-@INTLTOOL_DESKTOP_RULE@
-desktopdir = $(datadir)/applications
-desktop_in_files = xpad.desktop.in
-dist_desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-
-# Distribute pot file
-dist-hook:
-	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
-	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"
+# ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
-	$(desktop_in_files) \
+	autogen.sh \
 	intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in
@@ -42,8 +40,7 @@ DISTCLEANFILES = \
 	*.in~ \
 	*.~1~
 
-install:
-#	$(INSTALL) -d $(DESTDIR)/usr/share/metainfo
-#	$(INSTALL_DATA) xpad.appdata.xml $(DESTDIR)/usr/share/metainfo/xpad.appdata.xml
-	$(INSTALL) -d $(datadir)/metainfo
-	$(INSTALL_DATA) xpad.appdata.xml $(datadir)/metainfo/xpad.appdata.xml
+# Distribute pot file
+dist-hook:
+	$(MAKE) -C "$(srcdir)/po" "$(GETTEXT_PACKAGE).pot"
+	cp "$(srcdir)/po/$(GETTEXT_PACKAGE).pot" "$(distdir)/po/"

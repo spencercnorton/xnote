@@ -84,5 +84,15 @@ fi
 AC_SUBST(DEBUG_CFLAGS)
 
 # Sets up output files.
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile images/Makefile po/Makefile.in autopackage/Makefile autopackage/default.apspec])
+AC_CONFIG_FILES([
+Makefile 
+autopackage/Makefile 
+autopackage/default.apspec
+data/Makefile
+doc/Makefile 
+images/Makefile 
+po/Makefile.in 
+src/Makefile 
+])
+
 AC_OUTPUT

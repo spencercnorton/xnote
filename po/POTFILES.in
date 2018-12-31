@@ -1,6 +1,9 @@
 # List of source files containing translatable strings.
 # Copyright (C) 2003-2004 Michael Terry
 
+[encoding: UTF-8]
+data/xpad.appdata.xml.in
+
 # Package source files
 src/fio.c
 src/help.c

@@ -65,3 +65,4 @@ po/vi.gmo
 po/zh_CN.gmo
 po/zh_TW.gmo
 src/xpad
+data/xpad.appdata.xml
