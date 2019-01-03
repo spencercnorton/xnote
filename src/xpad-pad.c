@@ -353,6 +353,11 @@ static void xpad_pad_constructed (GObject *object)
 
 	g_object_set (G_OBJECT (pad), "child", vbox, NULL);
 
+        // xpad_pad_notify_has_scrollbar (pad);
+        // xpad_pad_notify_has_selection (pad);
+        // xpad_pad_notify_clipboard_owner_changed (pad);
+        // xpad_pad_notify_undo_redo_changed (pad);
+
 	pad->priv->clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
 	xpad_pad_sync_title (pad);
@@ -1218,6 +1223,7 @@ xpad_pad_load_content (XpadPad *pad)
 	g_free (content);
 	xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
 
+	// xpad_pad_text_changed(pad, buffer);
 	pad->priv->unsaved_content = FALSE;
 }
 
