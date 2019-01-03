@@ -1223,7 +1223,7 @@ xpad_pad_load_content (XpadPad *pad)
 	g_free (content);
 	xpad_text_buffer_thaw_undo (XPAD_TEXT_BUFFER (buffer));
 
-	// xpad_pad_text_changed(pad, buffer);
+	xpad_pad_sync_title (pad);
 	pad->priv->unsaved_content = FALSE;
 }
 
