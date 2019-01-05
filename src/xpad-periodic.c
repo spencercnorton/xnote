@@ -85,7 +85,7 @@ gboolean xpad_periodic_init (void)
 
 	/* Allocate space for the signal references. */
 	int tlen = xpptr->template_len = 5;
-	int slen = xpptr->sigs_len = 20;
+	int slen = xpptr->sigs_len = 200;
 	xpptr->template = g_malloc0((gsize) tlen * sizeof(Xpadsigref));
 	xpptr->sigs = g_malloc0((gsize) slen * sizeof(Xpadsigref));
 	is_activated = TRUE;

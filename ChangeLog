@@ -1,5 +1,8 @@
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
+* Fix: Fixed the regression that the scrollbars are not showing (#1810153)
+* Fix: Fixed the regression of the title of the pad not working on startup (#1810153)
+* Fix: Prevent crash when Closing/Showing all pads with more at least 32 pads (#1810614)
 
 Version 5.3
 * New: ability to change the size of a new pad by the preferences (#1809825)
