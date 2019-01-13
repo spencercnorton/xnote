@@ -1,3 +1,6 @@
+Version 5.5
+* 
+
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
 * Fix: Fixed the regression that the scrollbars are not showing (#1810153)
