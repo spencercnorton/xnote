@@ -27,11 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xpad-text-buffer.h"
 #include "xpad-pad.h"
-#include "xpad-undo.h"
 
 struct XpadTextBufferPrivate 
-{
-	XpadUndo *undo;
+{	
 	XpadPad *pad;
 };
 
@@ -82,17 +80,12 @@ static void
 xpad_text_buffer_init (XpadTextBuffer *buffer)
 {
 	buffer->priv = xpad_text_buffer_get_instance_private (buffer);
-
-	buffer->priv->undo = xpad_undo_new (buffer);
 }
 
 static void
 xpad_text_buffer_dispose (GObject *object)
 {
 	XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (object);
-
-	g_clear_object (&buffer->priv->pad);
-	g_clear_object (&buffer->priv->undo);
 
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
 }
@@ -327,12 +320,10 @@ xpad_text_buffer_toggle_tag (XpadTextBuffer *buffer, const gchar *name)
 	if (all_tagged)
 	{
 		gtk_text_buffer_remove_tag (GTK_TEXT_BUFFER (buffer_tb), tag, &start, &end);
-		xpad_undo_remove_tag (buffer->priv->undo, name, &start, &end);
 	}
 	else
 	{
 		gtk_text_buffer_apply_tag (GTK_TEXT_BUFFER (buffer_tb), tag, &start, &end);
-		xpad_undo_apply_tag (buffer->priv->undo, name, &start, &end);
 	}
 }
 
@@ -394,35 +385,47 @@ create_tag_table (void)
 gboolean
 xpad_text_buffer_undo_available (XpadTextBuffer *buffer)
 {
-	return xpad_undo_undo_available (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	return gtk_source_buffer_can_undo (parent);
 }
 
 gboolean
 xpad_text_buffer_redo_available (XpadTextBuffer *buffer)
 {
-	return xpad_undo_redo_available (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	return gtk_source_buffer_can_redo (parent);
 }
 
 void
 xpad_text_buffer_undo (XpadTextBuffer *buffer)
 {
-	xpad_undo_exec_undo (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	if (gtk_source_buffer_can_undo (parent))
+	{
+		gtk_source_buffer_undo (parent);
+	}
 }
 
 void
 xpad_text_buffer_redo (XpadTextBuffer *buffer)
 {
-	xpad_undo_exec_redo (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	if (gtk_source_buffer_can_redo (parent))
+	{
+		gtk_source_buffer_redo (parent);
+	}
 }
 
 void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer)
 {
-	xpad_undo_freeze (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	gtk_source_buffer_begin_not_undoable_action (parent);
 }
 
 void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer)
 {
-	xpad_undo_thaw (buffer->priv->undo);
+	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
+	gtk_source_buffer_end_not_undoable_action (parent);
 }
 
 XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer)

@@ -1,5 +1,5 @@
 Version 5.5
-* 
+* Fix: Removal of the obsolete undo/redo functionality, since it is already provided by the GtkSourceBuffer by Siergiej Riaguzow. (#1349838)
 
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
