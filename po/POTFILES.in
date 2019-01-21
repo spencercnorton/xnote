@@ -20,5 +20,4 @@ src/xpad-text-buffer.c
 src/xpad-text-view.c
 src/xpad-toolbar.c
 src/xpad-tray.c
-src/xpad-undo.c
-xpad.desktop.in
+data/xpad.desktop.in
