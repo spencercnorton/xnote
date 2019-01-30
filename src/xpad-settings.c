@@ -161,8 +161,8 @@ xpad_settings_init (XpadSettings *settings)
 	 * Found the explanation, but not a solution:
 	 * http://blogs.gnome.org/desrt/2012/02/26/a-gentle-introduction-to-gobject-construction/
 	 */
-	settings->priv->width = 200;
-	settings->priv->height = 200;
+	settings->priv->width = 300;
+	settings->priv->height = 300;
 	settings->priv->has_decorations = FALSE;
 	settings->priv->hide_from_taskbar = FALSE;
 	settings->priv->hide_from_task_switcher = FALSE;
