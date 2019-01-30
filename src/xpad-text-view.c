@@ -101,7 +101,8 @@ xpad_text_view_init (XpadTextView *view)
 	view->priv = xpad_text_view_get_instance_private (view);
 }
 
-static void xpad_text_view_constructed (GObject *object)
+static void
+xpad_text_view_constructed (GObject *object)
 {
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
@@ -335,7 +336,8 @@ xpad_text_view_notify_colors (XpadTextView *view)
 }
 
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
-void xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
+void
+xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
 	gchar *cssStyling = g_strconcat("textview, textview text {caret-color: ",
 			text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color",
 			"; color: ",
@@ -359,7 +361,8 @@ void xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, cons
 }
 
 /* Set the font of the pad, which is in the text view */
-void xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
+void
+xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
 	GtkStyleContext *context = gtk_widget_get_style_context (view);
 
 	if (desc == NULL && XPAD_TEXT_VIEW (view)->priv->font_provider) {

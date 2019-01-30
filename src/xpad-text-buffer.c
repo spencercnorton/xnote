@@ -1,8 +1,8 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
-Copyright (c) 2011 Sergei Riaguzov
 Copyright (c) 2013-2014 Arthur Borsboom
+Copyright (c) 2019 Siergiej Riaguzow
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -416,19 +416,22 @@ xpad_text_buffer_redo (XpadTextBuffer *buffer)
 	}
 }
 
-void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer)
+void
+xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer)
 {
 	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
 	gtk_source_buffer_begin_not_undoable_action (parent);
 }
 
-void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer)
+void
+xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer)
 {
 	GtkSourceBuffer *parent = GTK_SOURCE_BUFFER (buffer);
 	gtk_source_buffer_end_not_undoable_action (parent);
 }
 
-XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer)
+XpadPad *
+xpad_text_buffer_get_pad (XpadTextBuffer *buffer)
 {
 	if (buffer == NULL)
 		return NULL;
@@ -438,7 +441,8 @@ XpadPad *xpad_text_buffer_get_pad (XpadTextBuffer *buffer)
 	return pad;
 }
 
-void xpad_text_buffer_set_pad (XpadTextBuffer *buffer, XpadPad *pad)
+void
+xpad_text_buffer_set_pad (XpadTextBuffer *buffer, XpadPad *pad)
 {
 	g_return_if_fail (buffer);
 

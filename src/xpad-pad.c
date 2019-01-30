@@ -2,10 +2,10 @@
 
 Copyright (c) 2001-2007 Michael Terry
 Copyright (c) 2009 Paul Ivanov
-Copyright (c) 2011 Sergei Riaguzov
 Copyright (c) 2011 Dennis Hilmar
 Copyright (c) 2011 OBATA Akio
 Copyright (c) 2013-2015 Arthur Borsboom
+Copyright (c) 2019 Siergiej Riaguzow
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xpad-pad-properties.h"
 #include "xpad-periodic.h"
 #include "xpad-preferences.h"
+#include "xpad-search-bar.h"
 #include "xpad-text-buffer.h"
 #include "xpad-text-view.h"
 #include "xpad-toolbar.h"
@@ -52,8 +53,13 @@ struct XpadPadPrivate
 	gboolean sticky;
 
 	/* selected child widgets */
+	GtkOverlay *text_with_search_overlay;
+	// TODO: Why everything is a GtkWidget? declare as proper child types for readability
+	// see long comment in xpad-toolbar.h. Even if class creators may return GtkWidget*
+	// what is the point of storing them as such. This deastrically reduces readability
 	GtkWidget *textview;
 	GtkWidget *scrollbar;
+	XpadSearchBar *searchbar;
 
 	/* toolbar stuff */
 	GtkWidget *toolbar;
@@ -128,6 +134,7 @@ static void xpad_pad_show_toolbar (XpadPad *pad);
 static void xpad_pad_popup (XpadPad *pad, GdkEventButton *event);
 static void xpad_pad_spawn (XpadPad *pad);
 static void xpad_pad_clear (XpadPad *pad);
+static void xpad_pad_search (XpadPad *pad);
 static void xpad_pad_undo (XpadPad *pad);
 static void xpad_pad_redo (XpadPad *pad);
 static void xpad_pad_cut (XpadPad *pad);
@@ -289,8 +296,10 @@ xpad_pad_init (XpadPad *pad)
 	pad->priv->location_valid = FALSE;
 	pad->priv->infoname = NULL;
 	pad->priv->contentname = NULL;
+	pad->priv->text_with_search_overlay = NULL;
 	pad->priv->textview = NULL;
 	pad->priv->scrollbar = NULL;
+	pad->priv->searchbar = NULL;
 	pad->priv->toolbar = NULL;
 	pad->priv->toolbar_timeout = 0;
 	pad->priv->toolbar_height = 0;
@@ -306,7 +315,6 @@ static void xpad_pad_constructed (GObject *object)
 	XpadPad *pad = XPAD_PAD (object);
 
 	gboolean decorations, hide_from_taskbar, hide_from_task_switcher;
-	GtkBox *vbox;
 
 	g_object_get (pad->priv->settings,
 			"width", &pad->priv->width,
@@ -315,6 +323,7 @@ static void xpad_pad_constructed (GObject *object)
 
 	GtkWindow *pad_window = GTK_WINDOW (pad);
 
+	// textview in scrollbar
 	pad->priv->textview = GTK_WIDGET (XPAD_TEXT_VIEW (xpad_text_view_new (pad->priv->settings, pad)));
 
 	pad->priv->scrollbar = GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -326,6 +335,16 @@ static void xpad_pad_constructed (GObject *object)
 		"child", pad->priv->textview,
 		NULL));
 
+	// searchbar
+	GtkSourceBuffer *buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
+	pad->priv->searchbar = xpad_search_bar_new (buffer);
+
+	// overlay with scrollbar (with text) and searchbar
+	pad->priv->text_with_search_overlay = GTK_OVERLAY (gtk_overlay_new ());
+	gtk_overlay_add_overlay (pad->priv->text_with_search_overlay, pad->priv->scrollbar);
+	gtk_overlay_add_overlay (pad->priv->text_with_search_overlay, GTK_WIDGET (pad->priv->searchbar));
+
+	// toolbar
 	pad->priv->toolbar = GTK_WIDGET (xpad_toolbar_new (pad));
 
 	pad->priv->accel_group = gtk_accel_group_new ();
@@ -334,9 +353,10 @@ static void xpad_pad_constructed (GObject *object)
 	pad->priv->highlight_menu = menu_get_popup_highlight (pad, pad->priv->accel_group);
 	gtk_accel_group_connect (pad->priv->accel_group, GDK_KEY_Q, GDK_CONTROL_MASK, 0, g_cclosure_new_swap (G_CALLBACK (xpad_app_quit), pad, NULL));
 
-	vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
+	// GtkBox with overlay and toolbar
+	GtkBox *vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
 	gtk_box_set_homogeneous (vbox, FALSE);
-	gtk_box_pack_start (vbox, pad->priv->scrollbar, TRUE, TRUE, 0);
+	gtk_box_pack_start (vbox, GTK_WIDGET (pad->priv->text_with_search_overlay), TRUE, TRUE, 0);
 	gtk_box_pack_start (vbox, pad->priv->toolbar, FALSE, FALSE, 0);
 
 	gtk_container_child_set (GTK_CONTAINER (vbox), pad->priv->toolbar, "expand", FALSE, NULL);
@@ -404,6 +424,7 @@ static void xpad_pad_constructed (GObject *object)
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-cut", G_CALLBACK (xpad_pad_cut), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-copy", G_CALLBACK (xpad_pad_copy), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-paste", G_CALLBACK (xpad_pad_paste), pad);
+	g_signal_connect_swapped (pad->priv->toolbar, "activate-search", G_CALLBACK (xpad_pad_search), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-delete", G_CALLBACK (xpad_pad_delete), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-properties", G_CALLBACK (xpad_pad_open_properties), pad);
 	g_signal_connect_swapped (pad->priv->toolbar, "activate-preferences", G_CALLBACK (xpad_pad_open_preferences), pad);
@@ -842,6 +863,12 @@ xpad_pad_close (XpadPad *pad)
 	xpad_pad_save_info_delayed (pad);
 
 	g_signal_emit (pad, signals[CLOSED], 0);
+}
+
+void
+xpad_pad_search (XpadPad *pad)
+{
+	xpad_search_bar_show (pad->priv->searchbar);
 }
 
 void
@@ -1608,6 +1635,8 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Paste"), "edit-paste", 0, 0, xpad_pad_paste);
 	g_object_set_data (G_OBJECT (uppermenu), "paste", item);
+	MENU_ADD_SEP();
+	MENU_ADD (_("_Find"), "edit-find", GDK_KEY_F, GDK_CONTROL_MASK, xpad_pad_search);
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
 

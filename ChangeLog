@@ -1,4 +1,5 @@
 Version 5.5
+* New: Ability to search through a pad by Siergiej Riaguzow. (#452226)
 * Fix: Removal of the obsolete undo/redo functionality, since it is already provided by the GtkSourceBuffer by Siergiej Riaguzow. (#1349838)
 * Fix: 'make check' fails over missing/moved xpad.desktop.in (#1812678)
 
