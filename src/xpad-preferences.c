@@ -505,7 +505,7 @@ static void xpad_preferences_constructed (GObject *object)
 
 	gtk_notebook_append_page (GTK_NOTEBOOK (pref->priv->notebook), GTK_WIDGET (other_vbox), label);
 
-	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Make pads read-only"));
+	pref->priv->editcheck = gtk_check_button_new_with_mnemonic (_("_Make pads read-only (CTRL-J)"));
 	pref->priv->confirmcheck = gtk_check_button_new_with_mnemonic (_("_Confirm pad deletion"));
 
 	gtk_box_pack_start (other_vbox, pref->priv->editcheck, FALSE, FALSE, 0);
