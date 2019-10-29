@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-10-27 05:59+0000\n"
+"POT-Creation-Date: 2019-10-28 08:34+0000\n"
 "PO-Revision-Date: 2018-06-21 19:09+0000\n"
 "Last-Translator: Pjotr12345 <Unknown>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2019-10-28 05:57+0000\n"
+"X-Launchpad-Export-Date: 2019-10-29 05:51+0000\n"
 "X-Generator: Launchpad (build 469f241f4e73cc0bdffa4e30654052a2af068e06)\n"
 "Language: nl\n"
 
@@ -432,8 +432,8 @@ msgid "Other"
 msgstr "Overig"
 
 #: ../src/xpad-preferences.c:508
-msgid "_Make pads read-only"
-msgstr "Maak _alle memo's alleen-lezen"
+msgid "_Make pads read-only (CTRL-J)"
+msgstr ""
 
 #: ../src/xpad-preferences.c:509
 msgid "_Confirm pad deletion"
