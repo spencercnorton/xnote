@@ -56,7 +56,7 @@ struct XpadPadPrivate
 	GtkOverlay *text_with_search_overlay;
 	// TODO: Why everything is a GtkWidget? declare as proper child types for readability
 	// see long comment in xpad-toolbar.h. Even if class creators may return GtkWidget*
-	// what is the point of storing them as such. This deastrically reduces readability
+	// what is the point of storing them as such. This drastrically reduces readability
 	GtkWidget *textview;
 	GtkWidget *scrollbar;
 	XpadSearchBar *searchbar;
@@ -1639,6 +1639,7 @@ menu_get_popup_no_highlight (XpadPad *pad, GtkAccelGroup *accel_group)
 	MENU_ADD (_("_Find"), "edit-find", GDK_KEY_F, GDK_CONTROL_MASK, xpad_pad_search);
 	MENU_ADD_SEP();
 	MENU_ADD (_("_Layout"), "document-properties", 0, 0, xpad_pad_open_properties);
+	MENU_ADD (_("_Read only"), "editable", 0, 0, xpad_pad_open_properties);
 
 	menu = uppermenu;
 	MENU_ADD_SEP();
