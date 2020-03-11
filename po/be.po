@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2020-03-09 05:46+0000\n"
+"POT-Creation-Date: 2020-03-10 11:30+0000\n"
 "PO-Revision-Date: 2016-03-11 09:41+0000\n"
 "Last-Translator: Mikalai Udodau <Unknown>\n"
 "Language-Team: Belarusian <be@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-03-10 05:43+0000\n"
+"X-Launchpad-Export-Date: 2020-03-11 05:45+0000\n"
 "X-Generator: Launchpad (build e0878392dc799b267dea80578fa65500a5d74155)\n"
 
 #: ../data/xpad.appdata.xml.in.h:1 ../src/xpad-pad.c:1444
@@ -181,7 +181,7 @@ msgstr "Ад_каціць"
 msgid "_Redo"
 msgstr "_Паўтарыць"
 
-#: ../src/xpad-pad.c:1636 ../src/xpad-pad.c:1764
+#: ../src/xpad-pad.c:1636 ../src/xpad-pad.c:1765
 msgid "_Paste"
 msgstr "_Уставіць"
 
@@ -193,53 +193,57 @@ msgstr ""
 msgid "_Layout"
 msgstr "Выкла_д"
 
+#: ../src/xpad-pad.c:1642
+msgid "_Read only"
+msgstr ""
+
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1647
+#: ../src/xpad-pad.c:1648
 msgid "_Notes"
 msgstr "На_таткі"
 
-#: ../src/xpad-pad.c:1652 ../src/xpad-tray.c:140
+#: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:140
 msgid "_Show All"
 msgstr "_Паказаць усе"
 
-#: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:146
+#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:146
 msgid "_Close All"
 msgstr "_Закрыць усё"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1656 ../src/xpad-pad.c:1660 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1657 ../src/xpad-pad.c:1661 ../src/xpad-tray.c:164
 msgid "_Help"
 msgstr "_Даведка"
 
-#: ../src/xpad-pad.c:1661
+#: ../src/xpad-pad.c:1662
 msgid "_About"
 msgstr "_Аб праграме"
 
-#: ../src/xpad-pad.c:1666 ../src/xpad-tray.c:160
+#: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:160
 msgid "_Preferences"
 msgstr "_Настройкі"
 
-#: ../src/xpad-pad.c:1762
+#: ../src/xpad-pad.c:1763
 msgid "Cu_t"
 msgstr "_Выразаць"
 
-#: ../src/xpad-pad.c:1763
+#: ../src/xpad-pad.c:1764
 msgid "_Copy"
 msgstr "_Капіяваць"
 
-#: ../src/xpad-pad.c:1767
+#: ../src/xpad-pad.c:1768
 msgid "_Bold"
 msgstr "_Цёмны"
 
-#: ../src/xpad-pad.c:1768
+#: ../src/xpad-pad.c:1769
 msgid "_Italic"
 msgstr "_Курсіў"
 
-#: ../src/xpad-pad.c:1769
+#: ../src/xpad-pad.c:1770
 msgid "_Underline"
 msgstr "_Падкрэслены"
 
-#: ../src/xpad-pad.c:1770
+#: ../src/xpad-pad.c:1771
 msgid "_Strikethrough"
 msgstr "_Закрэслены"
 
