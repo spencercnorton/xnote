@@ -52,6 +52,7 @@ struct XpadSettingsPrivate
 	gboolean autostart_new_pad;
 	gboolean autostart_sticky;
 	guint autostart_display_pads;
+	gboolean line_numbering;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE (XpadSettings, xpad_settings, G_TYPE_OBJECT)
@@ -88,6 +89,7 @@ enum
 	PROP_AUTOSTART_DISPLAY_PADS,
 	PROP_HIDE_FROM_TASKBAR,
 	PROP_HIDE_FROM_TASK_SWITCHER,
+	PROP_LINE_NUMBERING,
 	N_PROPERTIES
 };
 
@@ -141,6 +143,7 @@ xpad_settings_class_init (XpadSettingsClass *klass)
 	obj_prop[PROP_AUTOSTART_DISPLAY_PADS] = g_param_spec_uint ("autostart-display-pads", "Autostart display pads", "Show/hide/restore pads at start", 0, G_MAXUINT, 2, G_PARAM_READWRITE);
 	obj_prop[PROP_HIDE_FROM_TASKBAR] = g_param_spec_boolean ("hide-from-taskbar", "Hide from taskbar", "Hide the pads from the task bar", FALSE, G_PARAM_READWRITE);
 	obj_prop[PROP_HIDE_FROM_TASK_SWITCHER] = g_param_spec_boolean ("hide-from-task-switcher", "Hide from task switcher", "Hide the pads from the task or workspace switcher", FALSE, G_PARAM_READWRITE);
+	obj_prop[PROP_LINE_NUMBERING] = g_param_spec_boolean ("line-numbering", "Toggle line numbering", "Enable or disable the line numbering", FALSE, G_PARAM_READWRITE);
 
 	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 
@@ -181,6 +184,7 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->autostart_sticky = FALSE;
 	settings->priv->autostart_delay = 0;
 	settings->priv->autostart_display_pads = 2;
+	settings->priv->line_numbering = FALSE;
 
 	settings->priv->toolbar_buttons = NULL;
 	settings->priv->toolbar_buttons = g_slist_append (settings->priv->toolbar_buttons, g_strdup ("New"));
@@ -427,6 +431,10 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 		settings->priv->hide_from_task_switcher = g_value_get_boolean (value);
 		break;
 
+	case PROP_LINE_NUMBERING:
+		settings->priv->line_numbering = g_value_get_boolean (value);
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		return;
@@ -535,6 +543,10 @@ xpad_settings_get_property (GObject *object, guint prop_id, GValue *value, GPara
 		g_value_set_boolean (value, settings->priv->hide_from_task_switcher);
 		break;
 
+	case PROP_LINE_NUMBERING:
+		g_value_set_boolean (value, settings->priv->line_numbering);
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		return;
@@ -573,6 +585,7 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_display_pads", &settings->priv->autostart_display_pads,
 		"b|hide_from_taskbar", &settings->priv->hide_from_taskbar,
 		"b|hide_from_task_switcher", &settings->priv->hide_from_task_switcher,
+		"b|line_numbering", &settings->priv->line_numbering,
 		NULL))
 		return;
 
@@ -690,6 +703,7 @@ save_to_file (XpadSettings *settings, const gchar *filename)
 		"u|autostart_display_pads", settings->priv->autostart_display_pads,
 		"b|hide_from_taskbar", settings->priv->hide_from_taskbar,
 		"b|hide_from_task_switcher", settings->priv->hide_from_task_switcher,
+		"b|line_numbering", settings->priv->line_numbering,
 		NULL);
 
 	g_free (buttons);
