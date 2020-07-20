@@ -1,16 +1,16 @@
-# Hebrew translation for xpad
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Punjabi translation for xpad
+# Copyright (c) 2020 Rosetta Contributors and Canonical Ltd 2020
 # This file is distributed under the same license as the xpad package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2020-07-19 06:13+0000\n"
-"PO-Revision-Date: 2013-10-13 08:58+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"PO-Revision-Date: 2020-07-20 04:17+0000\n"
+"Last-Translator: Gursharnjit_Singh <gursharnjitsingh13@gmail.com>\n"
+"Language-Team: Punjabi <pa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../data/xpad.appdata.xml.in.h:1 ../src/xpad-pad.c:1444
 msgid "Sticky notes"
-msgstr "פתקים נצמדים"
+msgstr "ਚਿਪਕਣਵਾਲੇ ਨੋਟ-ਕਥਨ"
 
 #: ../data/xpad.appdata.xml.in.h:2
 msgid ""
@@ -27,15 +27,19 @@ msgid ""
 "and customizable. Xpad consists of independent pad windows; each is "
 "basically a text box in which notes can be written."
 msgstr ""
+"Xpad ਚਿਪਕਣਵਾਲੇ ਨੋਟ-ਕਥਨਾਂ ਵਾਲੀ ਸੌਖੀ ਐਪਲੀਕੇਸ਼ਨ ਹੈ ਜਿਸ ਵਿੱਚ ਮਨ ਮੁਤਾਬਕ ਤਬਦੀਲੀਆਂ "
+"ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ ਅਤੇ ਜਿਸ 'ਤੇ ਸਿਸਟਮ ਦੀ ਖਰਾਬੀ ਦਾ ਅਸਰ ਨਹੀਂ ਪੈਂਦਾ। Xpad ਵਿੱਚ "
+"ਲਿਖਣ ਲਈ ਵੱਖ-ਵੱਖ ਤਾਕੀਆਂ ਹੁੰਦੀਆਂ ਹਨ; ਹਰੇਕ ਤਾਕੀ ਅਸਲ 'ਚ ਲਿਖਤ ਖਾਨਾ ਹੈ ਜਿਸ ਵਿੱਚ "
+"ਨੋਟ-ਕਥਨ ਲਿਖੇ ਜਾ ਸਕਦੇ ਹਨ।"
 
 #: ../src/fio.c:146
 #, c-format
 msgid "Could not write to file %s: %s"
-msgstr "לא ניתן לכתוב לקובץ %s:‏ %s"
+msgstr "ਫ਼ਾਈਲ %s: %s ਨੂੰ ਲਿਖਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ"
 
 #: ../src/help.c:51
 msgid "Error showing the help"
-msgstr ""
+msgstr "ਮਦਦ ਵਿਖਾਉਣ ਵਿੱਚ ਗੜਬੜ ਹੋਈ"
 
 #: ../src/help.c:51
 #, c-format
@@ -43,18 +47,20 @@ msgid ""
 "Could not find the help file %s\n"
 "%s"
 msgstr ""
+"ਮਦਦ ਫ਼ਾਈਲ ਨਹੀਂ ਮਿਲੀ %s\n"
+"%s"
 
 #: ../src/help.c:70 ../src/xpad-preferences.c:528
 msgid "Close"
-msgstr ""
+msgstr "ਬੰਦ ਕਰੋ"
 
 #: ../src/help.c:75
 msgid "Help"
-msgstr "עזרה"
+msgstr "ਮਦਦ"
 
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
-msgstr "Xpad is a graphical program.  Please run it from your desktop."
+msgstr "Xpad ਦਿਸਣ ਵਾਲਾ ਪ੍ਰੋਗਰਾਮ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇਸਨੂੰ ਡੈਸਕਟਾਪ 'ਤੇ ਚਲਾਓ।"
 
 #: ../src/xpad-app.c:136 ../data/xpad.desktop.in.h:1
 msgid "Xpad"
@@ -62,72 +68,72 @@ msgstr "Xpad"
 
 #: ../src/xpad-app.c:247
 msgid "_Ok"
-msgstr ""
+msgstr "_ਠੀਕ ਹੈ"
 
 #: ../src/xpad-app.c:498
 #, c-format
 msgid "Could not open directory %s."
-msgstr "לא ניתן לפתוח את התיקייה %s."
+msgstr ""
 
 #: ../src/xpad-app.c:501
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
-msgstr "תיקייה זו נדרשת לצורך אחסון העדפות ופרטים על הלוח. Xpad ייסגר כעת."
+msgstr ""
 
 #: ../src/xpad-app.c:819
 msgid "Show version number and quit"
-msgstr "הצגת מספר הגרסה ולצאת"
+msgstr ""
 
 #: ../src/xpad-app.c:820
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "אין ליצור לוח חדש עם ההפעלה אם לא קיימים שום לוחות קודמים"
+msgstr ""
 
 #: ../src/xpad-app.c:826
 msgid "Create a new pad on startup even if pads already exist"
-msgstr "יצירת לוח חדש עם ההפעלה אפילו אם קיים כבר לוח"
+msgstr ""
 
 #: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
-msgstr "הסתרת כל הלוחות"
+msgstr ""
 
 #: ../src/xpad-app.c:828
 msgid "Show all pads"
-msgstr "הצגת כל הלוחות"
+msgstr ""
 
 #: ../src/xpad-app.c:829
 msgid "Toggle between show and hide all pads"
-msgstr "החלפה בין הצגה להסתרה של כל הלוחות"
+msgstr ""
 
 #: ../src/xpad-app.c:830
 msgid "Create a new pad with the contents of a file"
-msgstr "יצירת לוח חדש עם תוכן של קובץ"
+msgstr ""
 
 #: ../src/xpad-app.c:830
 msgid "FILE"
-msgstr "FILE"
+msgstr ""
 
 #: ../src/xpad-app.c:831
 msgid "Close all pads"
-msgstr "סגירת כל הלוחות"
+msgstr ""
 
 #: ../src/xpad-app.c:862
 #, c-format
 msgid "Xpad %s"
-msgstr "Xpad %s"
+msgstr ""
 
 #: ../src/xpad-pad.c:187
 #, c-format
 msgid "Could not read file %s."
-msgstr "לא ניתן לקרוא את הקובץ %s."
+msgstr ""
 
 #: ../src/xpad-pad.c:920
 msgid "Delete this pad?"
-msgstr "האם למחוק לוח זה?"
+msgstr ""
 
 #: ../src/xpad-pad.c:920
 msgid "All text of this pad will be irrevocably lost."
-msgstr "כל הטקסט של לוח זה יאבד לצמיתות."
+msgstr ""
 
 #: ../src/xpad-pad.c:925 ../src/xpad-pad.c:1622
 msgid "_Delete"
@@ -148,8 +154,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
-"  Yaron https://launchpad.net/~sh-yaron"
+"  Gursharnjit_Singh https://launchpad.net/~ubuntuser13"
 
 #: ../src/xpad-pad.c:1621 ../src/xpad-tray.c:133
 msgid "_New"
@@ -166,7 +171,7 @@ msgstr ""
 #. Edit submenu
 #: ../src/xpad-pad.c:1627
 msgid "_Edit"
-msgstr "ע_ריכה"
+msgstr ""
 
 #: ../src/xpad-pad.c:1631
 msgid "_Undo"
@@ -195,24 +200,24 @@ msgstr ""
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1648
 msgid "_Notes"
-msgstr "ה_ערות"
+msgstr ""
 
 #: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:140
 msgid "_Show All"
-msgstr "ה_צגת הכול"
+msgstr ""
 
 #: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:146
 msgid "_Close All"
-msgstr "_סגירת הכול"
+msgstr ""
 
 #. Help submenu
 #: ../src/xpad-pad.c:1657 ../src/xpad-pad.c:1661 ../src/xpad-tray.c:164
 msgid "_Help"
-msgstr "ע_זרה"
+msgstr ""
 
 #: ../src/xpad-pad.c:1662
 msgid "_About"
-msgstr "על _אודות"
+msgstr ""
 
 #: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:160
 msgid "_Preferences"
@@ -244,43 +249,43 @@ msgstr ""
 
 #: ../src/xpad-pad-properties.c:104
 msgid "Appearance"
-msgstr "מראה"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:112
 msgid "Use font from xpad preferences"
-msgstr "שימוש בגופן מההעדפות של xpad"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:113
 msgid "Use this font:"
-msgstr "שימוש בגופן זה:"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:114
 msgid "Use colors from xpad preferences"
-msgstr "שימוש בצבעים מהעדפות של xpad"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:115
 msgid "Use these colors:"
-msgstr "שימוש בצבעים אלה:"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:125
 msgid "Foreground:"
-msgstr "חזית:"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:133
 msgid "Background:"
-msgstr "רקע:"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:147 ../src/xpad-preferences.c:418
 msgid "Set Foreground Color"
-msgstr "הגדרת צבע החזית:"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:148 ../src/xpad-preferences.c:419
 msgid "Set Background Color"
-msgstr "הגדרת צבע הרקע"
+msgstr ""
 
 #: ../src/xpad-pad-properties.c:149 ../src/xpad-preferences.c:420
 msgid "Set Font"
-msgstr "הגדרת הגופן"
+msgstr ""
 
 #. View options
 #: ../src/xpad-preferences.c:253
@@ -323,7 +328,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:312
 msgid "Use font from theme"
-msgstr "שימוש בגופן מערכת הנושא"
+msgstr ""
 
 #: ../src/xpad-preferences.c:313
 msgid "Use this font"
@@ -331,7 +336,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:314
 msgid "Use colors from theme"
-msgstr "שימוש בצבעים מערכת הנושא"
+msgstr ""
 
 #: ../src/xpad-preferences.c:315
 msgid "Use these colors"
@@ -427,7 +432,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:515
 msgid "_Confirm pad deletion"
-msgstr "_אישור למחיקת לוחות"
+msgstr ""
 
 #: ../src/xpad-preferences.c:516
 msgid "Enable _line numbering"
@@ -435,7 +440,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:530
 msgid "Xpad Preferences"
-msgstr "העדפות Xpad"
+msgstr ""
 
 #: ../src/xpad-preferences.c:752
 #, c-format
@@ -486,7 +491,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:80
 msgid "Clear Pad Contents"
-msgstr "מחיקת תכני הלוח"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:80
 msgid "Add C_lear button"
@@ -494,7 +499,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:81
 msgid "Close and Save Pad"
-msgstr "סגירה ושמירה של הלוח"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add _Close button"
@@ -518,7 +523,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Delete Pad"
-msgstr "מחיקת לוח"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _Delete button"
@@ -534,7 +539,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
-msgstr "פתיחת לוח חדש"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add _New button"
@@ -550,7 +555,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
-msgstr "עריכת ההעדפות"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences button"
@@ -558,7 +563,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
-msgstr "עריכת אפשרויות הלוח"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties button"
@@ -574,7 +579,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
-msgstr "סגירת כל הלוחות"
+msgstr ""
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All button"
@@ -606,114 +611,8 @@ msgstr ""
 
 #: ../data/xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr "פתקים נצמדים"
+msgstr ""
 
 #: ../data/xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr "שרבוט פתקים לשימוש מאוחר יותר"
-
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "נא לשלוח הערות או דיווחים על באגים ל־xpad-devel@lists.sourceforge.net"
-
-#~ msgid ""
-#~ "Each xpad session consists of one or more open pads.  These pads are "
-#~ "basically sticky notes on your desktop in which you can write memos."
-#~ msgstr ""
-#~ "כל הפעלה של Xpad מורכבת מלוח אחד או יותר. לוחות אלה בהגדרתן הן פתקים נצמדים "
-#~ "על שולחן העבודה שלך שבהן ניתן לכתוב מזכרים."
-
-#~ msgid ""
-#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-#~ "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-#~ msgstr ""
-#~ "<b>כדי להעביר לוח</b>, גרירה בשמאל על סרגל הכלים, גרירה בימין על סמן החלפת "
-#~ "הגודל מצד ימין למטה, או להחזיק CTRL במהלך גרירה בשמאל בכל מקום על גבי הלוח."
-
-#~ msgid ""
-#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-#~ "right dragging anywhere on the pad."
-#~ msgstr ""
-#~ "<b>כדי לשנות גודל של לוח</b>, לחיצה בשמאל על סמן החלפת הגודל או להחזיק CTRL "
-#~ "בעת גרירה בימין בכל מקום על הלוח."
-
-#~ msgid ""
-#~ "<b>To change color settings</b>, right click on a pad and choose Edit-"
-#~ ">Preferences."
-#~ msgstr ""
-#~ "<b>כדי לשנות הגדרות צבע</b>, לחיצה בימין על הלוח ולבחור בעריכה -> העדפות."
-
-#~ msgid ""
-#~ "Most actions are available throught the popup menu that appears when you "
-#~ "right click on a pad.  Try it out and enjoy."
-#~ msgstr ""
-#~ "רוב הפעולות זמינות דרך התפריט המוקפץ שמופיע בעת לחיצה בימין על הלוח. כדאי "
-#~ "לנסות וליהנות."
-
-#, c-format
-#~ msgid "'%s' Properties"
-#~ msgstr "מאפייני '%s'"
-
-#~ msgid "_Pad"
-#~ msgstr "_לוח"
-
-#~ msgid "Show on _All Workspaces"
-#~ msgstr "הצגה בכל _סביבות העבודה"
-
-#~ msgid "_Window Decorations"
-#~ msgstr "_עיטורי חלון"
-
-#~ msgid "_Scrollbar"
-#~ msgstr "פס _גלילה"
-
-#~ msgid "_Autohide Toolbar"
-#~ msgstr "הסתרת סרגל הכלים _אוטומטית"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_סרגל כלים"
-
-#~ msgid "_Contents"
-#~ msgstr "ת_כנים"
-
-#~ msgid "_View"
-#~ msgstr "ת_צוגה"
-
-#~ msgid "Options"
-#~ msgstr "אפשרויות"
-
-#~ msgid "_Pads start on all workspaces"
-#~ msgstr "ה_לוחות מתחילים בכל סביבות העבודה"
-
-#~ msgid "_Edit lock"
-#~ msgstr "_נעילת עריכה"
-
-#~ msgid "Add C_lear to Toolbar"
-#~ msgstr "הוספת מ_חיקה לסרגל הכלים"
-
-#~ msgid "Add _Close to Toolbar"
-#~ msgstr "הוספת _סגירה לסרגל הכלים"
-
-#~ msgid "Add Pr_eferences to Toolbar"
-#~ msgstr "הוספת ה_עדפות לסרגל הכלים"
-
-#~ msgid "Add _New to Toolbar"
-#~ msgstr "הוספת _חדש לסרגל הכלים"
-
-#~ msgid "Add _Delete to Toolbar"
-#~ msgstr "הוספת מ_חיקה לסרגל הכלים"
-
-#~ msgid "Add a Se_parator to Toolbar"
-#~ msgstr "הוספת מ_פריד לסרגל הכלים"
-
-#~ msgid "Add Close _All to Toolbar"
-#~ msgstr "הוספת ס_גירה לסרגל הכלים"
-
-#~ msgid "Add Proper_ties to Toolbar"
-#~ msgstr "הוספת מ_אפיינים לסרגל הכלים"
-
-#~ msgid "_Move"
-#~ msgstr "הע_ברה"
-
-#~ msgid "_Remove From Toolbar"
-#~ msgstr "הס_רה מסרגל הכלים"
+msgstr ""
