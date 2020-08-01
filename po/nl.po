@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-30 07:21+0000\n"
-"PO-Revision-Date: 2018-06-21 19:09+0000\n"
-"Last-Translator: Pjotr12345 <Unknown>\n"
+"POT-Creation-Date: 2020-07-31 05:49+0000\n"
+"PO-Revision-Date: 2020-07-31 07:36+0000\n"
+"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-07-31 05:47+0000\n"
+"X-Launchpad-Export-Date: 2020-08-01 05:45+0000\n"
 "X-Generator: Launchpad (build a24057fea7e4c6a98c0220d5f878da0f3c783699)\n"
 "Language: nl\n"
 
@@ -29,6 +29,9 @@ msgid ""
 "and customizable. Xpad consists of independent pad windows; each is "
 "basically a text box in which notes can be written."
 msgstr ""
+"Xpad voorziet in Post-It's op een simpele, veilige en aanpasbare manier. "
+"Xpad bestaat uit meerdere vensters; ieder venster is een tekst veld voor "
+"notities."
 
 #: ../src/fio.c:146
 #, c-format
@@ -195,7 +198,7 @@ msgstr "_Plakken"
 
 #: ../src/xpad-pad.c:1639
 msgid "_Find"
-msgstr ""
+msgstr "_Zoeken"
 
 #: ../src/xpad-pad.c:1641
 msgid "_Layout"
@@ -203,7 +206,7 @@ msgstr "_Opmaak"
 
 #: ../src/xpad-pad.c:1642
 msgid "_Read only"
-msgstr ""
+msgstr "_Alleen lezen"
 
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1648
@@ -341,7 +344,7 @@ msgstr "Gebruik lettertype uit thema"
 
 #: ../src/xpad-preferences.c:313
 msgid "Use this font"
-msgstr ""
+msgstr "Gebruik dit lettertype"
 
 #: ../src/xpad-preferences.c:314
 msgid "Use colors from theme"
@@ -349,24 +352,24 @@ msgstr "Gebruik kleuren uit thema"
 
 #: ../src/xpad-preferences.c:315
 msgid "Use these colors"
-msgstr ""
+msgstr "Gebruik deze kleuren"
 
 #. Size of new pads: input fields
 #: ../src/xpad-preferences.c:319
 msgid "Height new pad"
-msgstr ""
+msgstr "Hoogte van een nieuw notitie"
 
 #: ../src/xpad-preferences.c:325
 msgid "Width new pad"
-msgstr ""
+msgstr "Breedte van een nieuwe notitie"
 
 #: ../src/xpad-preferences.c:348
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
 #: ../src/xpad-preferences.c:356
 msgid "Background"
-msgstr ""
+msgstr "Achtergrond"
 
 #. Start options
 #: ../src/xpad-preferences.c:423
@@ -412,7 +415,7 @@ msgstr "Systeemvakpictogram inschakelen"
 
 #: ../src/xpad-preferences.c:490
 msgid "Tray left mouse click behavior"
-msgstr ""
+msgstr "Linker muis klik gedrag van de tray"
 
 #: ../src/xpad-preferences.c:492
 msgid "Do Nothing"
@@ -437,7 +440,7 @@ msgstr "Overig"
 
 #: ../src/xpad-preferences.c:514
 msgid "_Make pads read-only (CTRL-J)"
-msgstr ""
+msgstr "_Maak de notities alleen lezen (CTRL-J)"
 
 #: ../src/xpad-preferences.c:515
 msgid "_Confirm pad deletion"
@@ -445,7 +448,7 @@ msgstr "_Verwijderen van een memo bevestigen"
 
 #: ../src/xpad-preferences.c:516
 msgid "Enable _line numbering"
-msgstr ""
+msgstr "Activeer regelnummers"
 
 #: ../src/xpad-preferences.c:530
 msgid "Xpad Preferences"
@@ -550,11 +553,11 @@ msgstr "Voeg verwijderknop toe"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Find text"
-msgstr ""
+msgstr "Tekst zoeken"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add _Find button"
-msgstr ""
+msgstr "Voeg zoek knop toe"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
