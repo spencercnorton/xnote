@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2020-08-02 04:41+0000\n"
-"PO-Revision-Date: 2019-10-30 20:12+0000\n"
+"POT-Creation-Date: 2020-08-03 05:53+0000\n"
+"PO-Revision-Date: 2020-08-03 14:06+0000\n"
 "Last-Translator: Toni Estevez <toni.estevez@gmail.com>\n"
 "Language-Team: Catalán, Valenciano <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2020-08-03 05:50+0000\n"
+"X-Launchpad-Export-Date: 2020-08-04 05:48+0000\n"
 "X-Generator: Launchpad (build a24057fea7e4c6a98c0220d5f878da0f3c783699)\n"
 "Language: ca\n"
 
@@ -204,7 +204,7 @@ msgstr "_Propietats"
 
 #: ../src/xpad-pad.c:1642
 msgid "_Read only"
-msgstr ""
+msgstr "_Només lectura"
 
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1648
@@ -315,7 +315,7 @@ msgstr "Mostra la barra de desplaçament"
 
 #: ../src/xpad-preferences.c:279
 msgid "_Show notes on all workspaces"
-msgstr "Mostra les notes de tots els espais de treball"
+msgstr "Mostra les notes a tots els espais de treball"
 
 #: ../src/xpad-preferences.c:283
 msgid "_Show window decorations"
@@ -412,11 +412,11 @@ msgstr "Àrea de notificació"
 
 #: ../src/xpad-preferences.c:487
 msgid "_Enable tray icon"
-msgstr "Habilita la icona de l'àrea de notificació"
+msgstr "Activa la icona de l'àrea de notificació"
 
 #: ../src/xpad-preferences.c:490
 msgid "Tray left mouse click behavior"
-msgstr ""
+msgstr "Comportament del clic esquerre a l'àrea de notificació"
 
 #: ../src/xpad-preferences.c:492
 msgid "Do Nothing"
@@ -449,7 +449,7 @@ msgstr "Confirma la supressió de les notes"
 
 #: ../src/xpad-preferences.c:516
 msgid "Enable _line numbering"
-msgstr ""
+msgstr "Activa la numeració de les línies"
 
 #: ../src/xpad-preferences.c:530
 msgid "Xpad Preferences"
@@ -481,7 +481,7 @@ msgstr ""
 
 #: ../src/xpad-settings.c:375 ../src/xpad-settings.c:385
 msgid "Error enabling Xpad autostart"
-msgstr "S'ha produït un error en habilitar l'inici automàtic de l'Xpad"
+msgstr "S'ha produït un error en activar l'inici automàtic de l'Xpad"
 
 #: ../src/xpad-settings.c:375
 #, c-format
@@ -503,7 +503,7 @@ msgstr ""
 
 #: ../src/xpad-settings.c:402
 msgid "Error disabling Xpad autostart"
-msgstr "S'ha produït un error en deshabilitar l'inici automàtic de l'Xpad"
+msgstr "S'ha produït un error en desactivar l'inici automàtic de l'Xpad"
 
 #: ../src/xpad-settings.c:402
 #, c-format
