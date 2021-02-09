@@ -750,7 +750,7 @@ change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 	if (!g_key_file_load_from_file (keyfile, filename, flags, &error)) {
 		gchar *errtext;
 		errtext = g_strdup_printf (_("Could not load %s\n%s"), filename, error->message);
-		xpad_app_error (NULL, _("Error changing wait for systray setting"), errtext);
+		xpad_app_error (NULL, _("Failed to change the time delay of starting the Xpad systray"), errtext);
 		g_free (errtext);
 
 		gtk_toggle_button_set_active (button, !wait_systray);
@@ -762,7 +762,7 @@ change_autostart_wait_systray (GtkToggleButton *button, XpadPreferences *pref)
 	if (!g_key_file_save_to_file (keyfile, filename, &error)) {
 		gchar *errtext;
 		errtext = g_strdup_printf (_("Could not save %s\n%s"), filename, error->message);
-		xpad_app_error (NULL, _("Error changing wait for systray setting"), errtext);
+		xpad_app_error (NULL, _("Failed to change the time delay of starting the Xpad systray"), errtext);
 		g_free (errtext);
 
 		gtk_toggle_button_set_active (button, !wait_systray);
