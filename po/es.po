@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-08 04:38+0000\n"
+"POT-Creation-Date: 2021-02-09 09:39+0000\n"
 "PO-Revision-Date: 2019-10-28 09:27+0000\n"
 "Last-Translator: Toni Estevez <toni.estevez@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-02-09 06:37+0000\n"
+"X-Launchpad-Export-Date: 2021-02-10 06:33+0000\n"
 "X-Generator: Launchpad (build e34ce994f03aae76d4610a97bccf86c0f2cf9f70)\n"
 "Language: es\n"
 
@@ -470,10 +470,8 @@ msgstr ""
 "%s"
 
 #: ../src/xpad-preferences.c:753 ../src/xpad-preferences.c:765
-msgid "Error changing wait for systray setting"
+msgid "Failed to change the time delay of starting the Xpad systray"
 msgstr ""
-"Se ha producido un error al cambiar la opción de minimizar en el área de "
-"notificación"
 
 #: ../src/xpad-preferences.c:764
 #, c-format
