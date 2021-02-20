@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-18 06:27+0000\n"
-"PO-Revision-Date: 2021-02-01 05:58+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
+"POT-Creation-Date: 2021-02-19 06:34+0000\n"
+"PO-Revision-Date: 2021-02-19 22:32+0000\n"
+"Last-Translator: Andrey Novikov <cooking95@mail.ru>\n"
 "Language-Team: RU <RU@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-02-19 06:32+0000\n"
+"X-Launchpad-Export-Date: 2021-02-20 06:21+0000\n"
 "X-Generator: Launchpad (build bbfee60eef9f7fd8d30b24b3f53e75656e4d5fb0)\n"
 "Language: \n"
 
@@ -100,11 +100,11 @@ msgstr "Создать новый стикер на старте, даже ес�
 
 #: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
-msgstr "Скрывать все стикеры"
+msgstr "Скрывать все заметки"
 
 #: ../src/xpad-app.c:828
 msgid "Show all pads"
-msgstr "Показать все стикеры"
+msgstr "Показать все заметки"
 
 #: ../src/xpad-app.c:829
 msgid "Toggle between show and hide all pads"
@@ -208,7 +208,7 @@ msgstr "_Формат"
 
 #: ../src/xpad-pad.c:1642
 msgid "_Read only"
-msgstr ""
+msgstr "_Только просмотр"
 
 #. Notes submenu - The list of notes will get added in the prep function below
 #: ../src/xpad-pad.c:1648
@@ -234,7 +234,7 @@ msgstr "_О программе"
 
 #: ../src/xpad-pad.c:1667 ../src/xpad-tray.c:160
 msgid "_Preferences"
-msgstr "_Настройки"
+msgstr "П_араметры"
 
 #: ../src/xpad-pad.c:1763
 msgid "Cu_t"
@@ -390,7 +390,7 @@ msgstr "_Ожидать область уведомлений (если возм
 
 #: ../src/xpad-preferences.c:449
 msgid "_Open a new empty pad"
-msgstr "_Открывать пустой стикер"
+msgstr "О_ткрывать новую пустую заметку"
 
 #: ../src/xpad-preferences.c:453
 msgid "Delay in seconds"
@@ -398,11 +398,11 @@ msgstr "Задержка в секундах"
 
 #: ../src/xpad-preferences.c:464
 msgid "Display pads"
-msgstr "Отображение стикеров"
+msgstr "Отображение заметок"
 
 #: ../src/xpad-preferences.c:466
 msgid "Open all pads"
-msgstr "Открывать все стикеры"
+msgstr "Открывать все заметки"
 
 #: ../src/xpad-preferences.c:468
 msgid "Restore to previous state"
@@ -419,7 +419,7 @@ msgstr "_Показывать значок в области уведомлен�
 
 #: ../src/xpad-preferences.c:490
 msgid "Tray left mouse click behavior"
-msgstr ""
+msgstr "При нажатии левой кнопкой мыши в области уведомлений"
 
 #: ../src/xpad-preferences.c:492
 msgid "Do Nothing"
@@ -427,15 +427,15 @@ msgstr "Ничего не делать"
 
 #: ../src/xpad-preferences.c:493
 msgid "Toggle Show All"
-msgstr "Переключать «Показать все стикеры»"
+msgstr "Переключать «Показать все заметки»"
 
 #: ../src/xpad-preferences.c:494
 msgid "List of Pads"
-msgstr "Показывать список стикеров"
+msgstr "Показывать список заметок"
 
 #: ../src/xpad-preferences.c:495
 msgid "New Pad"
-msgstr "Создавать новый стикер"
+msgstr "Создавать новую заметку"
 
 #. Other options
 #: ../src/xpad-preferences.c:503
@@ -452,7 +452,7 @@ msgstr "_Подтверждать удаление заметок"
 
 #: ../src/xpad-preferences.c:516
 msgid "Enable _line numbering"
-msgstr ""
+msgstr "_Нумеровать строки"
 
 #: ../src/xpad-preferences.c:530
 msgid "Xpad Preferences"
@@ -469,7 +469,7 @@ msgstr ""
 
 #: ../src/xpad-preferences.c:753 ../src/xpad-preferences.c:765
 msgid "Failed to change the time delay of starting the Xpad systray"
-msgstr ""
+msgstr "Не удалось изменить задержу запуска области уведомлений Xpad"
 
 #: ../src/xpad-preferences.c:764
 #, c-format
@@ -517,7 +517,7 @@ msgstr ""
 
 #: ../src/xpad-toolbar.c:80
 msgid "Clear Pad Contents"
-msgstr "Очистить содержимое стикера"
+msgstr "Очистить содержимое заметки"
 
 #: ../src/xpad-toolbar.c:80
 msgid "Add C_lear button"
@@ -549,7 +549,7 @@ msgstr "Добавить кнопку «В_ырезать»"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Delete Pad"
-msgstr "Удалить стикер"
+msgstr "Удалить заметку"
 
 #: ../src/xpad-toolbar.c:84
 msgid "Add _Delete button"
@@ -561,11 +561,11 @@ msgstr "Найти текст"
 
 #: ../src/xpad-toolbar.c:85
 msgid "Add _Find button"
-msgstr "Добавить кнопку «Н_айти»"
+msgstr "Добавить кнопку «_Найти»"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Open New Pad"
-msgstr "Новый стикер"
+msgstr "Открыть новую заметку"
 
 #: ../src/xpad-toolbar.c:86
 msgid "Add _New button"
@@ -581,15 +581,15 @@ msgstr "Добавить кнопку «_Вставить»"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Edit Preferences"
-msgstr "Изменить настройки"
+msgstr "Изменить параметры"
 
 #: ../src/xpad-toolbar.c:88
 msgid "Add Pr_eferences button"
-msgstr "Добавить кнопку «_Настройки»"
+msgstr "Добавить кнопку «П_араметры»"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Edit Pad Properties"
-msgstr "Правка настроек стикера"
+msgstr "Изменить свойства заметки"
 
 #: ../src/xpad-toolbar.c:89
 msgid "Add Proper_ties button"
@@ -605,7 +605,7 @@ msgstr "Добавить кнопку «Пов_торить»"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Close All Pads"
-msgstr "Закрыть все стикеры"
+msgstr "Закрыть все заметки"
 
 #: ../src/xpad-toolbar.c:91
 msgid "Add Close _All button"
