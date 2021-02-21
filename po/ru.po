@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-19 06:34+0000\n"
-"PO-Revision-Date: 2021-02-19 22:32+0000\n"
-"Last-Translator: Andrey Novikov <cooking95@mail.ru>\n"
-"Language-Team: RU <RU@li.org>\n"
+"POT-Creation-Date: 2021-02-20 06:23+0000\n"
+"PO-Revision-Date: 2021-02-20 20:15+0000\n"
+"Last-Translator: vofka <Unknown>\n"
+"Language-Team: Russian Launchpad Translators <lp-l10n-"
+"ru@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-02-20 06:21+0000\n"
+"X-Launchpad-Export-Date: 2021-02-21 06:32+0000\n"
 "X-Generator: Launchpad (build bbfee60eef9f7fd8d30b24b3f53e75656e4d5fb0)\n"
-"Language: \n"
+"Language: ru\n"
 
 #: ../data/xpad.appdata.xml.in.h:1 ../src/xpad-pad.c:1444
 msgid "Sticky notes"
@@ -90,17 +91,26 @@ msgstr ""
 msgid "Show version number and quit"
 msgstr "Показать версию и выйти"
 
+# ❗Используется в справке в терминале, поэтому часть текста перенесена
+# на новую строку, чтобы уместиться в 80 символов.
 #: ../src/xpad-app.c:820
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr "Не создавать новый стикер на старте если их ещё нет"
+msgstr ""
+"Не создавать новую заметку при запуске,\n"
+"                                 даже если ещё нет других заметок"
 
+# ❗Используется в справке в терминале, поэтому часть текста перенесена
+# на новую строку, чтобы уместиться в 80 символов.
 #: ../src/xpad-app.c:826
 msgid "Create a new pad on startup even if pads already exist"
-msgstr "Создать новый стикер на старте, даже если уже есть."
+msgstr ""
+"Создавать новую заметку при запуске,\n"
+"                                 даже если уже есть другие заметки"
 
+# ❗Используется в справке в терминале и в параметрах в графическом интерфейсе.
 #: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
-msgstr "Скрывать все заметки"
+msgstr "Скрыть все заметки"
 
 #: ../src/xpad-app.c:828
 msgid "Show all pads"
@@ -108,11 +118,11 @@ msgstr "Показать все заметки"
 
 #: ../src/xpad-app.c:829
 msgid "Toggle between show and hide all pads"
-msgstr "Показать/Скрыть все заметки"
+msgstr "Показать или скрыть все заметки"
 
 #: ../src/xpad-app.c:830
 msgid "Create a new pad with the contents of a file"
-msgstr "Создать новый стикер с содержимым из файла"
+msgstr "Создать новую заметку с содержимым файла"
 
 #: ../src/xpad-app.c:830
 msgid "FILE"
@@ -378,7 +388,7 @@ msgstr "Фон"
 #. Start options
 #: ../src/xpad-preferences.c:423
 msgid "Startup"
-msgstr "Автозапуск"
+msgstr "Запуск"
 
 #: ../src/xpad-preferences.c:434
 msgid "_Start Xpad automatically after login"
@@ -402,11 +412,11 @@ msgstr "Отображение заметок"
 
 #: ../src/xpad-preferences.c:466
 msgid "Open all pads"
-msgstr "Открывать все заметки"
+msgstr "Открыть все заметки"
 
 #: ../src/xpad-preferences.c:468
 msgid "Restore to previous state"
-msgstr "Восстанавливать предыдущее состояние"
+msgstr "Восстановить предыдущее состояние"
 
 #. Tray options
 #: ../src/xpad-preferences.c:476
