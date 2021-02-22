@@ -7,21 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.10.1\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-20 06:23+0000\n"
-"PO-Revision-Date: 2021-02-20 20:15+0000\n"
-"Last-Translator: vofka <Unknown>\n"
+"POT-Creation-Date: 2021-02-21 06:34+0000\n"
+"PO-Revision-Date: 2021-02-21 13:05+0000\n"
+"Last-Translator: Andrey Novikov <cooking95@mail.ru>\n"
 "Language-Team: Russian Launchpad Translators <lp-l10n-"
 "ru@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-02-21 06:32+0000\n"
+"X-Launchpad-Export-Date: 2021-02-22 06:33+0000\n"
 "X-Generator: Launchpad (build bbfee60eef9f7fd8d30b24b3f53e75656e4d5fb0)\n"
 "Language: ru\n"
 
 #: ../data/xpad.appdata.xml.in.h:1 ../src/xpad-pad.c:1444
 msgid "Sticky notes"
-msgstr "Липкие записки"
+msgstr "Липкие заметки"
 
 #: ../data/xpad.appdata.xml.in.h:2
 msgid ""
@@ -63,7 +63,7 @@ msgstr "Помощь"
 #: ../src/xpad-app.c:131
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr ""
-"Xpad - это графическая программа. Пожалуйста, запускайте её с вашего "
+"Xpad — это графическая программа. Пожалуйста, запускайте её с вашего "
 "рабочего стола."
 
 #: ../src/xpad-app.c:136 ../data/xpad.desktop.in.h:1
@@ -144,11 +144,11 @@ msgstr "Не удалось прочитать %s"
 
 #: ../src/xpad-pad.c:920
 msgid "Delete this pad?"
-msgstr "Удалить заметку?"
+msgstr "Удалить эту заметку?"
 
 #: ../src/xpad-pad.c:920
 msgid "All text of this pad will be irrevocably lost."
-msgstr "Все содержимое заметки будет утрачено."
+msgstr "Весь текст этой заметки будет безвозвратно потерян."
 
 #: ../src/xpad-pad.c:925 ../src/xpad-pad.c:1622
 msgid "_Delete"
@@ -276,19 +276,19 @@ msgstr "Оформление"
 
 #: ../src/xpad-pad-properties.c:112
 msgid "Use font from xpad preferences"
-msgstr "Использовать общие настройки шрифта"
+msgstr "Использовать шрифт по умолчанию из Xpad"
 
 #: ../src/xpad-pad-properties.c:113
 msgid "Use this font:"
-msgstr "Другой шрифт"
+msgstr "Использовать этот шрифт:"
 
 #: ../src/xpad-pad-properties.c:114
 msgid "Use colors from xpad preferences"
-msgstr "Использовать общие настройки цвета"
+msgstr "Использовать цвета по умолчанию из Xpad"
 
 #: ../src/xpad-pad-properties.c:115
 msgid "Use these colors:"
-msgstr "Другие цвета"
+msgstr "Использовать эти цвета:"
 
 #: ../src/xpad-pad-properties.c:125
 msgid "Foreground:"
@@ -466,7 +466,7 @@ msgstr "_Нумеровать строки"
 
 #: ../src/xpad-preferences.c:530
 msgid "Xpad Preferences"
-msgstr "Общие настройки Xpad"
+msgstr "Параметры Xpad"
 
 #: ../src/xpad-preferences.c:752
 #, c-format
@@ -647,11 +647,11 @@ msgstr "_Завершить"
 
 #: ../data/xpad.desktop.in.h:2
 msgid "Sticky Notes"
-msgstr "Cтикеры"
+msgstr "Липкие заметки"
 
 #: ../data/xpad.desktop.in.h:3
 msgid "Jot down notes for later"
-msgstr "Заметки/стикеры на вашем рабочем столе"
+msgstr "Сделать заметки на будущее"
 
 #~ msgid "_Edit lock"
 #~ msgstr "Защита от редактирования"
