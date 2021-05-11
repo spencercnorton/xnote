@@ -4,6 +4,8 @@ Version 5.5
 * Fix: 'make check' fails over missing/moved xpad.desktop.in (#1812678)
 * Fix: Phased out the deprecated intltool (translation system) in favor of gettext. Source: https://wiki.gnome.org/MigratingFromIntltoolToGettext
 * Fix: Comply to C90 coding standards for comments
+* Fix: Increased the minimum required Glib version from 2.40 to 2.60, in preparation for a future shift from GtkSourceView v3 to v4,
+       following https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/84. GtkSourceView v3 uses the deprecated GTimeVal, which is not year 2038 proof.
 
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
