@@ -5,15 +5,15 @@ AC_INIT([Xpad],[5.5],[xpad-hackers@lists.launchpad.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 
-# Sets up automake.
-AM_INIT_AUTOMAKE([1.9 gnu no-dist-gzip dist-bzip2])
-AM_BINRELOC
-
 # Checks for programs.
+AC_USE_SYSTEM_EXTENSIONS
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
-AC_PROG_INTLTOOL([0.31], [no-xml])
+
+# Sets up automake.
+AM_INIT_AUTOMAKE([1.9 gnu no-dist-gzip dist-bzip2])
+AM_BINRELOC
 
 AC_PATH_XTRA
 
@@ -43,18 +43,19 @@ PKG_CHECK_MODULES(ATK, atk >= 2.8 atk-bridge-2.0)
 AC_SUBST(ATK_LIBS)
 AC_SUBST(ATK_CFLAGS)
 
-# Force the use of GNU libraries, for the special case of the function readlink
-AC_GNU_SOURCE
-
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-# Sets up gettext.
+# i18n / text translations
+# The choice for version of gettext is only based on what was installed on the developers desktop (2021).
+# If another version is more convenient, go for it.
+AM_GNU_GETTEXT_VERSION([0.21])
+AM_GNU_GETTEXT([external])
+
 GETTEXT_PACKAGE="$PACKAGE"
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext domain])
-AM_GLIB_GNU_GETTEXT
 
 # Sets up a few prefix-relative directories
 if test "x${prefix}" = "xNONE"; then
@@ -69,7 +70,7 @@ AC_DEFINE_UNQUOTED(BASE_DIR, "${PREFIX}",[Base directory])
 
 # Determines if we're debugging.
 AC_ARG_ENABLE(debug,
-  AC_HELP_STRING([--enable-debug=[no/yes]],[turn on debugging [default=no]]),
+  AS_HELP_STRING([--enable-debug=[no/yes]],[turn on debugging [default=no]]),
   enable_debug="$enableval",
   enable_debug=no)
 if test "$enable_debug" = "yes"; then

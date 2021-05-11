@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 
-_Name=Xpad
-_GenericName=Sticky Notes
-_Comment=Jot down notes for later
+Name=Xpad
+GenericName=Sticky Notes
+Comment=Jot down notes for later
 
 TryExec=xpad
 Exec=xpad

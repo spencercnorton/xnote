@@ -2,6 +2,7 @@ Version 5.5
 * New: Ability to search through a pad by Siergiej Riaguzow. (#452226)
 * Fix: Removal of the obsolete undo/redo functionality, since it is already provided by the GtkSourceBuffer by Siergiej Riaguzow. (#1349838)
 * Fix: 'make check' fails over missing/moved xpad.desktop.in (#1812678)
+* Fix: Phased out the deprecated intltool (translation system) in favor of gettext. Source: https://wiki.gnome.org/MigratingFromIntltoolToGettext
 
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
