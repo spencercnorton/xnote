@@ -249,7 +249,8 @@ xpad_search_bar_previous_match_cb(XpadSearchBar *searchbar)
 
 	GtkTextBuffer *buffer = GTK_TEXT_BUFFER (searchbar->priv->source_buffer);
 
-	/* See comment in xpad_search_bar_next_match_cb, this is exactly the same
+	/*
+	 * See comment in xpad_search_bar_next_match_cb, this is exactly the same
 	 * but as we are searching backwards this time we look for the beginning
 	 * of selection (or in case there is no selection - for the position of cursor
 	 * which is equal to both beginning and end of selection)
@@ -259,9 +260,9 @@ xpad_search_bar_previous_match_cb(XpadSearchBar *searchbar)
 
 	GtkTextIter match_start;
 	GtkTextIter match_end;
-	gboolean *ignore;
-	gboolean found = gtk_source_search_context_backward2 (searchbar->priv->search_context,
-														&start, &match_start, &match_end, ignore);
+	gboolean *has_wrapped_around = FALSE;
+	gboolean found = gtk_source_search_context_backward (searchbar->priv->search_context, &start, &match_start, &match_end, has_wrapped_around);
+
 	if (found)
 	{
 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
@@ -296,9 +297,9 @@ xpad_search_bar_next_match_cb(XpadSearchBar *searchbar)
 
 	GtkTextIter match_start;
 	GtkTextIter match_end;
-	gboolean *ignore;
-	gboolean found = gtk_source_search_context_forward2 (searchbar->priv->search_context,
-														&start, &match_start, &match_end, ignore);
+	gboolean *has_wrapped_around = FALSE;
+	gboolean found = gtk_source_search_context_forward (searchbar->priv->search_context, &start, &match_start, &match_end, has_wrapped_around);
+
 	if (found)
 	{
 		gtk_text_buffer_select_range (GTK_TEXT_BUFFER (buffer),
