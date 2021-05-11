@@ -23,11 +23,13 @@ AM_CONDITIONAL(GTK, test -n "$GTK_LIBS")
 AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)
 
-PKG_CHECK_MODULES(GTK_SOURCE_VIEW, gtksourceview-3.0 >= 3.10)
+# GTK source view version 4.x is based on the version available in Debian stable: https://packages.debian.org/stable/libs/
+PKG_CHECK_MODULES(GTK_SOURCE_VIEW, gtksourceview-4 >= 4.0.3)
 AC_SUBST(GTK_SOURCE_VIEW_LIBS)
 AC_SUBST(GTK_SOURCE_VIEW_CFLAGS)
 
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.60)
+# Glib version is based on the version available in Debian stable: https://packages.debian.org/stable/libs/
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.58)
 AC_SUBST(GLIB_LIBS)
 AC_SUBST(GLIB_CFLAGS)
 
