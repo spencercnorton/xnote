@@ -54,9 +54,13 @@ struct XpadPadPrivate
 
 	/* selected child widgets */
 	GtkOverlay *text_with_search_overlay;
-	// TODO: Why everything is a GtkWidget? declare as proper child types for readability
-	// see long comment in xpad-toolbar.h. Even if class creators may return GtkWidget*
-	// what is the point of storing them as such. This drastrically reduces readability
+
+	/*
+	 * TODO: Why everything is a GtkWidget? declare as proper child types for readability
+	 * see long comment in xpad-toolbar.h. Even if class creators may return GtkWidget*
+	 * what is the point of storing them as such. This drastrically reduces readability
+	 */
+
 	GtkWidget *textview;
 	GtkWidget *scrollbar;
 	XpadSearchBar *searchbar;
@@ -323,7 +327,7 @@ static void xpad_pad_constructed (GObject *object)
 
 	GtkWindow *pad_window = GTK_WINDOW (pad);
 
-	// textview in scrollbar
+	/* textview in scrollbar */
 	pad->priv->textview = GTK_WIDGET (XPAD_TEXT_VIEW (xpad_text_view_new (pad->priv->settings, pad)));
 
 	pad->priv->scrollbar = GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
@@ -335,16 +339,16 @@ static void xpad_pad_constructed (GObject *object)
 		"child", pad->priv->textview,
 		NULL));
 
-	// searchbar
+	/* searchbar */
 	GtkSourceBuffer *buffer = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)));
 	pad->priv->searchbar = xpad_search_bar_new (buffer);
 
-	// overlay with scrollbar (with text) and searchbar
+	/* overlay with scrollbar (with text) and searchbar */
 	pad->priv->text_with_search_overlay = GTK_OVERLAY (gtk_overlay_new ());
 	gtk_overlay_add_overlay (pad->priv->text_with_search_overlay, pad->priv->scrollbar);
 	gtk_overlay_add_overlay (pad->priv->text_with_search_overlay, GTK_WIDGET (pad->priv->searchbar));
 
-	// toolbar
+	/* toolbar */
 	pad->priv->toolbar = GTK_WIDGET (xpad_toolbar_new (pad));
 
 	pad->priv->accel_group = gtk_accel_group_new ();
@@ -353,7 +357,7 @@ static void xpad_pad_constructed (GObject *object)
 	pad->priv->highlight_menu = menu_get_popup_highlight (pad, pad->priv->accel_group);
 	gtk_accel_group_connect (pad->priv->accel_group, GDK_KEY_Q, GDK_CONTROL_MASK, 0, g_cclosure_new_swap (G_CALLBACK (xpad_app_quit), pad, NULL));
 
-	// GtkBox with overlay and toolbar
+	/* GtkBox with overlay and toolbar */
 	GtkBox *vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
 	gtk_box_set_homogeneous (vbox, FALSE);
 	gtk_box_pack_start (vbox, GTK_WIDGET (pad->priv->text_with_search_overlay), TRUE, TRUE, 0);
@@ -374,9 +378,9 @@ static void xpad_pad_constructed (GObject *object)
 	g_object_set (G_OBJECT (pad), "child", vbox, NULL);
 
 	xpad_pad_notify_has_scrollbar (pad);
-	// xpad_pad_notify_has_selection (pad);
-	// xpad_pad_notify_clipboard_owner_changed (pad);
-	// xpad_pad_notify_undo_redo_changed (pad);
+	/* xpad_pad_notify_has_selection (pad); */
+	/* xpad_pad_notify_clipboard_owner_changed (pad); */
+	/* xpad_pad_notify_undo_redo_changed (pad); */
 
 	pad->priv->clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
