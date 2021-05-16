@@ -166,7 +166,6 @@ xpad_app_init (int argc, char **argv)
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
 
-	xpad_tray_init (settings);
 	xpad_session_manager_init ();
 
 	/* load all pads */
@@ -185,6 +184,9 @@ xpad_app_init (int argc, char **argv)
 			}
 		}
 	}
+
+    /* Load the optional app indicator / tray */
+	xpad_tray_init (settings);
 
 	/* Initialize Xpad-periodic module */
 	xpad_periodic_init ();
