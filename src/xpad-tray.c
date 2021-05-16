@@ -25,6 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#ifdef HAVE_APP_INDICATOR
+#include <libappindicator/app-indicator.h>
+#endif /* HAVE_APP_INDICATOR */
+
 #include "xpad-tray.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
