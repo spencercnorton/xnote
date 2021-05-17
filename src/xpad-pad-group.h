@@ -61,10 +61,10 @@ void     xpad_pad_group_close_all        (XpadPadGroup *group);
 void     xpad_pad_group_show_all         (XpadPadGroup *group);
 void     xpad_pad_group_toggle_hide      (XpadPadGroup *group);
 GSList * xpad_pad_group_get_pads         (XpadPadGroup *group);
-guint    xpad_pad_group_num_pads         (XpadPadGroup *group);
 guint    xpad_pad_group_num_visible_pads (XpadPadGroup *group);
 void     xpad_pad_group_destroy_pads     (XpadPadGroup *group);
 void     xpad_pad_group_update_sticky    (XpadPadGroup *group, gboolean is_sticky);
+gboolean xpad_pad_group_has_pads (XpadPadGroup *group);
 
 G_END_DECLS
 

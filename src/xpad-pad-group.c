@@ -35,6 +35,7 @@ struct XpadPadGroupPrivate
 G_DEFINE_TYPE_WITH_PRIVATE (XpadPadGroup, xpad_pad_group, G_TYPE_OBJECT)
 
 static void xpad_pad_group_save_unsaved_all (XpadPadGroup *group);
+static guint xpad_pad_group_num_pads (XpadPadGroup *group);
 
 enum {
 	PROP_0
@@ -130,10 +131,15 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
 }
 
-guint
+static guint
 xpad_pad_group_num_pads (XpadPadGroup *group)
 {
 	return g_slist_length (group->priv->pads);
+}
+
+gboolean xpad_pad_group_has_pads (XpadPadGroup *group)
+{
+	return xpad_pad_group_num_pads (group) == 0;
 }
 
 guint
