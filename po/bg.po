@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 16:14+0000\n"
+"POT-Creation-Date: 2021-05-16 13:57+0000\n"
 "PO-Revision-Date: 2013-10-12 08:18+0000\n"
 "Last-Translator: Michael Terry <mike@mterry.name>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-05-16 06:23+0000\n"
+"X-Launchpad-Export-Date: 2021-05-17 06:25+0000\n"
 "X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
 "Language: bg\n"
 
@@ -158,7 +158,7 @@ msgstr ""
 "  PhobosK https://launchpad.net/~phobosk\n"
 "  Yavor Doganov https://launchpad.net/~yavor"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:133
+#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:137
 msgid "_New"
 msgstr ""
 
@@ -204,16 +204,16 @@ msgstr ""
 msgid "_Notes"
 msgstr "_Бележки"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:140
+#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:144
 msgid "_Show All"
 msgstr "Показване на _всички"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:146
+#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:150
 msgid "_Close All"
 msgstr "_Затваряне на всички"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:168
 msgid "_Help"
 msgstr "_Помощ"
 
@@ -221,7 +221,7 @@ msgstr "_Помощ"
 msgid "_About"
 msgstr "_Относно"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:160
+#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:164
 msgid "_Preferences"
 msgstr ""
 
@@ -607,7 +607,7 @@ msgstr ""
 msgid "Remo_ve Last Button"
 msgstr ""
 
-#: ../src/xpad-tray.c:168
+#: ../src/xpad-tray.c:172
 msgid "_Quit"
 msgstr ""
 
