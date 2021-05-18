@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-16 13:57+0000\n"
+"POT-Creation-Date: 2021-05-17 07:06+0000\n"
 "PO-Revision-Date: 2020-01-07 07:22+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Malay <translation-team-ms@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-05-17 06:25+0000\n"
+"X-Launchpad-Export-Date: 2021-05-18 06:33+0000\n"
 "X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
 "Language: ms\n"
 
@@ -53,16 +53,16 @@ msgstr ""
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:247
+#: ../src/xpad-app.c:249
 msgid "_Ok"
 msgstr "_Ok"
 
-#: ../src/xpad-app.c:498
+#: ../src/xpad-app.c:500
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Tidak dapat membuka direktori %s."
 
-#: ../src/xpad-app.c:501
+#: ../src/xpad-app.c:503
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -70,44 +70,44 @@ msgstr ""
 "Direktori ini diperlukan untuk menyimpan keutamaan dan maklumat pad. Xpad "
 "akan ditutup sekarang."
 
-#: ../src/xpad-app.c:819
+#: ../src/xpad-app.c:821
 msgid "Show version number and quit"
 msgstr "Tunjuk nombor versi dan keluar"
 
-#: ../src/xpad-app.c:820
+#: ../src/xpad-app.c:822
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "Jangan cipta pad baharu ketika permulaan jika tiada pad terdahulu wujud"
 
-#: ../src/xpad-app.c:826
+#: ../src/xpad-app.c:828
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Cipta satu pad baharu ketika permulaan walaupun pad telah wujud"
 
-#: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
+#: ../src/xpad-app.c:829 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
 msgstr "Sembunyi semua pad"
 
-#: ../src/xpad-app.c:828
+#: ../src/xpad-app.c:830
 msgid "Show all pads"
 msgstr "Tunjuk semua pad"
 
-#: ../src/xpad-app.c:829
+#: ../src/xpad-app.c:831
 msgid "Toggle between show and hide all pads"
 msgstr "Togol antara tunjuk dan sembunyi semua pad"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "Create a new pad with the contents of a file"
 msgstr "Cipta pad baru dengan kandungan fail"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "FILE"
 msgstr "FAIL"
 
-#: ../src/xpad-app.c:831
+#: ../src/xpad-app.c:833
 msgid "Close all pads"
 msgstr "Tutup semua pad"
 
-#: ../src/xpad-app.c:862
+#: ../src/xpad-app.c:864
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -154,7 +154,7 @@ msgstr ""
 "  Sharuzzaman Ahmat Raslan https://launchpad.net/~sharuzzaman\n"
 "  abuyop https://launchpad.net/~abuyop"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:151
 msgid "_New"
 msgstr "_Baharu"
 
@@ -200,16 +200,16 @@ msgstr ""
 msgid "_Notes"
 msgstr "_Nota"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:144
+#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:158
 msgid "_Show All"
 msgstr "Tunjuk _Semua"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:150
+#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:165
 msgid "_Close All"
 msgstr "_Tutup Semua"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:168
+#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:184
 msgid "_Help"
 msgstr "_Bantuan"
 
@@ -217,7 +217,7 @@ msgstr "_Bantuan"
 msgid "_About"
 msgstr "Perih_al"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:180
 msgid "_Preferences"
 msgstr "_Keutamaan"
 
@@ -613,7 +613,7 @@ msgstr "Buang Semua _Butang"
 msgid "Remo_ve Last Button"
 msgstr "B_uang Butang Terakhir"
 
-#: ../src/xpad-tray.c:172
+#: ../src/xpad-tray.c:188
 msgid "_Quit"
 msgstr "_Keluar"
 

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-16 13:57+0000\n"
+"POT-Creation-Date: 2021-05-17 07:06+0000\n"
 "PO-Revision-Date: 2021-05-11 14:46+0000\n"
 "Last-Translator: Toni Estevez <toni.estevez@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-05-17 06:26+0000\n"
+"X-Launchpad-Export-Date: 2021-05-18 06:34+0000\n"
 "X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
 "Language: es\n"
 
@@ -52,16 +52,16 @@ msgstr "Xpad es un programa gráfico. Ejecútelo desde el escritorio."
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:247
+#: ../src/xpad-app.c:249
 msgid "_Ok"
 msgstr "_Aceptar"
 
-#: ../src/xpad-app.c:498
+#: ../src/xpad-app.c:500
 #, c-format
 msgid "Could not open directory %s."
 msgstr "No se ha podido abrir la carpeta %s."
 
-#: ../src/xpad-app.c:501
+#: ../src/xpad-app.c:503
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -69,47 +69,47 @@ msgstr ""
 "Esta carpeta es necesaria para almacenar las preferencias y la información "
 "de las notas. Ahora se cerrará Xpad."
 
-#: ../src/xpad-app.c:819
+#: ../src/xpad-app.c:821
 msgid "Show version number and quit"
 msgstr "Mostrar el número de versión y salir"
 
-#: ../src/xpad-app.c:820
+#: ../src/xpad-app.c:822
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "No crear una nota nueva al iniciar el programa aunque no existan notas "
 "anteriores"
 
-#: ../src/xpad-app.c:826
+#: ../src/xpad-app.c:828
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Crear una nota nueva al iniciar el programa aunque ya existan notas "
 "anteriores"
 
-#: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
+#: ../src/xpad-app.c:829 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
 msgstr "Ocultar todas las notas"
 
-#: ../src/xpad-app.c:828
+#: ../src/xpad-app.c:830
 msgid "Show all pads"
 msgstr "Mostrar todas las notas"
 
-#: ../src/xpad-app.c:829
+#: ../src/xpad-app.c:831
 msgid "Toggle between show and hide all pads"
 msgstr "Conmutar entre mostrar y ocultar todas las notas"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "Create a new pad with the contents of a file"
 msgstr "Crear una nota nueva con el contenido de un archivo"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "FILE"
 msgstr "ARCHIVO"
 
-#: ../src/xpad-app.c:831
+#: ../src/xpad-app.c:833
 msgid "Close all pads"
 msgstr "Cerrar todas las notas"
 
-#: ../src/xpad-app.c:862
+#: ../src/xpad-app.c:864
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -160,7 +160,7 @@ msgstr ""
 "  Toni Estevez https://launchpad.net/~toni-estevez\n"
 "  angvp https://launchpad.net/~angvp"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:151
 msgid "_New"
 msgstr "_Nota nueva"
 
@@ -206,16 +206,16 @@ msgstr ""
 msgid "_Notes"
 msgstr "N_otas"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:144
+#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:158
 msgid "_Show All"
 msgstr "_Mostrar todas las notas"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:150
+#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:165
 msgid "_Close All"
 msgstr "_Cerrar todas las notas"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:168
+#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:184
 msgid "_Help"
 msgstr "Ay_uda"
 
@@ -223,7 +223,7 @@ msgstr "Ay_uda"
 msgid "_About"
 msgstr "Acerca _de"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:180
 msgid "_Preferences"
 msgstr "_Preferencias"
 
@@ -623,7 +623,7 @@ msgstr "Eliminar todos los _botones"
 msgid "Remo_ve Last Button"
 msgstr "Eliminar el ú_ltimo botón"
 
-#: ../src/xpad-tray.c:172
+#: ../src/xpad-tray.c:188
 msgid "_Quit"
 msgstr "_Salir"
 

@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-16 13:57+0000\n"
+"POT-Creation-Date: 2021-05-17 07:06+0000\n"
 "PO-Revision-Date: 2013-10-10 07:04+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-05-17 06:25+0000\n"
+"X-Launchpad-Export-Date: 2021-05-18 06:34+0000\n"
 "X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
 
 #: ../src/fio.c:146
@@ -50,16 +50,16 @@ msgstr "Xpad je grafický program.  Prosím, spustite ho z pracovnej plochy."
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:247
+#: ../src/xpad-app.c:249
 msgid "_Ok"
 msgstr ""
 
-#: ../src/xpad-app.c:498
+#: ../src/xpad-app.c:500
 #, c-format
 msgid "Could not open directory %s."
 msgstr "Priečinok %s sa nedá otvoriť."
 
-#: ../src/xpad-app.c:501
+#: ../src/xpad-app.c:503
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -67,43 +67,43 @@ msgstr ""
 "Tento priečinok je potrebný pre uloženie nastavení a blokov.  Xpad sa teraz "
 "ukončí."
 
-#: ../src/xpad-app.c:819
+#: ../src/xpad-app.c:821
 msgid "Show version number and quit"
 msgstr "Zobraziť číslo verzie a ukončiť"
 
-#: ../src/xpad-app.c:820
+#: ../src/xpad-app.c:822
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "Ak už nejaké bloky existujú, pri štarte nevytvárať nový blok"
 
-#: ../src/xpad-app.c:826
+#: ../src/xpad-app.c:828
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "Vytvoriť nový blok pri štarte aj v prípade, že už nejaké existujú"
 
-#: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
+#: ../src/xpad-app.c:829 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:828
+#: ../src/xpad-app.c:830
 msgid "Show all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:829
+#: ../src/xpad-app.c:831
 msgid "Toggle between show and hide all pads"
 msgstr ""
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "Create a new pad with the contents of a file"
 msgstr "Vytvoriť nový blok s obsahom súboru"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "FILE"
 msgstr "SÚBOR"
 
-#: ../src/xpad-app.c:831
+#: ../src/xpad-app.c:833
 msgid "Close all pads"
 msgstr "Zatvoriť všetky bloky"
 
-#: ../src/xpad-app.c:862
+#: ../src/xpad-app.c:864
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -149,7 +149,7 @@ msgstr ""
 "  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
 "  helix84 https://launchpad.net/~helix84"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:151
 msgid "_New"
 msgstr ""
 
@@ -195,16 +195,16 @@ msgstr ""
 msgid "_Notes"
 msgstr "_Poznámky"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:144
+#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:158
 msgid "_Show All"
 msgstr "Zobraziť _všetky"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:150
+#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:165
 msgid "_Close All"
 msgstr "Z_atvoriť všetky"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:168
+#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:184
 msgid "_Help"
 msgstr "_Nápoveda"
 
@@ -212,7 +212,7 @@ msgstr "_Nápoveda"
 msgid "_About"
 msgstr "_O programe"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:180
 msgid "_Preferences"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgstr ""
 msgid "Remo_ve Last Button"
 msgstr ""
 
-#: ../src/xpad-tray.c:172
+#: ../src/xpad-tray.c:188
 msgid "_Quit"
 msgstr ""
 

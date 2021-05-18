@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2021-05-16 13:57+0000\n"
-"PO-Revision-Date: 2020-08-03 14:06+0000\n"
+"POT-Creation-Date: 2021-05-17 07:06+0000\n"
+"PO-Revision-Date: 2021-05-17 20:02+0000\n"
 "Last-Translator: Toni Estevez <toni.estevez@gmail.com>\n"
 "Language-Team: Catalán, Valenciano <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2021-05-17 06:25+0000\n"
+"X-Launchpad-Export-Date: 2021-05-18 06:33+0000\n"
 "X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
 "Language: ca\n"
 
@@ -53,16 +53,16 @@ msgstr "L'Xpad és un programa gràfic. Executeu-lo des de l'escriptori."
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:247
+#: ../src/xpad-app.c:249
 msgid "_Ok"
 msgstr "D'ac_ord"
 
-#: ../src/xpad-app.c:498
+#: ../src/xpad-app.c:500
 #, c-format
 msgid "Could not open directory %s."
 msgstr "No s'ha pogut obrir la carpeta %s."
 
-#: ../src/xpad-app.c:501
+#: ../src/xpad-app.c:503
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
@@ -70,47 +70,47 @@ msgstr ""
 "Aquesta carpeta és necessària per a emmagatzemar les preferències i la "
 "informació de les notes. Ara es tancarà l'Xpad."
 
-#: ../src/xpad-app.c:819
+#: ../src/xpad-app.c:821
 msgid "Show version number and quit"
 msgstr "Mostra el número de versió i surt"
 
-#: ../src/xpad-app.c:820
+#: ../src/xpad-app.c:822
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr ""
 "No creïs una nova nota en iniciar el programa encara que no existeixin notes "
 "anteriors"
 
-#: ../src/xpad-app.c:826
+#: ../src/xpad-app.c:828
 msgid "Create a new pad on startup even if pads already exist"
 msgstr ""
 "Crea una nota nova en iniciar el programa tot i que ja hi hagi notes "
 "anteriors"
 
-#: ../src/xpad-app.c:827 ../src/xpad-preferences.c:467
+#: ../src/xpad-app.c:829 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
 msgstr "Amaga totes les notes"
 
-#: ../src/xpad-app.c:828
+#: ../src/xpad-app.c:830
 msgid "Show all pads"
 msgstr "Mostra totes les notes"
 
-#: ../src/xpad-app.c:829
+#: ../src/xpad-app.c:831
 msgid "Toggle between show and hide all pads"
 msgstr "Commuta entre mostrar i ocultar totes les notes"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "Create a new pad with the contents of a file"
 msgstr "Crea una nota nova amb el contingut d'un fitxer"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:832
 msgid "FILE"
 msgstr "FITXER"
 
-#: ../src/xpad-app.c:831
+#: ../src/xpad-app.c:833
 msgid "Close all pads"
 msgstr "Tanca totes les notes"
 
-#: ../src/xpad-app.c:862
+#: ../src/xpad-app.c:864
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -155,7 +155,7 @@ msgstr ""
 "  Robert Antoni Buj Gelonch https://launchpad.net/~robert-buj\n"
 "  Toni Estevez https://launchpad.net/~toni-estevez"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:137
+#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:151
 msgid "_New"
 msgstr "_Nota nova"
 
@@ -201,16 +201,16 @@ msgstr "_Només lectura"
 msgid "_Notes"
 msgstr "N_otes"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:144
+#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:158
 msgid "_Show All"
 msgstr "_Mostra totes les notes"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:150
+#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:165
 msgid "_Close All"
 msgstr "_Tanca totes les notes"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:168
+#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:184
 msgid "_Help"
 msgstr "_Ajuda"
 
@@ -218,7 +218,7 @@ msgstr "_Ajuda"
 msgid "_About"
 msgstr "_Quant a"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:164
+#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:180
 msgid "_Preferences"
 msgstr "_Preferències"
 
@@ -457,6 +457,7 @@ msgstr ""
 #: ../src/xpad-preferences.c:753 ../src/xpad-preferences.c:765
 msgid "Failed to change the time delay of starting the Xpad systray"
 msgstr ""
+"No s'ha pogut canviar el retard per iniciar l'Xpad a l'àrea de notificació."
 
 #: ../src/xpad-preferences.c:764
 #, c-format
@@ -618,7 +619,7 @@ msgstr "Suprimeix tots els botons"
 msgid "Remo_ve Last Button"
 msgstr "Suprimeix l'últim botó"
 
-#: ../src/xpad-tray.c:172
+#: ../src/xpad-tray.c:188
 msgid "_Quit"
 msgstr "_Surt"
 
