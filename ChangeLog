@@ -8,6 +8,7 @@ Version 5.5
        following https://gitlab.gnome.org/GNOME/gtksourceview/-/issues/84. GtkSourceView v3 uses the deprecated GTimeVal, which is not year 2038 proof.
 * Fix: Increased the minimum required GtkSourceView version from v3.10 to v4.0.3.
 * Fix: Search: use GtkSouceView v4; fix uninitialized variable.
+* Fix: Wayland compatibility: only set the X11 client ID, if Xpad is running in an X11 session.
 
 Version 5.4
 * New: added the AppStream metadata for easier packaging/software maintenance across Linux distributions. (#1809985)
