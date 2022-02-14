@@ -1,3 +1,6 @@
+Version 5.6
+* Fix: ...
+
 Version 5.5
 * New: Ability to search through a pad by Siergiej Riaguzow. (#452226)
 * Fix: Removal of the obsolete undo/redo functionality, since it is already provided by the GtkSourceBuffer by Siergiej Riaguzow. (#1349838)
