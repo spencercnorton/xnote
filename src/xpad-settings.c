@@ -368,7 +368,7 @@ xpad_settings_set_property (GObject *object, guint prop_id, const GValue *value,
 			GFile *source, *destination;
 			GError *error = NULL;
 
-			source_dir = g_strdup_printf ("%s/share/applications", BASE_DIR);
+			source_dir = g_strdup_printf ("%s/applications", DATADIR);
 			destination_dir = g_strdup_printf ("%s/.config/autostart", g_get_home_dir());
 
 			if (g_mkdir_with_parents (destination_dir, 0700) != 0) {
