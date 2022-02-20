@@ -139,7 +139,7 @@ xpad_pad_group_num_pads (XpadPadGroup *group)
 
 gboolean xpad_pad_group_has_pads (XpadPadGroup *group)
 {
-	return xpad_pad_group_num_pads (group) == 0;
+	return xpad_pad_group_num_pads (group) != 0;
 }
 
 guint
