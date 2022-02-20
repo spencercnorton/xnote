@@ -85,8 +85,6 @@ xpad_text_buffer_init (XpadTextBuffer *buffer)
 static void
 xpad_text_buffer_dispose (GObject *object)
 {
-	/* XpadTextBuffer *buffer = XPAD_TEXT_BUFFER (object); */
-
 	G_OBJECT_CLASS (xpad_text_buffer_parent_class)->dispose (object);
 }
 
