@@ -93,14 +93,20 @@ if test "x${prefix}" = "xNONE"; then
 else
   PREFIX="${prefix}"
 fi
-AC_DEFINE_UNQUOTED(LOCALE_DIR, "${PREFIX}/${DATADIRNAME}/locale",[Locale directory])
-AC_DEFINE_UNQUOTED(THEME_DIR, "${PREFIX}/${DATADIRNAME}/icons",[Icon directory])
 
 # Define the help path and filename
 HELP_DIR="$PACKAGE/help"
 HELP_FILE_NAME="xpad-user-help.txt"
 AC_SUBST(HELP_DIR)
 AC_SUBST(HELP_FILE_NAME)
+
+#Define the locale path
+LOCALE_DIR="locale"
+AC_SUBST(LOCALE_DIR)
+
+#Define the icon path
+ICON_PATH="icons"
+AC_SUBST(THEME_DIR)
 
 # Determines if we're debugging.
 AC_ARG_ENABLE(debug,

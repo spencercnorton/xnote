@@ -102,7 +102,9 @@ xpad_app_init (int argc, char **argv)
 
 	/* Set up support different languages */
 #ifdef ENABLE_NLS
-	bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
+	gchar *locale_dir = g_strdup_printf ("%s/%s", DATADIR, LOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE, locale_dir);
+	g_free(locale_dir);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
@@ -426,7 +428,9 @@ static void
 register_stock_icons (void)
 {
 	GtkIconTheme *theme = gtk_icon_theme_get_default ();
-	gtk_icon_theme_prepend_search_path (theme, THEME_DIR);
+	gchar *theme_dir = g_strdup_printf ("%s/%s", DATADIR, THEMEDIR);
+	gtk_icon_theme_prepend_search_path (theme, theme_dir);
+	g_free(theme_dir);
 }
 
 static gboolean
