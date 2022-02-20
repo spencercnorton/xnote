@@ -58,10 +58,10 @@ static AppIndicator *app_indicator = NULL;
 #define TRAY_ICON "xpad-panel"
 
 void xpad_tray_init (XpadSettings *settings) {
-	gboolean tray_enabled;
-	g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
+    gboolean tray_enabled;
+    g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
 
-	if (tray_enabled) {
+    if (tray_enabled) {
         app_indicator = xpad_tray_app_indicator_new(settings);
         xpad_tray_open(settings);
         g_signal_connect (settings, "notify::tray-enabled", G_CALLBACK (xpad_tray_toggle), NULL);
