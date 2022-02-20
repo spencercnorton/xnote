@@ -95,7 +95,12 @@ else
 fi
 AC_DEFINE_UNQUOTED(LOCALE_DIR, "${PREFIX}/${DATADIRNAME}/locale",[Locale directory])
 AC_DEFINE_UNQUOTED(THEME_DIR, "${PREFIX}/${DATADIRNAME}/icons",[Icon directory])
-AC_DEFINE_UNQUOTED(HELP_FILE, "${PREFIX}/${DATADIRNAME}/xpad/help/xpad-user-help.txt",[Help file])
+
+# Define the help path and filename
+HELP_DIR="$PACKAGE/help"
+HELP_FILE_NAME="xpad-user-help.txt"
+AC_SUBST(HELP_DIR)
+AC_SUBST(HELP_FILE_NAME)
 
 # Determines if we're debugging.
 AC_ARG_ENABLE(debug,
