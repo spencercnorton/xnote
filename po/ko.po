@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-02-19 06:37+0000\n"
+"POT-Creation-Date: 2022-02-20 18:31+0000\n"
 "PO-Revision-Date: 2021-05-11 14:46+0000\n"
 "Last-Translator: Minho Park <parkmino@gmail.com>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-02-20 06:43+0000\n"
+"X-Launchpad-Export-Date: 2022-02-21 04:33+0000\n"
 "X-Generator: Launchpad (build 131c1c72b6032652fb002ebff08e63a8deeb8d0a)\n"
 "Language: ko\n"
 
@@ -23,11 +23,11 @@ msgstr ""
 msgid "Could not write to file %s: %s"
 msgstr "파일에 쓸 수 없음 %s: %s"
 
-#: ../src/help.c:51
+#: ../src/help.c:53
 msgid "Error showing the help"
 msgstr "도움말 보기 오류"
 
-#: ../src/help.c:51
+#: ../src/help.c:53
 #, c-format
 msgid ""
 "Could not find the help file %s\n"
@@ -36,74 +36,74 @@ msgstr ""
 "도움말 파일을 찾을 수 없음 %s\n"
 "%s"
 
-#: ../src/help.c:70 ../src/xpad-preferences.c:528
+#: ../src/help.c:72 ../src/xpad-preferences.c:528
 msgid "Close"
 msgstr "닫기"
 
-#: ../src/help.c:75
+#: ../src/help.c:77
 msgid "Help"
 msgstr "도움말"
 
-#: ../src/xpad-app.c:131
+#: ../src/xpad-app.c:133
 msgid "Xpad is a graphical program.  Please run it from your desktop."
 msgstr "Xpad는 GUI 프로그램입니다.  그래픽 환경에서 실행해야 합니다."
 
-#: ../src/xpad-app.c:136
+#: ../src/xpad-app.c:138
 msgid "Xpad"
 msgstr "Xpad"
 
-#: ../src/xpad-app.c:249
+#: ../src/xpad-app.c:251
 msgid "_Ok"
 msgstr "확인(_O)"
 
-#: ../src/xpad-app.c:500
+#: ../src/xpad-app.c:504
 #, c-format
 msgid "Could not open directory %s."
 msgstr "%s 디렉터리를 열수 없습니다."
 
-#: ../src/xpad-app.c:503
+#: ../src/xpad-app.c:507
 msgid ""
 "This directory is needed to store preference and pad information.  Xpad will "
 "close now."
 msgstr "이 디렉터리에는 메모 내용과 설정을 저장하기 위해 필요합니다. Xpad를 닫습니다."
 
-#: ../src/xpad-app.c:821
+#: ../src/xpad-app.c:825
 msgid "Show version number and quit"
 msgstr "버전을 넘버를 보고 종료 합니다"
 
-#: ../src/xpad-app.c:822
+#: ../src/xpad-app.c:826
 msgid "Don't create a new pad on startup if no previous pads exist"
 msgstr "이전 메모가 없다면 시작할 때 메모를 만들지 않습니다"
 
-#: ../src/xpad-app.c:828
+#: ../src/xpad-app.c:832
 msgid "Create a new pad on startup even if pads already exist"
 msgstr "이미 메모가 있더라도 시작할 때 새로운 메모를 만듭니다."
 
-#: ../src/xpad-app.c:829 ../src/xpad-preferences.c:467
+#: ../src/xpad-app.c:833 ../src/xpad-preferences.c:467
 msgid "Hide all pads"
 msgstr "모든 메모 숨김"
 
-#: ../src/xpad-app.c:830
+#: ../src/xpad-app.c:834
 msgid "Show all pads"
 msgstr "모든 메모 보기"
 
-#: ../src/xpad-app.c:831
+#: ../src/xpad-app.c:835
 msgid "Toggle between show and hide all pads"
 msgstr "모든 메모 보기와 숨김 오가기"
 
-#: ../src/xpad-app.c:832
+#: ../src/xpad-app.c:836
 msgid "Create a new pad with the contents of a file"
 msgstr "파일의 내용을 이용하여 새로운 메모를 만듭니다."
 
-#: ../src/xpad-app.c:832
+#: ../src/xpad-app.c:836
 msgid "FILE"
 msgstr "파일"
 
-#: ../src/xpad-app.c:833
+#: ../src/xpad-app.c:837
 msgid "Close all pads"
 msgstr "모든 메모를 닫음"
 
-#: ../src/xpad-app.c:864
+#: ../src/xpad-app.c:868
 #, c-format
 msgid "Xpad %s"
 msgstr "Xpad %s"
@@ -113,34 +113,34 @@ msgstr "Xpad %s"
 msgid "Could not read file %s."
 msgstr "%s 파일을 읽을수 없습니다."
 
-#: ../src/xpad-pad.c:924
+#: ../src/xpad-pad.c:921
 msgid "Delete this pad?"
 msgstr "메모를 지울까요?"
 
-#: ../src/xpad-pad.c:924
+#: ../src/xpad-pad.c:921
 msgid "All text of this pad will be irrevocably lost."
 msgstr "이 메모의 모든 내용을 복구할 수 없습니다."
 
-#: ../src/xpad-pad.c:929 ../src/xpad-pad.c:1626
+#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1608
 msgid "_Delete"
 msgstr "지우기(_D)"
 
-#: ../src/xpad-pad.c:929
+#: ../src/xpad-pad.c:926
 msgid "_Cancel"
 msgstr "취소(_C)"
 
-#: ../src/xpad-pad.c:973
+#: ../src/xpad-pad.c:955
 #, c-format
 msgid "'%s' Layout"
 msgstr "'%s' 레이아웃"
 
-#: ../src/xpad-pad.c:1448
+#: ../src/xpad-pad.c:1430
 msgid "Sticky notes"
 msgstr "메모지"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1452
+#: ../src/xpad-pad.c:1434
 msgid "translator-credits"
 msgstr ""
 "KwangSub Lee <chokori@gmail.com>\n"
@@ -154,94 +154,94 @@ msgstr ""
 "  Minho Park https://launchpad.net/~parkmino\n"
 "  oops https://launchpad.net/~oops"
 
-#: ../src/xpad-pad.c:1625 ../src/xpad-tray.c:151
+#: ../src/xpad-pad.c:1607 ../src/xpad-tray.c:149
 msgid "_New"
 msgstr "새로 만들기(_N)"
 
-#: ../src/xpad-pad.c:1627
+#: ../src/xpad-pad.c:1609
 msgid "_Reload"
 msgstr "다시 읽기(_R)"
 
-#: ../src/xpad-pad.c:1628
+#: ../src/xpad-pad.c:1610
 msgid "_Close"
 msgstr "닫기(_C)"
 
 #. Edit submenu
-#: ../src/xpad-pad.c:1631
+#: ../src/xpad-pad.c:1613
 msgid "_Edit"
 msgstr "편집(_E)"
 
-#: ../src/xpad-pad.c:1635
+#: ../src/xpad-pad.c:1617
 msgid "_Undo"
 msgstr "되돌리기(_U)"
 
-#: ../src/xpad-pad.c:1637
+#: ../src/xpad-pad.c:1619
 msgid "_Redo"
 msgstr "다시 실행(_R)"
 
-#: ../src/xpad-pad.c:1640 ../src/xpad-pad.c:1769
+#: ../src/xpad-pad.c:1622 ../src/xpad-pad.c:1751
 msgid "_Paste"
 msgstr "붙여넣기(_P)"
 
-#: ../src/xpad-pad.c:1643
+#: ../src/xpad-pad.c:1625
 msgid "_Find"
 msgstr "찾기(_F)"
 
-#: ../src/xpad-pad.c:1645
+#: ../src/xpad-pad.c:1627
 msgid "_Layout"
 msgstr "레이아웃(_L)"
 
-#: ../src/xpad-pad.c:1646
+#: ../src/xpad-pad.c:1628
 msgid "_Read only"
 msgstr "읽기 전용(_R)"
 
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1652
+#: ../src/xpad-pad.c:1634
 msgid "_Notes"
 msgstr "메모(_N)"
 
-#: ../src/xpad-pad.c:1657 ../src/xpad-tray.c:158
+#: ../src/xpad-pad.c:1639 ../src/xpad-tray.c:156
 msgid "_Show All"
 msgstr "모두 보기(_S)"
 
-#: ../src/xpad-pad.c:1658 ../src/xpad-tray.c:165
+#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:163
 msgid "_Close All"
 msgstr "모두 닫기(_C)"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1661 ../src/xpad-pad.c:1665 ../src/xpad-tray.c:184
+#: ../src/xpad-pad.c:1643 ../src/xpad-pad.c:1647 ../src/xpad-tray.c:182
 msgid "_Help"
 msgstr "도움말(_H)"
 
-#: ../src/xpad-pad.c:1666
+#: ../src/xpad-pad.c:1648
 msgid "_About"
 msgstr "대하여..(_A)"
 
-#: ../src/xpad-pad.c:1671 ../src/xpad-tray.c:180
+#: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:178
 msgid "_Preferences"
 msgstr "설정(_P)"
 
-#: ../src/xpad-pad.c:1767
+#: ../src/xpad-pad.c:1749
 msgid "Cu_t"
 msgstr "잘라내기(_t)"
 
-#: ../src/xpad-pad.c:1768
+#: ../src/xpad-pad.c:1750
 msgid "_Copy"
 msgstr "복사(_C)"
 
-#: ../src/xpad-pad.c:1772
+#: ../src/xpad-pad.c:1754
 msgid "_Bold"
 msgstr "굵게(_B)"
 
-#: ../src/xpad-pad.c:1773
+#: ../src/xpad-pad.c:1755
 msgid "_Italic"
 msgstr "기울임(_I)"
 
-#: ../src/xpad-pad.c:1774
+#: ../src/xpad-pad.c:1756
 msgid "_Underline"
 msgstr "밑줄(_U)"
 
-#: ../src/xpad-pad.c:1775
+#: ../src/xpad-pad.c:1757
 msgid "_Strikethrough"
 msgstr "취소선(_S)"
 
@@ -613,7 +613,7 @@ msgstr "모든 단추 삭제(_B)"
 msgid "Remo_ve Last Button"
 msgstr "이전 단추 삭제(_v)"
 
-#: ../src/xpad-tray.c:188
+#: ../src/xpad-tray.c:186
 msgid "_Quit"
 msgstr "끝내기(_Q)"
 
