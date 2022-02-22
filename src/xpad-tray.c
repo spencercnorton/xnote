@@ -47,7 +47,6 @@ enum
 };
 
 static AppIndicator *app_indicator = NULL;
-static GtkWidget* tray_menu = NULL;
 
 #define ICON_NAME "xpad"
 #define TRAY_ICON "xpad-panel"
@@ -145,14 +144,19 @@ void xpad_tray_init (XpadSettings *settings) {
 
     if (tray_enabled) {
         app_indicator = xpad_tray_app_indicator_new(settings);
-	tray_menu = xpad_tray_create_menu(settings);
-	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+	xpad_tray_update_menu(settings);
     }
 }
 
 void xpad_tray_update_menu (XpadSettings *settings)
 {
-	tray_menu = xpad_tray_create_menu(settings);
+	GtkWidget* tray_menu = xpad_tray_create_menu(settings);
+	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+}
+
+void xpad_tray_dispose (XpadSettings *settings) {
+    if (app_indicator)
+        g_clear_object (&app_indicator);
 }
 
 gboolean xpad_tray_has_indicator ()
@@ -161,9 +165,4 @@ gboolean xpad_tray_has_indicator ()
 		return TRUE;
 	else
 		return FALSE;
-}
-
-void xpad_tray_dispose (XpadSettings *settings) {
-    if (app_indicator)
-        g_clear_object (&app_indicator);
 }
