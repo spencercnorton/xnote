@@ -851,7 +851,7 @@ xpad_pad_close (XpadPad *pad)
 	 * pad as closed, we want to start with just this pad next open.  So
 	 * quit before we record.
 	 */
-	if (!xpad_tray_is_open () &&
+	if (!xpad_tray_has_indicator () &&
 		 xpad_pad_group_num_visible_pads (pad->priv->group) == 0)
 	{
 		xpad_app_quit ();
@@ -1512,7 +1512,7 @@ xpad_pad_close_all (XpadPad *pad)
 	 * open, we do a quit.  This way, when xpad is run again, only the
 	 * pads open during the last 'close all' will open again.
 	 */
-	if (xpad_tray_is_open ())
+	if (xpad_tray_has_indicator ())
 		xpad_pad_group_close_all (pad->priv->group);
 	else
 		xpad_app_quit ();

@@ -46,92 +46,11 @@ enum
 	NEW_PAD
 };
 
-static void xpad_tray_open (XpadSettings *settings);
-static void xpad_tray_close ();
-static void xpad_tray_toggle (XpadSettings *settings);
-static GtkWidget* xpad_tray_create_menu(XpadSettings *settings);
-static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings);
-
 static AppIndicator *app_indicator = NULL;
+static GtkWidget* tray_menu = NULL;
 
 #define ICON_NAME "xpad"
 #define TRAY_ICON "xpad-panel"
-
-void xpad_tray_init (XpadSettings *settings) {
-    gboolean tray_enabled;
-    g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
-
-    if (tray_enabled) {
-        app_indicator = xpad_tray_app_indicator_new(settings);
-        xpad_tray_open(settings);
-        g_signal_connect (settings, "notify::tray-enabled", G_CALLBACK (xpad_tray_toggle), NULL);
-    }
-}
-
-static char const* getIconName(void)
-{
-    char const* icon_name;
-
-    GtkIconTheme* theme = gtk_icon_theme_get_default();
-
-    /* If the tray's icon is a 48x48 file, use it. Otherwise, use the fallback builtin icon. */
-    if (!gtk_icon_theme_has_icon(theme, TRAY_ICON)) {
-        icon_name = ICON_NAME;
-    } else {
-        GtkIconInfo* icon_info = gtk_icon_theme_lookup_icon(theme, TRAY_ICON, 48, GTK_ICON_LOOKUP_USE_BUILTIN);
-        gboolean const icon_is_builtin = gtk_icon_info_get_filename(icon_info) == NULL;
-        g_object_unref(icon_info);
-        icon_name = icon_is_builtin ? ICON_NAME : TRAY_ICON;
-    }
-
-    return icon_name;
-}
-
-static void xpad_tray_toggle (XpadSettings *settings) {
-	gboolean tray_enabled;
-	g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
-
-	if (tray_enabled) {
-		xpad_tray_open (settings);
-	} else {
-		xpad_tray_close ();
-    }
-}
-
-static void xpad_tray_open (XpadSettings *settings)
-{
-	GtkWidget* tray_menu = xpad_tray_create_menu(settings);
-	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
-}
-
-static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings)
-{
-	char const* icon_name = getIconName();
-	AppIndicator* indicator = app_indicator_new(ICON_NAME, icon_name, APP_INDICATOR_CATEGORY_SYSTEM_SERVICES);
-	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
-	app_indicator_set_title(indicator, g_get_application_name());
-	return indicator;
-}
-
-static void xpad_tray_close ()
-{
-    if (app_indicator)
-        g_clear_object (&app_indicator);
-}
-
-void xpad_tray_dispose (XpadSettings *settings) {
-	if (settings)
-		g_signal_handlers_disconnect_by_func (settings, xpad_tray_toggle, NULL);
-	xpad_tray_close ();
-}
-
-gboolean xpad_tray_is_open ()
-{
-	if (app_indicator)
-		return TRUE;
-	else
-		return FALSE;
-}
 
 static void menu_spawn (XpadSettings *settings)
 {
@@ -190,4 +109,61 @@ static GtkWidget* xpad_tray_create_menu(XpadSettings *settings) {
     gtk_widget_show_all (menu);
 
     return menu;
+}
+
+static char const* getIconName(void)
+{
+    char const* icon_name;
+
+    GtkIconTheme* theme = gtk_icon_theme_get_default();
+
+    /* If the tray's icon is a 48x48 file, use it. Otherwise, use the fallback builtin icon. */
+    if (!gtk_icon_theme_has_icon(theme, TRAY_ICON)) {
+        icon_name = ICON_NAME;
+    } else {
+        GtkIconInfo* icon_info = gtk_icon_theme_lookup_icon(theme, TRAY_ICON, 48, GTK_ICON_LOOKUP_USE_BUILTIN);
+        gboolean const icon_is_builtin = gtk_icon_info_get_filename(icon_info) == NULL;
+        g_object_unref(icon_info);
+        icon_name = icon_is_builtin ? ICON_NAME : TRAY_ICON;
+    }
+
+    return icon_name;
+}
+
+static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings)
+{
+	char const* icon_name = getIconName();
+	AppIndicator* indicator = app_indicator_new(ICON_NAME, icon_name, APP_INDICATOR_CATEGORY_SYSTEM_SERVICES);
+	app_indicator_set_status(indicator, APP_INDICATOR_STATUS_ACTIVE);
+	app_indicator_set_title(indicator, g_get_application_name());
+	return indicator;
+}
+
+void xpad_tray_init (XpadSettings *settings) {
+    gboolean tray_enabled;
+    g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
+
+    if (tray_enabled) {
+        app_indicator = xpad_tray_app_indicator_new(settings);
+	tray_menu = xpad_tray_create_menu(settings);
+	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+    }
+}
+
+void xpad_tray_update_menu (XpadSettings *settings)
+{
+	tray_menu = xpad_tray_create_menu(settings);
+}
+
+gboolean xpad_tray_has_indicator ()
+{
+	if (app_indicator)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+void xpad_tray_dispose (XpadSettings *settings) {
+    if (app_indicator)
+        g_clear_object (&app_indicator);
 }
