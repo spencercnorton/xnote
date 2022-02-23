@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-02-21 04:34+0000\n"
+"POT-Creation-Date: 2022-02-22 09:28+0000\n"
 "PO-Revision-Date: 2016-04-26 06:52+0000\n"
 "Last-Translator: zollac <kyle2160k@gmail.com>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-02-22 04:34+0000\n"
+"X-Launchpad-Export-Date: 2022-02-23 04:34+0000\n"
 "X-Generator: Launchpad (build 131c1c72b6032652fb002ebff08e63a8deeb8d0a)\n"
 "Language: zh_TW\n"
 
@@ -147,7 +147,7 @@ msgstr ""
 "  zollac https://launchpad.net/~kyle2160k\n"
 "  趙惟倫 https://launchpad.net/~chaoweilun"
 
-#: ../src/xpad-pad.c:1607 ../src/xpad-tray.c:149
+#: ../src/xpad-pad.c:1607 ../src/xpad-tray.c:67
 msgid "_New"
 msgstr ""
 
@@ -193,16 +193,16 @@ msgstr ""
 msgid "_Notes"
 msgstr "備忘(_N)"
 
-#: ../src/xpad-pad.c:1639 ../src/xpad-tray.c:156
+#: ../src/xpad-pad.c:1639 ../src/xpad-tray.c:74
 msgid "_Show All"
 msgstr "全部顯示(_S)"
 
-#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:163
+#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:81
 msgid "_Close All"
 msgstr "全部關閉(_C)"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1643 ../src/xpad-pad.c:1647 ../src/xpad-tray.c:182
+#: ../src/xpad-pad.c:1643 ../src/xpad-pad.c:1647 ../src/xpad-tray.c:100
 msgid "_Help"
 msgstr "求助(_H)"
 
@@ -210,7 +210,7 @@ msgstr "求助(_H)"
 msgid "_About"
 msgstr "關於(_A)"
 
-#: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:178
+#: ../src/xpad-pad.c:1653 ../src/xpad-tray.c:96
 msgid "_Preferences"
 msgstr ""
 
@@ -596,7 +596,7 @@ msgstr ""
 msgid "Remo_ve Last Button"
 msgstr ""
 
-#: ../src/xpad-tray.c:186
+#: ../src/xpad-tray.c:104
 msgid "_Quit"
 msgstr ""
 
