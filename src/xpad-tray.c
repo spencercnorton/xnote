@@ -138,6 +138,12 @@ static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings)
 	return indicator;
 }
 
+static gboolean xpad_tray_update_menu (XpadSettings *settings) {
+	GtkWidget* tray_menu = xpad_tray_create_menu(settings);
+	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+	return TRUE;
+}
+
 void xpad_tray_init (XpadSettings *settings) {
     gboolean tray_enabled;
     g_object_get (settings, "tray-enabled", &tray_enabled, NULL);
@@ -145,13 +151,11 @@ void xpad_tray_init (XpadSettings *settings) {
     if (tray_enabled) {
         app_indicator = xpad_tray_app_indicator_new(settings);
 	xpad_tray_update_menu(settings);
-    }
-}
 
-void xpad_tray_update_menu (XpadSettings *settings)
-{
-	GtkWidget* tray_menu = xpad_tray_create_menu(settings);
-	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+	/* Refresh the menu every x seconds */
+	guint refresh_each_seconds = 10;
+	g_timeout_add_seconds(refresh_each_seconds, (GSourceFunc) xpad_tray_update_menu, settings);
+    }
 }
 
 void xpad_tray_dispose (XpadSettings *settings) {

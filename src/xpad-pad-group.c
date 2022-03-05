@@ -114,16 +114,11 @@ xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 void
 xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 {
-	XpadSettings *settings;
-        g_object_get (pad, "settings", &settings, NULL);
-
+	/* Destroy the pad */
 	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
 	g_clear_object(&pad);
 
 	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
-
-	/* Update the app indicator menu */
-	xpad_tray_update_menu(settings);
 }
 
 /* Delete all the current pads in the group */

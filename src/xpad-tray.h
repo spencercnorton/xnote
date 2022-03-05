@@ -29,7 +29,6 @@ G_BEGIN_DECLS
 
 void xpad_tray_init (XpadSettings *settings);
 void xpad_tray_dispose (XpadSettings *settings);
-void xpad_tray_update_menu (XpadSettings *settings);
 gboolean xpad_tray_has_indicator ();
 
 G_END_DECLS
