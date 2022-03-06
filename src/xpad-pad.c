@@ -997,7 +997,7 @@ prop_notify_colors (XpadPad *pad)
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 
 	gboolean follow_color_style;
-	const GdkRGBA *text_color, *back_color;
+	GdkRGBA *text_color, *back_color;
 
 	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
 	g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-color-style", follow_color_style, NULL);
@@ -1011,6 +1011,8 @@ prop_notify_colors (XpadPad *pad)
 	}
 
 	xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
+	g_free (text_color);
+	g_free (back_color);
 
 	xpad_pad_save_info_delayed (pad);
 }

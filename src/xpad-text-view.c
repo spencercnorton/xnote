@@ -327,19 +327,21 @@ xpad_text_view_notify_colors (XpadTextView *view)
 {
 	if (view->priv->follow_color_style) {
 		/* Set the colors of this individual pad to the global setting preference. */
-		const GdkRGBA *text_color, *back_color;
+		GdkRGBA *text_color, *back_color;
 
 		GtkWidget *view_widget = GTK_WIDGET (view);
 
 		/* Set the colors to the global preferences colors */
 		g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
 		xpad_text_view_set_colors(view_widget, text_color, back_color);
+		g_free (text_color);
+		g_free (back_color);
 	}
 }
 
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
 void
-xpad_text_view_set_colors (GtkWidget *view, const GdkRGBA *text_color, const GdkRGBA *back_color) {
+xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_color) {
 	gchar *cssStyling = g_strconcat("textview, textview text {caret-color: ",
 			text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color",
 			"; color: ",
