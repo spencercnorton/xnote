@@ -373,11 +373,12 @@ xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
 		g_clear_object (&XPAD_TEXT_VIEW (view)->priv->font_provider);
 	} else {
 		/* Add/replace font provider */
-		const gchar *font_description;
+		gchar *font_description;
 		gchar *cssStyling;
 
 		font_description = pango_font_description_to_css(desc);
 		cssStyling = g_strconcat("textview, textview text ", font_description, "\n", NULL);
+		g_free (font_description);
 
 		if (XPAD_TEXT_VIEW (view)->priv->font_provider) {
 			gtk_style_context_remove_provider (context, GTK_STYLE_PROVIDER (XPAD_TEXT_VIEW (view)->priv->font_provider));
