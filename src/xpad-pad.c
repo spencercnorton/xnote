@@ -1360,6 +1360,8 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	if (show)
 		*show = !hidden;
 
+	g_free(text_color_string);
+	g_free(background_color_string);
 	g_free(fontname);
 }
 
