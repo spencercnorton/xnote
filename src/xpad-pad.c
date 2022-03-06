@@ -1552,20 +1552,6 @@ menu_strikethrough (XpadPad *pad)
 	menu_toggle_tag (pad, "strikethrough");
 }
 
-static gint
-menu_title_compare (GtkWindow *a, GtkWindow *b)
-{
-	gchar *title_a = g_utf8_casefold (gtk_window_get_title (a), -1);
-	gchar *title_b = g_utf8_casefold (gtk_window_get_title (b), -1);
-
-	gint rv = g_utf8_collate (title_a, title_b);
-
-	g_free (title_a);
-	g_free (title_b);
-
-	return rv;
-}
-
 /* FIXME: Accelerators are working but not visible for menu items with an image (icon). */
 #define MENU_ADD(mnemonic, image, key, mask, callback) {\
 	if (image) {\
@@ -1705,35 +1691,19 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 
 void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 {
-	/* Get all the pads */
-	GSList *pads = xpad_pad_group_get_pads (xpad_app_get_pad_group ());
-
-	/* Sort the pads by title. */
-	pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
+	/* Get all pads sorted by title. */
+	GSList *pads = xpad_pad_group_get_pads_sorted_by_title(xpad_app_get_pad_group ());
 
 	/* Create a fingerprint of the pad titles for usage in the tray logic. */
 	GString *pads_fingerprint = g_string_new(NULL);
 
 	/* Add pads to the menu. */
-	GtkWidget *item;
-
 	for (gint n = 1; pads; pads = pads->next, n++) {
 		XpadPad *pad = pads->data;
-		gchar *tmp_title = g_strndup (gtk_window_get_title (GTK_WINDOW (pad)), 20);
-		str_replace_tokens (&tmp_title, '_', "__");
-		gchar *title;
-
-		if (n < 10) {
-			title = g_strdup_printf ("_%i. %s", n, tmp_title);
-		} else {
-			title = g_strdup_printf ("%i. %s", n, tmp_title);
-		}
-
-		g_free (tmp_title);
-
+		gchar *title = xpad_pad_get_title_for_menu(pad, n);
 		g_string_append(pads_fingerprint, title);
 
-		item = gtk_menu_item_new_with_mnemonic (title);
+		GtkWidget *item = gtk_menu_item_new_with_mnemonic (title);
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (gtk_window_present), pad);
 		gtk_container_add (GTK_CONTAINER (menu), item);
 
@@ -1748,6 +1718,21 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 	g_object_set_data (G_OBJECT (menu), "pads-fingerprint", fingerprint);
 
 	g_slist_free (pads);
+}
+
+gchar* xpad_pad_get_title_for_menu(XpadPad *pad, gint pad_number) {
+	gchar *tmp_title = g_strndup (gtk_window_get_title (GTK_WINDOW (pad)), 20);
+	str_replace_tokens (&tmp_title, '_', "__");
+	gchar *title;
+
+	if (pad_number < 10) {
+		title = g_strdup_printf ("_%i. %s", pad_number, tmp_title);
+	} else {
+		title = g_strdup_printf ("%i. %s", pad_number, tmp_title);
+	}
+
+	g_free (tmp_title);
+	return title;
 }
 
 static GtkWidget *

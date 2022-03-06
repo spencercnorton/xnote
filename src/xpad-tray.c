@@ -138,21 +138,43 @@ static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings)
 	return indicator;
 }
 
+/* Create a fingerprint of all the  pad titles. */
+static gchar* xpad_tray_get_fingerprint () {
+        /* Get all pads sorted by title. */
+        GSList *pads = xpad_pad_group_get_pads_sorted_by_title(xpad_app_get_pad_group ());
+
+        GString *pads_fingerprint = g_string_new(NULL);
+
+        for (gint n = 1; pads; pads = pads->next, n++) {
+                XpadPad *pad = pads->data;
+                gchar *title = xpad_pad_get_title_for_menu(pad, n);
+                g_string_append(pads_fingerprint, title);
+                g_free (title);
+        }
+
+        g_slist_free (pads);
+
+        /* Return the fingerprint. */
+        gchar *fingerprint = g_string_free (pads_fingerprint, FALSE);
+        return fingerprint;
+}
+
 static gboolean xpad_tray_update_menu (XpadSettings *settings) {
-	GtkWidget* new_menu = xpad_tray_create_menu(settings);
 	GtkMenu *current_menu = app_indicator_get_menu (app_indicator);
 
 	/* If there is no menu, then add it. */
 	if (current_menu == NULL) {
+		GtkWidget* new_menu = xpad_tray_create_menu(settings);
 		app_indicator_set_menu(app_indicator, GTK_MENU(new_menu));
 	} else {
 		/* Determine if the menu items have changed. */
 		gchar *current_fingerprint = g_object_get_data (G_OBJECT (current_menu), "pads-fingerprint");
-		gchar *new_fingerprint = g_object_get_data (G_OBJECT (new_menu), "pads-fingerprint");
+		gchar *new_fingerprint = xpad_tray_get_fingerprint ();
 		int menu_changed = g_strcmp0 (current_fingerprint, new_fingerprint);
 
 		/* If the menu did change, then set the new menu. */
 		if (menu_changed != 0) {
+			GtkWidget* new_menu = xpad_tray_create_menu(settings);
 			app_indicator_set_menu(app_indicator, GTK_MENU(new_menu));
 		}
 	}

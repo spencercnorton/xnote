@@ -51,7 +51,6 @@ struct XpadPad
 struct XpadPadClass
 {
    GtkWindowClass parent_class;
-   
    void (*closed) (XpadPad *pad);
 };
 
@@ -77,6 +76,7 @@ void xpad_pad_notify_undo_redo_changed (XpadPad *pad);
 
 void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu);
 void xpad_pad_remove_accelerator_group (XpadPad *pad);
+gchar* xpad_pad_get_title_for_menu (XpadPad *pad, gint pad_number);
 
 G_END_DECLS
 
