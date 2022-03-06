@@ -1711,6 +1711,9 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 	/* Sort the pads by title. */
 	pads = g_slist_sort (pads, (GCompareFunc) menu_title_compare);
 
+	/* Create a fingerprint of the pad titles for usage in the tray logic. */
+	GString *pads_fingerprint = g_string_new(NULL);
+
 	/* Add pads to the menu. */
 	GtkWidget *item;
 
@@ -1728,6 +1731,8 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 
 		g_free (tmp_title);
 
+		g_string_append(pads_fingerprint, title);
+
 		item = gtk_menu_item_new_with_mnemonic (title);
 		g_signal_connect_swapped (item, "activate", G_CALLBACK (gtk_window_present), pad);
 		gtk_container_add (GTK_CONTAINER (menu), item);
@@ -1737,6 +1742,10 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 
 		g_free (title);
 	}
+
+	/* Add the fingerprint to the menu. */
+	gchar *fingerprint = g_string_free (pads_fingerprint, FALSE);
+	g_object_set_data (G_OBJECT (menu), "pads-fingerprint", fingerprint);
 
 	g_slist_free (pads);
 }

@@ -139,8 +139,24 @@ static AppIndicator* xpad_tray_app_indicator_new (XpadSettings *settings)
 }
 
 static gboolean xpad_tray_update_menu (XpadSettings *settings) {
-	GtkWidget* tray_menu = xpad_tray_create_menu(settings);
-	app_indicator_set_menu(app_indicator, GTK_MENU(tray_menu));
+	GtkWidget* new_menu = xpad_tray_create_menu(settings);
+	GtkMenu *current_menu = app_indicator_get_menu (app_indicator);
+
+	/* If there is no menu, then add it. */
+	if (current_menu == NULL) {
+		app_indicator_set_menu(app_indicator, GTK_MENU(new_menu));
+	} else {
+		/* Determine if the menu items have changed. */
+		gchar *current_fingerprint = g_object_get_data (G_OBJECT (current_menu), "pads-fingerprint");
+		gchar *new_fingerprint = g_object_get_data (G_OBJECT (new_menu), "pads-fingerprint");
+		int menu_changed = g_strcmp0 (current_fingerprint, new_fingerprint);
+
+		/* If the menu did change, then set the new menu. */
+		if (menu_changed != 0) {
+			app_indicator_set_menu(app_indicator, GTK_MENU(new_menu));
+		}
+	}
+
 	return TRUE;
 }
 
