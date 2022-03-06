@@ -57,7 +57,6 @@ static void xpad_text_view_notify_editable (XpadTextView *view);
 static void xpad_text_view_notify_fontname (XpadTextView *view);
 static void xpad_text_view_notify_colors (XpadTextView *view);
 static void xpad_text_view_notify_line_numbering (XpadTextView *view);
-gchar * pango_font_description_to_css (PangoFontDescription *desc);
 
 enum
 {

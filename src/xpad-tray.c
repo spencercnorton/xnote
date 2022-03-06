@@ -155,8 +155,7 @@ static gchar* xpad_tray_get_fingerprint () {
         g_slist_free (pads);
 
         /* Return the fingerprint. */
-        gchar *fingerprint = g_string_free (pads_fingerprint, FALSE);
-        return fingerprint;
+        return g_string_free (pads_fingerprint, FALSE);
 }
 
 static gboolean xpad_tray_update_menu (XpadSettings *settings) {
@@ -171,6 +170,8 @@ static gboolean xpad_tray_update_menu (XpadSettings *settings) {
 		gchar *current_fingerprint = g_object_get_data (G_OBJECT (current_menu), "pads-fingerprint");
 		gchar *new_fingerprint = xpad_tray_get_fingerprint ();
 		int menu_changed = g_strcmp0 (current_fingerprint, new_fingerprint);
+		g_free (current_fingerprint);
+		g_free (new_fingerprint);
 
 		/* If the menu did change, then set the new menu. */
 		if (menu_changed != 0) {
