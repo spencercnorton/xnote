@@ -656,6 +656,9 @@ load_from_file (XpadSettings *settings, const gchar *filename)
 		g_free (button_names);
 		g_free (buttons);
 	}
+
+	g_free(text_color_string);
+	g_free(background_color_string);
 }
 
 static void
