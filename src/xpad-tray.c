@@ -168,9 +168,9 @@ static gboolean xpad_tray_update_menu (XpadSettings *settings) {
 	} else {
 		/* Determine if the menu items have changed. */
 		gchar *current_fingerprint = g_object_get_data (G_OBJECT (current_menu), "pads-fingerprint");
-		gchar *new_fingerprint = xpad_tray_get_fingerprint ();
+		gchar *new_fingerprint = xpad_tray_get_fingerprint();
+
 		int menu_changed = g_strcmp0 (current_fingerprint, new_fingerprint);
-		g_free (current_fingerprint);
 		g_free (new_fingerprint);
 
 		/* If the menu did change, then set the new menu. */
