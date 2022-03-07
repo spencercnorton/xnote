@@ -1011,8 +1011,8 @@ prop_notify_colors (XpadPad *pad)
 	}
 
 	xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
-	g_free (text_color);
-	g_free (back_color);
+	gdk_rgba_free (text_color);
+	gdk_rgba_free (back_color);
 
 	xpad_pad_save_info_delayed (pad);
 }
