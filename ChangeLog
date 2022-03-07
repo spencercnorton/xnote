@@ -1,5 +1,7 @@
 Version 5.6
-* Fix: ...
+* Fix: build problem where external files, like the help, were inaccessable. (#1960838)
+* Fix: if pads changed (new, update or delete) the change was not reflected in in the tray overview with the pads. (#1960802) 
+* Fix: several memory leaks
 
 Version 5.5
 * New: Ability to search through a pad by Siergiej Riaguzow. (#452226)
