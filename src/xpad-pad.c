@@ -978,11 +978,13 @@ prop_notify_font (XpadPad *pad)
 
 	if (!follow_font_style)
 	{
-		const gchar *font;
-		g_object_get (prop, "fontname", &font, NULL);
+		gchar *fontname;
+		g_object_get (prop, "fontname", &fontname, NULL);
 
 		PangoFontDescription *fontdesc;
-		fontdesc = font ? pango_font_description_from_string (font) : NULL;
+		fontdesc = fontname ? pango_font_description_from_string (fontname) : NULL;
+		g_free(fontname);
+
 		xpad_text_view_set_font (pad->priv->textview, fontdesc);
 		if (fontdesc)
 			pango_font_description_free (fontdesc);
