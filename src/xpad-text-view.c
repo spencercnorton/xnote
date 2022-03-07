@@ -346,13 +346,19 @@ xpad_text_view_notify_colors (XpadTextView *view)
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
 void
 xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_color) {
+	gchar *text_color_string = gdk_rgba_to_string (text_color);
+	gchar *back_color_string = gdk_rgba_to_string (back_color);
+
 	gchar *cssStyling = g_strconcat("textview, textview text {caret-color: ",
-			text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color",
+			text_color ? text_color_string : "@theme-fg_color",
 			"; color: ",
-			text_color ? gdk_rgba_to_string (text_color) : "@theme_fg_color",
+			text_color ? text_color_string : "@theme_fg_color",
 			"; background-color: ",
-			back_color ? gdk_rgba_to_string (back_color) : "@theme_bg_color",
+			back_color ? back_color_string : "@theme_bg_color",
 			";}\n", NULL);
+
+	g_free (text_color_string);
+	g_free (back_color_string);
 
 	/*
 	 * TODO: If the background color is close to the text selection background color (blue-ish),
