@@ -1718,7 +1718,7 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 	}
 
 	/* Add the fingerprint to the menu. */
-	gchar *fingerprint = g_string_free (pads_fingerprint, FALSE);
+	gchar *fingerprint = g_string_free (pads_fingerprint, TRUE);
 	g_object_set_data (G_OBJECT (menu), "pads-fingerprint", fingerprint);
 
 	g_slist_free (pads);
