@@ -448,12 +448,6 @@ xpad_pad_dispose (GObject *object)
 	g_clear_object(&pad->priv->group);
 
 	if (GTK_IS_WIDGET(pad->priv->menu)) {
-		GtkWidget *notes_menu = g_object_get_data (G_OBJECT (pad->priv->menu), "notes-menu");
-
-		if (notes_menu) {
-			gtk_widget_destroy(notes_menu);
-		}
-
 		gtk_widget_destroy (pad->priv->menu);
 		pad->priv->menu = NULL;
 	}
@@ -1687,14 +1681,13 @@ menu_prep_popup_no_highlight (XpadPad *pad, GtkWidget *uppermenu)
 	if (menu)
 	{
 		gint n = 1;
-		gchar *key;
 
 		/* Remove old notes */
 		item = g_object_get_data (G_OBJECT (menu), "notes-sep");
 		while (item)
 		{
 			gtk_container_remove (GTK_CONTAINER (menu), item);
-			key = g_strdup_printf ("notes-%i", n++);
+			gchar *key = g_strdup_printf ("notes-%i", n++);
 			item = g_object_get_data (G_OBJECT (menu), key);
 			g_free (key);
 		}
