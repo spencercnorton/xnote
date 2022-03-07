@@ -111,7 +111,9 @@ xpad_text_view_constructed (GObject *object)
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
 	gtk_container_set_border_width (GTK_CONTAINER (view), 5);
-	gtk_widget_set_name (GTK_WIDGET (view), g_strdup_printf ("%p", (void *) view));
+	gchar *widget_name = g_strdup_printf ("%p", (void *) view);
+	gtk_widget_set_name (GTK_WIDGET (view), widget_name);
+	g_free (widget_name);
 	xpad_text_view_notify_line_numbering(view);
 
 	/* Add CSS style class, so the styling can be overridden by a GTK theme */
