@@ -1401,9 +1401,16 @@ xpad_pad_save_info (XpadPad *pad)
 		height -= pad->priv->toolbar_height;
 
 	style = gtk_widget_get_style_context (pad->priv->textview);
+
 	gtk_style_context_get (style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
+	gchar *font_string = pango_font_description_to_string (font);
+	pango_font_description_free (font);
+
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &text_color);
+	gchar *text_color_string = gdk_rgba_to_string (&text_color);
+
 	get_background_color (style, GTK_STATE_FLAG_NORMAL, &back_color);
+	gchar *back_color_string = gdk_rgba_to_string (&back_color);
 
 	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
 
@@ -1416,13 +1423,15 @@ xpad_pad_save_info (XpadPad *pad)
 		"b|follow_color", follow_color_style,
 		"b|sticky", pad->priv->sticky,
 		"b|hidden", !gtk_widget_get_visible (GTK_WIDGET(pad)),
-		"s|back", gdk_rgba_to_string (&back_color),
-		"s|text", gdk_rgba_to_string (&text_color),
-		"s|fontname", pango_font_description_to_string (font),
+		"s|back", back_color_string,
+		"s|text", text_color_string,
+		"s|fontname", font_string,
 		"s|content", pad->priv->contentname,
 		NULL);
 
-	pango_font_description_free (font);
+	g_free (text_color_string);
+	g_free (back_color_string);
+	g_free (font_string);
 	pad->priv->unsaved_info = FALSE;
 }
 
