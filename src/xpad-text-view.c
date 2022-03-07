@@ -304,7 +304,7 @@ xpad_text_view_notify_editable (XpadTextView *view)
 	display = gdk_window_get_display(view_window);
 	cursor = editable ? gdk_cursor_new_for_display (display, GDK_XTERM) : NULL;
 
-	/* Only set for pads which are currently visible */ 
+	/* Only set for pads which are currently visible */
 	if (view_window != NULL)
 		gdk_window_set_cursor (view_window, cursor);
 
@@ -338,8 +338,8 @@ xpad_text_view_notify_colors (XpadTextView *view)
 		/* Set the colors to the global preferences colors */
 		g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
 		xpad_text_view_set_colors(view_widget, text_color, back_color);
-		g_free (text_color);
-		g_free (back_color);
+		gdk_rgba_free (text_color);
+		gdk_rgba_free (back_color);
 	}
 }
 
