@@ -448,6 +448,12 @@ xpad_pad_dispose (GObject *object)
 	g_clear_object(&pad->priv->group);
 
 	if (GTK_IS_WIDGET(pad->priv->menu)) {
+		GtkWidget *notes_menu = g_object_get_data (G_OBJECT (pad->priv->menu), "notes-menu");
+
+		if (notes_menu) {
+			gtk_widget_destroy(notes_menu);
+		}
+
 		gtk_widget_destroy (pad->priv->menu);
 		pad->priv->menu = NULL;
 	}
@@ -1727,11 +1733,11 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 		g_free (title);
 	}
 
+	g_slist_free (pads);
+
 	/* Add the fingerprint to the menu. */
 	gchar *fingerprint = g_string_free (pads_fingerprint, TRUE);
 	g_object_set_data (G_OBJECT (menu), "pads-fingerprint", fingerprint);
-
-	g_slist_free (pads);
 }
 
 gchar* xpad_pad_get_title_for_menu(XpadPad *pad, gint pad_number) {
