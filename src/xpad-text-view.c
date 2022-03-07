@@ -312,13 +312,15 @@ xpad_text_view_notify_editable (XpadTextView *view)
 static void
 xpad_text_view_notify_fontname (XpadTextView *view)
 {
-	const gchar *font;
+	gchar *font;
 	g_object_get (view->priv->settings, "fontname", &font, NULL);
 
 	PangoFontDescription *fontdesc = font ? pango_font_description_from_string (font) : NULL;
 	xpad_text_view_set_font (GTK_WIDGET (view), fontdesc);
 	if (fontdesc)
 		pango_font_description_free (fontdesc);
+
+	g_free (font);
 }
 
 /* Update the colors of the textview */
