@@ -1722,6 +1722,7 @@ void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu)
 
 		gchar *key = g_strdup_printf ("notes-%i", n);
 		g_object_set_data (G_OBJECT (menu), key, item);
+		g_free (key);
 
 		g_free (title);
 	}
