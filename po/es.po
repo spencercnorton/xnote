@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.0-b2\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-03-07 00:00+0000\n"
+"POT-Creation-Date: 2022-03-07 15:10+0000\n"
 "PO-Revision-Date: 2022-02-15 17:29+0000\n"
 "Last-Translator: Toni Estevez <toni.estevez@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-03-07 06:26+0000\n"
+"X-Launchpad-Export-Date: 2022-03-08 06:22+0000\n"
 "X-Generator: Launchpad (build 61f4697954ab70d633d14d8ceecff69a20b08a6b)\n"
 "Language: es\n"
 
@@ -127,7 +127,7 @@ msgstr "¿Eliminar esta nota?"
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Todo el texto de esta nota se perderá irreversiblemente."
 
-#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1598
+#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1609
 msgid "_Delete"
 msgstr "_Eliminar"
 
@@ -140,13 +140,13 @@ msgstr "_Cancelar"
 msgid "'%s' Layout"
 msgstr "Propiedades de «%s»"
 
-#: ../src/xpad-pad.c:1434
+#: ../src/xpad-pad.c:1445
 msgid "Sticky notes"
 msgstr "Notas adhesivas"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1438
+#: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -160,94 +160,94 @@ msgstr ""
 "  Toni Estevez https://launchpad.net/~toni-estevez\n"
 "  angvp https://launchpad.net/~angvp"
 
-#: ../src/xpad-pad.c:1597 ../src/xpad-tray.c:67
+#: ../src/xpad-pad.c:1608 ../src/xpad-tray.c:67
 msgid "_New"
 msgstr "_Nota nueva"
 
-#: ../src/xpad-pad.c:1599
+#: ../src/xpad-pad.c:1610
 msgid "_Reload"
 msgstr "_Recargar"
 
-#: ../src/xpad-pad.c:1600
+#: ../src/xpad-pad.c:1611
 msgid "_Close"
 msgstr "_Cerrar"
 
 #. Edit submenu
-#: ../src/xpad-pad.c:1603
+#: ../src/xpad-pad.c:1614
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/xpad-pad.c:1607
+#: ../src/xpad-pad.c:1618
 msgid "_Undo"
 msgstr "_Deshacer"
 
-#: ../src/xpad-pad.c:1609
+#: ../src/xpad-pad.c:1620
 msgid "_Redo"
 msgstr "_Rehacer"
 
-#: ../src/xpad-pad.c:1612 ../src/xpad-pad.c:1752
+#: ../src/xpad-pad.c:1623 ../src/xpad-pad.c:1763
 msgid "_Paste"
 msgstr "_Pegar"
 
-#: ../src/xpad-pad.c:1615
+#: ../src/xpad-pad.c:1626
 msgid "_Find"
 msgstr "_Encontrar"
 
-#: ../src/xpad-pad.c:1617
+#: ../src/xpad-pad.c:1628
 msgid "_Layout"
 msgstr "Pr_opiedades"
 
-#: ../src/xpad-pad.c:1618
+#: ../src/xpad-pad.c:1629
 msgid "_Read only"
 msgstr "Solo _lectura"
 
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1624
+#: ../src/xpad-pad.c:1635
 msgid "_Notes"
 msgstr "N_otas"
 
-#: ../src/xpad-pad.c:1629 ../src/xpad-tray.c:74
+#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:74
 msgid "_Show All"
 msgstr "_Mostrar todas las notas"
 
-#: ../src/xpad-pad.c:1630 ../src/xpad-tray.c:81
+#: ../src/xpad-pad.c:1641 ../src/xpad-tray.c:81
 msgid "_Close All"
 msgstr "_Cerrar todas las notas"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1633 ../src/xpad-pad.c:1637 ../src/xpad-tray.c:100
+#: ../src/xpad-pad.c:1644 ../src/xpad-pad.c:1648 ../src/xpad-tray.c:100
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: ../src/xpad-pad.c:1638
+#: ../src/xpad-pad.c:1649
 msgid "_About"
 msgstr "Acerca _de"
 
-#: ../src/xpad-pad.c:1643 ../src/xpad-tray.c:96
+#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:96
 msgid "_Preferences"
 msgstr "_Preferencias"
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1761
 msgid "Cu_t"
 msgstr "Cor_tar"
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1762
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/xpad-pad.c:1755
+#: ../src/xpad-pad.c:1766
 msgid "_Bold"
 msgstr "_Negrita"
 
-#: ../src/xpad-pad.c:1756
+#: ../src/xpad-pad.c:1767
 msgid "_Italic"
 msgstr "C_ursiva"
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1768
 msgid "_Underline"
 msgstr "_Subrayado"
 
-#: ../src/xpad-pad.c:1758
+#: ../src/xpad-pad.c:1769
 msgid "_Strikethrough"
 msgstr "T_achado"
 

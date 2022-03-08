@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-03-07 00:00+0000\n"
+"POT-Creation-Date: 2022-03-07 15:10+0000\n"
 "PO-Revision-Date: 2021-05-11 14:46+0000\n"
 "Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
 "Language-Team: Afrikaans <i18n@af.org.za>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-03-07 06:26+0000\n"
+"X-Launchpad-Export-Date: 2022-03-08 06:22+0000\n"
 "X-Generator: Launchpad (build 61f4697954ab70d633d14d8ceecff69a20b08a6b)\n"
 "Language: af\n"
 
@@ -125,7 +125,7 @@ msgstr "Vee hierdie boekie uit?"
 msgid "All text of this pad will be irrevocably lost."
 msgstr "Alle teks in hierdie boekie sal onherroeplik verlore wees."
 
-#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1598
+#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1609
 msgid "_Delete"
 msgstr "_Skrap"
 
@@ -138,13 +138,13 @@ msgstr "_Kanselleer"
 msgid "'%s' Layout"
 msgstr "'%s' Uitleg"
 
-#: ../src/xpad-pad.c:1434
+#: ../src/xpad-pad.c:1445
 msgid "Sticky notes"
 msgstr "Kleefnotas"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1438
+#: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -153,94 +153,94 @@ msgstr ""
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  Petri Jooste https://launchpad.net/~rkwjpj"
 
-#: ../src/xpad-pad.c:1597 ../src/xpad-tray.c:67
+#: ../src/xpad-pad.c:1608 ../src/xpad-tray.c:67
 msgid "_New"
 msgstr "_Nuut"
 
-#: ../src/xpad-pad.c:1599
+#: ../src/xpad-pad.c:1610
 msgid "_Reload"
 msgstr "_Herlaai"
 
-#: ../src/xpad-pad.c:1600
+#: ../src/xpad-pad.c:1611
 msgid "_Close"
 msgstr "_Sluit"
 
 #. Edit submenu
-#: ../src/xpad-pad.c:1603
+#: ../src/xpad-pad.c:1614
 msgid "_Edit"
 msgstr "_Redigeer"
 
-#: ../src/xpad-pad.c:1607
+#: ../src/xpad-pad.c:1618
 msgid "_Undo"
 msgstr "_Ontdoen"
 
-#: ../src/xpad-pad.c:1609
+#: ../src/xpad-pad.c:1620
 msgid "_Redo"
 msgstr "_Herdoen"
 
-#: ../src/xpad-pad.c:1612 ../src/xpad-pad.c:1752
+#: ../src/xpad-pad.c:1623 ../src/xpad-pad.c:1763
 msgid "_Paste"
 msgstr "_Plak"
 
-#: ../src/xpad-pad.c:1615
+#: ../src/xpad-pad.c:1626
 msgid "_Find"
 msgstr "_Vind"
 
-#: ../src/xpad-pad.c:1617
+#: ../src/xpad-pad.c:1628
 msgid "_Layout"
 msgstr "_Uitleg"
 
-#: ../src/xpad-pad.c:1618
+#: ../src/xpad-pad.c:1629
 msgid "_Read only"
 msgstr "_Lees slegs"
 
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1624
+#: ../src/xpad-pad.c:1635
 msgid "_Notes"
 msgstr "_Notas"
 
-#: ../src/xpad-pad.c:1629 ../src/xpad-tray.c:74
+#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:74
 msgid "_Show All"
 msgstr "_Wys Alles"
 
-#: ../src/xpad-pad.c:1630 ../src/xpad-tray.c:81
+#: ../src/xpad-pad.c:1641 ../src/xpad-tray.c:81
 msgid "_Close All"
 msgstr "_Sluit Alle"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1633 ../src/xpad-pad.c:1637 ../src/xpad-tray.c:100
+#: ../src/xpad-pad.c:1644 ../src/xpad-pad.c:1648 ../src/xpad-tray.c:100
 msgid "_Help"
 msgstr "_Hulp"
 
-#: ../src/xpad-pad.c:1638
+#: ../src/xpad-pad.c:1649
 msgid "_About"
 msgstr "_Omtrent"
 
-#: ../src/xpad-pad.c:1643 ../src/xpad-tray.c:96
+#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:96
 msgid "_Preferences"
 msgstr "_Voorkeure"
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1761
 msgid "Cu_t"
 msgstr "Sn_y"
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1762
 msgid "_Copy"
 msgstr "_Kopieër"
 
-#: ../src/xpad-pad.c:1755
+#: ../src/xpad-pad.c:1766
 msgid "_Bold"
 msgstr "_Vetdruk"
 
-#: ../src/xpad-pad.c:1756
+#: ../src/xpad-pad.c:1767
 msgid "_Italic"
 msgstr "_Skuinsdruk"
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1768
 msgid "_Underline"
 msgstr "_Onderstreep"
 
-#: ../src/xpad-pad.c:1758
+#: ../src/xpad-pad.c:1769
 msgid "_Strikethrough"
 msgstr "_Strikethrough"
 

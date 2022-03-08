@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-03-07 00:00+0000\n"
+"POT-Creation-Date: 2022-03-07 15:10+0000\n"
 "PO-Revision-Date: 2021-03-21 09:11+0000\n"
 "Last-Translator: Michael Terry <mike@mterry.name>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-03-07 06:26+0000\n"
+"X-Launchpad-Export-Date: 2022-03-08 06:22+0000\n"
 "X-Generator: Launchpad (build 61f4697954ab70d633d14d8ceecff69a20b08a6b)\n"
 "Language: zh_CN\n"
 
@@ -120,7 +120,7 @@ msgstr "删除此便笺？"
 msgid "All text of this pad will be irrevocably lost."
 msgstr "此便笺中的所有文本将不可恢复地丢失。"
 
-#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1598
+#: ../src/xpad-pad.c:926 ../src/xpad-pad.c:1609
 msgid "_Delete"
 msgstr ""
 
@@ -133,13 +133,13 @@ msgstr ""
 msgid "'%s' Layout"
 msgstr ""
 
-#: ../src/xpad-pad.c:1434
+#: ../src/xpad-pad.c:1445
 msgid "Sticky notes"
 msgstr "自粘性备注"
 
 #. Translators: please translate this as your own name and optionally email
 #. like so: "Your Name <your@email.com>"
-#: ../src/xpad-pad.c:1438
+#: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
 "孟杰 <zuxy.meng@gmail.com>\n"
@@ -152,94 +152,94 @@ msgstr ""
 "  Michael Terry https://launchpad.net/~mterry\n"
 "  chenshijie https://launchpad.net/~chenshijie"
 
-#: ../src/xpad-pad.c:1597 ../src/xpad-tray.c:67
+#: ../src/xpad-pad.c:1608 ../src/xpad-tray.c:67
 msgid "_New"
 msgstr ""
 
-#: ../src/xpad-pad.c:1599
+#: ../src/xpad-pad.c:1610
 msgid "_Reload"
 msgstr ""
 
-#: ../src/xpad-pad.c:1600
+#: ../src/xpad-pad.c:1611
 msgid "_Close"
 msgstr ""
 
 #. Edit submenu
-#: ../src/xpad-pad.c:1603
+#: ../src/xpad-pad.c:1614
 msgid "_Edit"
 msgstr "编辑(_E)"
 
-#: ../src/xpad-pad.c:1607
+#: ../src/xpad-pad.c:1618
 msgid "_Undo"
 msgstr ""
 
-#: ../src/xpad-pad.c:1609
+#: ../src/xpad-pad.c:1620
 msgid "_Redo"
 msgstr ""
 
-#: ../src/xpad-pad.c:1612 ../src/xpad-pad.c:1752
+#: ../src/xpad-pad.c:1623 ../src/xpad-pad.c:1763
 msgid "_Paste"
 msgstr ""
 
-#: ../src/xpad-pad.c:1615
+#: ../src/xpad-pad.c:1626
 msgid "_Find"
 msgstr ""
 
-#: ../src/xpad-pad.c:1617
+#: ../src/xpad-pad.c:1628
 msgid "_Layout"
 msgstr ""
 
-#: ../src/xpad-pad.c:1618
+#: ../src/xpad-pad.c:1629
 msgid "_Read only"
 msgstr ""
 
 #. Notes submenu - The list of notes will get added in the prep function below
-#: ../src/xpad-pad.c:1624
+#: ../src/xpad-pad.c:1635
 msgid "_Notes"
 msgstr "备注(_N)"
 
-#: ../src/xpad-pad.c:1629 ../src/xpad-tray.c:74
+#: ../src/xpad-pad.c:1640 ../src/xpad-tray.c:74
 msgid "_Show All"
 msgstr "全部显示(_S)"
 
-#: ../src/xpad-pad.c:1630 ../src/xpad-tray.c:81
+#: ../src/xpad-pad.c:1641 ../src/xpad-tray.c:81
 msgid "_Close All"
 msgstr "全部关闭(_C)"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1633 ../src/xpad-pad.c:1637 ../src/xpad-tray.c:100
+#: ../src/xpad-pad.c:1644 ../src/xpad-pad.c:1648 ../src/xpad-tray.c:100
 msgid "_Help"
 msgstr "帮助(_H)"
 
-#: ../src/xpad-pad.c:1638
+#: ../src/xpad-pad.c:1649
 msgid "_About"
 msgstr "关于(_A)"
 
-#: ../src/xpad-pad.c:1643 ../src/xpad-tray.c:96
+#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:96
 msgid "_Preferences"
 msgstr ""
 
-#: ../src/xpad-pad.c:1750
+#: ../src/xpad-pad.c:1761
 msgid "Cu_t"
 msgstr ""
 
-#: ../src/xpad-pad.c:1751
+#: ../src/xpad-pad.c:1762
 msgid "_Copy"
 msgstr ""
 
-#: ../src/xpad-pad.c:1755
+#: ../src/xpad-pad.c:1766
 msgid "_Bold"
 msgstr ""
 
-#: ../src/xpad-pad.c:1756
+#: ../src/xpad-pad.c:1767
 msgid "_Italic"
 msgstr ""
 
-#: ../src/xpad-pad.c:1757
+#: ../src/xpad-pad.c:1768
 msgid "_Underline"
 msgstr ""
 
-#: ../src/xpad-pad.c:1758
+#: ../src/xpad-pad.c:1769
 msgid "_Strikethrough"
 msgstr ""
 
