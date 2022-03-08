@@ -83,21 +83,6 @@ gchar * pango_font_description_to_css (PangoFontDescription *desc) {
 		        case PANGO_VARIANT_SMALL_CAPS:
 		          g_string_append (s, "font-variant: small-caps; ");
 		          break;
-		        case PANGO_VARIANT_ALL_SMALL_CAPS:
-		          g_string_append (s, "font-variant: all-small-caps; ");
-		          break;
-		        case PANGO_VARIANT_PETITE_CAPS:
-		          g_string_append (s, "font-variant: petite-caps; ");
-		          break;
-		        case PANGO_VARIANT_ALL_PETITE_CAPS:
-		          g_string_append (s, "font-variant: all-petite-caps; ");
-		          break;
-		        case PANGO_VARIANT_UNICASE:
-		          g_string_append (s, "font-variant: unicase; ");
-		          break;
-		        case PANGO_VARIANT_TITLE_CAPS:
-		          g_string_append (s, "font-variant: titling-caps; ");
-		          break;
 		        default:
 		          break;
 		        }
