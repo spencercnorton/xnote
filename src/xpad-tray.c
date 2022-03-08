@@ -59,7 +59,7 @@ static void menu_spawn (XpadSettings *settings)
 
 static GtkWidget* xpad_tray_create_menu(XpadSettings *settings) {
 	XpadPadGroup *group = xpad_app_get_pad_group ();
-	gboolean no_pads = !xpad_pad_group_has_pads (group);
+	gboolean has_pads = xpad_pad_group_has_pads (group);
 
 	GtkWidget *menu = gtk_menu_new ();
 	GtkWidget *item;
@@ -74,16 +74,12 @@ static GtkWidget* xpad_tray_create_menu(XpadSettings *settings) {
 	item = gtk_menu_item_new_with_mnemonic (_("_Show All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_pad_group_show_all), group);
 	gtk_container_add (GTK_CONTAINER (menu), item);
-
-	if (no_pads)
-		gtk_widget_set_sensitive (item, FALSE);
+	gtk_widget_set_sensitive (item, has_pads);
 
 	item = gtk_menu_item_new_with_mnemonic (_("_Close All"));
 	g_signal_connect_swapped (item, "activate", G_CALLBACK (xpad_pad_group_close_all), group);
 	gtk_container_add (GTK_CONTAINER (menu), item);
-
-	if (no_pads)
-		gtk_widget_set_sensitive (item, FALSE);
+	gtk_widget_set_sensitive (item, has_pads);
 
 	item = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menu), item);
