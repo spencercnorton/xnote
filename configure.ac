@@ -70,16 +70,16 @@ AC_ARG_ENABLE(appindicator,
                         [enable_appindicator="auto"])
 
 if test x$enable_appindicator = xauto ; then
-        PKG_CHECK_EXISTS([appindicator3-0.1 >= $APPINDICATOR_REQUIRED],
+        PKG_CHECK_EXISTS([ayatana-appindicator3-0.1 >= $APPINDICATOR_REQUIRED],
                          enable_appindicator="yes",
                          enable_appindicator="no")
 fi
 
 if test x$enable_appindicator = xyes ; then
-        PKG_CHECK_EXISTS([appindicator3-0.1 >= $APPINDICATOR_REQUIRED],,
-                         AC_MSG_ERROR([appindicator3-0.1 is not installed]))
+        PKG_CHECK_EXISTS([ayatana-appindicator3-0.1 >= $APPINDICATOR_REQUIRED],,
+                         AC_MSG_ERROR([ayatana-appindicator3-0.1 is not installed]))
         PKG_CHECK_MODULES(APP_INDICATOR,
-                        appindicator3-0.1 >= $APPINDICATOR_REQUIRED)
+                        ayatana-appindicator3-0.1 >= $APPINDICATOR_REQUIRED)
         AC_SUBST(APP_INDICATOR_CFLAGS)
         AC_SUBST(APP_INDICATOR_LIBS)
         AC_DEFINE(HAVE_APP_INDICATOR, 1, [Have AppIndicator])

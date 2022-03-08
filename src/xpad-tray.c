@@ -25,16 +25,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "xpad-settings.h"
+
 #ifdef HAVE_APP_INDICATOR
-#include <libappindicator/app-indicator.h>
-#endif
+#include <libayatana-appindicator/app-indicator.h>
 
 #include "xpad-tray.h"
 #include "xpad-app.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-preferences.h"
-#include "xpad-settings.h"
 #include "fio.h"
 #include "help.h"
 
@@ -46,10 +46,10 @@ enum
 	NEW_PAD
 };
 
-static AppIndicator *app_indicator = NULL;
-
 #define ICON_NAME "xpad"
 #define TRAY_ICON "xpad-panel"
+
+static AppIndicator *app_indicator = NULL;
 
 static void menu_spawn (XpadSettings *settings)
 {
@@ -209,3 +209,18 @@ gboolean xpad_tray_has_indicator ()
 	else
 		return FALSE;
 }
+
+#else
+
+void xpad_tray_init (XpadSettings *settings) {
+}
+
+void xpad_tray_dispose (XpadSettings *settings) {
+}
+
+gboolean xpad_tray_has_indicator ()
+{
+	return FALSE;
+}
+
+#endif
