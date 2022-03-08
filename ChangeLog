@@ -1,3 +1,6 @@
+Version 5.7
+* Fix: undo build dependency on Pango v1.50 back to Pango v1.32
+
 Version 5.6
 * Fix: build problem where external files, like the help, were inaccessible. (#1960838)
 * Fix: if pads changed (new, update or delete) the change was not reflected in in the tray overview with the pads. (#1960802)
