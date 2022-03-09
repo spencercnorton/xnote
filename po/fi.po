@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-03-07 15:10+0000\n"
+"POT-Creation-Date: 2022-03-08 22:55+0000\n"
 "PO-Revision-Date: 2013-10-12 08:18+0000\n"
 "Last-Translator: Michael Terry <mike@mterry.name>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-03-08 06:22+0000\n"
+"X-Launchpad-Export-Date: 2022-03-09 06:35+0000\n"
 "X-Generator: Launchpad (build 61f4697954ab70d633d14d8ceecff69a20b08a6b)\n"
+"Language: fi\n"
 "X-Poedit-Language: Finnish\n"
 "X-Poedit-Country: FINLAND\n"
-"Language: fi\n"
 
 #: ../src/fio.c:146
 #, c-format
@@ -204,12 +204,12 @@ msgstr "_Muistiot"
 msgid "_Show All"
 msgstr "_Näytä kaikki"
 
-#: ../src/xpad-pad.c:1641 ../src/xpad-tray.c:81
+#: ../src/xpad-pad.c:1641 ../src/xpad-tray.c:79
 msgid "_Close All"
 msgstr "_Sulje kaikki"
 
 #. Help submenu
-#: ../src/xpad-pad.c:1644 ../src/xpad-pad.c:1648 ../src/xpad-tray.c:100
+#: ../src/xpad-pad.c:1644 ../src/xpad-pad.c:1648 ../src/xpad-tray.c:96
 msgid "_Help"
 msgstr "O_paste"
 
@@ -217,7 +217,7 @@ msgstr "O_paste"
 msgid "_About"
 msgstr "Oh_jelmasta"
 
-#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:96
+#: ../src/xpad-pad.c:1654 ../src/xpad-tray.c:92
 msgid "_Preferences"
 msgstr ""
 
@@ -603,7 +603,7 @@ msgstr ""
 msgid "Remo_ve Last Button"
 msgstr ""
 
-#: ../src/xpad-tray.c:104
+#: ../src/xpad-tray.c:100
 msgid "_Quit"
 msgstr ""
 
