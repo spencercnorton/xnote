@@ -110,7 +110,11 @@ xpad_text_view_constructed (GObject *object)
 
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (view), GTK_TEXT_BUFFER (view->priv->buffer));
 	gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (view), GTK_WRAP_WORD);
-	gtk_container_set_border_width (GTK_CONTAINER (view), 5);
+	gtk_text_view_set_top_margin (GTK_TEXT_VIEW (view), 5);
+	gtk_text_view_set_bottom_margin (GTK_TEXT_VIEW (view), 5);
+	gtk_text_view_set_left_margin (GTK_TEXT_VIEW (view), 5);
+	gtk_text_view_set_right_margin (GTK_TEXT_VIEW (view), 5);
+
 	gchar *widget_name = g_strdup_printf ("%p", (void *) view);
 	gtk_widget_set_name (GTK_WIDGET (view), widget_name);
 	g_free (widget_name);

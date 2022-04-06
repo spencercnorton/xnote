@@ -1,3 +1,6 @@
+Version 5.8
+* Fix: the move from GtkSourceView 3 > 4 has resulted in a border of 5 pixels around the pad. Restoring the original behavior by changing the outer border back to the inner margin. (#1967964)
+
 Version 5.7
 * Fix: undo build dependency on Pango v1.50 back to Pango v1.32 (#1964094)
 * Fix: Replace libappindicator with libayatana-appindicator, since libappindicator is not maintained. (#1964116)
