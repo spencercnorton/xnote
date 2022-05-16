@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU xpad 1.13\n"
 "Report-Msgid-Bugs-To: xpad-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-05-14 06:58+0000\n"
-"PO-Revision-Date: 2022-02-02 17:45+0000\n"
+"POT-Creation-Date: 2022-05-15 04:37+0000\n"
+"PO-Revision-Date: 2022-05-15 11:10+0000\n"
 "Last-Translator: Jean-Marc <Unknown>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2022-05-15 04:36+0000\n"
+"X-Launchpad-Export-Date: 2022-05-16 04:35+0000\n"
 "X-Generator: Launchpad (build 92c1e595fa54c70c984607f9a7b06ac34491774d)\n"
 "Language: fr\n"
 
@@ -517,7 +517,7 @@ msgstr "Ajouter le bouton « Efface_r »"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Close and Save Pad"
-msgstr "Fermer et sauvegarder la note"
+msgstr "Fermer et enregistrer la note"
 
 #: ../src/xpad-toolbar.c:81
 msgid "Add _Close button"
