@@ -103,6 +103,9 @@ Each pad can be resized to the prefered size.
 
 <span size="x-large">Shortcuts</span>
 
+Xpad honors the shortcuts set by the window manager and the Gnome Toolkit Framework (GTK).
+On top of that, the following shortcuts apply to Xpad.
+
 <tt>F1: Help 
 CTRL-Q: Quit 
 CTRL-W: Close current pad
