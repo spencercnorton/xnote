@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2023-03-09 06:25+0000\n"
+"POT-Creation-Date: 2023-03-10 06:31+0000\n"
 "PO-Revision-Date: 2020-04-22 08:51+0000\n"
 "Last-Translator: Vitaly Dubyna <vettos@yandex.ru>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2023-03-10 06:30+0000\n"
-"X-Generator: Launchpad (build 4172faca216310b5a2489df9a2b03113d28a5f29)\n"
+"X-Launchpad-Export-Date: 2023-03-11 06:30+0000\n"
+"X-Generator: Launchpad (build 997ba17554f0ee82f56d9282fce82d3e09a43780)\n"
 
 #: ../src/fio.c:146
 #, c-format
