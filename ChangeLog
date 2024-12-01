@@ -1,5 +1,6 @@
 Version 5.9
 * Fix: prevent irrelevant CLI warning about a failed toolbar height calculation. (#2046069)
+* Fix: Xpad help: extend the help by explaining that shortcuts are either being set by Xpad, GTK or the window manager.
 
 Version 5.8
 * Fix: the move from GtkSourceView 3 > 4 has resulted in a border of 5 pixels around the pad. Restoring the original behavior by changing the outer border back to the inner margin. (#1967964)
