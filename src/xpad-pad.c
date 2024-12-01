@@ -663,16 +663,16 @@ xpad_pad_text_and_toolbar_height (XpadPad *pad)
 	gtk_text_view_buffer_to_window_coords (GTK_TEXT_VIEW (pad_textview),
 		GTK_TEXT_WINDOW_WIDGET, rec.x + rec.width, rec.y + rec.height,
 		&textx, &texty);
-	gtk_widget_translate_coordinates(GTK_WIDGET (pad_textview), GTK_WIDGET (pad), textx, texty, &x, &y);
 
-	/* Safe cast from gint to guint */
-	if (y >= 0) {
-		return (guint) y + pad->priv->toolbar_height + gtk_container_get_border_width (GTK_CONTAINER (pad_textview));
-	}
-	else {
-		g_warning("There is a problem in the program Xpad. In function 'xpad_pad_toolbar_size_allocate' the variable 'event->height' is not a positive number. Please send a bugreport to https://bugs.launchpad.net/xpad/+filebug to help improve Xpad.");
+	gboolean no_result = !gtk_widget_translate_coordinates(GTK_WIDGET (pad_textview), GTK_WIDGET (pad), textx, texty, &x, &y);
+
+	/* If the widget is not realized, or there is no common ancestor, then return a height of 0. */
+	if (no_result || y < 0) {
 		return 0;
 	}
+
+	/* Safe cast from gint to guint, since y>= 0. */
+	return (guint) y + pad->priv->toolbar_height + gtk_container_get_border_width (GTK_CONTAINER (pad_textview));
 }
 
 static void
