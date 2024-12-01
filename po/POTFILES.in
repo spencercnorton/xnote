@@ -1,5 +1,6 @@
 # List of source files containing translatable strings.
 # Copyright (C) 2003-2004 Michael Terry
+# Copyright (C) 2013-2024 Arthur Borsboom
 
 # Package source files
 src/fio.c

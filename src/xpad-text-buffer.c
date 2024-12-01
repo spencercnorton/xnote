@@ -1,7 +1,7 @@
 /*
 
 Copyright (c) 2001-2007 Michael Terry
-Copyright (c) 2013-2014 Arthur Borsboom
+Copyright (c) 2013-2024 Arthur Borsboom
 Copyright (c) 2019 Siergiej Riaguzow
 
 This program is free software; you can redistribute it and/or modify

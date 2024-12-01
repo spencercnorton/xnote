@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2017-2022 Arthur Borsboom
+Copyright (c) 2017-2024 Arthur Borsboom
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
