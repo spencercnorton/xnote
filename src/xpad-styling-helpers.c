@@ -34,7 +34,7 @@ void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGB
 
 	gtk_style_context_get (context,
 			state,
-			"background-color", &c,
+			GTK_STYLE_PROPERTY_BACKGROUND_COLOR, &c,
 			NULL);
 
 	*color = *c;

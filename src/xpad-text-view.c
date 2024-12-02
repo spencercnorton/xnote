@@ -356,7 +356,7 @@ xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_c
 	gchar *cssStyling = g_strconcat(
 			"textview, textview text {caret-color: ", text_color_string,
 			"; color: ", text_color_string,
-			"; background-color: ", back_color_string,
+			"; ", GTK_STYLE_PROPERTY_BACKGROUND_COLOR, ": ", back_color_string,
 			";}\n", NULL);
 
 	if (text_color) {
