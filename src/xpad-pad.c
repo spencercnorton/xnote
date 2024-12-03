@@ -994,24 +994,26 @@ prop_notify_font (XpadPad *pad)
 }
 
 static void
-prop_notify_colors (XpadPad *pad)
+get_pad_colors (XpadPad *pad, GdkRGBA **text_color, GdkRGBA **back_color)
 {
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
-
 	gboolean follow_color_style;
-	GdkRGBA *text_color, *back_color;
-
 	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
-	g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-color-style", follow_color_style, NULL);
 
 	if (follow_color_style) {
-		/* Set the colors to the global preferences colors */
-		g_object_get (pad->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
+		/* Use colors of global preferences */
+		g_object_get (pad->priv->settings, "text-color", text_color, "back-color", back_color, NULL);
 	} else {
-		/* Set the color to the individual pad properties colors */
-		g_object_get (prop, "text-color", &text_color, "back-color", &back_color, NULL);
+		/* Use colors of individual pad properties */
+		g_object_get (prop, "text-color", text_color, "back-color", back_color, NULL);
 	}
+}
 
+static void
+prop_notify_colors (XpadPad *pad)
+{
+	GdkRGBA *text_color, *back_color;
+	get_pad_colors (pad, &text_color, &back_color);
 	xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
 	gdk_rgba_free (text_color);
 	gdk_rgba_free (back_color);
