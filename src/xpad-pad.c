@@ -996,9 +996,19 @@ prop_notify_font (XpadPad *pad)
 static void
 get_pad_colors (XpadPad *pad, GdkRGBA **text_color, GdkRGBA **back_color)
 {
+        // Allocate memory for the colors
+        *text_color = g_new0 (GdkRGBA, 1);
+        *back_color = g_new0 (GdkRGBA, 1);
+
 	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
 	gboolean follow_color_style;
-	g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+
+
+	if (prop) {
+		g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+	} else {
+		follow_color_style = TRUE;
+	}
 
 	if (follow_color_style) {
 		/* Use colors of global preferences */
