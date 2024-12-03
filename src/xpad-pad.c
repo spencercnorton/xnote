@@ -1382,20 +1382,13 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 void
 xpad_pad_save_info (XpadPad *pad)
 {
-	gboolean follow_font_style, follow_color_style;
-	guint height = 0;
-	GtkStyleContext *style = NULL;
-	PangoFontDescription *font = NULL;
-	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};
-
 	g_return_if_fail (pad);
 
 	if (!pad->priv->unsaved_info)
 		return;
 
 	/* Must create pad info file if it doesn't exist yet */
-	if (!pad->priv->infoname)
-	{
+	if (!pad->priv->infoname) {
 		pad->priv->infoname = fio_unique_name ("info-");
 		if (!pad->priv->infoname)
 			return;
@@ -1403,29 +1396,29 @@ xpad_pad_save_info (XpadPad *pad)
 	}
 
 	/* create content file if it doesn't exist yet */
-	if (!pad->priv->contentname)
-	{
+	if (!pad->priv->contentname) {
 		pad->priv->contentname = fio_unique_name ("content-");
 		if (!pad->priv->contentname)
 			return;
 	}
 
-	height = pad->priv->height;
+	guint height = pad->priv->height;
 	if (gtk_widget_get_visible (pad->priv->toolbar) && pad->priv->toolbar_expanded)
 		height -= pad->priv->toolbar_height;
 
-	style = gtk_widget_get_style_context (pad->priv->textview);
-
+	GtkStyleContext *style = gtk_widget_get_style_context (pad->priv->textview);
+	PangoFontDescription *font = NULL;
 	gtk_style_context_get (style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
 	gchar *font_string = pango_font_description_to_string (font);
 	pango_font_description_free (font);
 
+	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};
 	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &text_color);
-	gchar *text_color_string = gdk_rgba_to_string (&text_color);
-
 	get_background_color (style, GTK_STATE_FLAG_NORMAL, &back_color);
+	gchar *text_color_string = gdk_rgba_to_string (&text_color);
 	gchar *back_color_string = gdk_rgba_to_string (&back_color);
 
+	gboolean follow_font_style, follow_color_style;
 	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
 
 	fio_set_values_to_file (pad->priv->infoname,
