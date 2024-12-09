@@ -994,54 +994,34 @@ prop_notify_font (XpadPad *pad)
 }
 
 static void
-get_pad_colors (XpadPad *pad, GdkRGBA **text_color, GdkRGBA **back_color)
-{
-        // Allocate memory for the colors
-        *text_color = g_new0 (GdkRGBA, 1);
-        *back_color = g_new0 (GdkRGBA, 1);
-
-	XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
-	gboolean follow_color_style;
-
-
-	if (prop) {
-		g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
-	} else {
-		follow_color_style = TRUE;
-	}
-
-	if (follow_color_style) {
-		/* Use colors of global preferences */
-		g_object_get (pad->priv->settings, "text-color", text_color, "back-color", back_color, NULL);
-	} else {
-		/* Use colors of individual pad properties */
-		g_object_get (prop, "text-color", text_color, "back-color", back_color, NULL);
-	}
-}
-
-static void
 prop_notify_colors (XpadPad *pad)
 {
-	GdkRGBA *text_color, *back_color;
-	get_pad_colors (pad, &text_color, &back_color);
-	xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
-	gdk_rgba_free (text_color);
-	gdk_rgba_free (back_color);
+        gboolean follow_color_style;
+        XpadPadProperties *prop = XPAD_PAD_PROPERTIES (pad->priv->properties);
+        g_object_get (prop, "follow-color-style", &follow_color_style, NULL);
+        g_object_set (XPAD_TEXT_VIEW (pad->priv->textview), "follow-color-style", follow_color_style, NULL);
 
-	xpad_pad_save_info_delayed (pad);
+        GdkRGBA *text_color, *back_color;
+
+        if (follow_color_style) {
+                /* Use global preference colors */
+                g_object_get (pad->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
+        } else {
+                /* Use individual pad colors */
+                g_object_get (prop, "text-color", &text_color, "back-color", &back_color, NULL);
+        }
+
+        xpad_text_view_set_colors (pad->priv->textview, text_color, back_color);
+        gdk_rgba_free (text_color);
+        gdk_rgba_free (back_color);
+
+        xpad_pad_save_info_delayed (pad);
 }
 
 static void
 xpad_pad_open_properties (XpadPad *pad)
 {
-	gboolean follow_font_style, follow_color_style;
-	GtkStyleContext *style = NULL;
-	PangoFontDescription *font;
-	GdkRGBA widget_text_color = {0, 0, 0, 0};
-	GdkRGBA widget_background_color = {0, 0, 0, 0};
-
-	if (pad->priv->properties)
-	{
+	if (pad->priv->properties) {
 		gtk_window_present (GTK_WINDOW (pad->priv->properties));
 		return;
 	}
@@ -1054,17 +1034,24 @@ xpad_pad_open_properties (XpadPad *pad)
 	g_signal_connect_swapped (pad->priv->properties, "destroy", G_CALLBACK (pad_properties_destroyed), pad);
 	g_signal_connect (pad, "notify::title", G_CALLBACK (pad_properties_sync_title), NULL);
 
-	style = gtk_widget_get_style_context (pad->priv->textview);
-	gtk_style_context_get(style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
-	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &widget_text_color);
-	get_background_color (style, GTK_STATE_FLAG_NORMAL, &widget_background_color);
+	GtkStyleContext *style = gtk_widget_get_style_context (pad->priv->textview);
 
-	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
+	PangoFontDescription *font;
+	gtk_style_context_get(style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
+
+	gboolean follow_font_style, follow_color_style;
+	GdkRGBA *text_color = NULL, *back_color = NULL;
+	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview),
+		"follow-font-style", &follow_font_style,
+		"follow-color-style", &follow_color_style,
+		"text-color", &text_color,
+		"back-color", &back_color,
+		NULL);
 	g_object_set (G_OBJECT (pad->priv->properties),
 		"follow-font-style", follow_font_style,
 		"follow-color-style", follow_color_style,
-		"text-color", &widget_text_color,
-		"back-color", &widget_background_color,
+		"text-color", text_color,
+		"back-color", back_color,
 		"fontname", pango_font_description_to_string(font),
 		NULL);
 	pango_font_description_free (font);
@@ -1412,14 +1399,18 @@ xpad_pad_save_info (XpadPad *pad)
 	gchar *font_string = pango_font_description_to_string (font);
 	pango_font_description_free (font);
 
-	GdkRGBA text_color = {0, 0, 0, 0}, back_color = {0, 0, 0, 0};
-	gtk_style_context_get_color (style, GTK_STATE_FLAG_NORMAL, &text_color);
-	get_background_color (style, GTK_STATE_FLAG_NORMAL, &back_color);
-	gchar *text_color_string = gdk_rgba_to_string (&text_color);
-	gchar *back_color_string = gdk_rgba_to_string (&back_color);
+	gboolean follow_font_style = FALSE, follow_color_style = FALSE;
+	GdkRGBA *text_color = NULL, *back_color = NULL;
 
-	gboolean follow_font_style, follow_color_style;
-	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview), "follow-font-style", &follow_font_style, "follow-color-style", &follow_color_style, NULL);
+	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview),
+		"follow-font-style", &follow_font_style,
+		"follow-color-style", &follow_color_style,
+		"text-color", &text_color,
+		"back-color", &back_color,
+		NULL);
+
+	gchar *text_color_string = gdk_rgba_to_string (text_color);
+	gchar *back_color_string = gdk_rgba_to_string (back_color);
 
 	fio_set_values_to_file (pad->priv->infoname,
 		"i|width", pad->priv->width,

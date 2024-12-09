@@ -37,6 +37,8 @@ struct XpadTextViewPrivate
 	gulong notify_back_handler;
 	gulong notify_font_handler;
 	GtkCssProvider *font_provider;
+	GdkRGBA *text_color;
+	GdkRGBA *back_color;
 	XpadTextBuffer *buffer;
 	XpadSettings *settings;
 	XpadPad *pad;
@@ -65,6 +67,8 @@ enum
 	PROP_PAD,
 	PROP_FOLLOW_FONT_STYLE,
 	PROP_FOLLOW_COLOR_STYLE,
+	PROP_TEXT_COLOR,
+	PROP_BACK_COLOR,
 	N_PROPERTIES
 };
 
@@ -73,7 +77,22 @@ static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 GtkWidget *
 xpad_text_view_new (XpadSettings *settings, XpadPad *pad)
 {
-	return GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW, "settings", settings, "pad", pad, "follow-font-style", TRUE, "follow-color-style", TRUE, NULL));
+        GdkRGBA *text_color = gdk_rgba_copy(&(GdkRGBA){0, 0, 0, 0});
+        GdkRGBA *back_color = gdk_rgba_copy(&(GdkRGBA){0, 0, 0, 0});
+
+	GtkWidget *widget = GTK_WIDGET (g_object_new (XPAD_TYPE_TEXT_VIEW,
+		"settings", settings,
+		"pad", pad,
+		"follow-font-style", TRUE,
+		"follow-color-style", TRUE,
+		"text-color", &text_color,
+		"back-color", &back_color,
+		NULL));
+
+        gdk_rgba_free(text_color);
+        gdk_rgba_free(back_color);
+
+	return widget;
 }
 
 static void
@@ -91,6 +110,8 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 	obj_prop[PROP_PAD] = g_param_spec_pointer ("pad", "Pad", "Pad connected to this textview", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow color style", "Whether to use the default xpad color style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_TEXT_COLOR] = g_param_spec_boxed ("text-color", "Text and caret color", "The color for the text and the cursor", GDK_TYPE_RGBA, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_BACK_COLOR] = g_param_spec_boxed ("back-color", "Background color", "The color for the background", GDK_TYPE_RGBA, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 
 	g_object_class_install_properties (gobject_class, N_PROPERTIES, obj_prop);
 }
@@ -149,6 +170,16 @@ xpad_text_view_dispose (GObject *object)
 	g_clear_object (&view->priv->settings);
 	g_clear_object (&view->priv->font_provider);
 
+	if (view->priv->text_color) {
+		gdk_rgba_free(view->priv->text_color);
+		view->priv->text_color = NULL;
+	}
+
+	if (view->priv->back_color) {
+		gdk_rgba_free(view->priv->back_color);
+		view->priv->back_color = NULL;
+	}
+
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->dispose (object);
 }
 
@@ -205,6 +236,22 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		xpad_text_view_notify_colors (view);
 		break;
 
+	case PROP_TEXT_COLOR:
+		if (view->priv->text_color) {
+			gdk_rgba_free(view->priv->text_color);
+		}
+
+		view->priv->text_color = gdk_rgba_copy(g_value_get_boxed(value));
+ 		break;
+
+	case PROP_BACK_COLOR:
+		if (view->priv->back_color) {
+	                gdk_rgba_free(view->priv->back_color);
+		}
+
+		view->priv->back_color = gdk_rgba_copy(g_value_get_boxed(value));
+		break;
+
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -232,6 +279,14 @@ xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GPar
 
 	case PROP_FOLLOW_COLOR_STYLE:
 		g_value_set_boolean (value, view->priv->follow_color_style);
+		break;
+
+	case PROP_TEXT_COLOR:
+		g_value_set_boxed(value, view->priv->text_color);
+		break;
+
+	case PROP_BACK_COLOR:
+		g_value_set_boxed(value, view->priv->back_color);
 		break;
 
 	default:
@@ -333,23 +388,39 @@ xpad_text_view_notify_fontname (XpadTextView *view)
 static void
 xpad_text_view_notify_colors (XpadTextView *view)
 {
+	GdkRGBA *text_color, *back_color;
+
 	if (view->priv->follow_color_style) {
-		/* Set the colors of this individual pad to the global setting preference. */
-		GdkRGBA *text_color, *back_color;
-
-		GtkWidget *view_widget = GTK_WIDGET (view);
-
-		/* Set the colors to the global preferences colors */
+		/* Use global colors */
 		g_object_get (view->priv->settings, "text-color", &text_color, "back-color", &back_color, NULL);
-		xpad_text_view_set_colors(view_widget, text_color, back_color);
-		gdk_rgba_free (text_color);
-		gdk_rgba_free (back_color);
+	} else {
+		/* Use individual colors */
+		g_object_get (view, "text-color", &text_color, "back-color", &back_color, NULL);
 	}
+
+	GtkWidget *view_widget = GTK_WIDGET (view);
+	xpad_text_view_set_colors(view_widget, text_color, back_color);
+	gdk_rgba_free (text_color);
+	gdk_rgba_free (back_color);
 }
 
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
 void
 xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_color) {
+	XpadTextView *text_view = XPAD_TEXT_VIEW(view);
+
+	if (text_view->priv->text_color) {
+		gdk_rgba_free(text_view->priv->text_color);
+	}
+
+	text_view->priv->text_color = text_color ? gdk_rgba_copy(text_color) : NULL;
+
+	if (text_view->priv->back_color) {
+		gdk_rgba_free(text_view->priv->back_color);
+	}
+
+	text_view->priv->back_color = back_color ? gdk_rgba_copy(back_color) : NULL;
+
 	gchar *text_color_string = text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color";
 	gchar *back_color_string = back_color ? gdk_rgba_to_string (back_color) : "@theme_bg_color";
 
@@ -359,25 +430,14 @@ xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_c
 			"; ", GTK_STYLE_PROPERTY_BACKGROUND_COLOR, ": ", back_color_string,
 			";}\n", NULL);
 
-	if (text_color) {
-		g_free (text_color_string);
-	}
-
-	if (back_color) {
-		g_free (back_color_string);
-	}
-
-	/*
-	 * TODO: If the background color is close to the text selection background color (blue-ish),
-	 * then change the color for selected text by adding this to the CSS.
-	 * */
-
 	GtkStyleContext *context = gtk_widget_get_style_context (view);
 	GtkCssProvider *provider = gtk_css_provider_new ();
 	gtk_css_provider_load_from_data (provider, cssStyling, -1, NULL);
 	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
 
 	g_free(cssStyling);
+	g_free(text_color_string);
+	g_free(back_color_string);
 	g_clear_object (&provider);
 }
 
@@ -420,4 +480,3 @@ xpad_text_view_notify_line_numbering (XpadTextView *view)
 	g_object_get (view->priv->settings, "line-numbering", &line_numbering, NULL);
 	gtk_source_view_set_show_line_numbers (GTK_SOURCE_VIEW (view), line_numbering);
 }
-
