@@ -1,6 +1,7 @@
 bin_PROGRAMS = xpad
 
 xpad_SOURCES = \
+	constants.c constants.h \
 	fio.c fio.h \
 	help.c help.h \
 	prefix.c prefix.h \

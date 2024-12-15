@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 
+#include "constants.h"
 #include "xpad-app.h"
 #include "xpad-settings.h"
 #include "fio.h"
@@ -95,11 +96,6 @@ enum
 
 static GParamSpec *obj_prop[N_PROPERTIES] = { NULL, };
 static guint signals[LAST_SIGNAL] = { 0 };
-
-/* A pleasant light yellow background color, similar to commercial sticky notes, with black text. */
-static const GdkRGBA text_color_default = {0, 0, 0, 1};
-static const GdkRGBA back_color_default = {1, 0.933334350586, 0.6, 1};
-static const gchar *font_default = "Sans 9";
 
 static void load_from_file (XpadSettings *settings, const gchar *filename);
 static void save_to_file (XpadSettings *settings, const gchar *filename);
@@ -176,9 +172,9 @@ xpad_settings_init (XpadSettings *settings)
 	settings->priv->has_toolbar = TRUE;
 	settings->priv->autohide_toolbar = TRUE;
 	settings->priv->has_scrollbar = TRUE;
-	settings->priv->fontname = g_strdup (font_default);
-	settings->priv->text = gdk_rgba_copy (&text_color_default);
-	settings->priv->back = gdk_rgba_copy (&back_color_default);
+	settings->priv->fontname = g_strdup (default_font_name);
+	settings->priv->text = gdk_rgba_copy (&default_text_color);
+	settings->priv->back = gdk_rgba_copy (&default_back_color);
 	settings->priv->autostart_wait_systray = TRUE;
 	settings->priv->autostart_new_pad = FALSE;
 	settings->priv->autostart_sticky = FALSE;
@@ -557,7 +553,7 @@ static void
 load_from_file (XpadSettings *settings, const gchar *filename)
 {
 	gchar *buttons = NULL, *text_color_string = NULL, *background_color_string = NULL;
-	GdkRGBA text_color = text_color_default, back_color = back_color_default;
+	GdkRGBA text_color = default_text_color, back_color = default_back_color;
 	gboolean use_text = TRUE, use_back = TRUE;
 
 	/* get all the values from the default-style text file in the forms of booleans, ints or strings. */
