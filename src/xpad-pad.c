@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
+#include "constants.h"
 #include "xpad-pad.h"
 #include "xpad-app.h"
 #include "xpad-pad-properties.h"
@@ -1341,14 +1342,14 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 		 * set the color to the default.
 		 */
 		if (text_color_string == NULL || background_color_string == NULL) {
-			text_color = (GdkRGBA) {0, 0, 0, 1};
-			back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+			text_color = default_text_color;
+			back_color = default_back_color;
 		}
 		else {
 			/* If, for some reason, the parsing of the colors fail, set the color to the default. */
 			if (!gdk_rgba_parse (&text_color, text_color_string) || !gdk_rgba_parse (&back_color, background_color_string)) {
-				text_color = (GdkRGBA) {0, 0, 0, 1};
-				back_color = (GdkRGBA) {1, 0.933334350586, 0.6, 1};
+				text_color = default_text_color;
+				back_color = default_back_color;
 			}
 		}
 
