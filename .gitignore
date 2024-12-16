@@ -16,6 +16,7 @@ config.rpath
 config.sub
 config.status
 configure
+configure~
 data/xpad.appdata.xml
 depcomp
 doc/Makefile
