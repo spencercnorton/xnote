@@ -1039,23 +1039,36 @@ xpad_pad_open_properties (XpadPad *pad)
 
 	PangoFontDescription *font;
 	gtk_style_context_get(style, GTK_STATE_FLAG_NORMAL, GTK_STYLE_PROPERTY_FONT, &font, NULL);
+	gchar *font_name = pango_font_description_to_string(font);
+	pango_font_description_free (font);
 
 	gboolean follow_font_style, follow_color_style;
 	GdkRGBA *text_color = NULL, *back_color = NULL;
+
 	g_object_get (XPAD_TEXT_VIEW (pad->priv->textview),
 		"follow-font-style", &follow_font_style,
 		"follow-color-style", &follow_color_style,
 		"text-color", &text_color,
 		"back-color", &back_color,
 		NULL);
+
 	g_object_set (G_OBJECT (pad->priv->properties),
 		"follow-font-style", follow_font_style,
 		"follow-color-style", follow_color_style,
 		"text-color", text_color,
 		"back-color", back_color,
-		"fontname", pango_font_description_to_string(font),
+		"fontname", font_name,
 		NULL);
-	pango_font_description_free (font);
+
+	if (text_color) {
+		gdk_rgba_free(text_color);
+	}
+
+	if (back_color) {
+		gdk_rgba_free(back_color);
+	}
+
+	g_free(font_name);
 
 	g_signal_connect_swapped (pad->priv->properties, "notify::follow-font-style", G_CALLBACK (prop_notify_font), pad);
 	g_signal_connect_swapped (pad->priv->properties, "notify::follow-color-style", G_CALLBACK (prop_notify_colors), pad);
