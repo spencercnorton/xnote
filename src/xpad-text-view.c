@@ -407,19 +407,7 @@ xpad_text_view_notify_colors (XpadTextView *view)
 /* Set the foreground and background color of the visible part of the pad, which is the text view */
 void
 xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_color) {
-	XpadTextView *text_view = XPAD_TEXT_VIEW(view);
-
-	if (text_view->priv->text_color) {
-		gdk_rgba_free(text_view->priv->text_color);
-	}
-
-	text_view->priv->text_color = text_color ? gdk_rgba_copy(text_color) : NULL;
-
-	if (text_view->priv->back_color) {
-		gdk_rgba_free(text_view->priv->back_color);
-	}
-
-	text_view->priv->back_color = back_color ? gdk_rgba_copy(back_color) : NULL;
+	g_object_set(view, "text-color", text_color, "back_color", back_color, NULL);
 
 	gchar *text_color_string = text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color";
 	gchar *back_color_string = back_color ? gdk_rgba_to_string (back_color) : "@theme_bg_color";
