@@ -328,9 +328,8 @@ static void xpad_pad_constructed (GObject *object)
 
 	GtkWindow *pad_window = GTK_WINDOW (pad);
 
-	/* textview in scrollbar */
+	/* textview and scrollbar */
 	pad->priv->textview = GTK_WIDGET (XPAD_TEXT_VIEW (xpad_text_view_new (pad->priv->settings, pad)));
-
 	pad->priv->scrollbar = GTK_WIDGET (g_object_new (GTK_TYPE_SCROLLED_WINDOW,
 		"hadjustment", NULL,
 		"hscrollbar-policy", GTK_POLICY_NEVER,
