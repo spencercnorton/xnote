@@ -403,8 +403,8 @@ void
 xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_color) {
 	g_object_set(view, "text-color", text_color, "back-color", back_color, NULL);
 
-	gchar *text_color_string = text_color ? gdk_rgba_to_string (text_color) : "@theme-fg_color";
-	gchar *back_color_string = back_color ? gdk_rgba_to_string (back_color) : "@theme_bg_color";
+	gchar *text_color_string = text_color ? gdk_rgba_to_string (text_color) : g_strdup("@theme-fg_color");
+	gchar *back_color_string = back_color ? gdk_rgba_to_string (back_color) : g_strdup("@theme_bg_color");
 
 	gchar *cssStyling = g_strconcat(
 			"textview, textview text {caret-color: ", text_color_string,
