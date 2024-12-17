@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
 
+#include "constants.h"
 #include "xpad-text-view.h"
 #include "xpad-text-buffer.h"
 #include "xpad-pad.h"
@@ -110,8 +111,8 @@ xpad_text_view_init (XpadTextView *view) {
 
 	view->priv->follow_font_style = TRUE;
 	view->priv->follow_color_style = TRUE;
-	view->priv->text_color = NULL;
-	view->priv->back_color = NULL;
+	view->priv->text_color = gdk_rgba_copy(&default_text_color);
+	view->priv->back_color = gdk_rgba_copy(&default_back_color);
 }
 
 static void
@@ -234,7 +235,7 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		}
 
 		GdkRGBA *text_color = g_value_get_boxed(value);
-		view->priv->text_color = text_color ? gdk_rgba_copy(text_color) : NULL;
+		view->priv->text_color = text_color ? gdk_rgba_copy(text_color) : gdk_rgba_copy(&default_text_color);
  		break;
 
 	case PROP_BACK_COLOR:
@@ -243,7 +244,7 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		}
 
 		GdkRGBA *back_color = g_value_get_boxed(value);
-		view->priv->back_color = back_color ? gdk_rgba_copy(back_color) : NULL;
+		view->priv->back_color = back_color ? gdk_rgba_copy(back_color) : gdk_rgba_copy(&default_back_color);
 		break;
 
 	default:
