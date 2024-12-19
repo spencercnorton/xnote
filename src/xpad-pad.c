@@ -1324,13 +1324,7 @@ xpad_pad_load_info (XpadPad *pad, gboolean *show)
 	g_object_get (pad->priv->settings, "has-toolbar", &has_toolbar, "autohide-toolbar", &autohide_toolbar, NULL);
 
 	/* Resize pad */
-	if (has_toolbar && !autohide_toolbar) {
-		pad->priv->toolbar_height = 0;
-		xpad_pad_hide_toolbar (pad);
-		xpad_pad_show_toolbar (pad); /* these will resize pad at correct height */
-	} else {
-		gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
-	}
+	gtk_window_resize (GTK_WINDOW (pad), (gint) pad->priv->width, (gint) pad->priv->height);
 
 	gtk_window_move (GTK_WINDOW (pad), pad->priv->x, pad->priv->y);
 
