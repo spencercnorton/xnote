@@ -434,24 +434,6 @@ register_stock_icons (void)
 }
 
 static gboolean
-xpad_app_quit_if_no_pads (XpadPadGroup *group)
-{
-	if (!xpad_tray_has_indicator ())
-	{
-		gint num_pads = xpad_pad_group_num_visible_pads (group);
-		if (num_pads == 0)
-		{
-			if (gtk_main_level () > 0)
-				xpad_app_quit ();
-			else
-				exit (0);
-		}
-	}
-
-	return FALSE;
-}
-
-static gboolean
 xpad_app_first_idle_check (XpadPadGroup *group)
 {
 	/* We do this check at the first idle rather than immediately during
@@ -477,14 +459,6 @@ xpad_app_first_idle_check (XpadPadGroup *group)
 	return FALSE;
 }
 
-static void
-xpad_app_pad_added (XpadPadGroup *group, XpadPad *pad)
-{
-	g_signal_connect_swapped (pad, "closed", G_CALLBACK (xpad_app_quit_if_no_pads), group);
-	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_app_quit_if_no_pads), group);
-}
-
-
 /* Scans config directory for pad files and loads them. */
 static gint
 xpad_app_load_pads (void)
@@ -492,8 +466,6 @@ xpad_app_load_pads (void)
 	gint opened = 0;
 	GDir *dir;
 	const gchar *name;
-
-	g_signal_connect (pad_group, "pad-added", G_CALLBACK (xpad_app_pad_added), NULL);
 
 	dir = g_dir_open (xpad_app_get_config_dir (), 0, NULL);
 
