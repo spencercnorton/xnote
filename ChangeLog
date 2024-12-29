@@ -1,6 +1,9 @@
 Version 5.9
 * Fix: prevent irrelevant CLI warning about a failed toolbar height calculation. (#2046069)
 * Fix: Xpad help: extend the help by explaining that shortcuts are either being set by Xpad, GTK or the window manager.
+* Fix: CLI command: when hiding the pads from the CLI, do not quit the application if there is no notification icon enabled/available (#2084343).
+* Fix: Pad size was lost after app restart (#2027603)
+* Fix: Individual pad colors were lost after app restart (#2083321).
 
 Version 5.8
 * Fix: the move from GtkSourceView 3 > 4 has resulted in a border of 5 pixels around the pad. Restoring the original behavior by changing the outer border back to the inner margin. (#1967964)
