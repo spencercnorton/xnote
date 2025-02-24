@@ -1,4 +1,5 @@
 Version 5.9
+* New: Ability to activate transparency of a pad by Evaldas Granickas
 * Fix: prevent irrelevant CLI warning about a failed toolbar height calculation. (#2046069)
 * Fix: Xpad help: extend the help by explaining that shortcuts are either being set by Xpad, GTK or the window manager.
 * Fix: CLI command: when hiding the pads from the CLI, do not quit the application if there is no notification icon enabled/available (#2084343).

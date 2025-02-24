@@ -151,6 +151,7 @@ static void xpad_pad_open_preferences (XpadPad *pad);
 static void xpad_pad_close_all (XpadPad *pad);
 static void xpad_pad_sync_title (XpadPad *pad);
 static void xpad_pad_stick_unstick (XpadPad *pad);
+static void xpad_pad_set_visual (XpadPad *pad);
 static gboolean xpad_pad_leave_notify_event (GtkWidget *pad, GdkEventCrossing *event);
 static gboolean xpad_pad_enter_notify_event (GtkWidget *pad, GdkEventCrossing *event);
 
@@ -392,6 +393,10 @@ static void xpad_pad_constructed (GObject *object)
 	gtk_widget_hide (pad->priv->toolbar);
 	xpad_pad_notify_has_toolbar (pad);
 
+	/* Enable transparency */
+	gtk_widget_set_app_paintable (GTK_WIDGET (pad), TRUE);
+	xpad_pad_set_visual (pad);
+
 	/* Set up signals */
 	gtk_widget_add_events (GTK_WIDGET (pad), GDK_BUTTON_PRESS_MASK | GDK_PROPERTY_CHANGE_MASK);
 	gtk_widget_add_events (pad->priv->toolbar, GDK_ALL_EVENTS_MASK);
@@ -403,6 +408,7 @@ static void xpad_pad_constructed (GObject *object)
 	g_signal_connect (pad, "delete-event", G_CALLBACK (xpad_pad_delete_event), NULL);
 	g_signal_connect (pad, "popup-menu", G_CALLBACK (xpad_pad_popup_menu), NULL);
 	g_signal_connect (pad, "show", G_CALLBACK (xpad_pad_show), NULL);
+	g_signal_connect (pad, "screen-changed", G_CALLBACK (xpad_pad_set_visual), pad);
 	g_signal_connect_swapped (gtk_text_view_get_buffer (GTK_TEXT_VIEW (pad->priv->textview)), "changed", G_CALLBACK (xpad_pad_text_changed), pad);
 
 	g_signal_connect (pad, "enter-notify-event", G_CALLBACK (xpad_pad_enter_notify_event), NULL);
@@ -488,6 +494,14 @@ xpad_pad_finalize (GObject *object)
 	g_free (pad->priv->contentname);
 
 	G_OBJECT_CLASS (xpad_pad_parent_class)->finalize (object);
+}
+
+static void xpad_pad_set_visual (XpadPad *pad) {
+	GtkWidget *widget = GTK_WIDGET (pad);
+	GdkScreen *screen = gtk_widget_get_screen (widget);
+	GdkVisual *visual = gdk_screen_get_rgba_visual (screen);
+	gtk_widget_set_visual (widget, visual);
+	gtk_widget_show_all (widget);
 }
 
 static void

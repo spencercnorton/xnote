@@ -416,7 +416,7 @@ xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_c
 	GtkStyleContext *context = gtk_widget_get_style_context (view);
 	GtkCssProvider *provider = gtk_css_provider_new ();
 	gtk_css_provider_load_from_data (provider, cssStyling, -1, NULL);
-	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	g_free(cssStyling);
 	g_free(text_color_string);
