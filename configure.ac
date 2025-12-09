@@ -4,6 +4,7 @@
 AC_INIT([Xpad],[5.9],[xpad-hackers@lists.launchpad.net])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
+AC_CONFIG_MACRO_DIRS([m4])
 
 # Checks for programs.
 AC_USE_SYSTEM_EXTENSIONS
