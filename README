@@ -21,6 +21,22 @@ desktop integration for current GNOME systems.
 - Optional companion [XNote Placement extension](https://github.com/spencercnorton/xnote-placement)
   for restoring workspace and monitor placement on GNOME Shell.
 
+## Screenshots
+
+These captures use a fresh, isolated profile with synthetic sample text; they
+contain no personal notes or desktop data.
+
+![An XNote sticky note with sample text](screenshots/xnote-note.png)
+![XNote Preferences View page](screenshots/xnote-preferences-view.png)
+![XNote Preferences Layout page with color and size controls](screenshots/xnote-preferences-layout.png)
+![XNote color palette](screenshots/xnote-color-picker.png)
+
+The short animations show the color picker applying a new swatch and the note
+growing and shrinking from its resize grip.
+
+![Animated XNote color selection](screenshots/xnote-color-selection.gif)
+![Animated XNote note resizing](screenshots/xnote-resize.gif)
+
 ## Requirements
 
 XNote is tested on Ubuntu 26.04 with GNOME Shell 50. Building it requires:

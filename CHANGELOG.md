@@ -3,6 +3,11 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.0.4 — 2026-09-19
+
+- Added privacy-reviewed screenshots and short animations covering notes,
+  preferences, color selection, and note resizing.
+
 ## 3.0.3 — 2026-09-19
 
 - Prepared the first audited public source release.
