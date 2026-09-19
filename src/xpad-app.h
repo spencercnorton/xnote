@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XPAD_APP_H__
 #define __XPAD_APP_H__
 
-#include <gtk/gtk.h>
+#include <adwaita.h>
 
 #include "xpad-pad-group.h"
 #include "xpad-settings.h"
@@ -31,11 +31,14 @@ G_BEGIN_DECLS
 
 void       xpad_app_error     (GtkWindow *parent, const gchar *primary, const gchar *secondary);
 GtkWidget *xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *primary, const gchar *secondary);
+const gchar *xpad_app_alert_dialog_run (GtkWidget *dialog);
 
 const gchar *xpad_app_get_config_dir (void);
 const gchar *xpad_app_get_program_path (void);
 XpadPadGroup *xpad_app_get_pad_group (void);
 void xpad_app_quit (void);
+void xpad_app_main_quit (void);
+gboolean xpad_app_is_running (void);
 
 G_END_DECLS
 

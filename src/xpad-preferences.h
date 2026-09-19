@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_PREFERENCES_H__
 
 #include <gtk/gtk.h>
+#include <adwaita.h>
 
 #include "xpad-settings.h"
 #include "xpad-styling-helpers.h"
@@ -42,13 +43,13 @@ typedef struct XpadPreferences XpadPreferences;
 
 struct XpadPreferences
 {
-	GtkDialog parent;
+	AdwPreferencesDialog parent;
 	XpadPreferencesPrivate *priv;
 };
 
 struct XpadPreferencesClass
 {
-	GtkDialogClass parent_class;
+	AdwPreferencesDialogClass parent_class;
 };
 
 GType xpad_preferences_get_type (void);

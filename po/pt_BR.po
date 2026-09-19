@@ -1,16 +1,16 @@
 # Brazilian Portuguese translation for xpad
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the xpad package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: https://github.com/spencercnorton/xnote/issues\n"
 "POT-Creation-Date: 2023-09-14 08:34+0000\n"
 "PO-Revision-Date: 2020-05-13 07:01+0000\n"
-"Last-Translator: Felipe Braga <fbobraga@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Last-Translator: Felipe Braga\n"
+"Language-Team: Brazilian Portuguese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -75,8 +75,7 @@ msgstr "Exibir número da versão e sair"
 
 #: ../src/xpad-app.c:826
 msgid "Don't create a new pad on startup if no previous pads exist"
-msgstr ""
-"Não criar uma nova nota na inicialização se não existir nota anterior"
+msgstr "Não criar uma nova nota na inicialização se não existir nota anterior"
 
 #: ../src/xpad-app.c:832
 msgid "Create a new pad on startup even if pads already exist"
@@ -142,7 +141,7 @@ msgid "Sticky notes"
 msgstr "Notas fixas"
 
 #. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
+#. like so: "Your Name"
 #: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
@@ -613,18 +612,3 @@ msgstr "Remover o _último botão"
 #: ../src/xpad-tray.c:100
 msgid "_Quit"
 msgstr "_Sair"
-
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Por favor envie comentários ou relatórios de problemas para xpad-"
-#~ "devel@lists.sourceforge.net"
-
-#~ msgid "Show on _All Workspaces"
-#~ msgstr "Mostra em _todos os espaços de trabalhos"
-
-#~ msgid "Jot down notes for later"
-#~ msgstr "Faça anotações para mais tarde"
-
-#~ msgid "Sticky Notes"
-#~ msgstr "Notas"

@@ -53,6 +53,13 @@ gboolean	xpad_periodic_set_callback (const char *, XpadPeriodicFunc);
 void	xpad_periodic_save_content_delayed (void * xpad_pad);
 void	xpad_periodic_save_info_delayed (void * xpad_pad);
 
+/*
+	xpad_periodic_remove():
+	Cancel any pending scheduled save whose data pointer is xpad_pad. Must be
+	called when a pad is destroyed so a pending tick cannot fire on freed memory.
+*/
+void	xpad_periodic_remove (void * xpad_pad);
+
 G_END_DECLS
 
 #endif /* __XPAD_PERIODIC_H__ */

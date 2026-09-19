@@ -1,7 +1,7 @@
 /*
  * BinReloc - a library for creating relocatable executables
- * Written by: Mike Hearn <mike@theoretic.com>
- *             Hongli Lai <h.lai@chello.nl>
+ * Written by: Mike Hearn
+ *             Hongli Lai
  * http://autopackage.org/
  *
  * This library is free software; you can redistribute it and/or

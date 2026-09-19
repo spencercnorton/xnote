@@ -1,16 +1,16 @@
 # Xpad Bahasa Melayu (Malay) (ms)
 # Copyright (C) 2005 Sharuzzaman Ahmat Raslan
 # This file is distributed under the same license as the xpad package.
-# Sharuzzaman Ahmat Raslan <sharuzzaman@myrealbox.com>, 2005, 2006.
+# Sharuzzaman Ahmat Raslan, 2005, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad 2.11\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: https://github.com/spencercnorton/xnote/issues\n"
 "POT-Creation-Date: 2023-09-14 08:34+0000\n"
 "PO-Revision-Date: 2020-01-07 07:22+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
-"Language-Team: Malay <translation-team-ms@lists.sourceforge.net>\n"
+"Last-Translator: Arthur Borsboom\n"
+"Language-Team: Malay\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -143,11 +143,11 @@ msgid "Sticky notes"
 msgstr "Nota lekit"
 
 #. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
+#. like so: "Your Name"
 #: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
-"Sharuzzaman Ahmat Raslan <sharuzzaman@myrealbox.com>\n"
+"Sharuzzaman Ahmat Raslan\n"
 "\n"
 "Launchpad Contributions:\n"
 "  Arthur Borsboom https://launchpad.net/~arthurborsboom\n"
@@ -616,73 +616,3 @@ msgstr "B_uang Butang Terakhir"
 #: ../src/xpad-tray.c:100
 msgid "_Quit"
 msgstr "_Keluar"
-
-#, c-format
-#~ msgid "'%s' Properties"
-#~ msgstr "Ciri-ciri '%s'"
-
-#~ msgid "_Pad"
-#~ msgstr "_Pad"
-
-#~ msgid "Show on _All Workspaces"
-#~ msgstr "P_apar pada Semua Ruangkerja"
-
-#~ msgid "_View"
-#~ msgstr "_Lihat"
-
-#~ msgid "_Toolbar"
-#~ msgstr "Bar Ala_tan"
-
-#~ msgid "_Autohide Toolbar"
-#~ msgstr "_Autosorok Bar Alatan"
-
-#~ msgid "_Scrollbar"
-#~ msgstr "Bar _Skrol"
-
-#~ msgid "_Window Decorations"
-#~ msgstr "_Hiasan Tetingkap"
-
-#~ msgid "_Contents"
-#~ msgstr "_Kandungan"
-
-#~ msgid "_Edit lock"
-#~ msgstr "_Ubah kunci"
-
-#~ msgid "_Pads start on all workspaces"
-#~ msgstr "_Pad bermula pada semua ruangkerja"
-
-#~ msgid "Options"
-#~ msgstr "Pilihan"
-
-#~ msgid "Add C_lear to Toolbar"
-#~ msgstr "Tambah Kosongkan ke Bar A_latan"
-
-#~ msgid "Add _Close to Toolbar"
-#~ msgstr "_Tambah Tutup ke Bar Alatan"
-
-#~ msgid "Add _Delete to Toolbar"
-#~ msgstr "Tambah Pa_dam ke Bar Alatan"
-
-#~ msgid "Add _New to Toolbar"
-#~ msgstr "Tambah Baru ke Bar Alata_n"
-
-#~ msgid "Add Pr_eferences to Toolbar"
-#~ msgstr "Tambah K_eutamaan ke Bar Alat"
-
-#~ msgid "Add Proper_ties to Toolbar"
-#~ msgstr "Tambah Ciri-ciri ke Bar Ala_t"
-
-#~ msgid "Add a Se_parator to Toolbar"
-#~ msgstr "Tambah _Pengasing ke Bar Alat"
-
-#~ msgid "_Remove From Toolbar"
-#~ msgstr "Buang Da_ri Bar Alatan"
-
-#~ msgid "_Move"
-#~ msgstr "_Gerak"
-
-#~ msgid "Jot down notes for later"
-#~ msgstr "Catat nota untuk akan datang"
-
-#~ msgid "Sticky Notes"
-#~ msgstr "Nota Lekit"

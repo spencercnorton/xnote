@@ -69,6 +69,11 @@ void xpad_text_buffer_redo (XpadTextBuffer *buffer);
 void xpad_text_buffer_freeze_undo (XpadTextBuffer *buffer);
 void xpad_text_buffer_thaw_undo (XpadTextBuffer *buffer);
 
+/* Escape/unescape helpers for the PUA-delimited serialization format.
+ * Exported for the test suite; not part of the stable public API. */
+gchar *xpad_text_buffer_escape_segment   (const gchar *text);
+gchar *xpad_text_buffer_unescape_segment (const gchar *text);
+
 G_END_DECLS
 
 #endif /* __XPAD_TEXT_BUFFER_H__ */

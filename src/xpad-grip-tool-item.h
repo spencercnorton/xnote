@@ -37,20 +37,22 @@ typedef struct XpadGripToolItemClass XpadGripToolItemClass;
 typedef struct XpadGripToolItemPrivate XpadGripToolItemPrivate;
 typedef struct XpadGripToolItem XpadGripToolItem;
 
+/* GTK 4 removed GtkToolItem; the grip is now a GtkDrawingArea that paints a
+   resize handle and starts an interactive window resize when dragged. */
 struct XpadGripToolItem
 {
-	GtkToolItem parent;
+	GtkDrawingArea parent;
 	XpadGripToolItemPrivate *priv;
 };
 
 struct XpadGripToolItemClass
 {
-	GtkToolItemClass parent_class;
+	GtkDrawingAreaClass parent_class;
 };
 
 GType xpad_grip_tool_item_get_type (void);
 
-GtkToolItem *xpad_grip_tool_item_new (void);
+GtkWidget *xpad_grip_tool_item_new (void);
 
 G_END_DECLS
 

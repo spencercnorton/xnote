@@ -43,6 +43,7 @@ fio_fill_filename (const gchar *filename, DirectoryType dirType)
 		return g_file_new_for_path (filename);
 	} else {
 		gchar *full_path;
+		gchar *owned_cwd = NULL;  /* only the CWD branch allocates; borrowed otherwise */
 		const gchar *path;
 		GFile *file;
 
@@ -51,10 +52,11 @@ fio_fill_filename (const gchar *filename, DirectoryType dirType)
 				path = xpad_app_get_config_dir ();
 				break;
 			case CURRENT_WORK_DIR:
-				path = g_get_current_dir();
+				owned_cwd = g_get_current_dir ();
+				path = owned_cwd;
 				break;
 			default:
-				g_critical ("Unexpected directory type encountered. Falling back to Xpad config folder.");
+				g_critical ("Unexpected directory type encountered. Falling back to XNote config folder.");
 				path = xpad_app_get_config_dir ();
 				break;
 		}
@@ -63,6 +65,7 @@ fio_fill_filename (const gchar *filename, DirectoryType dirType)
 		file = g_file_new_for_path (full_path);
 
 		g_free (full_path);
+		g_free (owned_cwd);  /* NULL-safe; frees the leaked g_get_current_dir() result */
 		return file;
 	}
 }
@@ -134,6 +137,14 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
 	{
 		g_output_stream_write_all (G_OUTPUT_STREAM (stream), value, strlen (value),
 		                           NULL, NULL, &error);
+		/* Close explicitly: for a replace, this is where GIO flushes and
+		   renames the temp file over the target — an ENOSPC/rename failure
+		   surfaces HERE, not in write_all. Disposing the stream without
+		   closing would swallow that error and report a failed save as OK. */
+		if (!error)
+			g_output_stream_close (G_OUTPUT_STREAM (stream), NULL, &error);
+		else
+			g_output_stream_close (G_OUTPUT_STREAM (stream), NULL, NULL);
 		g_clear_object (&stream);
 	}
 
@@ -161,11 +172,26 @@ gboolean fio_set_file (const gchar *name, const gchar *value)
  */
 gchar *fio_get_file (const gchar *filename, DirectoryType dirType)
 {
+	return fio_get_file_checked (filename, dirType, NULL);
+}
+
+/*
+ * Like fio_get_file, but sets *out_read_error to TRUE when the load failed for a
+ * reason OTHER than the file not existing (e.g. a read error on a flaky mount),
+ * so a caller can avoid treating an unreadable-but-existing file as empty.
+ * Returned gchar * must be g_free'd.
+ */
+gchar *fio_get_file_checked (const gchar *filename, DirectoryType dirType, gboolean *out_read_error)
+{
 	GFile *file;
 	gchar *contents = NULL;
+	GError *err = NULL;
 
 	file = fio_fill_filename (filename, dirType);
-	g_file_load_contents (file, NULL, &contents, NULL, NULL, NULL);
+	g_file_load_contents (file, NULL, &contents, NULL, NULL, &err);
+	if (out_read_error)
+		*out_read_error = (err != NULL && !g_error_matches (err, G_IO_ERROR, G_IO_ERROR_NOT_FOUND));
+	g_clear_error (&err);
 	g_clear_object (&file);
 
 	return contents;

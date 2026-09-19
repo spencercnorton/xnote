@@ -142,6 +142,30 @@ gint xppd_intercept (gpointer cdata)
 }
 
 	/************************
+	xpad_periodic_remove():
+	Drop every pending scheduled callback whose data pointer is 'xpad_pad'.
+	A pad schedules a delayed save (data = the pad) and is cleared only when
+	the next tick fires it. If the pad is destroyed before that tick, the slot
+	would dereference freed memory — call this from the pad's dispose.
+	************************/
+
+void xpad_periodic_remove (void * xpad_pad)
+{
+	int cnt;
+
+	if (0 == xpptr->sigs || 0 == xpad_pad) {
+		return;
+	}
+
+	for (cnt = 0; cnt < xpptr->sigs_len; ++cnt) {
+		Xpadsigref * sig_item = xpptr->sigs + cnt;
+		if (sig_item->data == xpad_pad) {
+			memset(sig_item, 0, sizeof(*sig_item));
+		}
+	}
+}
+
+	/************************
 	Xpad_periodic_set_callback():
 	This function prepares a callback function to be invoked
 	for an event name such as "save-content" or "save-info".

@@ -1,16 +1,16 @@
 # Punjabi translation for xpad
 # Copyright (c) 2020 Rosetta Contributors and Canonical Ltd 2020
 # This file is distributed under the same license as the xpad package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+# FIRST AUTHOR, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: https://github.com/spencercnorton/xnote/issues\n"
 "POT-Creation-Date: 2023-09-14 08:34+0000\n"
 "PO-Revision-Date: 2020-07-20 07:20+0000\n"
-"Last-Translator: Gursharnjit_Singh <gursharnjitsingh13@gmail.com>\n"
-"Language-Team: Punjabi <pa@li.org>\n"
+"Last-Translator: Gursharnjit_Singh\n"
+"Language-Team: Punjabi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -138,7 +138,7 @@ msgid "Sticky notes"
 msgstr "ਚਿਪਕਣਵਾਲੇ ਨੋਟ-ਕਥਨ"
 
 #. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
+#. like so: "Your Name"
 #: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""

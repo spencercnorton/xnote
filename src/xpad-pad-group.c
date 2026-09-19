@@ -102,8 +102,10 @@ xpad_pad_group_get_pads (XpadPadGroup *group)
 static gint
 menu_title_compare (GtkWindow *a, GtkWindow *b)
 {
-        gchar *title_a = g_utf8_casefold (gtk_window_get_title (a), -1);
-        gchar *title_b = g_utf8_casefold (gtk_window_get_title (b), -1);
+        const gchar *window_title_a = gtk_window_get_title (a);
+        const gchar *window_title_b = gtk_window_get_title (b);
+        gchar *title_a = g_utf8_casefold (window_title_a ? window_title_a : "", -1);
+        gchar *title_b = g_utf8_casefold (window_title_b ? window_title_b : "", -1);
 
         gint rv = g_utf8_collate (title_a, title_b);
 
@@ -125,7 +127,11 @@ GSList* xpad_pad_group_get_pads_sorted_by_title(XpadPadGroup *group) {
 void
 xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 {
-	g_object_ref(pad);
+	/* GTK 3 toplevels sank their own floating reference; GTK 4 windows do not.
+	   The group takes ownership here with ref_sink so the pad has a single
+	   non-floating owner and a clean lifetime (released in
+	   xpad_pad_group_remove). */
+	g_object_ref_sink (pad);
 
 	group->priv->pads = g_slist_append (group->priv->pads, XPAD_PAD (pad));
 	g_signal_connect_swapped (pad, "destroy", G_CALLBACK (xpad_pad_group_remove), group);
@@ -137,11 +143,21 @@ xpad_pad_group_add (XpadPadGroup *group, GtkWidget *pad)
 void
 xpad_pad_group_remove (XpadPadGroup *group, GtkWidget *pad)
 {
-	/* Destroy the pad */
-	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
-	g_clear_object(&pad);
+	g_return_if_fail (group != NULL);
 
+	/* Idempotent: a pad can reach here twice — once from the explicit removal in
+	   xpad_pad_delete(), and again from the "destroy" signal if/when it is finally
+	   finalized. The list-find guard makes the second call a no-op and, crucially,
+	   prevents a double-unref of an already-freed pad. */
+	if (!g_slist_find (group->priv->pads, pad))
+		return;
+
+	group->priv->pads = g_slist_remove (group->priv->pads, XPAD_PAD (pad));
+	/* Emit with the real pad (was previously cleared to NULL before the emit) so
+	   listeners like the tray see which pad went away, then release the group's
+	   ownership ref. */
 	g_signal_emit (group, signals[PAD_REMOVED], 0, pad);
+	g_object_unref (pad);
 }
 
 /* Delete all the current pads in the group */
@@ -152,7 +168,8 @@ xpad_pad_group_destroy_pads (XpadPadGroup *group)
 
 	/* Remove (and thus disable) all the key accelerators before the pads get destroyed, preventing a call to a non-existing accelerator */
 	g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_remove_accelerator_group, NULL);
-	g_slist_foreach (group->priv->pads, (GFunc) gtk_widget_destroy, NULL);
+	/* Pads are GtkWindows; GTK 4 replaced gtk_widget_destroy() with gtk_window_destroy(). */
+	g_slist_foreach (group->priv->pads, (GFunc) gtk_window_destroy, NULL);
 }
 
 static guint
@@ -224,11 +241,3 @@ xpad_pad_group_toggle_hide (XpadPadGroup *group)
 	xpad_pad_group_close_all (group);
 }
 
-
-void
-xpad_pad_group_update_sticky (XpadPadGroup *group, gboolean is_sticky)
-{
-	if (group) {
-		g_slist_foreach (group->priv->pads, (GFunc) xpad_pad_set_sticky, GINT_TO_POINTER(is_sticky));
-	}
-}

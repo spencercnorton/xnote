@@ -29,11 +29,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 struct XpadSearchBarPrivate
 {
 	GtkSourceBuffer *source_buffer;
+	GtkSearchBar *search_bar;
 	GtkSearchEntry *search_entry;
 	GtkSourceSearchContext *search_context;
 };
 
-G_DEFINE_TYPE_WITH_PRIVATE (XpadSearchBar, xpad_search_bar, GTK_TYPE_SEARCH_BAR)
+G_DEFINE_TYPE_WITH_PRIVATE (XpadSearchBar, xpad_search_bar, GTK_TYPE_WIDGET)
 
 enum
 {
@@ -68,7 +69,7 @@ xpad_search_bar_show (XpadSearchBar *searchbar)
 {
 	reset_search_string(searchbar, EMPTY_STRING);
 	gtk_source_search_context_set_highlight (searchbar->priv->search_context, TRUE);
-	gtk_search_bar_set_search_mode (GTK_SEARCH_BAR(searchbar), TRUE);
+	gtk_search_bar_set_search_mode (searchbar->priv->search_bar, TRUE);
 }
 
 void
@@ -76,7 +77,7 @@ xpad_search_bar_hide (XpadSearchBar *searchbar)
 {
 	reset_search_string(searchbar, EMPTY_STRING);
 	gtk_source_search_context_set_highlight (searchbar->priv->search_context, FALSE);
-	gtk_search_bar_set_search_mode (GTK_SEARCH_BAR(searchbar), FALSE);
+	gtk_search_bar_set_search_mode (searchbar->priv->search_bar, FALSE);
 }
 
 static void
@@ -89,6 +90,9 @@ xpad_search_bar_class_init (XpadSearchBarClass *klass)
 	gobject_class->get_property = xpad_search_bar_get_property;
 	gobject_class->dispose = xpad_search_bar_dispose;
 	gobject_class->finalize = xpad_search_bar_finalize;
+
+	/* The single internal GtkSearchBar child is sized to fill us. */
+	gtk_widget_class_set_layout_manager_type (GTK_WIDGET_CLASS (klass), GTK_TYPE_BIN_LAYOUT);
 
 	g_object_class_install_property (gobject_class,
 					 PROP_SOURCE_BUFFER,
@@ -103,6 +107,7 @@ static void
 xpad_search_bar_init (XpadSearchBar *searchbar)
 {
 	searchbar->priv = xpad_search_bar_get_instance_private (searchbar);
+	searchbar->priv->search_bar = NULL;
 	searchbar->priv->search_entry = NULL;
 	searchbar->priv->search_context = NULL;
 }
@@ -112,28 +117,33 @@ xpad_search_bar_constructed (GObject *object)
 {
 	XpadSearchBar *searchbar = XPAD_SEARCH_BAR (object);
 
+	/* Internal GtkSearchBar, parented to us (we are a plain GtkWidget). */
+	searchbar->priv->search_bar = GTK_SEARCH_BAR (gtk_search_bar_new ());
+	gtk_widget_set_parent (GTK_WIDGET (searchbar->priv->search_bar), GTK_WIDGET (searchbar));
+
 	/* Horizontal box with search_entry and up/down buttons */
 	GtkBox *hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
 	gtk_box_set_homogeneous (hbox, FALSE);
-	gtk_container_add (GTK_CONTAINER (searchbar), GTK_WIDGET (hbox));
+	gtk_search_bar_set_child (searchbar->priv->search_bar, GTK_WIDGET (hbox));
 
 	/* search_entry */
 	searchbar->priv->search_entry = GTK_SEARCH_ENTRY (gtk_search_entry_new ());
-	gtk_box_pack_start (hbox, GTK_WIDGET (searchbar->priv->search_entry), TRUE, TRUE, 0);
+	gtk_widget_set_hexpand (GTK_WIDGET (searchbar->priv->search_entry), TRUE);
+	gtk_box_append (hbox, GTK_WIDGET (searchbar->priv->search_entry));
 
 	/* previous match button */
-	GtkButton *prev_search_btn = GTK_BUTTON (gtk_button_new_from_icon_name ("go-up-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-	gtk_box_pack_start (hbox, GTK_WIDGET (prev_search_btn), FALSE, FALSE, 0);
+	GtkButton *prev_search_btn = GTK_BUTTON (gtk_button_new_from_icon_name ("go-up-symbolic"));
+	gtk_box_append (hbox, GTK_WIDGET (prev_search_btn));
 
 	/* next match button */
-	GtkButton *forward_search_btn = GTK_BUTTON (gtk_button_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_SMALL_TOOLBAR));
-	gtk_box_pack_start (hbox, GTK_WIDGET (forward_search_btn), FALSE, FALSE, 0);
+	GtkButton *forward_search_btn = GTK_BUTTON (gtk_button_new_from_icon_name ("go-down-symbolic"));
+	gtk_box_append (hbox, GTK_WIDGET (forward_search_btn));
 
 	/*
 	 * this will allow to for example press Esc without moving the mouse exactly
 	 * Sinto the search field to remove the search bar
 	 */
-	gtk_search_bar_connect_entry (GTK_SEARCH_BAR (searchbar), GTK_ENTRY (searchbar->priv->search_entry));
+	gtk_search_bar_connect_entry (searchbar->priv->search_bar, GTK_EDITABLE (searchbar->priv->search_entry));
 
 	/* connecting to GtkSearchEntry signals for actual searching */
 	g_signal_connect_swapped (searchbar->priv->search_entry, "stop-search", G_CALLBACK (xpad_search_bar_stop_search_cb), searchbar);
@@ -152,7 +162,7 @@ xpad_search_bar_constructed (GObject *object)
 	 * text editor, but not hiding search entry when cursor is moved to text buffer is at least a
 	 * step in this direction
 	 */
-	gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR(searchbar), TRUE);
+	gtk_search_bar_set_show_close_button (searchbar->priv->search_bar, TRUE);
 
 	/* Searchbar should appear in right-top corner of the overlay with text
 	 * to not cover the text which is searched (assuming that first
@@ -228,6 +238,13 @@ xpad_search_bar_dispose (GObject *object)
 
 	g_clear_object (&searchbar->priv->source_buffer);
 	g_clear_object (&searchbar->priv->search_context);
+
+	/* As a GtkWidget subclass we must unparent our child explicitly. */
+	if (searchbar->priv->search_bar)
+	{
+		gtk_widget_unparent (GTK_WIDGET (searchbar->priv->search_bar));
+		searchbar->priv->search_bar = NULL;
+	}
 
 	G_OBJECT_CLASS (xpad_search_bar_parent_class)->dispose (object);
 }
@@ -315,7 +332,7 @@ xpad_search_bar_next_match_cb(XpadSearchBar *searchbar)
 static void
 xpad_search_bar_search_changed_cb(XpadSearchBar *searchbar)
 {
-	const gchar *text_to_search = gtk_entry_get_text (GTK_ENTRY (searchbar->priv->search_entry));
+	const gchar *text_to_search = gtk_editable_get_text (GTK_EDITABLE (searchbar->priv->search_entry));
 	gchar *unescaped_text_to_search = gtk_source_utils_unescape_search_text (text_to_search);
 
 	reset_search_string (searchbar, unescaped_text_to_search);
@@ -341,14 +358,16 @@ reset_search_string(XpadSearchBar *searchbar, const gchar *search_string)
 static void
 set_not_found_state (XpadSearchBar *searchbar, gboolean is_search_string_not_found)
 {
-	GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (searchbar->priv->search_entry));
+	/* GTK 4: style classes are managed directly on the widget; the
+	   GTK_STYLE_CLASS_ERROR macro is gone, the class name is "error". */
+	GtkWidget *entry = GTK_WIDGET (searchbar->priv->search_entry);
 
 	if (is_search_string_not_found)
 	{
-		gtk_style_context_add_class (context, GTK_STYLE_CLASS_ERROR);
+		gtk_widget_add_css_class (entry, "error");
 	}
 	else
 	{
-		gtk_style_context_remove_class (context, GTK_STYLE_CLASS_ERROR);
+		gtk_widget_remove_css_class (entry, "error");
 	}
 }

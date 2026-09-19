@@ -38,15 +38,18 @@ typedef struct XpadSearchBarClass XpadSearchBarClass;
 typedef struct XpadSearchBarPrivate XpadSearchBarPrivate;
 typedef struct XpadSearchBar XpadSearchBar;
 
+/* GTK 4 makes GtkSearchBar a final class (no public class struct), so
+   XpadSearchBar can no longer derive from it. Instead it derives from
+   GtkWidget and composes an internal GtkSearchBar child. */
 struct XpadSearchBar
 {
-	GtkSearchBar parent;
+	GtkWidget parent;
 	XpadSearchBarPrivate *priv;
 };
 
 struct XpadSearchBarClass
 {
-	GtkSearchBarClass parent_class;
+	GtkWidgetClass parent_class;
 };
 
 GType xpad_search_bar_get_type (void);

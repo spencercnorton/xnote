@@ -1,16 +1,16 @@
 # Basque translation for xpad
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the xpad package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: xpad\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: https://github.com/spencercnorton/xnote/issues\n"
 "POT-Creation-Date: 2023-09-14 08:34+0000\n"
 "PO-Revision-Date: 2013-10-10 07:03+0000\n"
-"Last-Translator: Arthur Borsboom <arthurborsboom@gmail.com>\n"
-"Language-Team: Basque <eu@li.org>\n"
+"Last-Translator: Arthur Borsboom\n"
+"Language-Team: Basque\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -138,7 +138,7 @@ msgid "Sticky notes"
 msgstr "Ohar itsaskorrak"
 
 #. Translators: please translate this as your own name and optionally email
-#. like so: "Your Name <your@email.com>"
+#. like so: "Your Name"
 #: ../src/xpad-pad.c:1449
 msgid "translator-credits"
 msgstr ""
@@ -598,117 +598,3 @@ msgstr ""
 #: ../src/xpad-tray.c:100
 msgid "_Quit"
 msgstr ""
-
-#~ msgid ""
-#~ "Please send comments or bug reports to xpad-devel@lists.sourceforge.net"
-#~ msgstr ""
-#~ "Bidali iruzkin edo errore jakinarazpenak xpad-devel@lists.sourceforge.net "
-#~ "helbidera"
-
-#~ msgid ""
-#~ "Each xpad session consists of one or more open pads.  These pads are "
-#~ "basically sticky notes on your desktop in which you can write memos."
-#~ msgstr ""
-#~ "Xpad sesio bakoitzak ohar ireki bat edo gehiagoz osaturik dago. Ohar hauek, "
-#~ "funtsean zure mahaigainerako ohar itsaskorrak dira, zeinetan gomutagarriak "
-#~ "idatzi ditzakezun."
-
-#~ msgid "_Pad"
-#~ msgstr "_Oharra"
-
-#~ msgid "_Window Decorations"
-#~ msgstr "_Leiho-apaingarriak"
-
-#~ msgid "_Autohide Toolbar"
-#~ msgstr "Tresna-barra _automatikoki ezkutatu"
-
-#~ msgid "_Toolbar"
-#~ msgstr "_Tresna-barra"
-
-#~ msgid "_Scrollbar"
-#~ msgstr "_Korritze-barra"
-
-#~ msgid "_View"
-#~ msgstr "_Ikusi"
-
-#~ msgid "_Contents"
-#~ msgstr "E_dukiak"
-
-#~ msgid "Options"
-#~ msgstr "Aukerak"
-
-#~ msgid "_Pads start on all workspaces"
-#~ msgstr "Oharrak idazmahai guztietan hasiko dira"
-
-#~ msgid "_Edit lock"
-#~ msgstr "Gilt_zarrapoa editatu"
-
-#~ msgid "Add Pr_eferences to Toolbar"
-#~ msgstr "Gehitu ezarpenak tresna-barrara"
-
-#~ msgid "Add _New to Toolbar"
-#~ msgstr "Gehitu _berria tresna-barrara"
-
-#~ msgid "Add _Delete to Toolbar"
-#~ msgstr "Gehitu _ezabatu tresna-barrara"
-
-#~ msgid "Add _Close to Toolbar"
-#~ msgstr "Gehitu _Itxi tresna barrara"
-
-#~ msgid "Add C_lear to Toolbar"
-#~ msgstr "Gehitu _Garbitu tresna-barrara"
-
-#~ msgid "Add Proper_ties to Toolbar"
-#~ msgstr "Gehitu propietateak tresna-barrara"
-
-#~ msgid "Sticky Notes"
-#~ msgstr "Ohar itsaskorrak"
-
-#~ msgid "Jot down notes for later"
-#~ msgstr "Oharrak gerorako idatzi"
-
-#~ msgid "_Move"
-#~ msgstr "_Mugitu"
-
-#~ msgid "_Remove From Toolbar"
-#~ msgstr "_Kendu tresna-barratik"
-
-#~ msgid "Add a Se_parator to Toolbar"
-#~ msgstr "Gehitu bereiz_lea tresna-barrara"
-
-#~ msgid "Add Close _All to Toolbar"
-#~ msgstr "Gehitu _Denak itxi tresna-barrara"
-
-#~ msgid ""
-#~ "Most actions are available throught the popup menu that appears when you "
-#~ "right click on a pad.  Try it out and enjoy."
-#~ msgstr ""
-#~ "Ekintza gehienak eskuragarri daude ohar batean eskuin-klika egin ondoren "
-#~ "agertzen den laster-menuan. Frogatu eta gozatu."
-
-#~ msgid ""
-#~ "<b>To change color settings</b>, right click on a pad and choose Edit-"
-#~ ">Preferences."
-#~ msgstr ""
-#~ "<b>Kolore-ezarpenak aldatzeko</b>, eskuin klika egin oharrean eta aukeratu "
-#~ "Editatu -> Hobespenak."
-
-#~ msgid ""
-#~ "<b>To resize a pad</b>, left drag on the resizer or hold down CTRL while "
-#~ "right dragging anywhere on the pad."
-#~ msgstr ""
-#~ "<b>Ohar bat tamainaz aldatzeko</b>, tamaina-aldatzailetik arrasatu ezker-"
-#~ "botoiarekin edota KTRL sakaturik mantendu eskuin-botoiarekin oharreko "
-#~ "edozein tokitan klik eginda arrastatzen den bitartean."
-
-#~ msgid ""
-#~ "<b>To move a pad</b>, left drag on the toolbar, right drag on the resizer in "
-#~ "the bottom right, or hold down CTRL while left dragging anywhere on the pad."
-#~ msgstr ""
-#~ "<b>Ohar bat mugitzeko</b>,  tresna-barratik arrastatu ezker-botoiarekin,  "
-#~ "tamaina-aldatzailetik arrastatu eskuin-botoiarekin edota KTRL sakaturik "
-#~ "mantendu ezker-botoiarekin oharreko edozein tokitan klik eginda arrastatzen "
-#~ "den bitartean."
-
-#~ msgid "Show on _All Workspaces"
-#~ msgstr "Erakutsi idazmahai _guztietan"

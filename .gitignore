@@ -4,13 +4,11 @@
 .settings/
 aclocal.m4
 autom4te.cache/
-autopackage/default.apspec
-autopackage/Makefile
-autopackage/Makefile.in
 compile
 config.guess
 config.h
 config.h.in
+config.h.in~
 config.log
 config.rpath
 config.sub
@@ -18,6 +16,8 @@ config.status
 configure
 configure~
 data/xpad.appdata.xml
+data/xnote.appdata.xml
+data/xnote.desktop
 depcomp
 doc/Makefile
 doc/Makefile.in
@@ -64,8 +64,8 @@ po/zh_CN.gmo
 po/zh_TW.gmo
 po/Rules-quot
 po/boldquot.sed
-po/en@boldquot.header
-po/en@quot.header
+po/en?boldquot.header
+po/en?quot.header
 po/insert-header.sin
 po/quot.sed
 po/remove-potcdate.sed
@@ -76,7 +76,26 @@ src/.deps/
 src/Makefile
 src/Makefile.in
 src/xpad
+src/xnote
 src/*.o
 stamp-h1
 xpad.desktop
+xnote.desktop
 ABOUT-NLS
+test-driver
+tests/.deps/
+tests/Makefile
+tests/Makefile.in
+tests/*.o
+tests/test-escape
+tests/test-fio
+tests/test-autostart
+tests/test-settings
+tests/test-tray-lifecycle
+tests/*.log
+tests/*.trs
+
+# Built by debian/rules and Makefile.am from cloud-helper/*.go; it was
+# committed by accident in the Phase A commit and nothing consumes the
+# tracked copy.
+cloud-helper/xnote-cloud-backup

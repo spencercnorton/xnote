@@ -53,8 +53,8 @@ static void xpad_text_view_constructed (GObject *object);
 static void xpad_text_view_dispose (GObject *object);
 static void xpad_text_view_finalize (GObject *object);
 static void xpad_text_view_realize (XpadTextView *widget);
-static gboolean xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event, XpadSettings *settings);
-static gboolean xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event, XpadSettings *settings);
+static void xpad_text_view_pressed (GtkGestureClick *gesture, gint n_press, gdouble x, gdouble y, gpointer data);
+static void xpad_text_view_focus_leave (GtkEventControllerFocus *controller, gpointer data);
 static void xpad_text_view_notify_edit_lock (XpadTextView *view);
 static void xpad_text_view_notify_editable (XpadTextView *view);
 static void xpad_text_view_notify_fontname (XpadTextView *view);
@@ -97,8 +97,8 @@ xpad_text_view_class_init (XpadTextViewClass *klass)
 
 	obj_prop[PROP_SETTINGS] = g_param_spec_pointer ("settings", "Xpad settings", "Xpad global settings", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_PAD] = g_param_spec_pointer ("pad", "Pad", "Pad connected to this textview", G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default xpad font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow color style", "Whether to use the default xpad color style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_FOLLOW_FONT_STYLE] = g_param_spec_boolean ("follow-font-style", "Follow font style", "Whether to use the default XNote font style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+	obj_prop[PROP_FOLLOW_COLOR_STYLE] = g_param_spec_boolean ("follow-color-style", "Follow color style", "Whether to use the default XNote color style", TRUE, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_TEXT_COLOR] = g_param_spec_boxed ("text-color", "Text and caret color", "The color for the text and the cursor", GDK_TYPE_RGBA, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 	obj_prop[PROP_BACK_COLOR] = g_param_spec_boxed ("back-color", "Background color", "The color for the background", GDK_TYPE_RGBA, G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
 
@@ -136,12 +136,19 @@ xpad_text_view_constructed (GObject *object)
 	xpad_text_view_notify_colors(view);
 
 	/* Add CSS style class, so the styling can be overridden by a GTK theme */
-	GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET (view));
-	gtk_style_context_add_class(context, "XpadTextView");
+	gtk_widget_add_css_class (GTK_WIDGET (view), "XpadTextView");
 
-	/* Signals */
-	g_signal_connect (view, "button-press-event", G_CALLBACK (xpad_text_view_button_press_event), view->priv->settings);
-	g_signal_connect_after (view, "focus-out-event", G_CALLBACK (xpad_text_view_focus_out_event), view->priv->settings);
+	/* Signals. GTK 4 routes pointer/focus through event controllers rather
+	   than the old button-press-event / focus-out-event signals. */
+	GtkGesture *click = gtk_gesture_click_new ();
+	gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), GDK_BUTTON_PRIMARY);
+	g_signal_connect (click, "pressed", G_CALLBACK (xpad_text_view_pressed), view->priv->settings);
+	gtk_widget_add_controller (GTK_WIDGET (view), GTK_EVENT_CONTROLLER (click));
+
+	GtkEventController *focus = gtk_event_controller_focus_new ();
+	g_signal_connect (focus, "leave", G_CALLBACK (xpad_text_view_focus_leave), view->priv->settings);
+	gtk_widget_add_controller (GTK_WIDGET (view), focus);
+
 	g_signal_connect (view, "realize", G_CALLBACK (xpad_text_view_realize), NULL);
 	g_signal_connect (view, "notify::editable", G_CALLBACK (xpad_text_view_notify_editable), NULL);
 	g_signal_connect_swapped (view->priv->settings, "notify::edit-lock", G_CALLBACK (xpad_text_view_notify_edit_lock), view);
@@ -160,7 +167,14 @@ xpad_text_view_dispose (GObject *object)
 	XpadTextView *view = XPAD_TEXT_VIEW (object);
 
 	g_clear_object (&view->priv->buffer);
-	g_clear_object (&view->priv->pad);
+	view->priv->pad = NULL;  /* non-owning back-reference; nothing to unref */
+	/* Disconnect our notify:: handlers on the settings singleton BEFORE releasing
+	   our ref to it. This must happen in dispose while settings is still non-NULL;
+	   the old code did it in finalize, but dispose had already cleared settings, so
+	   the disconnect never ran and the handlers fired on the freed view whenever a
+	   Preferences change (font/color/edit-lock/line-numbering) was made. */
+	if (view->priv->settings)
+		g_signal_handlers_disconnect_matched (view->priv->settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
 	g_clear_object (&view->priv->settings);
 	g_clear_object (&view->priv->font_provider);
 
@@ -180,11 +194,8 @@ xpad_text_view_dispose (GObject *object)
 static void
 xpad_text_view_finalize (GObject *object)
 {
-	XpadTextView *view = XPAD_TEXT_VIEW (object);
-
-	if (view->priv->settings)
-		g_signal_handlers_disconnect_matched (view->priv->settings, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, view);
-
+	/* The settings-singleton handlers are disconnected in dispose (before the
+	   settings ref is released), so there is nothing settings-related to do here. */
 	G_OBJECT_CLASS (xpad_text_view_parent_class)->finalize (object);
 }
 
@@ -209,8 +220,9 @@ xpad_text_view_set_property (GObject *object, guint prop_id, const GValue *value
 		break;
 
 	case PROP_PAD:
+		/* Non-owning: the pad owns this text view (its child) and outlives it;
+		   a ref here would be a finalize-blocking cycle. */
 		view->priv->pad = g_value_get_pointer (value);
-		g_object_ref (view->priv->pad);
 		break;
 
 	case PROP_FOLLOW_FONT_STYLE:
@@ -290,47 +302,46 @@ xpad_text_view_get_property (GObject *object, guint prop_id, GValue *value, GPar
 	}
 }
 
-static gboolean
-xpad_text_view_focus_out_event (GtkWidget *widget, GdkEventFocus *event, XpadSettings *settings)
+static void
+xpad_text_view_focus_leave (GtkEventControllerFocus *controller, gpointer data)
 {
-	/* A dirty way to silence the compiler for these unused variables. */
-	(void) event;
+	XpadSettings *settings = data;
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (controller));
 
 	gboolean edit_lock;
 	g_object_get (settings, "edit-lock", &edit_lock, NULL);
 
 	if (edit_lock)
-	{
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), FALSE);
-		return TRUE;
-	}
-
-	return FALSE;
 }
 
-static gboolean
-xpad_text_view_button_press_event (GtkWidget *widget, GdkEventButton *event, XpadSettings *settings)
+static void
+xpad_text_view_pressed (GtkGestureClick *gesture, gint n_press, gdouble x, gdouble y, gpointer data)
 {
+	(void) x;
+	(void) y;
+
+	XpadSettings *settings = data;
+	GtkWidget *widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+
 	gboolean edit_lock;
 	g_object_get (settings, "edit-lock", &edit_lock, NULL);
 
-	if (event->button == 1 &&
-	    edit_lock &&
-	    !gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)))
+	if (edit_lock && !gtk_text_view_get_editable (GTK_TEXT_VIEW (widget)))
 	{
-		if (event->type == GDK_2BUTTON_PRESS)
+		if (n_press >= 2)
 		{
+			/* Double-click on a locked pad unlocks it for editing. */
 			gtk_text_view_set_editable (GTK_TEXT_VIEW (widget), TRUE);
-			return TRUE;
+			gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 		}
-		else if (event->type == GDK_BUTTON_PRESS)
+		else
 		{
-			gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)), (gint) event->button, (gint) event->x_root, (gint) event->y_root, event->time);
-			return TRUE;
+			/* Single-click drags the whole pad. */
+			gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+			xpad_pad_begin_window_drag (widget, gesture, TRUE);
 		}
 	}
-
-	return FALSE;
 }
 
 static void
@@ -345,24 +356,15 @@ xpad_text_view_notify_edit_lock (XpadTextView *view)
 static void
 xpad_text_view_notify_editable (XpadTextView *view)
 {
-	GdkCursor *cursor;
 	gboolean editable;
-	GdkDisplay *display;
-	GdkWindow *view_window;
 	GtkSourceView *view_tv = GTK_SOURCE_VIEW (view);
 
 	editable = gtk_text_view_get_editable (GTK_TEXT_VIEW (view_tv));
 	gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (view_tv), editable);
 
-	view_window = gtk_text_view_get_window (GTK_TEXT_VIEW (view_tv), GTK_TEXT_WINDOW_TEXT);
-	display = gdk_window_get_display(view_window);
-	cursor = editable ? gdk_cursor_new_for_display (display, GDK_XTERM) : NULL;
-
-	/* Only set for pads which are currently visible */
-	if (view_window != NULL)
-		gdk_window_set_cursor (view_window, cursor);
-
-	g_clear_object (&cursor);
+	/* GTK 4 has no per-text-window GdkWindow; set the widget cursor by name.
+	   An editable pad shows the I-beam text cursor, a locked one the default. */
+	gtk_widget_set_cursor_from_name (GTK_WIDGET (view), editable ? "text" : "default");
 }
 
 static void
@@ -410,12 +412,12 @@ xpad_text_view_set_colors (GtkWidget *view, GdkRGBA *text_color, GdkRGBA *back_c
 	gchar *cssStyling = g_strconcat(
 			"textview, textview text {caret-color: ", text_color_string,
 			"; color: ", text_color_string,
-			"; ", GTK_STYLE_PROPERTY_BACKGROUND_COLOR, ": ", back_color_string,
+			"; background-color: ", back_color_string,
 			";}\n", NULL);
 
 	GtkStyleContext *context = gtk_widget_get_style_context (view);
 	GtkCssProvider *provider = gtk_css_provider_new ();
-	gtk_css_provider_load_from_data (provider, cssStyling, -1, NULL);
+	gtk_css_provider_load_from_data (provider, cssStyling, -1);
 	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	g_free(cssStyling);
@@ -448,8 +450,15 @@ xpad_text_view_set_font (GtkWidget *view, PangoFontDescription *desc) {
 		}
 
 		GtkCssProvider *provider = gtk_css_provider_new ();
-		gtk_css_provider_load_from_data (provider, cssStyling, -1, NULL);
-		gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_SETTINGS);
+		gtk_css_provider_load_from_data (provider, cssStyling, -1);
+		/* APPLICATION priority, not SETTINGS: on a real desktop the session's
+		   UI font (gtk-font-name / theme) is registered at PRIORITY_SETTINGS,
+		   so a font override added at the same priority ties and the desktop
+		   font wins — the user's font choice has "no effect". The colour
+		   provider hit the identical problem and was already moved up to
+		   PRIORITY_APPLICATION (commit a286b66a5); the font provider was left
+		   behind. Keep the two in lockstep so the pad font actually applies. */
+		gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 		XPAD_TEXT_VIEW (view)->priv->font_provider = provider;
 
 		g_free (cssStyling);

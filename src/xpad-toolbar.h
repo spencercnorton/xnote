@@ -36,15 +36,16 @@ typedef struct XpadToolbarClass XpadToolbarClass;
 typedef struct XpadToolbarPrivate XpadToolbarPrivate;
 typedef struct XpadToolbar XpadToolbar;
 
+/* GTK 4 removed GtkToolbar; XpadToolbar is now a horizontal GtkBox. */
 struct XpadToolbar
 {
-	GtkToolbar parent;
+	GtkBox parent;
 	XpadToolbarPrivate *priv;
 };
 
 struct XpadToolbarClass
 {
-	GtkToolbarClass parent_class;
+	GtkBoxClass parent_class;
 };
 
 GType xpad_toolbar_get_type (void);
@@ -79,6 +80,7 @@ void xpad_toolbar_enable_redo_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_cut_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_copy_button (XpadToolbar *toolbar, gboolean enable);
 void xpad_toolbar_enable_paste_button (XpadToolbar *toolbar, gboolean enable);
+void xpad_toolbar_update_color_swatch (XpadToolbar *toolbar);
 
 G_END_DECLS
 

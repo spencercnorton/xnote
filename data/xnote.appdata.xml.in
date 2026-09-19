@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>tech.norvi.xnote</id>
+  <launchable type="desktop-id">xnote.desktop</launchable>
+  <name>XNote</name>
+  <summary>Sticky notes</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>XNote is a sticky note application that strives to be simple, fault-tolerant, and customizable. XNote consists of independent pad windows; each is basically a text box in which notes can be written.</p>
+  </description>
+  <url type="bugtracker">https://github.com/spencercnorton/xnote/issues</url>
+  <url type="homepage">https://github.com/spencercnorton/xnote</url>
+  <translation type="gettext">xnote</translation>
+  <developer id="tech.norvi.xnote">
+    <name>XNote contributors</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="3.0.3" date="2026-09-19">
+      <description>
+        <p>Prepared the first audited public source release, with public documentation, provenance, metadata, and reproducible release checks.</p>
+      </description>
+    </release>
+    <release version="2.0.0" date="2026-07-14">
+      <description>
+        <p>Full rename from Xpad to XNote: new binary (xnote), package name, config directory (~/.config/xnote), icons, and desktop integration. Existing notes are automatically migrated from ~/.config/xpad on first launch. The package replaces the old xpad package.</p>
+      </description>
+    </release>
+    <release version="1.5.0" date="2026-07-11">
+      <description>
+        <p>Backup pipeline heartbeat and hardening, honest save-error handling, tray watcher re-registration with a properly themable symbolic icon, and packaging fixes (deb epoch, renderer pin moved into the binary, autostart as a symlink).</p>
+      </description>
+    </release>
+    <release version="1.3.0" date="2026-06-11">
+      <description>
+        <p>Right-clicking a note now shows xpad's own menu (with Close) instead of the text widget's built-in one, and Close is also available while text is selected.</p>
+      </description>
+    </release>
+    <release version="1.2.0" date="2026-06-10">
+      <description>
+        <p>New pads now pick a random classic sticky-note color (toggleable in Preferences), and the Preferences Close button works again.</p>
+      </description>
+    </release>
+    <release version="1.1.0" date="2026-06-10">
+      <description>
+        <p>The pad toolbar is now a floating rounded pill that fades in over the note on hover, with symbolic icons and a corner resize grip.</p>
+      </description>
+    </release>
+    <release version="1.0.0" date="2026-06-09">
+      <description>
+        <p>First XNote release: ported from GTK 3 to GTK 4 and libadwaita, with a StatusNotifierItem tray and a symbolic top-bar icon.</p>
+      </description>
+    </release>
+  </releases>
+</component>

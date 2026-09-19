@@ -14,12 +14,11 @@ src/xpad-pad-properties.c
 src/xpad-periodic.c
 src/xpad-preferences.c
 src/xpad-search-bar.c
-src/xpad-session-manager.c
 src/xpad-settings.c
 src/xpad-styling-helpers.c
 src/xpad-text-buffer.c
 src/xpad-text-view.c
 src/xpad-toolbar.c
 src/xpad-tray.c
-data/xpad.desktop.in
-data/xpad.appdata.xml.in
+data/xnote.desktop.in
+data/xnote.appdata.xml.in

@@ -1,0 +1,44 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH XNOTE 1 "July 14, 2026"
+.SH NAME
+xnote \- A sticky notes application for GTK 4
+.PP
+.SH SYNOPSIS
+.B xnote
+.RI [OPTIONS]
+.PP
+.SH DESCRIPTION
+XNote is a sticky note application for GTK 4 + libadwaita.
+.PP
+.SH OPTIONS
+.TP
+.B \-v, \-\-version
+Display version information.
+.TP
+.B \-?, \-\-help
+Display usage information.
+.TP
+.B \-h, \-\-hide
+Hides existing pads on startup.  All pads will be hidden, so unless the tray icon is present or you also specify \-\-new, xnote will exit immediately.
+.TP
+.B \-s, \-\-show
+Shows existing pads on startup.
+.TP
+.B \-t, \-\-toggle
+Toggle between showing and hiding each of the existing pads on startup.
+.TP
+.B \-n, \-\-new
+Open a new pad.
+.TP
+.B \-N, \-\-no-new
+Prevents xnote from making a new pad on startup.  A new pad would be created if xnote is already running and is run again or if there are no old pads to load.
+.TP
+.B \-f, \-\-new-from-file=FILE
+Create a new pad with the contents of a file
+.TP
+.B \-q, \-\-quit
+Closes all open pads and terminates the xnote processes.
+.PP
+.SH AUTHOR
+Written by Michael Terry and Arthur Borsboom.
+Renamed to XNote and maintained by the XNote contributors.

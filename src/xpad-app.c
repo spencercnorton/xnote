@@ -31,20 +31,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/un.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <glib.h>
+#include <glib-unix.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
+#include <adwaita.h>
 
 #include "xpad-app.h"
 #include "help.h"
+#include "xpad-backup.h"
 #include "xpad-pad.h"
 #include "xpad-pad-group.h"
 #include "xpad-periodic.h"
-#include "xpad-session-manager.h"
 #include "xpad-tray.h"
 
 /* Seems that some systems (sun-sparc-solaris2.8 at least), need the following three #defines.
-   These were provided by Alan Mizrahi <alan@cesma.usb.ve>.
+   These were provided by Alan Mizrahi.
 */
 #ifndef PF_LOCAL
 #define PF_LOCAL PF_UNIX
@@ -65,11 +68,15 @@ static gboolean option_new;
 static gboolean option_hide;
 static gboolean option_show;
 static gboolean option_toggle;
+/* Accepted and ignored: XSMP is gone with X11 (3.0.0), but an X session
+   manager may still hold a saved restart command from an older XNote that
+   passes it. Parsing it as a no-op keeps that launch working; rejecting it
+   made XNote exit(1) and never start. */
+static gchar *option_smid_ignored;
 static gboolean option_version;
 static gboolean option_quit;
 static gboolean shutdown_in_progress;
 static gchar **option_files;
-static gchar *option_smid;
 static gchar *config_dir;
 static gchar *program_path;
 static gchar *server_filename;
@@ -78,6 +85,10 @@ static FILE *output;
 static XpadPadGroup *pad_group;
 static gint pads_loaded_on_start = 0;
 static XpadSettings *settings;
+/* GTK 4 removed gtk_main()/gtk_main_quit()/gtk_main_level(); xpad is not a
+   GtkApplication (it runs its own socket-based single-instance), so we drive
+   our own GLib main loop instead. */
+static GMainLoop *main_loop = NULL;
 
 static gboolean		process_local_args          (gint *argc, gchar **argv[]);
 static gboolean		process_remote_args         (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings *xpad_settings);
@@ -86,12 +97,11 @@ static gboolean		config_dir_exists           (void);
 static gchar		*make_config_dir            (void);
 static void		register_stock_icons        (void);
 static gint		xpad_app_load_pads          (void);
-static gboolean		xpad_app_quit_if_no_pads    (XpadPadGroup *group);
 static gboolean		xpad_app_first_idle_check   (XpadPadGroup *group);
 static gboolean		xpad_app_pass_args          (void);
 static gboolean		xpad_app_open_proc_file     (void);
 static void enable_unix_signal_handlers();
-static void unix_signal_handler(int sig) __attribute__(( __noreturn__ ));
+static gboolean on_unix_signal(gpointer data);
 
 static void
 xpad_app_init (int argc, char **argv)
@@ -109,10 +119,18 @@ xpad_app_init (int argc, char **argv)
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-	have_gtk = gtk_init_check (&argc, &argv);
+	/* GTK 4 gtk_init_check() takes no arguments and no longer strips GTK
+	   options from argv; xpad does its own option parsing below. */
+	have_gtk = gtk_init_check ();
 	xpad_argc = argc;
 	xpad_argv = argv;
 	output = stdout;
+
+	/* Bring libadwaita up before touching the config dir, so the migration
+	   error dialogs in make_config_dir() have a valid Adw context (guarded on
+	   have_gtk; the headless --version/remote path below never needs it). */
+	if (have_gtk)
+		adw_init ();
 
 	/* Set up config directory. */
 	first_time = !config_dir_exists ();
@@ -130,13 +148,31 @@ xpad_app_init (int argc, char **argv)
 		if (!xpad_app_pass_args ())
 		{
 			process_remote_args (&xpad_argc, &xpad_argv, FALSE, settings);
-			fprintf (output, "%s\n", _("Xpad is a graphical program.  Please run it from your desktop."));
+			fprintf (output, "%s\n", _("XNote is a graphical program.  Please run it from your desktop."));
 		}
 		exit (0);
 	}
 
-	g_set_application_name (_("Xpad"));
-	gdk_set_program_class (PACKAGE);
+	/* libadwaita was initialised above (before the config-dir migration). */
+
+	/* App-level CSS: shape the hover toolbar into a floating pill on top of
+	   the theme's .osd.toolbar look, and give its buttons a tighter round
+	   hit-target. Keyed on the XpadToolbar class so themes can override. */
+	{
+		GtkCssProvider *css = gtk_css_provider_new ();
+		gtk_css_provider_load_from_data (css,
+			".XpadToolbar { padding: 3px 6px; border-radius: 16px; border-spacing: 2px; }"
+			".XpadToolbar button { min-width: 26px; min-height: 26px; border-radius: 13px; padding: 2px; margin: 0; }"
+			".XpadToolbar separator { margin-top: 5px; margin-bottom: 5px; margin-left: 1px; margin-right: 1px; }",
+			-1);
+		gtk_style_context_add_provider_for_display (gdk_display_get_default (),
+			GTK_STYLE_PROVIDER (css), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		g_object_unref (css);
+	}
+
+	g_set_application_name (_("XNote"));
+	/* gdk_set_program_class() was removed in GTK 4; the WM class now comes
+	   from the application id / .desktop file instead. */
 
 	/* Set up program path. */
 	if (xpad_argc > 0)
@@ -153,7 +189,8 @@ xpad_app_init (int argc, char **argv)
 	xpad_app_open_proc_file ();
 
 	register_stock_icons ();
-	gtk_window_set_default_icon_name (PACKAGE);
+	/* gtk_window_set_default_icon_name() was removed in GTK 4; each pad
+	   window sets its own icon name, and the app id supplies the rest. */
 
 	/* Read the Xpad configuration file from disk (if exists) */
 	settings = xpad_settings_new ();
@@ -168,8 +205,6 @@ xpad_app_init (int argc, char **argv)
 	pad_group = xpad_pad_group_new();
 	process_remote_args (&xpad_argc, &xpad_argv, TRUE, settings);
 
-	xpad_session_manager_init ();
-
 	/* load all pads */
 	pads_loaded_on_start = xpad_app_load_pads ();
 
@@ -178,8 +213,8 @@ xpad_app_init (int argc, char **argv)
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);
 
 			/* Only show a new pad on startup, if the generic setting says to show all pads on startup. */
-			guint display_pads;
-			g_object_get (settings, "autostart-display-pads", &display_pads, NULL);
+			guint display_pads =
+				xpad_settings_get_effective_startup_display (settings);
 
 			if (display_pads == 0) {
 				gtk_widget_show (pad);
@@ -195,6 +230,10 @@ xpad_app_init (int argc, char **argv)
 	xpad_periodic_set_callback ("save-content", (XpadPeriodicFunc) xpad_pad_save_content);
 	xpad_periodic_set_callback ("save-info", (XpadPeriodicFunc) xpad_pad_save_info);
 
+	/* Cloud note backup: saves above also schedule a debounced run of the
+	   xpad-cloud-backup helper. */
+	xpad_backup_init ();
+
 	g_idle_add ((GSourceFunc)xpad_app_first_idle_check, pad_group);
 
 	if (first_time) {
@@ -208,30 +247,70 @@ xpad_app_init (int argc, char **argv)
 
 gint main (gint argc, gchar **argv)
 {
+	/* No backend or renderer pin. XNote follows the session like any other
+	   GTK 4 app.
+
+	   Both pins existed only to prop up X11. GDK_BACKEND=x11 was forced
+	   because pad positioning and the WM hints were raw Xlib; GSK_RENDERER=
+	   cairo was forced because NVIDIA + *XWayland* GL surfaces silently drop
+	   their contents after a KVM/DDC switch or DPMS cycle. Removing X11
+	   removes the cause of both, and the XWayland round-trip that could hang
+	   the main loop mid-snapshot goes with it.
+
+	   XPAD_GDK_BACKEND / XPAD_GSK_RENDERER are kept as overrides, but they
+	   are now opt-in rather than a default: CI uses them to force a backend
+	   in a headless compositor, and they are the escape hatch if a specific
+	   GPU ever needs a different renderer. */
+	const gchar *backend = g_getenv ("XPAD_GDK_BACKEND");
+	const gchar *renderer = g_getenv ("XPAD_GSK_RENDERER");
+	if (backend && *backend)
+		g_setenv ("GDK_BACKEND", backend, TRUE);
+	if (renderer && *renderer)
+		g_setenv ("GSK_RENDERER", renderer, TRUE);
+
 	xpad_app_init (argc, argv);
 	enable_unix_signal_handlers();
-	gtk_main ();
+
+	main_loop = g_main_loop_new (NULL, FALSE);
+	g_main_loop_run (main_loop);
+	g_clear_pointer (&main_loop, g_main_loop_unref);
 
 	return 0;
 }
 
-static void enable_unix_signal_handlers() {
-	signal(SIGINT, unix_signal_handler);
-	signal(SIGQUIT, unix_signal_handler);
-	signal(SIGTERM, unix_signal_handler);
+/* Replacement for gtk_main_level() > 0: is our main loop actually running? */
+gboolean
+xpad_app_is_running (void)
+{
+	return main_loop != NULL && g_main_loop_is_running (main_loop);
 }
 
-static void unix_signal_handler(int sig)
+/* Replacement for gtk_main_quit(): stop the GLib main loop without tearing
+   down any windows. Used by the session manager too. */
+void
+xpad_app_main_quit (void)
 {
-	switch (sig) {
-		case SIGINT:
-		case SIGTERM:
-		case SIGQUIT:
-			xpad_app_quit();
-			break;
-	}
+	if (main_loop != NULL && g_main_loop_is_running (main_loop))
+		g_main_loop_quit (main_loop);
+}
 
-	exit(EXIT_FAILURE);
+/* SIGINT/SIGTERM are delivered through the GLib main loop, so the full
+   save-and-teardown in xpad_app_quit() runs in normal main context. The old
+   raw signal() handler called GTK/GIO from async-signal context, where a
+   signal landing mid-save could deadlock or corrupt the very save it
+   triggered. (SIGQUIT keeps its default core-dump action on purpose.) */
+static void enable_unix_signal_handlers() {
+	g_unix_signal_add(SIGINT, on_unix_signal, NULL);
+	g_unix_signal_add(SIGTERM, on_unix_signal, NULL);
+}
+
+static gboolean on_unix_signal(gpointer data)
+{
+	(void) data;
+
+	xpad_app_quit();
+
+	return G_SOURCE_REMOVE;
 }
 
 /* parent and secondary may be NULL.
@@ -242,17 +321,12 @@ xpad_app_error (GtkWindow *parent, const gchar *primary, const gchar *secondary)
 {
 	GtkWidget *dialog;
 
-	if (!xpad_session_manager_start_interact (TRUE))
-		return;
-
 	g_printerr ("%s\n", primary);
 
 	dialog = xpad_app_alert_dialog (parent, "dialog-error", primary, secondary);
-	gtk_dialog_add_buttons (GTK_DIALOG (dialog), _("_Ok"), GTK_RESPONSE_OK, NULL);
-	gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-
-	xpad_session_manager_stop_interact (FALSE);
+	adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (dialog), "ok", _("_Ok"));
+	adw_message_dialog_set_default_response (ADW_MESSAGE_DIALOG (dialog), "ok");
+	xpad_app_alert_dialog_run (dialog);
 }
 
 const gchar *
@@ -283,14 +357,19 @@ xpad_app_quit (void)
 
 	shutdown_in_progress = TRUE;
 
-	/* Stop the GTK main loop. gtk_main_quit() does no destruction of windows. It is just saying "exit the main loop and return to the caller". */
-	gtk_main_quit ();
+	/* Stop the main loop. This does no destruction of windows; it just exits
+	   the loop and returns to the caller in main(). */
+	xpad_app_main_quit ();
 
 	/* First disable the signals, then free the memory used by the tray icon and its menu. */
 	xpad_tray_dispose (settings);
 
 	/* First disable the accelerators, then free the memory used by the pads belonging to this group */
 	xpad_pad_group_destroy_pads (pad_group);
+
+	/* Pads saved any pending changes while being destroyed; if a backup was
+	   scheduled, launch it now — the helper process outlives xpad. */
+	xpad_backup_flush ();
 
 	/* Free the memory used by group. */
 	g_clear_object (&pad_group);
@@ -307,15 +386,32 @@ config_dir_exists (void)
 	gchar *dir = NULL;
 	gboolean exists = FALSE;
 
+	/* New location: ~/.config/xnote (PACKAGE = "xnote") */
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 	exists = g_file_test (dir, G_FILE_TEST_EXISTS);
 	g_free (dir);
 
 	if (!exists)
 	{
-		/* For backwards-compatibility, we see if the old location for
-		   configuration files exists.  It will be moved in make_config_dir */
+		/* Legacy xnote location: ~/.xnote */
 		dir = g_build_filename (g_get_home_dir (), "." PACKAGE, NULL);
+		exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+		g_free (dir);
+	}
+
+	if (!exists)
+	{
+		/* Old xpad location: ~/.config/xpad — will be migrated in make_config_dir.
+		   Probe explicitly with a literal so existing-user first_time stays FALSE. */
+		dir = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
+		exists = g_file_test (dir, G_FILE_TEST_EXISTS);
+		g_free (dir);
+	}
+
+	if (!exists)
+	{
+		/* Old legacy xpad location: ~/.xpad */
+		dir = g_build_filename (g_get_home_dir (), ".xpad", NULL);
 		exists = g_file_test (dir, G_FILE_TEST_EXISTS);
 		g_free (dir);
 	}
@@ -348,10 +444,125 @@ make_path (const gchar *path)
 	g_slist_free(i);
 }
 
+/* Recursively copy a directory tree, skipping the named socket file.
+   Used as a cross-filesystem fallback when g_rename() fails. */
+static gboolean
+copy_dir_recursive (const gchar *src, const gchar *dst, const gchar *skip_name)
+{
+	GDir *dir;
+	const gchar *name;
+	gboolean ok = TRUE;
+
+	if (g_mkdir (dst, 0700) != 0 && !g_file_test (dst, G_FILE_TEST_IS_DIR))
+		return FALSE;
+
+	dir = g_dir_open (src, 0, NULL);
+	if (!dir)
+		return FALSE;
+
+	while ((name = g_dir_read_name (dir)) != NULL)
+	{
+		gchar *s = g_build_filename (src, name, NULL);
+		gchar *d = g_build_filename (dst, name, NULL);
+
+		if (skip_name && g_strcmp0 (name, skip_name) == 0)
+		{
+			/* skip the live server socket */
+		}
+		else if (g_file_test (s, G_FILE_TEST_IS_DIR))
+		{
+			ok = copy_dir_recursive (s, d, skip_name) && ok;
+		}
+		else
+		{
+			gchar *contents = NULL;
+			gsize len = 0;
+			if (g_file_get_contents (s, &contents, &len, NULL))
+				ok = g_file_set_contents (d, contents, (gssize)len, NULL) && ok;
+			else
+				ok = FALSE;
+			g_free (contents);
+		}
+
+		g_free (s);
+		g_free (d);
+	}
+	g_dir_close (dir);
+	return ok;
+}
+
+/* Best-effort recursive delete, used to clean up a partially-copied
+   destination so the next launch can retry the migration from the intact
+   source rather than starting with half the notes. */
+static void
+remove_dir_recursive (const gchar *path)
+{
+	GDir *dir = g_dir_open (path, 0, NULL);
+	const gchar *name;
+
+	if (dir)
+	{
+		while ((name = g_dir_read_name (dir)) != NULL)
+		{
+			gchar *child = g_build_filename (path, name, NULL);
+			if (g_file_test (child, G_FILE_TEST_IS_DIR))
+				remove_dir_recursive (child);
+			else
+				g_unlink (child);
+			g_free (child);
+		}
+		g_dir_close (dir);
+	}
+	g_rmdir (path);
+}
+
+/* Show a fatal migration error and exit. Uses an AdwMessageDialog when a
+   display is present (adw_init() has already run for that case), otherwise
+   falls back to stderr so a headless launch cannot crash on uninitialized
+   libadwaita. Never returns. */
+static void
+migration_fatal (const gchar *primary, const gchar *secondary)
+{
+	if (gdk_display_get_default () != NULL)
+	{
+		GtkWidget *dialog = xpad_app_alert_dialog (NULL, NULL, primary, secondary);
+		adw_message_dialog_add_response (ADW_MESSAGE_DIALOG (dialog), "quit", _("Quit"));
+		xpad_app_alert_dialog_run (dialog);
+	}
+	else
+		g_printerr ("%s: %s\n", primary, secondary);
+	exit (1);
+}
+
 /**
  * Creates the directory if it does not exist.
  * Returns newly allocated dir name, NULL if an error occurred.
  */
+/* Returns TRUE only if a process is actually listening on the given AF_UNIX
+   socket path. A crashed/killed xpad leaves its "server" socket file on disk (it
+   is not unlinked on exit), so an existence check is not proof of a live
+   instance — connect() is. */
+static gboolean
+unix_socket_is_live (const gchar *path)
+{
+	struct sockaddr_un addr;
+	int fd;
+	gboolean live;
+
+	fd = socket (PF_LOCAL, SOCK_STREAM, 0);
+	if (fd < 0)
+		return FALSE;
+
+	bzero (&addr, sizeof (addr));
+	addr.sun_family = AF_LOCAL;
+	strncpy (addr.sun_path, path, sizeof (addr.sun_path) - 1);
+
+	/* cppcheck-suppress nullPointer ; SUN_LEN expands offsetof, i.e. a literal (struct sockaddr_un *) 0 */
+	live = (connect (fd, (struct sockaddr *) &addr, SUN_LEN (&addr)) == 0);
+	close (fd);
+	return live;
+}
+
 static gchar *
 make_config_dir (void)
 {
@@ -359,85 +570,155 @@ make_config_dir (void)
 
 	make_path (g_get_user_config_dir ());
 
+	/* New config dir: ~/.config/xnote (PACKAGE) */
 	dir = g_build_filename (g_get_user_config_dir (), PACKAGE, NULL);
 
 	if (!g_file_test (dir, G_FILE_TEST_EXISTS))
 	{
-		gchar *olddir;
+		gchar *olddir_xpad;
+		gchar *olddir_legacy;
 
-		/* For backwards-compatibility, we see if the old location for
-		   configuration files exists.  If so, we move it. */
-		olddir = g_build_filename (g_get_home_dir (), "." PACKAGE, NULL);
+		/* --- xpad → xnote migration (explicit literals, not PACKAGE) --- */
+		olddir_xpad = g_build_filename (g_get_user_config_dir (), "xpad", NULL);
 
-		if (g_file_test (olddir, G_FILE_TEST_EXISTS))
-			g_rename (olddir, dir);
+		if (g_file_test (olddir_xpad, G_FILE_TEST_EXISTS))
+		{
+			/* Safety: refuse to migrate only if a LIVE xpad instance is running.
+			   A crashed/killed xpad leaves a stale server socket file behind (it is
+			   not unlinked on exit), so the old existence check blocked the migration
+			   forever. Probe for an actual listener instead. A stale socket carried
+			   into the new dir is harmless — xnote unlinks its own server socket on
+			   startup — so we do not touch it here (never risk racing a live writer). */
+			gchar *old_socket = g_build_filename (olddir_xpad, "server", NULL);
+			gboolean live = g_file_test (old_socket, G_FILE_TEST_EXISTS)
+			             && unix_socket_is_live (old_socket);
+			g_free (old_socket);
+
+			if (live)
+			{
+				/* xpad is genuinely running; bail rather than racing an active writer. */
+				migration_fatal (_("XNote cannot start"),
+					_("An existing xpad instance is running. Please close xpad before starting XNote so your notes can be migrated safely."));
+			}
+
+			/* Attempt atomic rename first (same filesystem). */
+			if (g_rename (olddir_xpad, dir) != 0)
+			{
+				/* Cross-filesystem or other rename failure: copy then remove. */
+				if (!copy_dir_recursive (olddir_xpad, dir, "server"))
+				{
+					/* Copy failed partway: delete the partial destination so the next
+					   launch retries from the intact source instead of starting with
+					   half the notes, then abort. */
+					remove_dir_recursive (dir);
+					migration_fatal (_("XNote cannot migrate notes"),
+						g_strdup_printf (_("Could not move or copy %s to %s. "
+						                   "Please move your notes manually and try again."),
+						                 olddir_xpad, dir));
+				}
+				/* Copy succeeded; remove the old dir tree. */
+				remove_dir_recursive (olddir_xpad);
+			}
+		}
 		else
-			g_mkdir (dir, 0700); /* give user all rights */
+		{
+			/* --- legacy ~/.xpad → ~/.config/xnote migration (original upstream path) --- */
+			olddir_legacy = g_build_filename (g_get_home_dir (), ".xpad", NULL);
 
-		g_free (olddir);
+			if (g_file_test (olddir_legacy, G_FILE_TEST_EXISTS))
+				g_rename (olddir_legacy, dir);
+			else
+				g_mkdir (dir, 0700); /* give user all rights */
+
+			g_free (olddir_legacy);
+		}
+
+		g_free (olddir_xpad);
 	}
 
 	return dir;
 }
 
 /**
- * Creates an alert with a named-icon used to create an icon and parent text of 'parent',
- * secondary text of 'secondary'.  No buttons are added.
+ * Creates an AdwMessageDialog with heading 'primary' and body 'secondary'.
+ * No responses (buttons) are added; the caller adds them with
+ * adw_message_dialog_add_response() before calling xpad_app_alert_dialog_run().
+ *
+ * The icon_name argument is retained for source compatibility but ignored:
+ * AdwMessageDialog renders no leading icon.
  */
 GtkWidget *
 xpad_app_alert_dialog (GtkWindow *parent, const gchar *icon_name, const gchar *primary, const gchar *secondary)
 {
-	GtkWidget *dialog, *hbox, *image, *label;
-	gchar *buf;
+	(void) icon_name;
 
-	dialog = gtk_dialog_new ();
-	gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
+	GtkWidget *dialog = adw_message_dialog_new (parent, primary, secondary);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-
-	hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 12);
-	image = gtk_image_new_from_icon_name (icon_name, GTK_ICON_SIZE_DIALOG);
-	label = gtk_label_new (NULL);
-
-	if (secondary)
-		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s\n</span>\n%s", primary, secondary);
-	else
-		buf = g_strdup_printf ("<span weight=\"bold\" size=\"larger\">%s</span>", primary);
-
-	gtk_label_set_markup (GTK_LABEL (label), buf);
-	g_free (buf);
-
-	gtk_box_set_spacing (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), 12);
-	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), hbox);
-	gtk_container_add (GTK_CONTAINER (hbox), image);
-	gtk_container_add (GTK_CONTAINER (hbox), label);
-
-	gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-	gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
-	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
-
-	gtk_widget_show_all (hbox);
 
 	return dialog;
+}
+
+/* Stores the response id from the most recent xpad_app_alert_dialog_run(). */
+static gchar *alert_dialog_response = NULL;
+
+static void
+alert_dialog_response_cb (AdwMessageDialog *dialog, const char *response, gpointer user_data)
+{
+	(void) dialog;
+	GMainLoop *loop = user_data;
+
+	g_free (alert_dialog_response);
+	alert_dialog_response = g_strdup (response);
+
+	if (g_main_loop_is_running (loop))
+		g_main_loop_quit (loop);
+}
+
+/**
+ * Presents an AdwMessageDialog and blocks in a nested main loop until the user
+ * picks a response, mimicking the old gtk_dialog_run(). Returns the chosen
+ * response id (owned by xpad-app, valid until the next call). AdwMessageDialog
+ * closes and frees itself once a response is emitted.
+ */
+const gchar *
+xpad_app_alert_dialog_run (GtkWidget *dialog)
+{
+	GMainLoop *loop = g_main_loop_new (NULL, FALSE);
+
+	g_signal_connect (dialog, "response", G_CALLBACK (alert_dialog_response_cb), loop);
+	gtk_window_present (GTK_WINDOW (dialog));
+	g_main_loop_run (loop);
+	g_main_loop_unref (loop);
+
+	return alert_dialog_response;
 }
 
 static void
 register_stock_icons (void)
 {
-	GtkIconTheme *theme = gtk_icon_theme_get_default ();
+	/* GTK 4: icon themes are per-display and gtk_icon_theme_get_default() /
+	   _prepend_search_path() are gone. */
+	GtkIconTheme *theme = gtk_icon_theme_get_for_display (gdk_display_get_default ());
 	gchar *theme_dir = g_strdup_printf ("%s/%s", DATADIR, THEMEDIR);
-	gtk_icon_theme_prepend_search_path (theme, theme_dir);
+	gtk_icon_theme_add_search_path (theme, theme_dir);
 	g_free(theme_dir);
 }
 
 static gboolean
 xpad_app_first_idle_check (XpadPadGroup *group)
 {
+	static guint tries = 0;
+
 	/* We do this check at the first idle rather than immediately during
-	   start because we want to give the tray time to become embedded. */
+	   start because we want to give the tray time to become embedded.
+	   has_indicator is only meaningful once the async bus-name and
+	   watcher-presence queries resolve — until then, retry briefly instead
+	   of racing them (a lost race showed all pads / quit spuriously). */
+	if (!xpad_tray_ready () && tries++ < 30) {
+		g_timeout_add (100, (GSourceFunc) xpad_app_first_idle_check, group);
+		return FALSE;
+	}
+
 	if (!xpad_tray_has_indicator () &&
 	    xpad_pad_group_num_visible_pads (group) == 0)
 	{
@@ -449,7 +730,7 @@ xpad_app_first_idle_check (XpadPadGroup *group)
 			xpad_pad_group_show_all (group);
 		else
 		{
-			if (gtk_main_level () > 0)
+			if (xpad_app_is_running ())
 				xpad_app_quit ();
 			else
 				exit (0);
@@ -476,7 +757,7 @@ xpad_app_load_pads (void)
 		errtext = g_strdup_printf (_("Could not open directory %s."), xpad_app_get_config_dir ());
 
 		xpad_app_error (NULL, errtext,
-			_("This directory is needed to store preference and pad information.  Xpad will close now."));
+			_("This directory is needed to store preference and pad information.  XNote will close now."));
 		g_free (errtext);
 
 		exit (1);
@@ -496,7 +777,7 @@ xpad_app_load_pads (void)
 			*/
 
 			if ((show || option_show) && !option_hide) {
-				gtk_widget_show (pad);
+				gtk_window_present (GTK_WINDOW (pad));
 			} else if (show) {
 				/* pad thought it would show, we should save that it didn't */
 				xpad_pad_save_info_delayed (XPAD_PAD (pad));
@@ -591,11 +872,14 @@ string_to_args (const char *string, char ***argv)
 			len = strlen (string);
 
 		list[i] = g_malloc (len + 1);
-		strncpy (list[i], string, len);
+		memcpy (list[i], string, len);
 		list[i][len] = '\0';
 
-		/* make string point to beginning of next arg */
-		string = tmp + 1;
+		/* Make string point to beginning of next arg. tmp is NULL on the
+		   final argument -- NULL + 1 is undefined behaviour even though the
+		   loop is about to end, so only advance when there is a next arg. */
+		if (tmp)
+			string = tmp + 1;
 	}
 
 	list[i] = NULL;  /* null terminate list */
@@ -703,6 +987,7 @@ xpad_app_open_proc_file (void)
 	master.sun_family = AF_LOCAL;
 	strcpy (master.sun_path, server_filename);
 
+	/* cppcheck-suppress nullPointer ; SUN_LEN expands offsetof, i.e. a literal (struct sockaddr_un *) 0 */
 	if (bind (server_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 		return FALSE;
 
@@ -738,6 +1023,7 @@ xpad_app_pass_args (void)
 	strcpy (master.sun_path, server_filename);
 
 	/* connect to master socket */
+	/* cppcheck-suppress nullPointer ; SUN_LEN expands offsetof, i.e. a literal (struct sockaddr_un *) 0 */
 	if (connect (client_fd, (struct sockaddr *) &master, SUN_LEN (&master)))
 		goto done;
 	connected = TRUE;
@@ -807,7 +1093,9 @@ static GOptionEntry remote_options[] =
 	{"toggle", 't', 0, G_OPTION_ARG_NONE, &option_toggle, N_("Toggle between show and hide all pads"), NULL},
 	{"new-from-file", 'f', 0, G_OPTION_ARG_FILENAME_ARRAY, &option_files, N_("Create a new pad with the contents of a file"), N_("FILE")},
 	{"quit", 'q', 0, G_OPTION_ARG_NONE, &option_quit, N_("Close all pads"), NULL},
-	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid, NULL, NULL},
+	/* Compatibility no-op -- see option_smid_ignored. Deliberately NOT part of
+	   the "there are remote args" result below: it triggers no action. */
+	{"sm-client-id", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &option_smid_ignored, NULL, NULL},
 	{NULL}
 };
 
@@ -837,7 +1125,7 @@ process_local_args (gint *argc, gchar **argv[])
 	{
 		if (option_version)
 		{
-			fprintf (output, _("Xpad %s"), PACKAGE_VERSION);
+			fprintf (output, _("XNote %s"), PACKAGE_VERSION);
 			fprintf (output, "\n");
 			exit (0);
 		}
@@ -863,7 +1151,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	option_new = FALSE;
 	option_files = NULL;
 	option_quit = FALSE;
-	option_smid = NULL;
+	g_clear_pointer (&option_smid_ignored, g_free);
 	option_hide = FALSE;
 	option_show = FALSE;
 	option_toggle = FALSE;
@@ -874,10 +1162,6 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
 
 	if (g_option_context_parse (context, argc, argv, &error)) {
-		if (have_gtk && option_smid) {
-			xpad_session_manager_set_id (option_smid);
-		}
-
 		if (!option_new) {
 			g_object_get (settings, "autostart-new-pad", &option_new, NULL);
 		}
@@ -900,8 +1184,8 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 		}
 
 		if (!option_hide && !option_show) {
-			guint display_pads;
-			g_object_get (xpad_settings, "autostart-display-pads", &display_pads, NULL);
+			guint display_pads =
+				xpad_settings_get_effective_startup_display (xpad_settings);
 
 			if (display_pads == 0) {
 				option_show = TRUE;
@@ -923,7 +1207,7 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 		}
 
 		if (option_quit) {
-			if (have_gtk && gtk_main_level () > 0) {
+			if (have_gtk && xpad_app_is_running ()) {
 				xpad_app_quit ();
 			} else {
 				exit (0);
@@ -937,6 +1221,6 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 
 	g_option_context_free (context);
 
-	return(option_new || option_quit || option_smid || option_files ||
+	return(option_new || option_quit || option_files ||
 	       option_hide || option_show || option_toggle);
 }

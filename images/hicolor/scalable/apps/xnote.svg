@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  XNote application icon.
+  Derived from the Xpad application icon and distributed under GPL-3.0-or-later.
+  The vector was simplified, stripped of editor metadata, and recolored for XNote.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="750" height="750" viewBox="0 0 750 750" role="img">
+  <title>XNote sticky note</title>
+  <defs>
+    <radialGradient id="paper" cx="0.18" cy="0.02" r="1.2">
+      <stop offset="0" stop-color="#ffd9a0"/>
+      <stop offset="1" stop-color="#ee7f24"/>
+    </radialGradient>
+    <radialGradient id="fold" cx="0.9" cy="0.1" r="1.2">
+      <stop offset="0" stop-color="#f3a24f"/>
+      <stop offset="1" stop-color="#8a3900"/>
+    </radialGradient>
+  </defs>
+  <g transform="matrix(.9654166 .2607117 -.2607117 .9654166 55.57107 -251.92015)">
+    <path d="M95.6693 157.021 463.524 575.987 461.852 158.95Z"
+          transform="matrix(.663002 -.216353 .18759 .574854 81.5526 619.267)"
+          fill="url(#fold)"/>
+    <path d="M125.36 122.06v349.688c0 116.563 123.534 138.427 252.192 96.641-56.137 82.877-17.967 253.047 99.145 253.047h351.337V122.06Z"
+          transform="matrix(.958362 -.285556 .285556 .958362 -120.492 206.174)"
+          fill="url(#paper)" stroke="#44220d" stroke-width="18.75"/>
+  </g>
+</svg>

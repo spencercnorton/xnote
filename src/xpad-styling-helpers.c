@@ -24,21 +24,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color);
 
-/* Replacement of gtk_style_context_get_background_color with local static
- * function get_background_color that does exactly same thing. */
+/* Fetches the theme's background colour.
+ *
+ * GTK 4 removed gtk_style_context_get_background_color() and also the generic
+ * gtk_style_context_get() with style-property names / the
+ * GTK_STYLE_PROPERTY_BACKGROUND_COLOR constant this helper used to rely on.
+ * The closest stable replacement is the named theme colour "theme_bg_color";
+ * if the theme does not define it we fall back to opaque white. The state
+ * argument is no longer meaningful and is ignored. */
 void get_background_color (GtkStyleContext *context, GtkStateFlags state, GdkRGBA *color) {
-	GdkRGBA *c;
+	(void) state;
 
 	g_return_if_fail (color != NULL);
 	g_return_if_fail (GTK_IS_STYLE_CONTEXT (context));
 
-	gtk_style_context_get (context,
-			state,
-			GTK_STYLE_PROPERTY_BACKGROUND_COLOR, &c,
-			NULL);
-
-	*color = *c;
-	gdk_rgba_free (c);
+	if (!gtk_style_context_lookup_color (context, "theme_bg_color", color)) {
+		color->red = color->green = color->blue = color->alpha = 1.0;
+	}
 }
 
 /*

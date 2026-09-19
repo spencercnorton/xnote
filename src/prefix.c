@@ -1,7 +1,7 @@
 /*
  * BinReloc - a library for creating relocatable executables
- * Written by: Mike Hearn <mike@theoretic.com>
- *             Hongli Lai <h.lai@chello.nl>
+ * Written by: Mike Hearn
+ *             Hongli Lai
  * http://autopackage.org/
  * 
  * This library is free software; you can redistribute it and/or
@@ -347,6 +347,7 @@ br_strcat (const char *str1, const char *str2)
 	len2 = strlen (str2);
 
 	result = (char *) malloc (len1 + len2 + 1);
+	if (!result) return (char *) NULL;
 	memcpy (result, str1, len1);
 	memcpy (result + len1, str2, len2);
 	result[len1 + len2] = '\0';
@@ -369,6 +370,7 @@ br_strndup (char *str, size_t size)
 	if (size > len) size = len;
 
 	result = (char *) calloc (sizeof (char), len + 1);
+	if (!result) return (char *) NULL;
 	memcpy (result, str, size);
 	return result;
 }
@@ -388,7 +390,8 @@ br_strndup (char *str, size_t size)
 char *
 br_extract_dir (const char *path)
 {
-	char *end, *result;
+	const char *end;
+	char *result;
 
 	br_return_val_if_fail (path != (char *) NULL, (char *) NULL);
 
@@ -423,7 +426,8 @@ br_extract_dir (const char *path)
 char *
 br_extract_prefix (const char *path)
 {
-	char *end, *tmp, *result;
+	const char *end;
+	char *tmp, *result;
 
 	br_return_val_if_fail (path != (char *) NULL, (char *) NULL);
 

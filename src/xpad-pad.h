@@ -62,7 +62,6 @@ GtkWidget *xpad_pad_new_from_file (XpadPadGroup *group, XpadSettings *settings, 
 void xpad_pad_close (XpadPad *pad);
 void xpad_pad_toggle (XpadPad *pad);
 void xpad_pad_save_info (XpadPad *pad);
-void xpad_pad_set_sticky (XpadPad *pad, gboolean is_sticky);
 
 void xpad_pad_load_content (XpadPad *pad);
 void xpad_pad_save_content (XpadPad *pad);
@@ -70,12 +69,22 @@ void xpad_pad_save_unsaved (XpadPad *pad);
 void xpad_pad_save_content_delayed (XpadPad *pad);
 void xpad_pad_save_info_delayed (XpadPad *pad);
 
+void xpad_pad_set_back_color (XpadPad *pad, const GdkRGBA *back);
+void xpad_pad_get_back_color (XpadPad *pad, GdkRGBA *back);
+
 void xpad_pad_notify_has_selection (XpadPad *pad);
 void xpad_pad_notify_clipboard_owner_changed (XpadPad *pad);
 void xpad_pad_notify_undo_redo_changed (XpadPad *pad);
 
-void xpad_pad_append_pad_titles_to_menu (GtkWidget *menu);
+void xpad_pad_append_pad_titles_to_menu (GMenu *section);
 void xpad_pad_remove_accelerator_group (XpadPad *pad);
+
+/* Hand an interactive move (move = TRUE) or bottom-corner resize (move = FALSE)
+   of the pad window containing @widget over to the window manager. Backend
+   agnostic: GDK emits xdg_toplevel.move/resize on Wayland and
+   _NET_WM_MOVERESIZE on X11. Only valid from inside a gesture "pressed"
+   handler — it reads the press point and device off @gesture. */
+void xpad_pad_begin_window_drag (GtkWidget *widget, GtkGestureClick *gesture, gboolean move);
 gchar* xpad_pad_get_title_for_menu (XpadPad *pad, gint pad_number);
 
 G_END_DECLS

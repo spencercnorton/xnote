@@ -29,6 +29,7 @@ typedef enum {CONFIG_DIR, CURRENT_WORK_DIR} DirectoryType;
 G_BEGIN_DECLS
 
 gchar *fio_get_file (const gchar *name, DirectoryType dirType);
+gchar *fio_get_file_checked (const gchar *name, DirectoryType dirType, gboolean *out_read_error);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 void fio_remove_file (const gchar *filename);
 

@@ -1,0 +1,132 @@
+.\" XNote encrypted backup helper.
+.TH XNOTE-CLOUD-BACKUP 1 "July 23, 2026"
+.SH NAME
+xnote-cloud-backup \- encrypted local and off-box recovery for XNote
+.SH SYNOPSIS
+.B xnote-cloud-backup
+.RI [ COMMAND ]
+.SH DESCRIPTION
+XNote stores live notes as plaintext under
+.IR ~/.config/xnote .
+This helper creates authenticated encrypted snapshots under
+.IR ~/.local/share/xnote-backup
+and can append complete recovery kits to a filesystem or rclone remote.
+Remote note contents are encrypted, but the provider can observe the device
+name, snapshot timestamps, file sizes, count, and backup cadence.
+.PP
+Run
+.B init
+interactively once.  Preserve the printed recovery code separately from the
+passphrase.  Without the passphrase or recovery code, encrypted snapshots
+cannot be recovered.
+.SH COMMANDS
+.TP
+.B init
+Create the wrapped master key and print the one-time recovery code.
+.TP
+.B backup
+Create a local snapshot and, when configured, upload an append-only recovery
+kit.  An uninitialised helper or configured remote failure exits nonzero.
+.TP
+.B status
+Show local snapshot count and the last remote attempt, success, or error.
+.TP
+.B list
+List local snapshots.
+.TP
+.B remote-list
+List complete remote recovery kits.  A manifest is the completion marker.
+.TP
+.BI "import " "ID|latest" " [--force]"
+Download and validate a remote kit, then install its keyfile, head, and
+snapshot into local recovery state.  Without
+.BR --force ,
+existing recovery state is refused.  With
+.BR --force ,
+the previous state is preserved under a
+.I pre-import-*
+directory.
+The helper clears any cached master key and blocks new backups until the
+imported keyfile is explicitly unlocked.
+.TP
+.B unlock
+Prompt for the passphrase and cache the unwrapped master key.
+.TP
+.B unlock --recovery
+Prompt for the one-time recovery code instead.
+.TP
+.BI "restore " "ID|latest" " [--force]"
+Restore a local snapshot.  Close XNote first; use
+.B --force
+only when the caller has independently ensured that no live writer can race.
+.TP
+.B rotate-passphrase
+Rewrap the unchanged master key under a new passphrase.
+.SH CONFIGURATION
+Configuration is read from
+.IR ~/.config/xnote/cloud-backup.conf .
+Recognised keys are:
+.TP
+.B KEEP_SNAPSHOTS
+Number of local snapshots to retain (default 60).
+.TP
+.B CLOUD_REMOTE
+An explicit filesystem path such as
+.I /mnt/backup/xnote
+or an rclone target such as
+.IR dropbox:xnote-backup .
+A bare word is rejected to prevent a misspelled remote from becoming a false
+local success.
+.TP
+.B CLOUD_DEVICE
+Stable remote device directory (default: current hostname).  Set this to the
+original device name when recovering on a differently named replacement host.
+.TP
+.B CLOUD_TIMEOUT
+Maximum seconds for each external transfer command (default 120).
+.SH REMOTE LAYOUT
+Each successful push appends:
+.PP
+.I <remote>/<device>/kits/<snapshot-id>/
+.br
+.I "  manifest.json"
+.br
+.I "  keyfile.json"
+.br
+.I "  head.json"
+.br
+.I "  snapshots/<snapshot-id>.xsnap"
+.PP
+The helper never automatically deletes remote history.  Provider-side
+retention, if desired, must be configured independently and should preserve
+multiple complete kits.
+.PP
+Only the manifest, keyfile, head, and manifest-named snapshot are downloaded.
+Unexpected provider objects are ignored, and each expected object has a
+hard size limit before it is accepted.
+.SH DISASTER RECOVERY
+On a replacement installation, install and configure rclone (if used), set
+.B CLOUD_REMOTE
+and
+.B CLOUD_DEVICE
+to the original device directory, then run:
+.PP
+.nf
+xnote-cloud-backup remote-list
+xnote-cloud-backup import latest
+xnote-cloud-backup unlock
+xnote-cloud-backup restore latest
+.fi
+.PP
+Use
+.B unlock --recovery
+instead of
+.B unlock
+when recovering with the one-time recovery code.
+.SH FILES
+.TP
+.I ~/.config/xnote/cloud-backup.conf
+Configuration.
+.TP
+.I ~/.local/share/xnote-backup/
+Keyfile, head state, local snapshots, lock, and remote status.

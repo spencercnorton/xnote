@@ -23,8 +23,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XPAD_SETTINGS_H__
 
 #include <gtk/gtk.h>
+#include <glib.h>
 
 #include "xpad-styling-helpers.h"
+
+/* Opaque handle on one entry in the option registry (xpad-settings.c).
+   Used by tests; not needed by normal callers. */
+typedef struct {
+	const gchar *fio_key;
+	const gchar *fio_type;   /* "b" = gboolean, "u" = guint */
+	guint        prop_id;
+	gsize        offset;
+} SettingEntry;
 
 G_BEGIN_DECLS
 
@@ -56,10 +66,19 @@ GType xpad_settings_get_type (void);
 
 XpadSettings *xpad_settings_new (void);
 
+/* Startup must never leave the app unreachable when the tray is disabled.
+   Return "open all" in that case without overwriting the user's stored
+   display-pads preference. */
+guint xpad_settings_get_effective_startup_display (XpadSettings *settings);
+
 void xpad_settings_add_toolbar_button (XpadSettings *settings, const gchar *button);
 gboolean xpad_settings_remove_all_toolbar_buttons (XpadSettings *settings);
 gboolean xpad_settings_remove_last_toolbar_button (XpadSettings *settings);
 const GSList *xpad_settings_get_toolbar_buttons (XpadSettings *settings);
+
+/* Returns the static option registry and its element count.
+   Used by tests to enumerate all plain bool/uint settings. */
+const SettingEntry *xpad_settings_get_registry (gsize *out_n);
 
 G_END_DECLS
 

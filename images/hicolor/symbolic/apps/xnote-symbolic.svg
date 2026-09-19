@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- xpad tray icon: hollow folded note. MUST use .ColorScheme-Text + fill:currentColor
+       and keep <svg> at the top (a long leading XML comment breaks gdk-pixbuf SVG
+       detection => appindicator shows the "..." fallback). No hardcoded fills/strokes. -->
+  <defs>
+    <style type="text/css" id="current-color-scheme">.ColorScheme-Text { color:#fcfcfc; }</style>
+  </defs>
+  <g class="ColorScheme-Text" fill="currentColor">
+    <path fill-rule="evenodd"
+          d="M3.5 2 C2.672 2 2 2.672 2 3.5 V12.5 C2 13.328 2.672 14 3.5 14 H9 L14 9 V3.5 C14 2.672 13.328 2 12.5 2 Z
+             M3.8 3.2 C3.47 3.2 3.2 3.47 3.2 3.8 V12.2 C3.2 12.53 3.47 12.8 3.8 12.8 H8.2 L12.8 8.2 V3.8 C12.8 3.47 12.53 3.2 12.2 3.2 Z"/>
+    <rect x="4.7" y="5.3" width="6.6" height="1.15"/>
+    <rect x="4.7" y="7.9" width="4.6" height="1.15"/>
+    <path d="M11.25 13.75 V12.25 C11.25 11.698 11.698 11.25 12.25 11.25 H13.75 Z"/>
+  </g>
+</svg>

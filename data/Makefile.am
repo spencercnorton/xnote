@@ -1,9 +1,9 @@
 desktopdir = $(datadir)/applications
-desktop_in_files = xpad.desktop.in
+desktop_in_files = xnote.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 appdatadir = $(datadir)/metainfo
-appdata_in_files = xpad.appdata.xml.in
+appdata_in_files = xnote.appdata.xml.in
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 
 CLEANFILES = \

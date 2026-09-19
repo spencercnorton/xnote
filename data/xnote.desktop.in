@@ -1,0 +1,19 @@
+[Desktop Entry]
+Version=1.0
+
+Name=XNote
+GenericName=Sticky Notes
+Comment=Jot down notes for later
+
+TryExec=xnote
+Exec=xnote
+Terminal=false
+Icon=xnote
+
+StartupNotify=true
+StartupWMClass=xnote
+
+Type=Application
+Categories=GTK;Utility;
+X-LXQt-Need-Tray=true
+Keywords=notes;sticky;postit;
