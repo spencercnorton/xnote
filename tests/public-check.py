@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "3.0.4"
+VERSION = "3.0.5"
 GITHUB = "https://github.com/spencercnorton/xnote"
 
 
@@ -75,7 +75,7 @@ for module in ("crypto", "sys", "term"):
 require((ROOT / "cloud-helper/vendor/modules.txt").is_file(),
         "vendored module manifest must be published")
 for path in (
-    "README",
+    "README.md",
     "SECURITY.md",
     "CHANGELOG.md",
     "configure.ac",
@@ -87,5 +87,5 @@ for path in (
 ):
     read(path)
 
-require(GITHUB in read("README"), "README must point to the public repository")
+require(GITHUB in read("README.md"), "README must point to the public repository")
 print("public-check: PASS")

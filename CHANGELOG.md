@@ -3,6 +3,11 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.0.5 — 2026-09-19
+
+- Rename the public README to `README.md` so GitHub renders its screenshots
+  and animations on the repository overview page.
+
 ## 3.0.4 — 2026-09-19
 
 - Added privacy-reviewed screenshots and short animations covering notes,
