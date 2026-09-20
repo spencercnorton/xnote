@@ -17,6 +17,11 @@
   </developer>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="3.0.6" date="2026-09-20">
+      <description>
+        <p>README leads with the product: a session recording, desktop and toolbar captures, and preference screenshots from an isolated profile.</p>
+      </description>
+    </release>
     <release version="3.0.5" date="2026-09-19">
       <description>
         <p>Renamed the public README so GitHub renders its screenshots and animations on the repository overview page.</p>

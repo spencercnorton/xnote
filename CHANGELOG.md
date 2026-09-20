@@ -3,6 +3,14 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.0.6 — 2026-09-20
+
+- README: leads with the name and what a note is, shows a recording of a
+  session (typing, `Ctrl+N`, bold, resize) as the hero, a desktop and a
+  hovered-toolbar capture, and one paragraph per feature; the palette and
+  Preferences captures stay. Captures from an isolated profile with invented
+  notes. The two GIFs and the bare 300 px note are gone.
+
 ## 3.0.5 — 2026-09-19
 
 - Rename the public README to `README.md` so GitHub renders its screenshots
