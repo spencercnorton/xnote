@@ -3,20 +3,72 @@
   <id>tech.norvi.xnote</id>
   <launchable type="desktop-id">xnote.desktop</launchable>
   <name>XNote</name>
-  <summary>Sticky notes</summary>
+  <summary>Sticky notes that stay on your desktop</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
-  <description>
-    <p>XNote is a sticky note application that strives to be simple, fault-tolerant, and customizable. XNote consists of independent pad windows; each is basically a text box in which notes can be written.</p>
-  </description>
-  <url type="bugtracker">https://github.com/spencercnorton/xnote/issues</url>
-  <url type="homepage">https://github.com/spencercnorton/xnote</url>
-  <translation type="gettext">xnote</translation>
-  <developer id="tech.norvi.xnote">
-    <name>XNote contributors</name>
+  <developer id="tech.norvi">
+    <name>Spencer Norton</name>
   </developer>
+  <description>
+    <p>XNote keeps each note as its own small window on the desktop: sized and coloured on its own, with the first line as its title. There is no list to open first. Every change is saved as you type, and nothing leaves the machine unless you ask it to.</p>
+    <p>Notes are plain files under ~/.config/xnote. Hover a note for a small toolbar, right-click for the menu, and use the keyboard for the rest: Ctrl+N for a new note, Ctrl+B, Ctrl+I and Ctrl+U for formatting, Ctrl+F to search inside a note.</p>
+    <ul>
+      <li>Independent note windows with a classic six-colour sticky-note palette, or any colour and font you choose, per note or for all of them</li>
+      <li>Autosave a few seconds after every edit; a failed write is retried, never silently dropped</li>
+      <li>An optional StatusNotifierItem tray icon with a menu of all notes</li>
+      <li>Optional encrypted backups with the xnote-cloud-backup helper: local snapshots, an rclone or filesystem remote, and a recovery code for a new machine</li>
+      <li>Native Wayland with libadwaita styling; notes from Xpad are migrated on first start</li>
+    </ul>
+  </description>
+  <url type="homepage">https://github.com/spencercnorton/xnote</url>
+  <url type="bugtracker">https://github.com/spencercnorton/xnote/issues</url>
+  <url type="vcs-browser">https://github.com/spencercnorton/xnote</url>
+  <url type="help">https://github.com/spencercnorton/xnote/blob/main/docs/user-guide.md</url>
+  <url type="donation">https://buy.stripe.com/8x26oH2U44f65TRe574wM04</url>
+  <translation type="gettext">xnote</translation>
   <content_rating type="oars-1.1"/>
+  <keywords>
+    <keyword>notes</keyword>
+    <keyword>sticky</keyword>
+    <keyword>postit</keyword>
+    <keyword>xpad</keyword>
+  </keywords>
+  <provides>
+    <binary>xnote</binary>
+    <binary>xnote-cloud-backup</binary>
+  </provides>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Five sticky notes of different colours and sizes on a desktop</caption>
+      <image type="source" width="1280" height="800">https://raw.githubusercontent.com/spencercnorton/xnote/main/screenshots/xnote-desktop.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The floating toolbar that appears when a note is hovered</caption>
+      <image type="source" width="1280" height="800">https://raw.githubusercontent.com/spencercnorton/xnote/main/screenshots/xnote-toolbar.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The sticky-note colour palette</caption>
+      <image type="source" width="640" height="666">https://raw.githubusercontent.com/spencercnorton/xnote/main/screenshots/xnote-color-picker.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Preferences, View page: toolbar, scrollbar and window decorations</caption>
+      <image type="source" width="640" height="666">https://raw.githubusercontent.com/spencercnorton/xnote/main/screenshots/xnote-preferences-view.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Preferences, Layout page: font, colours and the default note size</caption>
+      <image type="source" width="640" height="666">https://raw.githubusercontent.com/spencercnorton/xnote/main/screenshots/xnote-preferences-layout.png</image>
+    </screenshot>
+  </screenshots>
   <releases>
+    <release version="3.1.0" date="2026-09-20">
+      <description>
+        <p>Debian package built from the public tree and published to the APT archive; a full user guide and development notes; restore works after a normal quit; the startup "open a new empty pad" no longer fires on remote commands.</p>
+      </description>
+    </release>
     <release version="3.0.6" date="2026-09-20">
       <description>
         <p>README leads with the product: a session recording, desktop and toolbar captures, and preference screenshots from an isolated profile.</p>

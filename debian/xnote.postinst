@@ -1,0 +1,7 @@
+#!/bin/sh
+# The backup timer is intentionally opt-in. Package installation must not start
+# a per-user backup job before that user has initialised encryption and chosen a
+# destination. README documents the explicit enable command.
+set -e
+
+#DEBHELPER#

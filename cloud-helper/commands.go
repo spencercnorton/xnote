@@ -678,21 +678,17 @@ func cmdShowRecovery() error {
 
 // --- helpers ---
 
-// xnoteIsRunning checks if the xnote server socket exists.
+// xnoteIsRunning reports whether a live XNote answers on its server socket.
+// Only a successful connect counts: XNote never unlinks the socket file on a
+// crash, so an existence check would refuse every restore after one (and,
+// before 3.1.0, after every normal quit too).
 func xnoteIsRunning() bool {
-	sockPath := filepath.Join(configDir(), "server")
-	conn, err := net.Dial("unix", sockPath)
-	if err == nil {
-		conn.Close()
-		return true
+	conn, err := net.Dial("unix", filepath.Join(configDir(), "server"))
+	if err != nil {
+		return false
 	}
-	// Also check file presence (socket file may exist but process is dead)
-	fi, statErr := os.Lstat(sockPath)
-	if statErr == nil && fi.Mode()&os.ModeSocket != 0 {
-		// Socket file exists; assume running conservatively
-		return true
-	}
-	return false
+	conn.Close()
+	return true
 }
 
 // readPassphrase reads a passphrase from stdin (no echo via terminal raw mode).

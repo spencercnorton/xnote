@@ -35,7 +35,8 @@ EXTRA_DIST = \
 	$(CLOUD_HELPER_GO_SOURCES) \
 	cloud-helper/go.mod \
 	cloud-helper/go.sum \
-	cloud-helper/vendor
+	cloud-helper/vendor \
+	src/COPYING.LESSER
 
 # --- Go E2EE backup helper (conditional on AC_CHECK_PROG for go) ---
 # Built from cloud-helper/ using the checksummed vendored modules; installed to

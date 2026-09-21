@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "3.0.6"
+VERSION = "3.1.0"
 GITHUB = "https://github.com/spencercnorton/xnote"
 
 
@@ -54,8 +54,12 @@ require("637c7b51f1b09a28553a926f594f626d363c526a" in read("NOTICE"),
         "NOTICE must identify the audited upstream baseline")
 require("GNU GENERAL PUBLIC LICENSE" in read("COPYING"),
         "COPYING must contain the GPL text")
-require("GNU LESSER GENERAL PUBLIC LICENSE" in read("COPYING.LESSER"),
-        "COPYING.LESSER must contain the LGPL text")
+require("GNU LESSER GENERAL PUBLIC LICENSE" in read("src/COPYING.LESSER"),
+        "src/COPYING.LESSER must contain the LGPL text")
+# GitHub's licence detection reads only the repository root: a second licence
+# file there (COPYING.LESSER beside COPYING) makes it label the project LGPL.
+require(not (ROOT / "COPYING.LESSER").exists(),
+        "the LGPL text belongs in src/, not beside COPYING")
 require(not (ROOT / "cloud-helper/xnote-cloud-backup").exists(),
         "compiled cloud-helper binary must not be in the release tree")
 require(not (ROOT / "autopackage").exists(),
@@ -84,6 +88,8 @@ for path in (
     "doc/xnote-user-help.txt",
     "src/xpad-pad.c",
     "cloud-helper/go.mod",
+    "debian/control",
+    "scripts/build-deb.sh",
 ):
     read(path)
 

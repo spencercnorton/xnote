@@ -1,0 +1,85 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: XNote
+Source: https://github.com/spencercnorton/xnote
+
+Files: *
+Copyright: 2001-2007 Michael Terry
+           2009 Paul Ivanov
+           2011 Dennis Hilmar
+           2011 OBATA Akio
+           2013-2024 Arthur Borsboom
+           2019 Siergiej Riaguzow
+           2026 Spencer Norton
+License: GPL-3+
+
+Files: src/prefix.c src/prefix.h
+Copyright: Mike Hearn
+           Hongli Lai
+License: LGPL-3+
+
+Files: data/xnote.appdata.xml.in
+Copyright: Xpad and XNote contributors
+License: CC0-1.0
+
+Files: cloud-helper/vendor/golang.org/x/crypto/*
+       cloud-helper/vendor/golang.org/x/sys/*
+       cloud-helper/vendor/golang.org/x/term/*
+Copyright: 2009 The Go Authors
+License: BSD-3-Clause
+
+License: GPL-3+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public License
+ version 3 can be found in the file /usr/share/common-licenses/GPL-3.
+
+License: LGPL-3+
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or (at your
+ option) any later version.
+ .
+ On Debian systems, the full text of the GNU Lesser General Public License
+ version 3 can be found in the file /usr/share/common-licenses/LGPL-3.
+ The source distribution also includes it as src/COPYING.LESSER.
+
+License: CC0-1.0
+ To the extent possible under law, the contributors have waived all copyright
+ and related or neighboring rights to this metadata under the Creative Commons
+ CC0 1.0 Universal Public Domain Dedication.
+ .
+ The legal code is available at
+ https://creativecommons.org/publicdomain/zero/1.0/legalcode .
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ 3. Neither the name of the copyright holder nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.

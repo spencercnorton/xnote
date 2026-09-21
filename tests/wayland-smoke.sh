@@ -8,9 +8,9 @@
 #
 # There is deliberately NO synthetic input. Wayland has no XTEST, and
 # ydotool-style uinput injection is seat-GLOBAL rather than confined to the
-# test compositor -- it has escaped into a live desktop session on this
-# hardware before. Clicking and typing stay in the human acceptance matrix
-# (docs/wayland-acceptance.md); this script covers everything else.
+# test compositor -- it has escaped into a live desktop session before.
+# Clicking and typing stay in a by-hand acceptance pass on a real desktop;
+# this script covers everything else.
 #
 # THERE IS NO TRAY HERE. dbus-run-session provides a session bus but no
 # StatusNotifier watcher, so xpad_tray_has_indicator() is false for the whole

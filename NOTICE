@@ -11,15 +11,15 @@ The upstream work includes contributions from Michael Terry, Paul Ivanov,
 Dennis Hilmar, OBATA Akio, Arthur Borsboom, Siergiej Riaguzow, translators,
 and other contributors recorded in AUTHORS and the public source history.
 
-The XNote application icon is a recolored and metadata-free derivative of the
-Xpad vector icon from that public history. XNote-specific changes and artwork
-are copyright their respective contributors. Unless a file says otherwise,
+The XNote application icon (an orange note with a folded corner) and the
+symbolic tray icon are original XNote artwork. XNote-specific changes and
+artwork are copyright their respective contributors. Unless a file says otherwise,
 the project is distributed under the GNU General Public License, version 3 or
 any later version. The complete license text is in COPYING.
 
 The BinReloc implementation in src/prefix.c and src/prefix.h is distributed
 under the GNU Lesser General Public License, version 3 or any later version.
-Its license text is in COPYING.LESSER.
+Its license text is in src/COPYING.LESSER.
 
 The optional backup helper uses golang.org/x/crypto, golang.org/x/sys, and
 golang.org/x/term. Those packages are copyright The Go Authors and distributed

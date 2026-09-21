@@ -1,0 +1,48 @@
+Source: xnote
+Section: x11
+Priority: optional
+Maintainer: Norvi <apt@globalentry.systems>
+Build-Depends:
+ debhelper-compat (= 13),
+ autoconf,
+ automake,
+ libtool,
+ intltool,
+ gettext,
+ autopoint,
+ pkg-config,
+ autoconf-archive,
+ libgtk-4-dev,
+ libadwaita-1-dev,
+ libgtksourceview-5-dev,
+ libglib2.0-dev,
+ libpango1.0-dev,
+ libgdk-pixbuf-2.0-dev,
+ golang-go (>= 2:1.26~1)
+Standards-Version: 4.6.2
+Homepage: https://github.com/spencercnorton/xnote
+Rules-Requires-Root: no
+
+Package: xnote
+Architecture: any
+Conflicts: xpad
+Replaces: xpad
+Provides: xpad
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends}
+Recommends:
+ gnome-shell-extension-appindicator,
+ libsecret-tools,
+ rclone,
+ rsync
+Description: sticky note application for the desktop (XNote, GTK 4 fork)
+ XNote is a sticky note application that strives to be simple, fault-tolerant
+ and customizable. XNote consists of independent pad windows, each being a text
+ box in which notes can be written.
+ .
+ This is the XNote fork (renamed from xpad), ported from GTK 3 to GTK 4 +
+ libadwaita. Existing notes are automatically migrated from ~/.config/xpad on
+ first launch. The tray icon is provided via the freedesktop StatusNotifierItem
+ protocol (visible through the GNOME AppIndicator extension). XNote is native
+ Wayland and does not directly link against X11 libraries.

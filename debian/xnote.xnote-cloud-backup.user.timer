@@ -1,0 +1,11 @@
+[Unit]
+Description=Hourly safety-net backup of XNote sticky notes
+Documentation=man:xnote(1)
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

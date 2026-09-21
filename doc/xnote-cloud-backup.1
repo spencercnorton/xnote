@@ -27,6 +27,8 @@ Create the wrapped master key and print the one-time recovery code.
 .B backup
 Create a local snapshot and, when configured, upload an append-only recovery
 kit.  An uninitialised helper or configured remote failure exits nonzero.
+.B sync
+is an alias; the hourly user timer calls it.
 .TP
 .B status
 Show local snapshot count and the last remote attempt, success, or error.
@@ -62,6 +64,13 @@ only when the caller has independently ensured that no live writer can race.
 .TP
 .B rotate-passphrase
 Rewrap the unchanged master key under a new passphrase.
+.TP
+.B show-recovery
+Report whether a recovery slot exists and print a fingerprint of its salt.
+The recovery code itself was shown once at
+.B init
+and cannot be displayed again; verify a code with
+.BR "unlock --recovery" .
 .SH CONFIGURATION
 Configuration is read from
 .IR ~/.config/xnote/cloud-backup.conf .

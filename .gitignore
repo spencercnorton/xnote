@@ -16,7 +16,7 @@ config.status
 configure
 configure~
 data/xpad.appdata.xml
-data/xnote.appdata.xml
+data/tech.norvi.xnote.metainfo.xml
 data/xnote.desktop
 depcomp
 doc/Makefile

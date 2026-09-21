@@ -3,6 +3,33 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.1.0 — 2026-09-20
+
+- Debian package built from the audited public tree (`scripts/build-deb.sh`,
+  `debian/` in the release) and published to the APT archive on every
+  release tag; `sudo apt install xnote` on Ubuntu 26.04.
+- Documentation: `docs/user-guide.md` (every setting, shortcut, command and
+  the backup helper end to end), `docs/development.md` (source layout, tests,
+  packaging, the release model, a section for coding agents), a rewritten
+  in-app help (`F1`), and the `xnote-cloud-backup(1)` page now lists `sync`
+  and `show-recovery`.
+- Community files: contributing guide, code of conduct, support and security
+  policies, issue forms, pull-request template, a CI workflow on GitHub and
+  the Sponsor button.
+- Licence text for `src/prefix.c` moved to `src/COPYING.LESSER` so the
+  repository is labelled GPL-3.0 rather than LGPL-3.0; `COPYING` unchanged.
+- `xnote-cloud-backup restore` no longer refuses after a normal quit: only a
+  live XNote answering on its socket counts as running, and XNote removes
+  the socket when it quits.
+- "Open a new empty pad" applies at startup only; `xnote --show`, `--hide`
+  and `--toggle` no longer open an extra note when it is enabled.
+- The application icon is the orange note with the folded corner again, as a
+  vector (`images/hicolor/scalable/apps/xnote.svg`), so it is crisp at every
+  size and the same on the GitHub page and the desktop.
+- The AppStream metadata installs as `tech.norvi.xnote.metainfo.xml`, names
+  the screenshots and the help URL, and validates cleanly; libadwaita 1.5 is
+  the declared minimum (it always was the real one).
+
 ## 3.0.6 — 2026-09-20
 
 - README: leads with the name and what a note is, shows a recording of a

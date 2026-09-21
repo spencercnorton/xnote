@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Sets up autoconf.
-AC_INIT([XNote],[3.0.6],[https://github.com/spencercnorton/xnote/issues])
+AC_INIT([XNote],[3.1.0],[https://github.com/spencercnorton/xnote/issues])
 AC_CONFIG_SRCDIR(src/xpad-app.c)
 AC_CONFIG_HEADERS([config.h:config.h.in])
 AC_CONFIG_MACRO_DIRS([m4])
@@ -24,10 +24,10 @@ AM_BINRELOC
 
 # Checks for GTK 4 + libadwaita.
 # GTK 4 floor 4.10 gives us GtkWidget child-iteration, set_draw_func, the
-# modern event-controller model, and AdwMessageDialog. libadwaita 1.4 is the
-# matching Adw API floor. Accessibility is built into GTK 4 (GtkAccessible),
+# modern event-controller model, and AdwMessageDialog. libadwaita 1.5 is the
+# Adw floor: Preferences is an AdwPreferencesDialog (AdwDialog is 1.5). Accessibility is built into GTK 4 (GtkAccessible),
 # so the old ATK / atk-bridge checks are gone.
-PKG_CHECK_MODULES(GTK, gtk4 >= 4.10 gio-2.0 >= 2.66 libadwaita-1 >= 1.4)
+PKG_CHECK_MODULES(GTK, gtk4 >= 4.10 gio-2.0 >= 2.66 libadwaita-1 >= 1.5)
 AM_CONDITIONAL(GTK, test -n "$GTK_LIBS")
 AC_SUBST(GTK_LIBS)
 AC_SUBST(GTK_CFLAGS)

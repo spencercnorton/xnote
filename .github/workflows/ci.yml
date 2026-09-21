@@ -1,0 +1,66 @@
+# Build and test XNote on every pull request and on main: the autotools build
+# with -Werror, the GLib test suite, the Wayland smoke test on a headless
+# weston, and the Go tests for the backup helper. No secrets, read-only token,
+# GitHub-owned actions pinned by commit.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    # Pinned rather than ubuntu-latest: 24.04 (GTK 4.14, libadwaita 1.5,
+    # GtkSourceView 5.12) is the oldest release that meets configure.ac.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The README list, plus weston + dbus for the smoke test and rsync for the
+      # backup helper's remote tests.
+      - name: Build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq build-essential autoconf automake libtool intltool \
+            gettext autopoint pkg-config autoconf-archive libgtk-4-dev libadwaita-1-dev \
+            libgtksourceview-5-dev libglib2.0-dev libpango1.0-dev libgdk-pixbuf-2.0-dev \
+            weston dbus rsync
+      # The same checksummed Go 1.26.8 the release builds use (go.mod refuses
+      # older compilers). The script exports PATH only for the shell that sources
+      # it; it runs under sudo here for /opt, so the PATH change is re-applied.
+      - name: Go toolchain
+        run: |
+          sudo sh ci/install-go-toolchain.sh
+          echo /opt/xnote-go-1.26.8/bin >> "$GITHUB_PATH"
+      - name: Build (--enable-debug=most is -Wall -Werror)
+        run: |
+          NOCONFIGURE=1 ./autogen.sh
+          ./configure --prefix=/usr --enable-debug=most
+          make -j"$(nproc)"
+      # XNote is native Wayland. Only our own DT_NEEDED entries are policed:
+      # ldd would show libX11 through libgtk-4, which ships both backends.
+      - name: No direct X11 linkage
+        run: |
+          if readelf -d src/xnote | grep NEEDED | grep -qE 'libX11|libXi|libSM|libICE'; then
+            readelf -d src/xnote | grep NEEDED
+            echo 'ERROR - src/xnote directly links X libraries; XNote is native Wayland.'
+            exit 1
+          fi
+      - name: GLib test suite
+        run: make check || { cat tests/test-suite.log; exit 1; }
+      # A real wl_compositor (headless weston) and a session bus, no synthetic
+      # input, no tray: tests/wayland-smoke.sh explains both. Installed first so
+      # the on-disk layout is the shipping one. GTK_A11Y=none: the script fails
+      # on any Gtk-WARNING, and GTK 4.14 logs one when no accessibility bus
+      # exists on the private session bus.
+      - name: Wayland smoke test
+        env:
+          GTK_A11Y: none
+        run: |
+          sudo make install
+          dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote
+      - name: Go tests (backup helper)
+        run: cd cloud-helper && go test -mod=vendor -count=1 -timeout=300s ./...

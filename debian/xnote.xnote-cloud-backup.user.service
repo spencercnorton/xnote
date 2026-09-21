@@ -1,0 +1,9 @@
+[Unit]
+Description=Back up XNote sticky notes to cloud storage
+Documentation=man:xnote(1)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/xnote-cloud-backup sync
+Nice=10
+IOSchedulingClass=idle

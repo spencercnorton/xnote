@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+# Go build uses vendored deps — no network access needed during build.
+export GOFLAGS = -mod=vendor
+# Never let an older distro Go silently download a replacement toolchain or
+# module. go.mod's Go 1.26.8 minimum must fail closed in that environment.
+export GOTOOLCHAIN = local
+export GOPROXY = off
+
+%:
+	dh $@
+
+# The tree bootstraps with autogen.sh (autoreconf + autopoint); use it in place
+# of dh_autoreconf so the in-tree AM_BINRELOC / gettext macros are picked up.
+override_dh_autoreconf:
+	NOCONFIGURE=1 ./autogen.sh
+
+# Build the Go E2EE backup helper before the autotools install phase.
+# The binary is committed to debian/install so dh_install picks it up.
+# -buildmode=pie: Go's default is a fixed-address executable without RELRO,
+# which lintian flags (hardening-no-pie, hardening-no-relro); PIE gives both.
+override_dh_auto_build:
+	dh_auto_build
+	cd cloud-helper && go build -mod=vendor -buildmode=pie -o xnote-cloud-backup .
+
+# dwz cannot process the Go helper's compressed .debug_abbrev section. Keep
+# optimizing the native XNote binary while excluding only the Go executable.
+override_dh_dwz:
+	dh_dwz -Xxnote-cloud-backup
+
+# Per-user units (the opt-in cloud-backup timer); installed from
+# debian/xnote.xnote-cloud-backup.user.{service,timer}. Users enable the timer
+# after initialising encrypted backup.
+override_dh_installsystemduser:
+	dh_installsystemduser --name=xnote-cloud-backup --no-enable

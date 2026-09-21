@@ -377,6 +377,10 @@ xpad_app_quit (void)
 	/* Free the memory used by the settings menu. */
 	g_clear_object (&settings);
 
+	/* A clean quit leaves no socket behind: the backup helper's restore only
+	   dials it, but a stale file still misleads anyone looking at the dir. */
+	g_unlink (server_filename);
+
 	exit(EXIT_SUCCESS);
 }
 
@@ -1162,9 +1166,15 @@ process_remote_args (gint *argc, gchar **argv[], gboolean have_gtk, XpadSettings
 	g_option_context_add_main_entries (context, remote_options, GETTEXT_PACKAGE);
 
 	if (g_option_context_parse (context, argc, argv, &error)) {
-		if (!option_new) {
+		/* "Open a new empty pad" is a startup preference. This function also
+		   serves every command a second xnote sends to the running instance
+		   (--show, --hide, --toggle, a file), and those must not spawn a pad. */
+		static gboolean startup_args_done = FALSE;
+
+		if (!option_new && !startup_args_done) {
 			g_object_get (settings, "autostart-new-pad", &option_new, NULL);
 		}
+		startup_args_done = TRUE;
 
 		if (have_gtk && option_new) {
 			GtkWidget *pad = xpad_pad_new (pad_group, settings);

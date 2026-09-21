@@ -1,0 +1,86 @@
+name: Bug report
+description: Something in XNote does not behave as documented.
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please remove anything private before pasting: note text, file paths, hostnames, remote names. Never paste a recovery code, a passphrase or `keyfile.json`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what happened instead.
+      placeholder: Pressed Ctrl+N on a note, expected a new note next to it, nothing appeared.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start `xnote` from a terminal
+        2. …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Notes and editing
+        - Toolbar and colours
+        - Preferences
+        - Tray icon
+        - Startup, autostart or quitting
+        - Backup helper (xnote-cloud-backup)
+        - Migration from xpad
+        - Build or packaging
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: XNote version
+      description: The output of `xnote --version`.
+      placeholder: XNote 3.1.0
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: Distribution
+      description: Name and release.
+      placeholder: Ubuntu 26.04
+    validations:
+      required: true
+  - type: input
+    id: desktop
+    attributes:
+      label: Desktop versions
+      description: GNOME Shell version (`gnome-shell --version`), or the name of your desktop if not GNOME, plus the GTK 4 and libadwaita package versions from your package manager.
+      placeholder: GNOME Shell 50 · GTK 4.22 · libadwaita 1.9
+    validations:
+      required: true
+  - type: dropdown
+    id: session
+    attributes:
+      label: Session type
+      options: ["Wayland", "X11", "Not sure"]
+    validations:
+      required: true
+  - type: dropdown
+    id: appindicator
+    attributes:
+      label: AppIndicator / KStatusNotifierItem extension
+      description: XNote's tray icon is a StatusNotifierItem; on GNOME it is only shown when this extension is installed and enabled.
+      options: ["Installed and enabled", "Installed but disabled", "Not installed", "Not GNOME", "Not sure"]
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal output
+      description: There is no debug flag. Quit XNote (`xnote --quit`), start `xnote` from a terminal, reproduce the problem and paste what was printed, scrubbed. For the backup helper, paste the failing command and its output, and `xnote-cloud-backup status`.
+      render: text

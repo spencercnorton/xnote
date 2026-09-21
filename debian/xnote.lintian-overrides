@@ -1,0 +1,5 @@
+# prerm disables the retired xpad-cloud-backup.timer in each logged-in user's
+# session so the unit Conflicts/Replaces removes is not left enabled. Per-user
+# units have no deb-systemd-helper equivalent, so systemctl --user is the only
+# way to reach them; the call is best-effort and never starts anything.
+xnote: maintainer-script-calls-systemctl [prerm:*]
