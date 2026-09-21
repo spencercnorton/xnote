@@ -64,6 +64,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="3.2.0" date="2026-09-21">
+      <description>
+        <p>The package recommends the XNote Placement extension; README and community files in the NorviTech Suite house style, with an encrypted-backup callout.</p>
+      </description>
+    </release>
     <release version="3.1.0" date="2026-09-20">
       <description>
         <p>Debian package built from the public tree and published to the APT archive; a full user guide and development notes; restore works after a normal quit; the startup "open a new empty pad" no longer fires on remote commands.</p>

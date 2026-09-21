@@ -3,6 +3,19 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.2.0 — 2026-09-21
+
+- The package recommends `gnome-shell-extension-xnote-placement`, so
+  `apt install xnote` brings the placement extension along; the README says
+  how to enable it and what it does.
+- README rewritten to the NorviTech Suite house style: suite, release and
+  install badges, an encrypted-backup callout (Dropbox or any rclone remote,
+  the recovery code, the hourly timer), the placement callout, a data-location
+  table with what leaves the machine, and the suite footer. Community files
+  aligned with the shared templates (DCO sign-off, an out-of-scope list, a
+  security scope section).
+- The GitHub CI workflow can be run by hand (`workflow_dispatch`).
+
 ## 3.1.0 — 2026-09-20
 
 - Debian package built from the audited public tree (`scripts/build-deb.sh`,

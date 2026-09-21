@@ -6,26 +6,31 @@
 
 <p align="center">
   <strong>Sticky notes that stay on your desktop, and stay yours.</strong><br>
-  A native GTK4/libadwaita notes app for GNOME on Wayland, descended from Xpad.
+  A native GTK4/libadwaita notes app for GNOME on Wayland, descended from Xpad, with encrypted backup to Dropbox or any rclone remote.
 </p>
 
 <p align="center">
+  <a href="https://norvitech.com"><img alt="NorviTech Suite" src="https://img.shields.io/badge/NorviTech-Suite-FD8024.svg"></a>
   <a href="https://github.com/spencercnorton/xnote/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/spencercnorton/xnote/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/spencercnorton/xnote/tags"><img alt="Latest release" src="https://img.shields.io/github/v/tag/spencercnorton/xnote?label=release&sort=semver"></a>
   <a href="https://apt.globalentry.systems"><img alt="APT repository" src="https://img.shields.io/badge/apt-Ubuntu%2026.04-e95420.svg?logo=ubuntu&logoColor=white"></a>
-  <a href="COPYING"><img alt="GPL-3.0-or-later" src="https://img.shields.io/badge/licence-GPL--3.0--or--later-blue.svg"></a>
+  <a href="COPYING"><img alt="Licence" src="https://img.shields.io/badge/licence-GPL--3.0--or--later-blue.svg"></a>
   <a href="https://buy.stripe.com/8x26oH2U44f65TRe574wM04"><img alt="Donate" src="https://img.shields.io/badge/donate-Stripe-635bff.svg?logo=stripe&logoColor=white"></a>
-  <a href="https://github.com/spencercnorton/xnote-placement"><img alt="Placement extension" src="https://img.shields.io/badge/GNOME_Shell-placement_extension-4a86cf.svg"></a>
 </p>
 
 <p align="center">
   <img alt="Five sticky notes on a desktop: a line is typed into one, a new note is created with Ctrl+N, its title made bold, and it is resized" src="screenshots/xnote-session.png" width="900">
 </p>
 
+The recording and every picture below come from a fresh, isolated profile with invented notes; nothing personal appears in them.
+
 A note is a small window with your words in it, in the colour you gave it,
 where you left it. XNote keeps each one as an independent window, saves every
-change as you type, and never sends a byte anywhere unless you ask it to.
+change as you type, and never sends a byte anywhere unless you ask it to. It
+is a GPL-3.0-or-later descendant of Xpad, rebuilt on GTK 4 and libadwaita for
+GNOME on Wayland.
 
-## What it looks like
+## What it does
 
 **Notes, not a notes app.** There is no list to open first: each note is its
 own window on the desktop, sized and coloured on its own, with the first line
@@ -59,15 +64,36 @@ random colour so a cluster reads at a glance.
   <img alt="Preferences — Layout: font, colours and the default note size" src="screenshots/xnote-preferences-layout.png" width="420">
 </p>
 
-**Saved as you type, backed up if you want.** Notes live as plain files under
-`~/.config/xnote`; the optional `xnote-cloud-backup` helper keeps encrypted,
-authenticated snapshots locally or on an `rclone` remote, and a recovery code
-brings them back on a new machine.
+**Saved as you type.** Notes live as plain files under `~/.config/xnote`,
+written atomically on a four-second tick, so a crash never costs more than
+the last few seconds and never corrupts a note.
+
+**Encrypted backup to Dropbox — or anywhere rclone goes — so you never lose a
+note.** The optional `xnote-cloud-backup` helper takes an encrypted,
+authenticated snapshot of every note (XChaCha20-Poly1305 under a key that
+only your passphrase or a one-time recovery code can unwrap) and appends it
+as a recovery kit to a Dropbox folder, any of the storage services `rclone`
+speaks, or a mounted path; an hourly user timer keeps it current. On a new
+machine, `xnote-cloud-backup import latest` and the recovery code bring
+everything back. The provider sees ciphertext and metadata — device name,
+timestamps, sizes, cadence — never a note.
+
+```bash
+rclone config                          # once: a remote called "dropbox" (or any provider)
+xnote-cloud-backup init                # passphrase + a recovery code, shown once
+xnote-cloud-backup backup              # first snapshot; CLOUD_REMOTE=dropbox:xnote-backup in cloud-backup.conf
+systemctl --user enable --now xnote-cloud-backup.timer
+```
+
+**Back where you left it.** Wayland forbids an application from placing its
+own windows, so the companion
+[XNote Placement](https://github.com/spencercnorton/xnote-placement) GNOME
+Shell extension does it from the compositor side: every note returns to the
+position, monitor and workspace it had, on every login. `apt install xnote`
+brings it along as a recommendation.
 
 **At home on GNOME.** Native Wayland, libadwaita styling that follows your
-theme, an optional StatusNotifierItem tray menu, and the companion
-[XNote Placement](https://github.com/spencercnorton/xnote-placement) extension
-that puts every note back on the workspace and monitor you left it on.
+theme, and an optional StatusNotifierItem tray menu.
 
 <p align="center">
   <img alt="Preferences — View: toolbar, autohide, scrollbar and window decorations" src="screenshots/xnote-preferences-view.png" width="420">
@@ -88,9 +114,15 @@ sudo apt install xnote
 first if you prefer to do those two steps by hand — it is short. Only `amd64`
 packages for 26.04 are published today. The package conflicts with, replaces
 and provides `xpad`, and on first launch XNote moves the notes it finds in
-`~/.config/xpad` to `~/.config/xnote`.
+`~/.config/xpad` to `~/.config/xnote`. It recommends
+`gnome-shell-extension-xnote-placement`, so the placement extension comes
+along; enable it once after your next login:
 
-### Other distributions — build from source
+```bash
+gnome-extensions enable xnote-placement@spencercnorton.github.io
+```
+
+### Other platforms — from source
 
 XNote is tested on Ubuntu 26.04 with GNOME Shell 50. Building it requires:
 
@@ -167,8 +199,11 @@ The [user guide](docs/user-guide.md) covers the things the screenshots do not:
 - [Troubleshooting](docs/user-guide.md#troubleshooting)
 
 [docs/development.md](docs/development.md) maps the source tree, the tests
-and the release model. The man pages `xnote(1)` and `xnote-cloud-backup(1)`
-install with the package (their roff source is in `doc/`).
+and the release model; [CHANGELOG.md](CHANGELOG.md) lists every release. The
+man pages `xnote(1)` and `xnote-cloud-backup(1)` install with the package
+(their roff source is in `doc/`). Placement on Wayland is the
+[XNote Placement](https://github.com/spencercnorton/xnote-placement) extension's job;
+its README explains how.
 
 ## Where your data lives
 
@@ -180,83 +215,57 @@ install with the package (their roff source is in `doc/`).
 | `<CLOUD_REMOTE>/<device>/kits/<snapshot-id>/` | Off-box recovery kits, one per backup, append-only; the helper never deletes remote history |
 | `xnote-cloud-backup.timer`, `xnote-cloud-backup.service` | systemd user units installed by the package, disabled until you enable them; the timer runs `xnote-cloud-backup sync` hourly |
 
-## Note data and privacy
-
-Live notes are plaintext files under `~/.config/xnote`. Protect that directory
-with the same care as the notes themselves. XNote does not send note contents
-over the network.
-
-The optional `xnote-cloud-backup` helper creates authenticated encrypted
-snapshots under `~/.local/share/xnote-backup`. A configured storage provider
-can still observe metadata such as device name, timestamps, file sizes, item
-count, and backup cadence. See `man xnote-cloud-backup` before enabling remote
-backups, and keep the generated recovery code somewhere separate from the
-computer.
-
-Backup is opt-in. Initialise it and verify a manual backup before enabling the
-hourly user timer (the timer is installed by the `.deb`; a source build has
-none — see the [guide](docs/user-guide.md#backup-and-recovery)):
-
-```sh
-xnote-cloud-backup init
-xnote-cloud-backup backup
-systemctl --user enable --now xnote-cloud-backup.timer
-```
-
-The pictures above were captured from a fresh, isolated profile with invented
-notes; no personal note or desktop data appears in them.
+Nothing leaves the machine unless you configure a backup remote; then only
+encrypted recovery kits do, and the provider can observe their metadata
+(device name, timestamps, sizes, item count, cadence) but never a note.
+Live notes are plain text under `~/.config/xnote` — protect that directory
+with the same care as the notes themselves, and keep the recovery code
+somewhere separate from the computer.
 
 ## Contributing and support
 
-- Bugs and feature requests: [open an issue](https://github.com/spencercnorton/xnote/issues/new/choose);
-  questions go to [Discussions](https://github.com/spencercnorton/xnote/discussions).
-  [SUPPORT.md](SUPPORT.md) says what to include.
-- Security reports: [private vulnerability reporting](https://github.com/spencercnorton/xnote/security/advisories/new) — see [SECURITY.md](SECURITY.md).
-- Pull requests are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) first —
-  this repository is a release mirror, and accepted changes ship in the next
-  tagged release. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
+- Bugs and feature requests: [open an issue](https://github.com/spencercnorton/xnote/issues/new/choose). Questions: [Discussions](https://github.com/spencercnorton/xnote/discussions).
+- Security reports: [private vulnerability reporting](https://github.com/spencercnorton/xnote/security/advisories/new) — see [SECURITY.md](SECURITY.md). There is no e-mail address; that is deliberate.
+- Pull requests are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) first — this repository is a release mirror, and accepted changes ship in the next tagged release.
 - If XNote saves you time, you can [support its development](https://buy.stripe.com/8x26oH2U44f65TRe574wM04).
 
 ## Development
 
-```sh
-make check                                      # GLib unit tests, C — what CI runs
-make check-go                                   # Go tests for the backup helper (needs Go at configure time)
-cd cloud-helper && GOFLAGS=-mod=vendor GOPROXY=off GOTOOLCHAIN=local go test ./...   # the same, without automake
-dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote   # end to end, under a headless Weston
-python3 tests/public-check.py                   # what every public release must satisfy
+```bash
+make check                                                                # what CI runs: the GLib unit tests
+cd cloud-helper && GOFLAGS=-mod=vendor GOPROXY=off GOTOOLCHAIN=local go test ./...   # the backup helper
+dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote                 # end to end, under a headless Weston
+python3 tests/public-check.py                                             # what every public release must satisfy
 ```
 
-The Wayland smoke test requires a headless Weston compositor; CI runs it
-against the installed build tree.
+`./configure --enable-debug=most` builds with `-Wall -Werror`, as CI does;
+[docs/development.md](docs/development.md) maps the tree.
 
-```
-src/              # the GTK4 application, C — files and symbols keep their upstream xpad- names
-cloud-helper/     # xnote-cloud-backup, Go, dependencies vendored
-data/             # xnote.desktop and AppStream metadata, generated from .in templates
-doc/              # man pages and the in-app help text
-docs/             # user guide and development notes
-images/           # the two SVG icons (app and symbolic tray)
-po/               # gettext catalogue
-tests/            # GLib C tests, the Wayland smoke test, the public-release check
-ci/               # the checksummed Go toolchain installer
-debian/           # Debian packaging (the changelog is generated at build time)
-scripts/          # build-deb.sh: the .deb and source tarball the APT repository publishes
-screenshots/      # the captures above
-```
+## Licence
 
-## Provenance and licence
+[GPL-3.0-or-later](COPYING) © Spencer Norton
 
 XNote is a descendant of [Xpad](https://launchpad.net/xpad), forked from its
-development tree after the 5.8 release. The public history keeps every
-upstream commit up to the
-[baseline commit](https://git.launchpad.net/xpad/commit/?id=637c7b51f1b09a28553a926f594f626d363c526a),
-which is why the contributor list shows Xpad's authors; everything after it is
-XNote — see the
+development tree after the 5.8 release, and inherits its GPL-3.0-or-later
+licence. The public history keeps every upstream commit up to the
+[baseline commit](https://git.launchpad.net/xpad/commit/?id=637c7b51f1b09a28553a926f594f626d363c526a)
+— which is why the contributor list shows Xpad's authors — and everything
+after it is XNote; see the
 [comparison](https://github.com/spencercnorton/xnote/compare/637c7b51f1b09a28553a926f594f626d363c526a...main).
+[NOTICE](NOTICE) and [AUTHORS](AUTHORS) carry attribution; the BinReloc code
+in `src/prefix.c` and `src/prefix.h` is LGPL-3.0-or-later
+([src/COPYING.LESSER](src/COPYING.LESSER)).
 
-XNote is free software under the GNU General Public License, version 3 or, at
-your option, any later version: [COPYING](COPYING). The BinReloc code in
-`src/prefix.c` and `src/prefix.h` is under the GNU Lesser General Public
-License, version 3 or later: [src/COPYING.LESSER](src/COPYING.LESSER).
-[NOTICE](NOTICE) and [AUTHORS](AUTHORS) carry attribution.
+---
+
+<p align="center">
+  <a href="https://norvitech.com"><img alt="Part of the NorviTech Suite — open-source apps for the Linux desktop and the self-hosted stack" src="https://norvitech.com/assets/banner.svg" width="640"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/spencercnorton/helios">Helios</a> ·
+  <a href="https://github.com/spencercnorton/bitagent">BitAgent</a> ·
+  <a href="https://github.com/spencercnorton/xnote">XNote</a> ·
+  <a href="https://github.com/spencercnorton/xnote-placement">XNote Placement</a> ·
+  <a href="https://norvitech.com">norvitech.com</a>
+</p>

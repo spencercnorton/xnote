@@ -88,6 +88,11 @@ which checks the public surface (version, licences, vendored modules).
   kit; see [SECURITY.md](SECURITY.md).
 - Keep a change to one concern. A pull request that fixes a bug and
   reformats a file is two pull requests.
+- Commits carry a `Signed-off-by:` line (`git commit -s`, the Developer
+  Certificate of Origin). There is no CLA.
+- No secrets, hostnames, personal data or screenshots of a real desktop in
+  the diff — the export gate rejects them and the pull request will be sent
+  back.
 - Tests: a bug fix carries a regression test; a feature carries the smallest
   test that fails without it. C tests live in `tests/` (one `test-*.c` per
   area, registered in `tests/Makefile.am`); Go tests sit next to the code in
@@ -104,6 +109,17 @@ there first (`. ci/install-go-toolchain.sh` gives you the checksummed
 1.26.8 the release builds use). A change
 that touches installed paths, the systemd user units or the helper's command
 line should be checked against that build as well as `make install`.
+
+## Out of scope
+
+So nobody wastes an evening on it, XNote will not accept:
+
+- telemetry, analytics, or any network use by the application itself — only
+  the opt-in backup helper ever talks to a remote, and only with ciphertext
+- a sync service, accounts, or sharing notes between people
+- placing windows itself — Wayland forbids it, and that is the
+  [XNote Placement](https://github.com/spencercnorton/xnote-placement) extension's job
+- renaming the `xpad_` files and symbols
 
 ## Pull request checklist
 

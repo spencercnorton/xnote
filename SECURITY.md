@@ -8,8 +8,11 @@ Do not open a public issue, and do not attach real notes, keyfiles, recovery
 codes or backup snapshots — the affected version, a description and a minimal
 reproduction with disposable test data are enough.
 
-You will get an acknowledgement within a week. Fixes ship as a tagged
-release; the advisory is published once the release is out.
+There is no e-mail address for security reports; the advisory form is the
+only channel, and it is the one that is monitored. You will get an
+acknowledgement within a week. Fixes ship as a tagged release; the advisory
+is published once the release is out, and credits you unless you ask
+otherwise.
 
 Ordinary bugs with no security impact belong in the
 [public issue tracker](https://github.com/spencercnorton/xnote/issues/new/choose).
@@ -17,6 +20,14 @@ Ordinary bugs with no security impact belong in the
 ## Supported versions
 
 Only the latest tagged release is supported. XNote has no LTS line.
+
+## Scope
+
+In scope: this repository's code and the artefacts it ships — the `xnote`
+application, the `xnote-cloud-backup` helper and the Debian package.
+Out of scope: the XNote Placement extension (report to
+[its own advisory form](https://github.com/spencercnorton/xnote-placement/security/advisories/new)),
+the storage providers a backup remote points at, and `rclone` itself.
 
 ## What XNote does with your notes
 
