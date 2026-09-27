@@ -29,7 +29,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Trust the checked-out workspace for Go VCS metadata
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        # debhelper replaces HOME, so use this disposable container's system config.
+        run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
       # The README list, plus weston + dbus for the smoke test and rsync for the
       # backup helper's remote tests.
       - name: Build dependencies
