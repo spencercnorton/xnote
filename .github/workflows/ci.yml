@@ -4,6 +4,7 @@
 # GitHub-owned actions pinned by commit.
 name: CI
 on:
+  workflow_call:
   pull_request:
   push:
     branches: [main]
