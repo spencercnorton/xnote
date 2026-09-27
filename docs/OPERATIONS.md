@@ -9,6 +9,21 @@ is handled by the separate XNote Placement extension.
 The published APT package targets Ubuntu 26.04 on amd64 and replaces the old
 xpad package. Back up existing notes before the first migration.
 
+For a manual GitHub install, use v3.2.2 or newer: these Debian packages are
+built and install-tested on Ubuntu 26.04, including a real Wayland smoke test.
+Download the `.deb`, `source.tar.gz` and `SHA256SUMS.txt` from the same
+[release](https://github.com/spencercnorton/xnote/releases) into an empty directory:
+
+```bash
+sha256sum --check SHA256SUMS.txt
+sudo apt install ./xnote_3.2.2_amd64.deb
+xnote --version
+```
+
+The v3.2.1 asset was built on Ubuntu 24.04. GitHub installs are versioned manual
+updates; the signed APT feed publishes on its own schedule. Use the APT route
+below for managed upgrades and keep a separate backup of your notes:
+
 ```bash
 curl -fsSL https://apt.globalentry.systems/setup.sh -o /tmp/norvitech-apt-setup.sh
 less /tmp/norvitech-apt-setup.sh

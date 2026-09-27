@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.2 — 2026-09-27
+
+- Build Debian packages on Ubuntu 26.04 and verify the installed package
+  with a real headless Wayland compositor on the target distribution.
+
+
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
