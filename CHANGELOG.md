@@ -3,7 +3,7 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
-## Unreleased
+## 3.2.1 — 2026-09-27
 
 - Establish GitHub pull requests as the development workflow, with privacy checks.
 - Add deployment, configuration, security, upgrade and recovery documentation.
