@@ -16,13 +16,15 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    # Pinned rather than ubuntu-latest: 24.04 (GTK 4.14, libadwaita 1.5,
-    # GtkSourceView 5.12) is the oldest release that meets configure.ac.
+    # Build and install-test packages against the supported Ubuntu 26.04 target.
+    container: ubuntu:26.04@sha256:da6fc2be547864451aa253836dd926da33623312df4a9a243e35dc877c378a78
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
+      - name: Container prerequisites
+        run: apt-get update -q && apt-get install -q -y git ca-certificates sudo curl
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -88,6 +90,13 @@ jobs:
           mkdir -p dist
           cp ../xnote_*.deb dist/
           cd dist && sha256sum *.deb > SHA256SUMS.txt
+      - name: Verify packaged install on Ubuntu 26.04
+        env:
+          GTK_A11Y: none
+        run: |
+          sudo apt-get install -q -y --no-install-recommends ./dist/*.deb
+          xnote --version
+          dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: xnote-debian-candidate
