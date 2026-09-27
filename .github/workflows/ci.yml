@@ -72,6 +72,15 @@ jobs:
       # the exact required Go toolchain was installed and tested above.
       - name: Build Debian candidate from the public tree
         run: |
+          VERSION=$(sed -n 's/^AC_INIT(\[XNote\],\[\([^]]*\)\],.*/\1/p' configure.ac)
+          test -n "$VERSION"
+          cat > debian/changelog <<EOF
+          xnote ($VERSION) unstable; urgency=medium
+
+            * Build the public GitHub source.
+
+           -- NorviTech <131503564+spencercnorton@users.noreply.github.com>  $(date -u -R)
+          EOF
           dpkg-buildpackage -us -uc -b -d
           mkdir -p dist
           cp ../xnote_*.deb dist/
