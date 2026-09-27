@@ -3,6 +3,11 @@
 This file records the public XNote release line. The complete upstream Xpad
 history remains available from the canonical Launchpad repository.
 
+## 3.2.1 — 2026-09-27
+
+- Establish GitHub pull requests as the development workflow, with privacy checks.
+- Add deployment, configuration, security, upgrade and recovery documentation.
+
 ## 3.2.0 — 2026-09-21
 
 - The package recommends `gnome-shell-extension-xnote-placement`, so

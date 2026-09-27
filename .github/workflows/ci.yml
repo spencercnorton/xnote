@@ -4,22 +4,28 @@
 # GitHub-owned actions pinned by commit.
 name: CI
 on:
+  workflow_call:
   pull_request:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     # Pinned rather than ubuntu-latest: 24.04 (GTK 4.14, libadwaita 1.5,
     # GtkSourceView 5.12) is the oldest release that meets configure.ac.
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # The README list, plus weston + dbus for the smoke test and rsync for the
       # backup helper's remote tests.
       - name: Build dependencies
@@ -28,7 +34,7 @@ jobs:
           sudo apt-get install -y -qq build-essential autoconf automake libtool intltool \
             gettext autopoint pkg-config autoconf-archive libgtk-4-dev libadwaita-1-dev \
             libgtksourceview-5-dev libglib2.0-dev libpango1.0-dev libgdk-pixbuf-2.0-dev \
-            weston dbus rsync
+            weston dbus rsync debhelper dh-autoreconf
       # The same checksummed Go 1.26.8 the release builds use (go.mod refuses
       # older compilers). The script exports PATH only for the shell that sources
       # it; it runs under sudo here for /opt, so the PATH change is re-applied.
@@ -65,3 +71,26 @@ jobs:
           dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote
       - name: Go tests (backup helper)
         run: cd cloud-helper && go test -mod=vendor -count=1 -timeout=300s ./...
+      # -d only bypasses the distribution's older golang-go dependency;
+      # the exact required Go toolchain was installed and tested above.
+      - name: Build Debian candidate from the public tree
+        run: |
+          VERSION=$(sed -n 's/^AC_INIT(\[XNote\],\[\([^]]*\)\],.*/\1/p' configure.ac)
+          test -n "$VERSION"
+          cat > debian/changelog <<EOF
+          xnote ($VERSION) unstable; urgency=medium
+
+            * Build the public GitHub source.
+
+           -- NorviTech <131503564+spencercnorton@users.noreply.github.com>  $(date -u -R)
+          EOF
+          dpkg-buildpackage -us -uc -b -d
+          mkdir -p dist
+          cp ../xnote_*.deb dist/
+          cd dist && sha256sum *.deb > SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: xnote-debian-candidate
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
