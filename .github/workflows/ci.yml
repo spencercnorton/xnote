@@ -11,6 +11,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     # Pinned rather than ubuntu-latest: 24.04 (GTK 4.14, libadwaita 1.5,
