@@ -181,6 +181,9 @@ the source tarball beside it.
 
 ## Documentation
 
+- [Deployment and operations guide](docs/OPERATIONS.md) — setup, configuration, verification, upgrades, recovery and troubleshooting.
+- [Releasing](docs/RELEASING.md) — public builds, release checks and private deployment boundaries.
+
 The [user guide](docs/user-guide.md) covers the things the screenshots do not:
 
 - [First run](docs/user-guide.md#first-run) — the first note, autostart and
@@ -226,7 +229,7 @@ somewhere separate from the computer.
 
 - Bugs and feature requests: [open an issue](https://github.com/spencercnorton/xnote/issues/new/choose). Questions: [Discussions](https://github.com/spencercnorton/xnote/discussions).
 - Security reports: [private vulnerability reporting](https://github.com/spencercnorton/xnote/security/advisories/new) — see [SECURITY.md](SECURITY.md). There is no e-mail address; that is deliberate.
-- Pull requests are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) first — this repository is a release mirror, and accepted changes ship in the next tagged release.
+- Pull requests are welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) first — changes are reviewed and merged on GitHub, then shipped in tagged releases.
 - If XNote saves you time, you can [support its development](https://buy.stripe.com/8x26oH2U44f65TRe574wM04).
 
 ## Development
@@ -267,5 +270,6 @@ in `src/prefix.c` and `src/prefix.h` is LGPL-3.0-or-later
   <a href="https://github.com/spencercnorton/bitagent">BitAgent</a> ·
   <a href="https://github.com/spencercnorton/xnote">XNote</a> ·
   <a href="https://github.com/spencercnorton/xnote-placement">XNote Placement</a> ·
+  <a href="https://github.com/spencercnorton/snipsnap">SnipSnap</a> ·
   <a href="https://norvitech.com">norvitech.com</a>
 </p>

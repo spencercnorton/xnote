@@ -20,6 +20,8 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # The README list, plus weston + dbus for the smoke test and rsync for the
       # backup helper's remote tests.
       - name: Build dependencies
