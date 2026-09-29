@@ -24,10 +24,14 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
     steps:
       - name: Container prerequisites
-        run: apt-get update -q && apt-get install -q -y git ca-certificates sudo curl
+        run: apt-get update -q && apt-get install -q -y git ca-certificates sudo curl python3
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      # Version, AppStream releases, licences, icons, module path: stdlib
+      # Python over the checked-out tree, so it runs before the build.
+      - name: Release surface
+        run: python3 tests/public-check.py
       - name: Trust the checked-out workspace for Go VCS metadata
         # debhelper replaces HOME, so use this disposable container's system config.
         run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
