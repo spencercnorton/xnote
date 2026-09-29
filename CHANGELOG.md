@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- CI lints the Debian package it builds (`lintian --fail-on error,warning`)
+  and runs the new `scripts/check-deb.sh` on it, which fails if installing
+  the package would enable or start the opt-in backup timer, or if the
+  backup helper was built by a Go older than `go.mod` requires.
+  `scripts/build-deb.sh` runs the same checks.
+
 ## 3.2.3 — 2026-09-29
 
 - Notes open in the order of their `info-` file names (byte order), not in

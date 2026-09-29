@@ -93,6 +93,13 @@ jobs:
           mkdir -p dist
           cp ../xnote_*.deb dist/
           cd dist && sha256sum *.deb > SHA256SUMS.txt
+      # lintian's errors and warnings (debian/xnote.lintian-overrides holds the
+      # accepted ones), then what lintian cannot know: scripts/check-deb.sh.
+      - name: Check Debian candidate
+        run: |
+          sudo apt-get install -q -y --no-install-recommends lintian
+          lintian --fail-on error,warning dist/*.deb
+          scripts/check-deb.sh dist/*.deb
       - name: Verify packaged install on Ubuntu 26.04
         env:
           GTK_A11Y: none
