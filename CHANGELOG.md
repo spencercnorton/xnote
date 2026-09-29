@@ -9,6 +9,14 @@
   accessibility bus deleted the live socket when the test ended. The script
   now also refuses a session bus that anything else is on.
 
+## 3.2.3 — 2026-09-29
+
+- Notes open in the order of their `info-` file names (byte order), not in
+  whatever order the filesystem lists them. XNote Placement hands out the
+  saved places of notes that share a first line, several empty notes
+  typically, in that same order, so with XNote Placement 1.1.5 or later each
+  such note keeps its own place rather than possibly another's.
+
 ## 3.2.2 — 2026-09-27
 
 - Build Debian packages on Ubuntu 26.04 and verify the installed package

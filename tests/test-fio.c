@@ -20,6 +20,7 @@ gint fio_set_values_to_file (const gchar *filename, ...);
 gint fio_get_values_from_file (const gchar *filename, ...);
 gboolean fio_set_file (const gchar *name, const gchar *value);
 gchar *fio_get_file (const gchar *filename, int dirType);
+GSList *fio_info_names (GDir *dir);
 
 /* Stub: xpad_app_error is called by fio on write failure.  In tests we just
  * print to stderr so the test harness can report it. */
@@ -168,6 +169,49 @@ test_missing_key_leaves_default (void)
 	g_free (path);
 }
 
+/* Pads open in byte order, whatever order the filesystem lists them in:
+   digits, then upper case, then lower case, which is how XNote Placement
+   orders ids too. Created out of that order, beside a backup and a content
+   file that must not be opened as pads. */
+static void
+test_info_names_byte_order (void)
+{
+	const gchar *files[] = {"info-b1", "info-A1", "content-A1", "info-a1~", "info-B1", "info-a1", "info-11"};
+	gchar *dir = g_dir_make_tmp ("test-fio-XXXXXX", NULL);
+	GString *got = g_string_new (NULL);
+	GSList *names, *l;
+	GDir *d;
+	guint i;
+
+	g_assert_nonnull (dir);
+	for (i = 0; i < G_N_ELEMENTS (files); i++)
+	{
+		gchar *path = g_build_filename (dir, files[i], NULL);
+		g_assert_true (g_file_set_contents (path, "", 0, NULL));
+		g_free (path);
+	}
+
+	d = g_dir_open (dir, 0, NULL);
+	g_assert_nonnull (d);
+	names = fio_info_names (d);
+	g_dir_close (d);
+
+	for (l = names; l; l = l->next)
+		g_string_append_printf (got, "%s%s", got->len ? " " : "", (const gchar *) l->data);
+	g_assert_cmpstr (got->str, ==, "info-11 info-A1 info-B1 info-a1 info-b1");
+
+	for (i = 0; i < G_N_ELEMENTS (files); i++)
+	{
+		gchar *path = g_build_filename (dir, files[i], NULL);
+		g_unlink (path);
+		g_free (path);
+	}
+	g_rmdir (dir);
+	g_slist_free_full (names, g_free);
+	g_string_free (got, TRUE);
+	g_free (dir);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -179,6 +223,7 @@ main (int argc, char **argv)
 	g_test_add_func ("/fio/kv_bool_round_trip",      test_kv_bool_round_trip);
 	g_test_add_func ("/fio/kv_multiple_values",      test_kv_multiple_values);
 	g_test_add_func ("/fio/missing_key_leaves_default", test_missing_key_leaves_default);
+	g_test_add_func ("/fio/info_names_byte_order",   test_info_names_byte_order);
 
 	return g_test_run ();
 }

@@ -50,7 +50,7 @@ declared with `G_DEFINE_TYPE_WITH_PRIVATE`.
 | `xpad-grip-tool-item.[ch]` | The resize grip: an 18 × 18 `GtkDrawingArea` that paints a corner handle and starts an interactive resize on press |
 | `xpad-tray.[ch]` | The tray icon, implemented directly against `org.kde.StatusNotifierItem` and `com.canonical.dbusmenu` over GDBus (introspection XML inline): owns `org.kde.StatusNotifierItem-<pid>-1`, registers with the watcher and re-registers when it reappears, rebuilds the menu. No AppIndicator library; the only dependency is gio |
 | `xpad-styling-helpers.[ch]` | Theme colour lookups and `PangoFontDescription` → CSS conversion |
-| `fio.[ch]` | File I/O for the config directory: whole-file read/write, the `key value` line format, unique `prefixXXXXXX` names via `g_mkstemp`, a read-error-aware loader. Writes go through `g_file_replace()` with an explicit close, so a failed write surfaces and the pad keeps its dirty flag |
+| `fio.[ch]` | File I/O for the config directory: whole-file read/write, the `key value` line format, unique `prefixXXXXXX` names via `g_mkstemp`, the `info-*` names in the byte order pads open in, a read-error-aware loader. Writes go through `g_file_replace()` with an explicit close, so a failed write surfaces and the pad keeps its dirty flag |
 | `help.[ch]` | The Help window: renders `$(datadir)/xnote/help/xnote-user-help.txt` (Pango markup) |
 | `constants.[ch]` | Default pad size, font and colours, and the six-entry sticky-note palette |
 | `prefix.[ch]` | BinReloc (third-party, LGPL; see `src/COPYING.LESSER`) for relocatable prefix lookup. Not XNote code; do not edit |
