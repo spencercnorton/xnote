@@ -3,7 +3,8 @@
 # test-escape:   verifies the U+E000/E001 escape scheme in xpad-text-buffer.c.
 #                Only links GLib (no GtkSourceBuffer/XpadPad needed).
 #
-# test-fio:      verifies fio key/value write→read round-trip.
+# test-fio:      verifies fio key/value write→read round-trip and the
+#                byte order of the info-* names pads open in.
 #                Links GLib + GIO (fio.c uses GFile/GIO).
 #
 # test-settings: verifies the declarative option registry round-trips every

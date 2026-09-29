@@ -121,6 +121,26 @@ fio_unique_name (const gchar *prefix)
 	return base;
 }
 
+/* The info-* names left in DIR, in byte order rather than the filesystem's.
+   Pads open in this order, and XNote Placement hands the ids of notes that
+   share a first line to their windows in the same order, so it has to stay
+   strcmp: case-sensitive and the same in every locale. */
+GSList *
+fio_info_names (GDir *dir)
+{
+	const gchar *name;
+	GSList *names = NULL;
+
+	while ((name = g_dir_read_name (dir)))
+	{
+		/* if it's an info file, but not a backup info file... */
+		if (!strncmp (name, "info-", 5) && name[strlen (name) - 1] != '~')
+			names = g_slist_prepend (names, g_strdup (name));
+	}
+
+	return g_slist_sort (names, (GCompareFunc) strcmp);
+}
+
 /* This callously overwrites name~ -- but this is fine since this function is for
    our private .xpad directory anyway */
 gboolean fio_set_file (const gchar *name, const gchar *value)
