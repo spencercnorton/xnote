@@ -1,8 +1,9 @@
 #!/bin/sh
 # Install the exact Go toolchain used for XNote release builds.
 #
-# This file is sourced by GitLab CI so the PATH update remains active for the
-# rest of the job. Checksums are from https://go.dev/dl/?mode=json.
+# Sourced, the PATH update stays active for the rest of the calling shell; CI
+# runs it under sudo and adds the PATH itself. Checksums are from
+# https://go.dev/dl/?mode=json.
 
 set -eu
 

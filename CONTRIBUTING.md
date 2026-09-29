@@ -88,8 +88,8 @@ which checks the public surface (version, licences, vendored modules).
 - Commits carry a `Signed-off-by:` line (`git commit -s`, the Developer
   Certificate of Origin). There is no CLA.
 - No secrets, hostnames, personal data or screenshots of a real desktop in
-  the diff — the export gate rejects them and the pull request will be sent
-  back.
+  the diff — the Privacy check rejects the ones it recognises, and review
+  sends back the rest.
 - Tests: a bug fix carries a regression test; a feature carries the smallest
   test that fails without it. C tests live in `tests/` (one `test-*.c` per
   area, registered in `tests/Makefile.am`); Go tests sit next to the code in

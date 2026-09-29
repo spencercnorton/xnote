@@ -14,12 +14,12 @@ cloud-helper/   xnote-cloud-backup, the encrypted backup helper (Go, vendored de
 tests/          GLib C tests, the Wayland smoke test, the public-release check
 data/           xnote.desktop.in and xnote.appdata.xml.in (gettext-merged at make time)
 doc/            man pages xnote.1 and xnote-cloud-backup.1, the in-app help text
-docs/           this guide, the user guide
+docs/           this guide, the user guide, OPERATIONS.md, RELEASING.md
 images/         the two SVG icons (app icon and symbolic tray icon)
 po/             gettext catalogue; po/LINGUAS lists the 28 translations that are built
 screenshots/    the README's captures, from an isolated profile with invented notes
 debian/         Debian packaging (control, rules, maintainer scripts, systemd user units)
-scripts/        build-deb.sh, the package build used by CI and by hand
+scripts/        build-deb.sh (the package build by hand), the privacy check and its test
 ci/             install-go-toolchain.sh, the checksummed Go toolchain installer
 ```
 
@@ -116,7 +116,8 @@ name), so those two need `make install`.
 
 ## Tests
 
-Four entry points; CI runs all four.
+Four entry points. CI runs the first three on every pull request; the
+fourth is run by hand before a release.
 
 **`make check`** builds and runs the five GLib tests in `tests/`:
 
@@ -153,10 +154,12 @@ compiled helper in the tree, the offline build flags in `Makefile.am`, the
 vendored `LICENSE`/`PATENTS` files, and that the README points at GitHub.
 It is dependency-free and runs from the tree it is in.
 
-Other tools CI runs: `cppcheck --error-exitcode=1` over `src/`, `go vet`,
-`shellcheck` on the smoke script, `desktop-file-validate` on the generated
-desktop file, and `appstreamcli validate --no-net` on the generated
-AppStream file (advisory).
+CI also lints, and any finding fails the build: `shellcheck` on the smoke
+script and `scripts/build-deb.sh`, `cppcheck` over `src/` (warning,
+performance and portability checks, honouring `cppcheck-suppress`
+comments), `desktop-file-validate` on the generated desktop file,
+`appstreamcli validate --no-net` on the generated AppStream file, and
+`go vet` on the helper.
 
 ## The `xpad_` prefix rule
 
@@ -198,53 +201,59 @@ disables the old `xpad-cloud-backup.timer` on upgrade), and the two systemd
 user units `xnote-cloud-backup.service` / `.timer`. Source format is
 `3.0 (native)`.
 
-`scripts/build-deb.sh [outdir]` builds `xnote_<version>_<arch>.deb` (`amd64` in CI) and the
-source tarball `xnote_<version>.tar.gz` that is published beside it. It
+`scripts/build-deb.sh [outdir]` builds `xnote_<version>_<arch>.deb` and the
+source tarball `xnote_<version>.tar.gz`. It
 reads the version from `configure.ac`'s `AC_INIT`, generates
 `debian/changelog` for the build (and puts a tracked one back afterwards),
 tars the tree reproducibly under `SOURCE_DATE_EPOCH`, runs
 `dpkg-buildpackage -us -uc -b`, and then checks the result: the maintainer
 scripts must not enable or start the opt-in backup timer, and the packaged
 helper must have been built by a Go at least as new as `go.mod` requires.
-It uses whatever `go` is first on `PATH` (CI sources the checksummed 1.26.8
-toolchain from `ci/install-go-toolchain.sh` first) and needs the build
-dependencies from `debian/control` and `dpkg-buildpackage`. Linux only. Run
-in a private development checkout it builds the `.deb` only; the source
-tarball is always made from the exported public tree.
+It uses whatever `go` is first on `PATH` (put `/opt/xnote-go-1.26.8/bin`
+there after running `ci/install-go-toolchain.sh`) and needs the build
+dependencies from `debian/control` and `dpkg-buildpackage`. Linux only.
 
-A release tag builds the package from the audited public tree on Ubuntu
-26.04 and hands it to the Norvi APT archive at
-<https://apt.globalentry.systems> (suite `resolute`, `amd64`), the same
-archive the other projects there use; a maintainer merges it into the
-archive, and the archive's front page documents how to add it. The package
-is built on 26.04 and links against 26.04's libraries, so it is filed under
+CI does not use the script: it runs `dpkg-buildpackage` itself in the
+Ubuntu 26.04 container, installs the `.deb` and runs the smoke test against
+the installed binary, and a release tag publishes that `.deb` (see
+[The release model](#the-release-model)). The Norvi APT archive at
+<https://apt.globalentry.systems> (suite `resolute`, `amd64`) publishes on
+its own schedule; its front page documents how to add it. The package is
+built on 26.04 and links against 26.04's libraries, so it is filed under
 that release's suite only.
 
 ## The release model
 
-**This GitHub repository is a release mirror.** Development happens in a
-private tree; the public history is the upstream Xpad history up to the
-baseline commit named in `NOTICE`, and above it every commit on `main` is a
-tagged release (`vX.Y.Z`) exported through an audited gate that admits only
-the files in a manifest and rejects anything that looks like an internal
-identifier or a secret. `main` only ever moves forward by a release.
+**GitHub is the development home.** Branch from `main` and open a pull
+request into it; it merges here once CI and the privacy check pass and the
+code owner approves it. The history is the upstream Xpad history up to the
+baseline commit named in `NOTICE`, then XNote's own.
 
-**Pull requests are reviewed here, applied there.** A reviewer reads the
-pull request on GitHub, applies an accepted change to the development tree,
-and it ships in the next tagged release; the pull request is closed with a
-reference to that release. Contributors keep the credit in `CHANGELOG.md`.
+**The privacy check** (`.github/workflows/privacy.yml`) scans the whole
+history for secrets with gitleaks and runs `scripts/check_public_content.py`,
+which fails a change that adds a personal path, a private URL or network
+address, or a private file such as a key or a database;
+`scripts/test_public_content.py` tests the checker.
+
+**A release is a tag.** Pushing `vX.Y.Z` runs
+`.github/workflows/release.yml`: CI and the privacy check again, a proof
+that the tag is on `main` and matches `AC_INIT`, then a GitHub Release with
+the `.deb`, the source archive and `SHA256SUMS.txt`. The checklist is in
+[RELEASING.md](RELEASING.md).
 
 **Where the version lives.** `configure.ac`'s `AC_INIT` is the version's
 home. Two other places must agree, and `tests/public-check.py` fails when
 they do not: `VERSION` in `tests/public-check.py` itself and a
 `<release version="…">` entry in `data/xnote.appdata.xml.in`; by convention
-the top heading of `CHANGELOG.md` matches too. `debian/changelog` is not
-tracked in the release tree: `scripts/build-deb.sh` generates it from
-`AC_INIT` at build time.
+the newest version heading of `CHANGELOG.md` matches too. `debian/changelog`
+is not tracked: CI and `scripts/build-deb.sh` generate it from `AC_INIT` at
+build time.
 
-**`CHANGELOG.md`** records the public release line, newest first, one
-heading per version with the date. The AppStream `<releases>` list carries a
-one-paragraph summary of each release for software centres.
+**`CHANGELOG.md`** records the release line, newest first, one heading per
+version with the date. A pull request adds its entry under `## Unreleased`
+at the top, and the release moves those entries under its version heading.
+The AppStream `<releases>` list carries a one-paragraph summary of each
+release for software centres.
 
 ## For coding agents
 
@@ -278,7 +287,7 @@ If you are an AI agent asked to work on XNote, orient in this order:
    `doc/xnote-cloud-backup.1`, and `doc/xnote-user-help.txt` (the in-app
    help). If you change behaviour, change the documentation in the same
    pull request.
-6. Pull requests are reviewed here but land through the development tree
-   (see [The release model](#the-release-model)); do not expect a merge
-   button, expect a release. Keep one concern per pull request and fill in
-   the template.
+6. Pull requests merge here once CI and the privacy check pass and the code
+   owner approves (see [The release model](#the-release-model)). Keep one
+   concern per pull request, add its entry under `## Unreleased` in
+   `CHANGELOG.md`, and fill in the template.
