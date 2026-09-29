@@ -4,12 +4,10 @@
 #   scripts/build-deb.sh [outdir]     -> outdir/xnote_<version>_<arch>.deb
 #                                        outdir/xnote_<version>.tar.gz
 #
-# Run from the public export tree (CI does, so the package and the tarball
-# hold exactly the public surface) or from a clean checkout. A private
-# development checkout (one that carries .public-release.toml) gets the .deb
-# only: its tree must never become the tarball served as source. The tarball
-# is the tree as found, so build products from an earlier configure would
-# ship in it — use a clean tree.
+# Run from a clean checkout. A private development checkout (one that carries
+# .public-release.toml) gets the .deb only: its tree must never become the
+# tarball served as source. The tarball is the tree as found, so build
+# products from an earlier configure would ship in it — use a clean tree.
 # debian/changelog is generated from configure.ac's AC_INIT, so the version
 # has one home; a checkout that tracks its own debian/changelog gets it back
 # when the script exits.
