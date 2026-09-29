@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <adwaita.h>
 
 #include "xpad-app.h"
+#include "fio.h"
 #include "help.h"
 #include "xpad-backup.h"
 #include "xpad-pad.h"
@@ -750,7 +751,7 @@ xpad_app_load_pads (void)
 {
 	gint opened = 0;
 	GDir *dir;
-	const gchar *name;
+	GSList *names, *l;
 
 	dir = g_dir_open (xpad_app_get_config_dir (), 0, NULL);
 
@@ -767,31 +768,30 @@ xpad_app_load_pads (void)
 		exit (1);
 	}
 
-	while ((name = g_dir_read_name (dir)))
+	names = fio_info_names (dir);
+	g_dir_close (dir);
+
+	for (l = names; l; l = l->next)
 	{
-		/* if it's an info file, but not a backup info file... */
-		if (!strncmp (name, "info-", 5) && name[strlen (name) - 1] != '~')
-		{
-			gboolean show = TRUE;
-			GtkWidget *pad = xpad_pad_new_with_info (pad_group, settings, name, &show);
-			/*
-			 * show = refers to the hidden variable in the info file; this can be different for each pad; show = !hidden.
-			 * option_show = command line parameter to show all the pads
-			 * option_hide = command line parameter to hide all the pads
-			*/
+		gboolean show = TRUE;
+		GtkWidget *pad = xpad_pad_new_with_info (pad_group, settings, l->data, &show);
+		/*
+		 * show = refers to the hidden variable in the info file; this can be different for each pad; show = !hidden.
+		 * option_show = command line parameter to show all the pads
+		 * option_hide = command line parameter to hide all the pads
+		*/
 
-			if ((show || option_show) && !option_hide) {
-				gtk_window_present (GTK_WINDOW (pad));
-			} else if (show) {
-				/* pad thought it would show, we should save that it didn't */
-				xpad_pad_save_info_delayed (XPAD_PAD (pad));
-			}
-
-			opened ++;
+		if ((show || option_show) && !option_hide) {
+			gtk_window_present (GTK_WINDOW (pad));
+		} else if (show) {
+			/* pad thought it would show, we should save that it didn't */
+			xpad_pad_save_info_delayed (XPAD_PAD (pad));
 		}
+
+		opened ++;
 	}
 
-	g_dir_close (dir);
+	g_slist_free_full (names, g_free);
 
 	return opened;
 }
