@@ -17,7 +17,7 @@
 # run. That is not incidental -- it decides when XNote is allowed to exit, and
 # both phases below are built around it. See the comments on each phase.
 #
-# Usage:  tests/wayland-smoke.sh /path/to/xnote
+# Usage:  dbus-run-session -- tests/wayland-smoke.sh /path/to/xnote
 # Exits non-zero on the first failed assertion.
 
 set -u
@@ -39,6 +39,7 @@ SOCKET="$XDG_CONFIG_HOME/xnote/server"
 # XNote is native Wayland. Unset DISPLAY so that if anything ever reaches for
 # X again the test fails loudly instead of silently falling back to XWayland.
 unset DISPLAY
+export WAYLAND_DISPLAY=wayland-xnote-ci
 
 XNOTE_PID=""
 WESTON_PID=""
@@ -46,6 +47,10 @@ WESTON_PID=""
 cleanup_all () {
 	[ -n "$XNOTE_PID" ]  && kill -9 "$XNOTE_PID"  2>/dev/null
 	[ -n "$WESTON_PID" ] && kill -9 "$WESTON_PID" 2>/dev/null
+	# The document portal and gvfsd, started on the session bus below, outlive
+	# this script and keep FUSE mounts in $WORK that rm cannot remove.
+	awk -v w="$WORK/" 'index($2, w) == 1 { print $2 }' /proc/self/mounts |
+		xargs -r -n1 fusermount3 -u -z
 	rm -rf "$WORK"
 }
 trap cleanup_all EXIT
@@ -87,8 +92,28 @@ start_xnote () {
 	kill -0 "$XNOTE_PID" 2>/dev/null || fail "xnote exited during startup"
 }
 
+# --- the session bus ------------------------------------------------------
+# dbus-run-session starts its bus before this script runs, so the bus has the
+# caller's environment and passes it to every service it activates. GTK and
+# GIO bring up the portals, gvfsd and the accessibility bus, which mount and
+# listen under XDG_RUNTIME_DIR: run from a desktop, the live session's, where
+# the document portal unmounts the running one to take its place and the
+# accessibility bus deletes the live socket when it exits. So give the bus
+# this run's directories and compositor before XNote starts; a portal with no
+# display drops its Settings interface, and GTK warns. DISPLAY= because the
+# bus cannot unset a variable. Refuse a bus with any other name on it: that is
+# not dbus-run-session's fresh bus but a desktop's, which this would change.
+NAMES=$(dbus-send --session --print-reply --dest=org.freedesktop.DBus \
+	/org/freedesktop/DBus org.freedesktop.DBus.ListNames) \
+	|| fail "no session bus: run this under dbus-run-session"
+if printf '%s\n' "$NAMES" | grep 'string "' | grep -qv -e 'string ":' -e '"org.freedesktop.DBus"'; then
+	fail "the session bus is already in use: run this under dbus-run-session, not on a desktop's bus"
+fi
+dbus-update-activation-environment XDG_RUNTIME_DIR XDG_CONFIG_HOME XDG_DATA_HOME \
+	WAYLAND_DISPLAY DISPLAY= || fail "could not update the session bus's activation environment"
+ok "private session bus; the services it starts get this run's directories"
+
 # --- the compositor -------------------------------------------------------
-export WAYLAND_DISPLAY=wayland-xnote-ci
 weston --backend=headless --socket="$WAYLAND_DISPLAY" --width=1280 --height=1024 \
 	>"$WORK/weston.log" 2>&1 &
 WESTON_PID=$!

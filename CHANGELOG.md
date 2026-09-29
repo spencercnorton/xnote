@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- `tests/wayland-smoke.sh` keeps the services its session bus starts (the
+  portals, gvfsd, the accessibility bus) in the test's own directories and
+  compositor. Run from a desktop, they used the live session's runtime
+  directory: the document portal took over the running one's mount, and the
+  accessibility bus deleted the live socket when the test ended. The script
+  now also refuses a session bus that anything else is on.
+
 ## 3.2.3 — 2026-09-29
 
 - Notes open in the order of their `info-` file names (byte order), not in
