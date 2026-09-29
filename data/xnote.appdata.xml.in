@@ -64,6 +64,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="3.2.3" date="2026-09-29">
+      <description>
+        <p>Notes open in the order of their file names, so the XNote Placement extension keeps notes that share a first line each in its own place.</p>
+      </description>
+    </release>
     <release version="3.2.0" date="2026-09-21">
       <description>
         <p>The package recommends the XNote Placement extension; README and community files in the NorviTech Suite house style, with an encrypted-backup callout.</p>
