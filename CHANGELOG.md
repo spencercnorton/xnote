@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- CI runs `tests/public-check.py`, the release-surface check, on every pull
+  request and release tag. It used to be run by hand, and 3.2.1 and 3.2.2
+  shipped with it failing and without their AppStream release entries.
+
 ## 3.2.3 — 2026-09-29
 
 - Notes open in the order of their `info-` file names (byte order), not in
