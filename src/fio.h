@@ -39,6 +39,7 @@ gint fio_set_values_to_file (const gchar *filename, ...);
 gchar *str_replace_tokens (gchar **string, gchar obj, gchar *replacement);
 
 gchar *fio_unique_name (const gchar *prefix);
+GSList *fio_info_names (GDir *dir);
 
 G_END_DECLS
 
