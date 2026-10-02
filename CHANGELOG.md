@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- `tests/test-settings` keeps its settings file in each test's own temporary
+  directory. It used the shared `/tmp/default-style`, so two `make check`
+  runs at once on one machine could read each other's settings and fail, a
+  `/tmp/default-style` left by another user failed the test, and the file
+  stayed behind.
+
 ## 3.2.3 — 2026-09-29
 
 - Notes open in the order of their `info-` file names (byte order), not in

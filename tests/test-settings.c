@@ -22,6 +22,8 @@
 #include "fio.h"
 #include "constants.h"
 
+static gchar *test_config_dir;
+
 /* ---- Stubs ---- */
 
 void
@@ -34,13 +36,14 @@ xpad_app_error (void *parent, const gchar *primary, const gchar *secondary)
 const gchar *
 xpad_app_get_config_dir (void)
 {
-	return "/tmp";
+	return test_config_dir;
 }
 
 /* ---- helpers ---- */
 
-/* Set HOME + XDG_CONFIG_HOME to a fresh temp dir, create the xnote subdir,
-   return the temp root (caller must free). */
+/* Set HOME + XDG_CONFIG_HOME to a fresh temp dir, create the xnote subdir
+   and make it the config dir fio saves default-style in, return the temp
+   root (caller must free). */
 static gchar *
 setup_temp_home (void)
 {
@@ -48,9 +51,8 @@ setup_temp_home (void)
 	gchar *dir = g_mkdtemp (tmpl);
 	g_assert_nonnull (dir);
 
-	gchar *cfgdir = g_build_filename (dir, ".config", "xnote", NULL);
-	g_mkdir_with_parents (cfgdir, 0700);
-	g_free (cfgdir);
+	test_config_dir = g_build_filename (dir, ".config", "xnote", NULL);
+	g_assert_cmpint (g_mkdir_with_parents (test_config_dir, 0700), ==, 0);
 
 	g_setenv ("HOME", dir, TRUE);
 	g_setenv ("XDG_CONFIG_HOME", g_build_filename (dir, ".config", NULL), TRUE);
@@ -80,6 +82,7 @@ remove_temp_home (const gchar *dir)
 	g_free (autostartdir);
 
 	g_rmdir (dir);
+	g_clear_pointer (&test_config_dir, g_free);
 }
 
 /* ---- tests ---- */
