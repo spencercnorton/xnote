@@ -21,6 +21,9 @@
   directory: the document portal took over the running one's mount, and the
   accessibility bus deleted the live socket when the test ended. The script
   now also refuses a session bus that anything else is on.
+- CI runs `tests/public-check.py`, the release-surface check, on every pull
+  request and release tag. It used to be run by hand, and 3.2.1 and 3.2.2
+  shipped with it failing and without their AppStream release entries.
 
 ## 3.2.3 — 2026-09-29
 
