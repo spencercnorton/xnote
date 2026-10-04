@@ -182,7 +182,7 @@ func cmdBackup() error {
 	tmpPath := snapPath + ".tmp"
 
 	// --- Build tar in memory (notes are text files, total << RAM) ---
-	// ponytail: in-memory tar; pipe through io.Pipe if notes grow huge.
+	// The whole tar is held in memory; stream it through io.Pipe if notes grow huge.
 	var tarBuf bytes.Buffer
 	nFiles, noteFiles, err := WriteTarWithNoteCount(&tarBuf, configD)
 	if err != nil {

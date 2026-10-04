@@ -15,9 +15,9 @@
 // If secret-tool is absent the binary falls back gracefully: backup still
 // works (no-op if uninitialised), but unlock is required before backup.
 //
-// ponytail: secret-tool over DBus — add direct DBus if secret-tool proves
-// unreliable in automated contexts (headless CI, systemd --user sessions
-// without a running agent).
+// The keyring is reached through secret-tool over DBus. Talk to DBus directly
+// if secret-tool proves unreliable in automated contexts (headless CI,
+// systemd --user sessions without a running agent).
 
 package main
 
@@ -43,7 +43,7 @@ func KeyringStore(masterKey []byte) error {
 	}
 	// Encode into a zeroed buffer rather than an immutable Go string,
 	// so we can wipe it after the subprocess completes.
-	// ponytail: hex.NewEncoder writes into a bytes.Buffer we control; zero after use.
+	// hex.NewEncoder writes into a bytes.Buffer we control; it is zeroed after use.
 	var hexBuf bytes.Buffer
 	enc := hex.NewEncoder(&hexBuf)
 	enc.Write(masterKey) //nolint:errcheck — writes to bytes.Buffer, never errors
