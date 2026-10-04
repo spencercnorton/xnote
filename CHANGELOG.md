@@ -29,6 +29,10 @@
   the package would enable or start the opt-in backup timer, or if the
   backup helper was built by a Go older than `go.mod` requires.
   `scripts/build-deb.sh` runs the same checks.
+- `src/xpad-backup.c` and `src/xpad-backup.h` name Spencer Norton as their
+  copyright holder, as `debian/copyright` and the README do, and five
+  comments in the backup helper, the preferences window and the settings
+  table read as plain comments without a leftover tag prefix.
 
 ## 3.2.3 — 2026-09-29
 

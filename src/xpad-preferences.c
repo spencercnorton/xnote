@@ -617,7 +617,7 @@ xpad_preferences_constructed (GObject *object)
 		pref->priv->autostart_display_pads_row, "sensitive", G_BINDING_SYNC_CREATE);
 
 	/* Height/width: AdwSpinRow "value" is a double; settings property is guint.
-	   ponytail: no transform func needed — GObject binding coerces uint→double automatically */
+	   No transform func needed: the GObject binding coerces uint to double automatically. */
 	g_object_bind_property (settings, "height", height_row, "value", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 	g_object_bind_property (settings, "width",  width_row,  "value", G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 

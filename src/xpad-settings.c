@@ -119,7 +119,7 @@ static guint signals[LAST_SIGNAL] = { 0 };
  * SettingEntry typedef lives in xpad-settings.h (shared with tests).
  * ----------------------------------------------------------------------- */
 
-/* ponytail: macro avoids repeating offsetof boilerplate for every row */
+/* The macros avoid repeating offsetof boilerplate for every row. */
 #define BOFF(f) offsetof(XpadSettingsPrivate, f)
 #define UOFF(f) offsetof(XpadSettingsPrivate, f)
 
