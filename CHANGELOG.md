@@ -24,6 +24,11 @@
 - CI runs `tests/public-check.py`, the release-surface check, on every pull
   request and release tag. It used to be run by hand, and 3.2.1 and 3.2.2
   shipped with it failing and without their AppStream release entries.
+- CI lints the Debian package it builds (`lintian --fail-on error,warning`)
+  and runs the new `scripts/check-deb.sh` on it, which fails if installing
+  the package would enable or start the opt-in backup timer, or if the
+  backup helper was built by a Go older than `go.mod` requires.
+  `scripts/build-deb.sh` runs the same checks.
 
 ## 3.2.3 — 2026-09-29
 

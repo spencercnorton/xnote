@@ -19,7 +19,7 @@ images/         the two SVG icons (app icon and symbolic tray icon)
 po/             gettext catalogue; po/LINGUAS lists the 28 translations that are built
 screenshots/    the README's captures, from an isolated profile with invented notes
 debian/         Debian packaging (control, rules, maintainer scripts, systemd user units)
-scripts/        build-deb.sh (the package build by hand), the privacy check and its test
+scripts/        build-deb.sh and check-deb.sh (the package build and checks), the privacy check and its test
 ci/             install-go-toolchain.sh, the checksummed Go toolchain installer
 ```
 
@@ -154,11 +154,11 @@ vendored `LICENSE`/`PATENTS` files, and that the README points at GitHub.
 It is dependency-free and runs from the tree it is in.
 
 CI also lints, and any finding fails the build: `shellcheck` on the smoke
-script and `scripts/build-deb.sh`, `cppcheck` over `src/` (warning,
-performance and portability checks, honouring `cppcheck-suppress`
-comments), `desktop-file-validate` on the generated desktop file,
-`appstreamcli validate --no-net` on the generated AppStream file, and
-`go vet` on the helper.
+script, `scripts/build-deb.sh` and `scripts/check-deb.sh`, `cppcheck` over
+`src/` (warning, performance and portability checks, honouring
+`cppcheck-suppress` comments), `desktop-file-validate` on the generated
+desktop file, `appstreamcli validate --no-net` on the generated AppStream
+file, and `go vet` on the helper.
 
 ## The `xpad_` prefix rule
 
@@ -201,21 +201,30 @@ user units `xnote-cloud-backup.service` / `.timer`. Source format is
 `3.0 (native)`.
 
 `scripts/build-deb.sh [outdir]` builds `xnote_<version>_<arch>.deb` and the
-source tarball `xnote_<version>.tar.gz`. It
-reads the version from `configure.ac`'s `AC_INIT`, generates
-`debian/changelog` for the build (and puts a tracked one back afterwards),
-tars the tree reproducibly under `SOURCE_DATE_EPOCH`, runs
-`dpkg-buildpackage -us -uc -b`, and then checks the result: the maintainer
-scripts must not enable or start the opt-in backup timer, and the packaged
-helper must have been built by a Go at least as new as `go.mod` requires.
-It uses whatever `go` is first on `PATH` (put `/opt/xnote-go-1.26.8/bin`
-there after running `ci/install-go-toolchain.sh`) and needs the build
-dependencies from `debian/control` and `dpkg-buildpackage`. Linux only.
+source tarball `xnote_<version>.tar.gz`. It reads the version from
+`configure.ac`'s `AC_INIT`, generates `debian/changelog` for the build (and
+puts a tracked one back afterwards), tars the tree reproducibly under
+`SOURCE_DATE_EPOCH` (the tree as found, so start from a clean checkout),
+runs `dpkg-buildpackage -us -uc -b`, and then runs `scripts/check-deb.sh` on
+the package. It uses whatever `go` is first on `PATH` (put
+`/opt/xnote-go-1.26.8/bin` there after running `ci/install-go-toolchain.sh`)
+and needs the build dependencies from `debian/control` and
+`dpkg-buildpackage`. Linux only.
 
-CI does not use the script: it runs `dpkg-buildpackage` itself in the
-Ubuntu 26.04 container, installs the `.deb` and runs the smoke test against
-the installed binary, and a release tag publishes that `.deb` (see
-[The release model](#the-release-model)). The Norvi APT archive at
+`scripts/check-deb.sh <deb>` checks what lintian cannot know about: the
+`postinst` must carry the guard that `dh_installsystemduser --no-enable`
+writes and must not call `deb-systemd-invoke … start`, so installing the
+package never enables or starts the opt-in backup timer, and the packaged
+helper must have been built by a Go at least as new as `go.mod` requires.
+
+CI does not use `build-deb.sh`. It runs `dpkg-buildpackage -us -uc -b -d`
+itself in the Ubuntu 26.04 container (`-d` skips the build-dependency check,
+which asks for the distribution's older `golang-go`; CI builds with the
+checksummed 1.26.8 instead), fails on any lintian error or warning
+(`lintian --fail-on error,warning`; `debian/xnote.lintian-overrides` holds
+the accepted ones), runs `scripts/check-deb.sh`, then installs the `.deb`
+and runs the smoke test against the installed binary. A release tag
+publishes that `.deb` on the GitHub Release. The Norvi APT archive at
 <https://apt.globalentry.systems> (suite `resolute`, `amd64`) publishes on
 its own schedule; its front page documents how to add it. The package is
 built on 26.04 and links against 26.04's libraries, so it is filed under
