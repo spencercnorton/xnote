@@ -1,7 +1,7 @@
 # Build and test XNote on every pull request and on main: the autotools build
-# with -Werror, the GLib test suite, the Wayland smoke test on a headless
-# weston, and the Go tests for the backup helper. No secrets, read-only token,
-# GitHub-owned actions pinned by commit.
+# with -Werror, the linters, the GLib test suite, the Wayland smoke test on a
+# headless weston, and the Go tests for the backup helper. No secrets,
+# read-only token, GitHub-owned actions pinned by commit.
 name: CI
 on:
   workflow_call:
@@ -31,15 +31,16 @@ jobs:
       - name: Trust the checked-out workspace for Go VCS metadata
         # debhelper replaces HOME, so use this disposable container's system config.
         run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
-      # The README list, plus weston + dbus for the smoke test and rsync for the
-      # backup helper's remote tests.
+      # The README list, plus weston + dbus for the smoke test, rsync for the
+      # backup helper's remote tests, and the linters.
       - name: Build dependencies
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq build-essential autoconf automake libtool intltool \
             gettext autopoint pkg-config autoconf-archive libgtk-4-dev libadwaita-1-dev \
             libgtksourceview-5-dev libglib2.0-dev libpango1.0-dev libgdk-pixbuf-2.0-dev \
-            weston dbus rsync debhelper dh-autoreconf
+            weston dbus rsync debhelper dh-autoreconf \
+            shellcheck cppcheck desktop-file-utils appstream
       # The same checksummed Go 1.26.8 the release builds use (go.mod refuses
       # older compilers). The script exports PATH only for the shell that sources
       # it; it runs under sudo here for /opt, so the PATH change is re-applied.
@@ -61,6 +62,18 @@ jobs:
             echo 'ERROR - src/xnote directly links X libraries; XNote is native Wayland.'
             exit 1
           fi
+      # --inline-suppr honours the cppcheck-suppress comments in src/.
+      # cppcheck cannot expand G_DEFINE_TYPE_WITH_PRIVATE and reports every
+      # file that uses it, so that generated GObject boilerplate is defined
+      # away. The desktop file and AppStream metadata are make's output.
+      - name: Lint
+        run: |
+          shellcheck tests/wayland-smoke.sh scripts/build-deb.sh
+          cppcheck --enable=warning,performance,portability --inline-suppr \
+            --error-exitcode=1 -q -D'G_DEFINE_TYPE_WITH_PRIVATE(TN,t_n,T_P)=' src/
+          desktop-file-validate data/xnote.desktop
+          appstreamcli validate --no-net data/tech.norvi.xnote.metainfo.xml
+          cd cloud-helper && go vet -mod=vendor ./...
       - name: GLib test suite
         run: make check || { cat tests/test-suite.log; exit 1; }
       # A real wl_compositor (headless weston) and a session bus, no synthetic

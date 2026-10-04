@@ -7,6 +7,14 @@
   runs at once on one machine could read each other's settings and fail, a
   `/tmp/default-style` left by another user failed the test, and the file
   stayed behind.
+- CI runs the linters the development guide lists: `shellcheck` on the smoke
+  test and `scripts/build-deb.sh`, `cppcheck` over `src/`,
+  `desktop-file-validate` and `appstreamcli validate` on the generated
+  metadata, and `go vet` on the backup helper.
+- The development guide, the contributing guide and the pull-request
+  template describe how a change lands now: the pull request merges here and
+  a pushed `vX.Y.Z` tag publishes the release. They still called this
+  repository a release mirror.
 
 ## 3.2.3 — 2026-09-29
 

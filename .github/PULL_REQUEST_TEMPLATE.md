@@ -18,8 +18,7 @@
 - [ ] Docs updated if behaviour changed (README, `docs/user-guide.md`, `doc/xnote.1`, `doc/xnote-user-help.txt`; `doc/xnote-cloud-backup.1` for the helper)
 
 <!--
-How this lands: this repository is a release mirror. A maintainer reviews the
-pull request here, applies accepted changes to the development tree, and the
-change ships in the next tagged release — the pull request is then closed
-with a reference to that release. See CONTRIBUTING.md.
+How this lands: the pull request merges here once CI and the privacy check
+pass and the code owner approves it, and the change ships in the next tagged
+release. See CONTRIBUTING.md.
 -->
