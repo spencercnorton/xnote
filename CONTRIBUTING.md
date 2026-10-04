@@ -64,8 +64,9 @@ sudo apt install weston dbus
 dbus-run-session -- tests/wayland-smoke.sh /usr/bin/xnote
 ```
 
-Before a release the maintainer also runs `python3 tests/public-check.py`,
-which checks the public surface (version, licences, vendored modules).
+CI also runs `python3 tests/public-check.py`, which checks the public
+surface (version, licences, vendored modules); it needs only Python 3, so
+run it yourself after touching any of those.
 
 ### Conventions
 

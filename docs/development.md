@@ -116,8 +116,7 @@ name), so those two need `make install`.
 
 ## Tests
 
-Four entry points. CI runs the first three on every pull request; the
-fourth is run by hand before a release.
+Four entry points; CI runs all four on every pull request and release tag.
 
 **`make check`** builds and runs the five GLib tests in `tests/`:
 
