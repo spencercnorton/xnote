@@ -317,6 +317,8 @@ backup is disabled." once and carries on.
 
 ### Setting up
 
+Before running `init`, install `secret-tool` (the `libsecret-tools` package). The backup helper needs it to store the master key in your login keyring.
+
 ```sh
 xnote-cloud-backup init
 xnote-cloud-backup backup

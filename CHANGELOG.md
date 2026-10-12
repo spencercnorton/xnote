@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Explain the backup helper’s keyring prerequisite before its initialization commands.
+
 - `tests/test-settings` keeps its settings file in each test's own temporary
   directory. It used the shared `/tmp/default-style`, so two `make check`
   runs at once on one machine could read each other's settings and fail, a
